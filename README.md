@@ -40,5 +40,6 @@ Private datasets under the `MedOmni` org — ask Bosong for access.
 | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `[MedOmni/family-samples](https://huggingface.co/datasets/MedOmni/family-samples)` | `families.yaml` (37 input families) + representative samples per family |
 | `[MedOmni/tasks](https://huggingface.co/datasets/MedOmni/tasks)`                   | `tasks.yaml` index + per-task definition, patients, labels              |
+| `[MedOmni/encoder-assets](https://huggingface.co/datasets/MedOmni/encoder-assets)` | `encoders.yaml` ledger + encoder weights + source snapshots (reference) |
 
 

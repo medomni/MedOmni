@@ -1,16 +1,44 @@
 # MedOmni
 
+> **Collaboration principle**: anything another team needs to read lives in a README — this one or your team's. 
+> Keep it short and easy to understand.
+
 MedOmni is a benchmark for agent-based medical diagnosis across all clinical
 modalities. An agent solves diagnostic tasks by querying the Modality Perception
 service, which runs off-the-shelf encoders and returns standardized Evidence.
 Tasks and data, perception, and assurance are owned by three independent teams
-connected through a thin contract layer.
+connected through the interfaces below.
 
 ## Ownership
 
-| Path | Team | Contact |
-|---|---|---|
-| `data_task/` | Data & Task | Bosong Huang · @medomni/task-team |
-| `perception/` | Modality Perception | @medomni/modality-perception-team |
-| `assurance/` | Assurance | @medomni/qa-team |
-| `contracts/` | shared seam — changes need all three teams | — |
+
+| Path          | Team                | Contact                    |
+| ------------- | ------------------- | -------------------------- |
+| `data_task/`  | Data & Task         | Bosong Huang · @BosonHwang |
+| `perception/` | Modality Perception | Patric Langer · @RealLast  |
+| `assurance/`  | Assurance           | Xiaoda Wang · @ignite-abd  |
+
+
+## Interfaces (what teams hand each other)
+
+
+| Artifact                                                 | From → To                       | Where                                                     |
+| -------------------------------------------------------- | ------------------------------- | --------------------------------------------------------- |
+| Family declarations + samples                            | Data & Task → Perception        | `data_task/families/*.yaml` · HF `MedOmni/family-samples` |
+| Benchmark tasks (template + patients + labels)           | Data & Task → agents, Assurance | `data_task/tasks/<task-id>/` · HF `MedOmni/tasks`         |
+| Perception API (`list_encoders` / `get_card` / `encode`) | Perception → agents             | `perception/README.md`                                    |
+| Encoder cards                                            | Perception → agents, Assurance  | `perception/encoder_cards/`                               |
+| Audit verdicts + sign-offs                               | Assurance → everyone            | `assurance/records/`                                      |
+
+
+## DATA resources
+
+Private datasets under the `MedOmni` org — ask Bosong for access.
+
+
+| Repo                                                                               | Contents                                                                |
+| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `[MedOmni/family-samples](https://huggingface.co/datasets/MedOmni/family-samples)` | `families.yaml` (37 input families) + representative samples per family |
+| `[MedOmni/tasks](https://huggingface.co/datasets/MedOmni/tasks)`                   | `tasks.yaml` index + per-task definition, patients, labels              |
+
+

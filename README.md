@@ -15,7 +15,7 @@ connected through the interfaces below.
 | Path          | Team                | Contact                    |
 | ------------- | ------------------- | -------------------------- |
 | `data_task/`  | Data & Task         | Bosong Huang · @BosonHwang |
-| `perception/` | Modality Perception | Patric Langer · @RealLast  |
+| `perception/` | Modality Perception | Timo Stoffregen · @TimoStoff  |
 | `assurance/`  | Assurance           | Xiaoda Wang · @ignite-abd  |
 
 

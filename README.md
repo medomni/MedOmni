@@ -1,13 +1,6 @@
 # MedOmni
 
-> **Collaboration principle**: anything another team needs to read lives in a README — this one or your team's. 
-> Keep it short and easy to understand.
-
-MedOmni is a benchmark for agent-based medical diagnosis across all clinical
-modalities. An agent solves diagnostic tasks by querying the Modality Perception
-service, which runs off-the-shelf encoders and returns standardized Evidence.
-Tasks and data, perception, and assurance are owned by three independent teams
-connected through the interfaces below.
+**Bosong Huang · @BosonHwang.** Shared contract for an agent benchmark in medical diagnosis across clinical modalities.
 
 ## Ownership
 

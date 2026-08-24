@@ -1,6 +1,7 @@
 # MedOmni
 
-**Bosong Huang · @BosonHwang.** Shared contract for an agent benchmark in medical diagnosis across clinical modalities.
+### Benchmarking Omni Modality* Integration in Medical Multimodal Agentic Systems
+
 
 ## Ownership
 

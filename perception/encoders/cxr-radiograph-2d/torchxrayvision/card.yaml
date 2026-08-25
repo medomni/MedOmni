@@ -1,0 +1,36 @@
+id: cxr-radiograph-2d__torchxrayvision
+family: cxr-radiograph-2d
+modality: cxr
+
+summary: >-
+  Eighteen chest-radiograph pathology probabilities from a DenseNet-121 trained
+  on eight public datasets.
+intended_use: >-
+  Screening-level findings on frontal adult chest radiographs, 224x224, as
+  published. One probability per pathology, independent of the others.
+limits:
+  - Adult frontal views only. A lateral view is out of distribution.
+  - Probabilities are not calibrated across datasets. Compare them within one image, not between patients.
+  - The eighteen labels come from eight source datasets, so not every label was trained on every dataset.
+outputs:
+  - kind: labels
+    scale: probability
+    labels: [Atelectasis, Consolidation, Infiltration, Pneumothorax, Edema,
+             Emphysema, Fibrosis, Effusion, Pneumonia, Pleural_Thickening,
+             Cardiomegaly, Nodule, Mass, Hernia, Lung Lesion, Fracture,
+             Lung Opacity, Enlarged Cardiomediastinum]
+
+reliability:
+  status: unmeasured
+non_training: true
+license: Apache-2.0
+source:
+  url: https://github.com/mlmed/torchxrayvision
+  rev: null                    # TODO pin before the image is built
+weights:
+  sha256: null                 # TODO densenet121-res224-all
+  uri: null
+runtime:
+  image: null
+  digest: null
+acceptance: pending

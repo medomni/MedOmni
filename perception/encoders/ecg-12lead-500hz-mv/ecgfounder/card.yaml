@@ -1,0 +1,38 @@
+id: ecg-12lead-500hz-mv__ecgfounder
+family: ecg-12lead-500hz-mv
+modality: ecg
+
+summary: >-
+  Twelve-lead ECG foundation model. Returns diagnostic probabilities and a
+  pooled embedding for downstream use.
+intended_use: >-
+  Diagnostic screening on a full twelve-lead resting ECG at 500 Hz, in mV, with
+  leads in the order the family declares.
+limits:
+  - Needs all twelve leads. A reduced lead set is a different family and a different encoder.
+  - Lead order is taken from the family protocol. Alignment is by name, never by position.
+  - The embedding is a representation, not a finding. An agent that cannot use a vector must read the labels.
+outputs:
+  - kind: labels
+    scale: probability
+    # TODO enumerate the head's diagnosis labels from the released checkpoint.
+    # registry.py test refuses a labels block with no vocabulary, so this must
+    # be filled before the image is built.
+  - kind: embedding
+    # TODO declare dim once the checkpoint width is confirmed. Omitted rather
+    # than null: schema-on-read means a missing field stays missing.
+
+reliability:
+  status: unmeasured
+non_training: true
+license: TODO                  # TODO from the MedOmni/encoder-assets ledger
+source:
+  url: TODO                    # TODO from the MedOmni/encoder-assets ledger
+  rev: null
+weights:
+  sha256: null
+  uri: null
+runtime:
+  image: null
+  digest: null
+acceptance: pending

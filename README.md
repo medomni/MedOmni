@@ -25,7 +25,7 @@
 | Family declarations + samples                            | Data & Task → Perception        | `data_task/families/*.yaml` · HF `MedOmni/family-samples` |
 | Benchmark tasks (template + patients + labels)           | Data & Task → agents, Assurance | `data_task/tasks/<task-id>/` · HF `MedOmni/tasks`         |
 | Perception API (`list_encoders` / `get_card` / `encode`) | Perception → agents             | `perception/README.md`                                    |
-| Encoder cards                                            | Perception → agents, Assurance  | `perception/encoder_cards/`                               |
+| Encoder cards                                            | Perception → agents, Assurance  | `perception/encoders/<id>/card.yaml` · `perception/encoders.yaml` |
 | Audit verdicts + sign-offs                               | Assurance → everyone            | `assurance/records/`                                      |
 
 

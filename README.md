@@ -1,5 +1,9 @@
 # MedOmni
 
+<p align="center">
+  <img src="docs/design-refs/assets/MedOmni-logo.png" alt="MedOmni bench" width="280">
+</p>
+
 ### Benchmarking Omni Modality* Integration in Medical Multimodal Agentic Systems
 
 

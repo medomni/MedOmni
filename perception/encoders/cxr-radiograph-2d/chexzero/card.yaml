@@ -11,7 +11,8 @@ intended_use: >-
 limits:
   - The label vocabulary is defined by the prompts, and is fixed at these five for reproducibility.
   - Scores are similarities turned into probabilities. They are not calibrated and are best read as a ranking.
-  - Trained on MIMIC-CXR reports. Performance on other sources is unmeasured.
+  - The training data is MIMIC-CXR reports. A task that scores on MIMIC-CXR therefore overlaps with the pretraining of this encoder.
+  - Performance on other sources is unmeasured.
 outputs:
   - kind: labels
     scale: probability

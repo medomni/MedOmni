@@ -12,6 +12,7 @@ limits:
   - Adult frontal views only. A lateral view is out of distribution.
   - Probabilities are not calibrated across datasets. Compare them within one image, not between patients.
   - The eighteen labels come from eight source datasets, so not every label was trained on every dataset.
+  - The training data includes MIMIC-CXR. A task that scores on MIMIC-CXR therefore overlaps with the pretraining of this encoder.
 outputs:
   - kind: labels
     scale: probability

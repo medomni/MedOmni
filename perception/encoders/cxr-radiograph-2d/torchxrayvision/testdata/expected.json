@@ -1,0 +1,86 @@
+{
+ "encoder_id": "cxr-radiograph-2d__torchxrayvision",
+ "family": "cxr-radiograph-2d",
+ "healthy": true,
+ "outputs": [
+  {
+   "kind": "labels",
+   "scale": "probability",
+   "items": [
+    {
+     "label": "Atelectasis",
+     "value": 0.403
+    },
+    {
+     "label": "Consolidation",
+     "value": 0.393
+    },
+    {
+     "label": "Infiltration",
+     "value": 0.5116
+    },
+    {
+     "label": "Pneumothorax",
+     "value": 0.3433
+    },
+    {
+     "label": "Edema",
+     "value": 0.0168
+    },
+    {
+     "label": "Emphysema",
+     "value": 0.5154
+    },
+    {
+     "label": "Fibrosis",
+     "value": 0.508
+    },
+    {
+     "label": "Effusion",
+     "value": 0.3801
+    },
+    {
+     "label": "Pneumonia",
+     "value": 0.0386
+    },
+    {
+     "label": "Pleural_Thickening",
+     "value": 0.4929
+    },
+    {
+     "label": "Cardiomegaly",
+     "value": 0.1446
+    },
+    {
+     "label": "Nodule",
+     "value": 0.2856
+    },
+    {
+     "label": "Mass",
+     "value": 0.5016
+    },
+    {
+     "label": "Hernia",
+     "value": 0.3694
+    },
+    {
+     "label": "Lung Lesion",
+     "value": 0.062
+    },
+    {
+     "label": "Fracture",
+     "value": 0.3673
+    },
+    {
+     "label": "Lung Opacity",
+     "value": 0.2822
+    },
+    {
+     "label": "Enlarged Cardiomediastinum",
+     "value": 0.4388
+    }
+   ]
+  }
+ ],
+ "notes": []
+}

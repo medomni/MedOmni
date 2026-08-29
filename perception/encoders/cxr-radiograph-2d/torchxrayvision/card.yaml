@@ -26,11 +26,11 @@ non_training: true
 license: Apache-2.0
 source:
   url: https://github.com/mlmed/torchxrayvision
-  rev: null                    # TODO pin before the image is built
+  rev: f4087b3f9c0848ba4ab5da3f35eb397681991868      # tag 1.5.4
 weights:
-  sha256: null                 # TODO densenet121-res224-all
-  uri: null
+  sha256: 56524913dd16a906422e8d8b66a7a5c46be1d82eb7ac012d8103776f1aa68899
+  uri: https://github.com/mlmed/torchxrayvision/releases/download/v1/nih-pc-chex-mimic_ch-google-openi-kaggle-densenet121-d121-tw-lr001-rot45-tr15-sc15-seed0-best.pt
 runtime:
-  image: null
-  digest: null
+  image: ghcr.io/medomni/cxr-radiograph-2d__torchxrayvision
+  digest: null                 # until the image is pushed. README phase 5.
 acceptance: pending

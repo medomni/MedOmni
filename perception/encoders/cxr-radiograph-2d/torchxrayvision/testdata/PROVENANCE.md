@@ -38,6 +38,38 @@ acknowledgement that the NIH Clinical Center is the data provider.
 these weights were trained on. The probabilities for this file are in
 distribution. They are not evidence that the encoder generalizes.
 
+## input-cc0.png — a second real radiograph, out of sample
+
+| Field | Value |
+|---|---|
+| Source | Wikimedia Commons, `File:Chest_Xray_PA_3-8-2010.png` |
+| Author | Stillwaterising, own work |
+| License | CC0 1.0 Universal, a public domain dedication |
+| Source sha256 | `a43431b089a6dfab031c10eceef6c821e4f326913bf9015f73f4a1f0446d2be1` |
+| This file sha256 | `03266151c0817945ae7f5d9f03d9c870214c77bc31a552584b035c61ef944f60` |
+
+CC0 asks for nothing in return. The author is named here because attribution is
+good practice, and not because the license requires it.
+
+**Why this file is here.** The NIH sample is in distribution. This radiograph
+was uploaded to Wikimedia Commons as the work of one person, and it comes from
+no hospital dataset release, so these weights have not seen it. The two files
+together show the difference, in place of a warning that a reader must take on
+trust.
+
+**What was changed, and what was not.** The source is 2412x1956 RGBA, and the
+three color planes hold equal values. Taking one plane is therefore lossless,
+and no tone conversion happened. The image was then reduced to fit 1024 pixels,
+because 4.2 MB does not belong in a git repository. The recipe, with Pillow
+12.3.0:
+
+    import numpy as np
+    from PIL import Image
+    plane = np.asarray(Image.open("Chest_Xray_PA_3-8-2010.png"))[..., 0]
+    img = Image.fromarray(plane, mode="L")
+    img.thumbnail((1024, 1024), Image.LANCZOS)
+    img.save("input-cc0.png", optimize=True)
+
 ## What is not here, and why
 
 No MIMIC image. MIMIC-CXR is under the PhysioNet credentialed license, which

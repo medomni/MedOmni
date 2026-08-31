@@ -1,6 +1,6 @@
 # Build from the perception/ directory, so the shared runtime is in context:
 #   docker build -f encoders/ecg-12lead-500hz-mv__ecgfounder/Dockerfile -t <tag> .
-FROM python:3.11-slim
+FROM python:3.11-slim@sha256:1042b61448fef4ba92d16a8c7eb4996d027568ce64792a7877fd88511e0af7c6
 
 # The assets come first, and the dependencies after, because this layer is the
 # expensive one: it downloads 353 MiB of weights. Changing a pin below then

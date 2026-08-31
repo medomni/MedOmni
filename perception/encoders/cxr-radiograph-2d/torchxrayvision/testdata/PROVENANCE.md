@@ -35,8 +35,8 @@ acknowledgement that the NIH Clinical Center is the data provider.
     IEEE CVPR 2017, pages 2097-2106.
 
 **Read this response with care.** ChestX-ray14 is one of the eight datasets
-these weights were trained on. The probabilities for this file are in
-distribution. They are not evidence that the encoder generalizes.
+these weights were trained on. The scores for this file are in distribution.
+They are not evidence that the encoder generalizes.
 
 ## input-cc0.png — a second real radiograph, out of sample
 

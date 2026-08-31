@@ -6,7 +6,7 @@
   "outputs": [
    {
     "kind": "labels",
-    "scale": "probability",
+    "scale": "score",
     "items": [
      {
       "label": "Atelectasis",
@@ -92,7 +92,7 @@
   "outputs": [
    {
     "kind": "labels",
-    "scale": "probability",
+    "scale": "score",
     "items": [
      {
       "label": "Atelectasis",
@@ -178,7 +178,7 @@
   "outputs": [
    {
     "kind": "labels",
-    "scale": "probability",
+    "scale": "score",
     "items": [
      {
       "label": "Atelectasis",

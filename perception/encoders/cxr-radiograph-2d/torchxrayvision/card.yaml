@@ -3,19 +3,20 @@ family: cxr-radiograph-2d
 modality: cxr
 
 summary: >-
-  Eighteen chest-radiograph pathology probabilities from a DenseNet-121 trained
-  on eight public datasets.
+  Eighteen operating-point-normalized pathology scores from a DenseNet-121
+  trained on eight public datasets.
 intended_use: >-
-  Screening-level findings on frontal adult chest radiographs, 224x224, as
-  published. One probability per pathology, independent of the others.
+  Screening-level findings on frontal adult chest radiographs. The adapter
+  center-crops each image and resizes it to the published 224x224 model input.
 limits:
   - Adult frontal views only. A lateral view is out of distribution.
-  - Probabilities are not calibrated across datasets. Compare them within one image, not between patients.
+  - The library applies a sigmoid and rescales each result. Each published operating point maps to 0.5.
+  - These values are scores and not probabilities. Compare each score with 0.5. Do not interpret it as calibrated risk.
   - The eighteen labels come from eight source datasets, so not every label was trained on every dataset.
   - The training data includes MIMIC-CXR. A task that scores on MIMIC-CXR therefore overlaps with the pretraining of this encoder.
 outputs:
   - kind: labels
-    scale: probability
+    scale: score
     labels: [Atelectasis, Consolidation, Infiltration, Pneumothorax, Edema,
              Emphysema, Fibrosis, Effusion, Pneumonia, Pleural_Thickening,
              Cardiomegaly, Nodule, Mass, Hernia, Lung Lesion, Fracture,

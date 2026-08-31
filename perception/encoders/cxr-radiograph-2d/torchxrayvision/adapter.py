@@ -1,4 +1,4 @@
-"""torchxrayvision — chest-radiograph pathology probabilities.
+"""torchxrayvision — operating-point-normalized pathology scores.
 
 A DenseNet-121 published by the mlmed group, used as it is: no fine-tuning and
 no probe. The adapter owns only what is specific to this model — the intensity
@@ -36,6 +36,9 @@ _TRANSFORM = torchvision.transforms.Compose([
 def load():
     """Read the weights once, at start. The server passes the result to encode."""
     model = xrv.models.DenseNet(weights=WEIGHTS, cache_dir=WEIGHTS_DIR)
+    if model.op_threshs is None or len(model.op_threshs) != len(model.pathologies):
+        raise RuntimeError(
+            "the model does not declare one operating point for each pathology")
     model.eval()
     return model
 
@@ -51,8 +54,10 @@ def encode(sample, options):
     image = xrv.datasets.normalize(pixels.astype(np.float32), MAXVAL)
     image = _TRANSFORM(image[None, ...])
     with torch.no_grad():
+        # The model applies a sigmoid and then moves each published operating
+        # point to 0.5. The values are scores, not raw probabilities.
         scores = model(torch.from_numpy(image)[None, ...])[0]
 
     items = [{"label": name, "value": round(float(score), PRECISION)}
              for name, score in zip(model.pathologies, scores) if name]
-    return [labels(items, scale="probability")]
+    return [labels(items, scale="score")]

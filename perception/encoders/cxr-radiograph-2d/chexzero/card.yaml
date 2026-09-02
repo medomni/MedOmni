@@ -1,0 +1,34 @@
+id: cxr-radiograph-2d__chexzero
+family: cxr-radiograph-2d
+modality: cxr
+
+summary: >-
+  Zero-shot chest-radiograph classification with a CLIP model trained on image
+  and report pairs. No task-specific training head.
+intended_use: >-
+  The five CheXpert competition pathologies on frontal adult chest radiographs,
+  scored by prompt similarity rather than by a trained classifier.
+limits:
+  - The label vocabulary is defined by the prompts, and is fixed at these five for reproducibility.
+  - Scores are similarities turned into probabilities. They are not calibrated and are best read as a ranking.
+  - The training data is MIMIC-CXR reports. A task that scores on MIMIC-CXR therefore overlaps with the pretraining of this encoder.
+  - Performance on other sources is unmeasured.
+outputs:
+  - kind: labels
+    scale: probability
+    labels: [Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion]
+
+reliability:
+  status: unmeasured
+non_training: true
+license: MIT
+source:
+  url: https://github.com/rajpurkarlab/CheXzero
+  rev: null                    # TODO pin before the image is built
+weights:
+  sha256: null                 # TODO
+  uri: null
+runtime:
+  image: null
+  digest: null
+acceptance: pending

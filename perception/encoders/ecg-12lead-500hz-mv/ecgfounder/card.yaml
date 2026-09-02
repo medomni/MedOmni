@@ -1,0 +1,192 @@
+id: ecg-12lead-500hz-mv__ecgfounder
+family: ecg-12lead-500hz-mv
+modality: ecg
+
+summary: >-
+  A hundred and fifty diagnostic-statement probabilities and a pooled embedding,
+  from a twelve-lead ECG model pretrained on ten million recordings.
+intended_use: >-
+  Diagnostic screening on a ten-second twelve-lead resting ECG at 500 Hz, in mV,
+  with leads aligned by name. One probability per statement, independent of the
+  others, and one embedding for an agent that can use a vector.
+limits:
+  - Needs all twelve leads. A reduced lead set is a different family and a different encoder.
+  - Lead order is taken from the family protocol. Alignment is by name, never by position.
+  - Ten seconds are encoded, from the start of the record. A longer record is truncated, and the rest is never seen.
+  - The labels are the diagnostic statements of the reporting system the model was pretrained on, not a curated ontology. Some qualify another statement instead of standing alone, such as WITH RAPID VENTRICULAR RESPONSE and R IN AVL.
+  - Each probability comes from its own sigmoid, so they neither sum to one nor rank against each other. Compare them within one recording, not between patients.
+  - Pretraining is the Harvard-Emory ECG Database. MIMIC-ECG is not part of it, so a task that scores on MIMIC does not overlap with the pretraining of this encoder.
+  - The embedding is a representation, not a finding. An agent that cannot use a vector must read the labels.
+outputs:
+  - kind: labels
+    scale: probability
+    # The complete vocabulary, in the order the checkpoint's head emits it:
+    # tasks.txt at the pinned source revision. A response carries all 150.
+    labels:
+      - "ABNORMAL ECG"
+      - "NORMAL SINUS RHYTHM"
+      - "NORMAL ECG"
+      - "SINUS RHYTHM"
+      - "SINUS BRADYCARDIA"
+      - "ATRIAL FIBRILLATION"
+      - "SINUS TACHYCARDIA"
+      - "otherwise normal ecg"
+      - "LEFT AXIS DEVIATION"
+      - "PREMATURE VENTRICULAR COMPLEXES"
+      - "BORDERLINE ECG"
+      - "RIGHT BUNDLE BRANCH BLOCK"
+      - "SEPTAL INFARCT"
+      - "LEFT ATRIAL ENLARGEMENT"
+      - "NONSPECIFIC T WAVE ABNORMALITY"
+      - "LOW VOLTAGE QRS"
+      - "PREMATURE ATRIAL COMPLEXES"
+      - "ANTERIOR INFARCT"
+      - "INCOMPLETE RIGHT BUNDLE BRANCH BLOCK"
+      - "PREMATURE SUPRAVENTRICULAR COMPLEXES"
+      - "LEFT BUNDLE BRANCH BLOCK"
+      - "NONSPECIFIC T WAVE ABNORMALITY NOW EVIDENT IN"
+      - "NONSPECIFIC T WAVE ABNORMALITY NO LONGER EVIDENT IN"
+      - "T WAVE INVERSION NOW EVIDENT IN"
+      - "LATERAL INFARCT"
+      - "NONSPECIFIC ST ABNORMALITY"
+      - "LEFT VENTRICULAR HYPERTROPHY"
+      - "T WAVE INVERSION NO LONGER EVIDENT IN"
+      - "WITH RAPID VENTRICULAR RESPONSE"
+      - "QT HAS SHORTENED"
+      - "QT HAS LENGTHENED"
+      - "FUSION COMPLEXES"
+      - "ATRIAL FLUTTER"
+      - "MARKED SINUS BRADYCARDIA"
+      - "WITH SINUS ARRHYTHMIA"
+      - "NONSPECIFIC ST AND T WAVE ABNORMALITY"
+      - "LEFT ANTERIOR FASCICULAR BLOCK"
+      - "RIGHT AXIS DEVIATION"
+      - "ECTOPIC ATRIAL RHYTHM"
+      - "UNDETERMINED RHYTHM"
+      - "ANTEROSEPTAL INFARCT"
+      - "RIGHTWARD AXIS"
+      - "ST NOW DEPRESSED IN"
+      - "WITH SHORT PR"
+      - "WITH MARKED SINUS ARRHYTHMIA"
+      - "ST NO LONGER DEPRESSED IN"
+      - "INVERTED T WAVES HAVE REPLACED NONSPECIFIC T WAVE ABNORMALITY IN"
+      - "NON-SPECIFIC CHANGE IN ST SEGMENT IN"
+      - "NONSPECIFIC T WAVE ABNORMALITY HAS REPLACED INVERTED T WAVES IN"
+      - "JUNCTIONAL RHYTHM"
+      - "ELECTRONIC ATRIAL PACEMAKER"
+      - "ABERRANT CONDUCTION"
+      - "ELECTRONIC VENTRICULAR PACEMAKER"
+      - "T WAVE INVERSION LESS EVIDENT IN"
+      - "ANTEROLATERAL INFARCT"
+      - "WITH REPOLARIZATION ABNORMALITY"
+      - "RSR' OR QR PATTERN IN V1 SUGGESTS RIGHT VENTRICULAR CONDUCTION DELAY"
+      - "T WAVE INVERSION MORE EVIDENT IN"
+      - "WIDE QRS RHYTHM"
+      - "WITH PREMATURE VENTRICULAR OR ABERRANTLY CONDUCTED COMPLEXES"
+      - "RIGHT ATRIAL ENLARGEMENT"
+      - "INFERIOR INFARCT"
+      - "INCOMPLETE LEFT BUNDLE BRANCH BLOCK"
+      - "VOLTAGE CRITERIA FOR LEFT VENTRICULAR HYPERTROPHY"
+      - "OR DIGITALIS EFFECT"
+      - "BIFASCICULAR BLOCK"
+      - "ST NO LONGER ELEVATED IN"
+      - "WITH SLOW VENTRICULAR RESPONSE"
+      - "ST ELEVATION NOW PRESENT IN"
+      - "PREMATURE ECTOPIC COMPLEXES"
+      - "LEFT POSTERIOR FASCICULAR BLOCK"
+      - "T WAVE AMPLITUDE HAS DECREASED IN"
+      - "WITH A COMPETING JUNCTIONAL PACEMAKER"
+      - "RIGHT SUPERIOR AXIS DEVIATION"
+      - "BIATRIAL ENLARGEMENT"
+      - "VENTRICULAR-PACED RHYTHM"
+      - "ATRIAL-PACED RHYTHM"
+      - "T WAVE AMPLITUDE HAS INCREASED IN"
+      - "WITH QRS WIDENING"
+      - "WITH 1ST DEGREE AV BLOCK"
+      - "PROLONGED QT"
+      - "WITH PROLONGED AV CONDUCTION"
+      - "RIGHT VENTRICULAR HYPERTROPHY"
+      - "WITH QRS WIDENING AND REPOLARIZATION ABNORMALITY"
+      - "ATRIAL-SENSED VENTRICULAR-PACED RHYTHM"
+      - "AV SEQUENTIAL OR DUAL CHAMBER ELECTRONIC PACEMAKER"
+      - "PULMONARY DISEASE PATTERN"
+      - "ACUTE MI / STEMI"
+      - "INFERIOR-POSTERIOR INFARCT"
+      - "NONSPECIFIC INTRAVENTRICULAR CONDUCTION DELAY"
+      - "PREMATURE VENTRICULAR AND FUSION COMPLEXES"
+      - "IN A PATTERN OF BIGEMINY"
+      - "AV DUAL-PACED RHYTHM"
+      - "SUPRAVENTRICULAR TACHYCARDIA"
+      - "VENTRICULAR-PACED COMPLEXES"
+      - "WIDE QRS TACHYCARDIA"
+      - "RSR' PATTERN IN V1"
+      - "ST LESS DEPRESSED IN"
+      - "VENTRICULAR TACHYCARDIA"
+      - "EARLY REPOLARIZATION"
+      - "ST MORE DEPRESSED IN"
+      - "ANTEROLATERAL LEADS"
+      - "ELECTRONIC DEMAND PACING"
+      - "RBBB AND LEFT ANTERIOR FASCICULAR BLOCK"
+      - "LATERAL INJURY PATTERN"
+      - "BIVENTRICULAR PACEMAKER DETECTED"
+      - "SUSPECT UNSPECIFIED PACEMAKER FAILURE"
+      - "WOLFF-PARKINSON-WHITE"
+      - "WITH VENTRICULAR ESCAPE COMPLEXES"
+      - "INFERIOR INJURY PATTERN"
+      - "CONSIDER RIGHT VENTRICULAR INVOLVEMENT IN ACUTE INFERIOR INFARCT"
+      - "ST ELEVATION HAS REPLACED ST DEPRESSION IN"
+      - "NONSPECIFIC INTRAVENTRICULAR BLOCK"
+      - "MASKED BY FASCICULAR BLOCK"
+      - "PEDIATRIC ECG ANALYSIS"
+      - "BLOCKED"
+      - "WITH UNDETERMINED RHYTHM IRREGULARITY"
+      - "LEFTWARD AXIS"
+      - "WITH 2ND DEGREE SA BLOCK MOBITZ I"
+      - "ACUTE"
+      - "ABNORMAL LEFT AXIS DEVIATION"
+      - "WITH COMPLETE HEART BLOCK"
+      - "NO P-WAVES FOUND"
+      - "ST LESS ELEVATED IN"
+      - "WITH RETROGRADE CONDUCTION"
+      - "ST MORE ELEVATED IN"
+      - "JUNCTIONAL BRADYCARDIA"
+      - "WITH VARIABLE AV BLOCK"
+      - "ANTERIOR INJURY PATTERN"
+      - "WITH JUNCTIONAL ESCAPE COMPLEXES"
+      - "ACUTE MI"
+      - "ACUTE PERICARDITIS"
+      - "POSTERIOR INFARCT"
+      - "IDIOVENTRICULAR RHYTHM"
+      - "WITH 2ND DEGREE SA BLOCK MOBITZ II"
+      - "R IN AVL"
+      - "SINUS/ATRIAL CAPTURE"
+      - "AV DUAL-PACED COMPLEXES"
+      - "INFEROLATERAL INJURY PATTERN"
+      - "RBBB AND LEFT POSTERIOR FASCICULAR BLOCK"
+      - "ANTEROLATERAL INJURY PATTERN"
+      - "ATRIAL-PACED COMPLEXES"
+      - "WITH SINUS PAUSE"
+      - "BIVENTRICULAR HYPERTROPHY"
+      - "ABNORMAL RIGHT AXIS DEVIATION"
+      - "SUPRAVENTRICULAR COMPLEXES"
+      - "WITH 2ND DEGREE AV BLOCK MOBITZ I"
+      - "WITH 2:1 AV CONDUCTION"
+      - "WITH AV DISSOCIATION"
+      - "MULTIFOCAL ATRIAL TACHYCARDIA"
+  - kind: embedding
+    dim: 1024                    # Net1D pools its last stage to 1024 features
+
+reliability:
+  status: unmeasured
+non_training: true
+license: MIT
+source:
+  url: https://github.com/PKUDigitalHealth/ECGFounder
+  rev: 04edac702b61c91face519774ddcc0cd712fef23      # branch master
+weights:
+  sha256: ee199f3781f4ae1f732973267f003da0a759ea12bddb0dd28a77faa60aca7997
+  uri: https://huggingface.co/PKUDigitalHealth/ECGFounder/resolve/main/12_lead_ECGFounder.pth
+runtime:
+  image: ghcr.io/medomni/ecg-12lead-500hz-mv__ecgfounder
+  digest: null                 # until the image is pushed. README phase 5.
+acceptance: pending

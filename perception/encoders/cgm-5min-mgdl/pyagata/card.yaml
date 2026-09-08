@@ -1,0 +1,30 @@
+id: cgm-5min-mgdl__pyagata
+family: cgm-5min-mgdl
+modality: cgm
+summary: Glucose mean, sample standard deviation, variability, and range coverage on a five-minute grid.
+outputs:
+- kind: labels
+  scale: physical
+  labels:
+  - glucose_mean
+  - glucose_std
+  - glucose_cv
+  - percent_70_to_180
+  - percent_missing
+limits:
+- Reads a JSON array of Open mHealth blood-glucose records with date_time and mg/dL units.
+- Samples must lie on a five-minute grid. Missing slots stay missing; no interpolation occurs.
+- Range coverage includes 70 and 180 mg/dL and uses observed samples as its denominator. This is a fixed
+  reference band, not a personal treatment target.
+- At least two positive values are required. The maximum supported span is 90 days.
+reliability:
+  status: unmeasured
+non_training: true
+license: GPL-3.0-only
+source:
+  url: https://github.com/gcappon/py_agata
+  rev: d3da90ae8f1fd362598c6e8d4ea7d2f580d1fffd
+runtime:
+  image: ghcr.io/medomni/cgm-5min-mgdl__pyagata
+  digest: null
+acceptance: pending

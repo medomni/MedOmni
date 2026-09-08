@@ -1,0 +1,74 @@
+[
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "blood-glucose",
+        "version": "3.0"
+      }
+    },
+    "body": {
+      "blood_glucose": {
+        "value": 60,
+        "unit": "mg/dL"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:00:00Z"
+      }
+    }
+  },
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "blood-glucose",
+        "version": "3.0"
+      }
+    },
+    "body": {
+      "blood_glucose": {
+        "value": 70,
+        "unit": "mg/dL"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:05:00Z"
+      }
+    }
+  },
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "blood-glucose",
+        "version": "3.0"
+      }
+    },
+    "body": {
+      "blood_glucose": {
+        "value": 180,
+        "unit": "mg/dL"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:15:00Z"
+      }
+    }
+  },
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "blood-glucose",
+        "version": "3.0"
+      }
+    },
+    "body": {
+      "blood_glucose": {
+        "value": 200,
+        "unit": "mg/dL"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:20:00Z"
+      }
+    }
+  }
+]

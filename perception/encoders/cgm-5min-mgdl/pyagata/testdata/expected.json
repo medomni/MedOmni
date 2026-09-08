@@ -1,0 +1,43 @@
+{
+ "input.json": {
+  "encoder_id": "cgm-5min-mgdl__pyagata",
+  "family": "cgm-5min-mgdl",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "glucose_mean",
+      "value": 127.5,
+      "unit": "mg/dL"
+     },
+     {
+      "label": "glucose_std",
+      "value": 72.74384280931731,
+      "unit": "mg/dL"
+     },
+     {
+      "label": "glucose_cv",
+      "value": 57.05399436024887,
+      "unit": "%"
+     },
+     {
+      "label": "percent_70_to_180",
+      "value": 50.0,
+      "unit": "%"
+     },
+     {
+      "label": "percent_missing",
+      "value": 20.0,
+      "unit": "%"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "1 missing five-minute slots; no values imputed"
+  ]
+ }
+}

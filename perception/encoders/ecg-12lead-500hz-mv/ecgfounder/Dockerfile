@@ -1,5 +1,5 @@
 # Build from the perception/ directory, so the shared runtime is in context:
-#   docker build -f encoders/ecg-12lead-500hz-mv__ecgfounder/Dockerfile -t <tag> .
+#   docker build -f encoders/ecg-12lead-500hz-mv/ecgfounder/Dockerfile -t <tag> .
 FROM python:3.11-slim@sha256:1042b61448fef4ba92d16a8c7eb4996d027568ce64792a7877fd88511e0af7c6
 
 # The assets come first, and the dependencies after, because this layer is the
@@ -15,7 +15,7 @@ ENV ECGFOUNDER_SOURCE=/opt/ecgfounder \
     ECGFOUNDER_LABELS=/opt/ecgfounder/tasks.txt \
     ECGFOUNDER_WEIGHTS=/opt/weights/12_lead_ECGFounder.pth \
     PYTHONPATH=/opt/ecgfounder
-COPY encoders/ecg-12lead-500hz-mv__ecgfounder/fetch_assets.py /tmp/
+COPY encoders/ecg-12lead-500hz-mv/ecgfounder/fetch_assets.py /tmp/
 RUN python3 /tmp/fetch_assets.py \
     && rm /tmp/fetch_assets.py \
     && chmod -R a+rX /opt/weights /opt/ecgfounder
@@ -42,10 +42,10 @@ RUN pip install --no-cache-dir \
 
 WORKDIR /app
 COPY runtime/serve.py runtime/contract.py ./
-COPY encoders/ecg-12lead-500hz-mv__ecgfounder/adapter.py ./
-COPY encoders/ecg-12lead-500hz-mv__ecgfounder/card.yaml ./
+COPY encoders/ecg-12lead-500hz-mv/ecgfounder/adapter.py ./
+COPY encoders/ecg-12lead-500hz-mv/ecgfounder/card.yaml ./
 # Test data travels with the image, so the smoke test needs no dataset access.
-COPY encoders/ecg-12lead-500hz-mv__ecgfounder/testdata ./testdata
+COPY encoders/ecg-12lead-500hz-mv/ecgfounder/testdata ./testdata
 
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1
 EXPOSE 8080

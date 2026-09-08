@@ -1,5 +1,5 @@
 # Build from the perception/ directory, so the shared runtime is in context:
-#   docker build -f encoders/cxr-radiograph-2d__torchxrayvision/Dockerfile -t <tag> .
+#   docker build -f encoders/cxr-radiograph-2d/torchxrayvision/Dockerfile -t <tag> .
 FROM python:3.11-slim@sha256:1042b61448fef4ba92d16a8c7eb4996d027568ce64792a7877fd88511e0af7c6
 
 # CPU wheels. They are much smaller than the CUDA wheels, and deployment.yaml
@@ -25,10 +25,10 @@ RUN python -c "import torchxrayvision as xrv; \
 
 WORKDIR /app
 COPY runtime/serve.py runtime/contract.py ./
-COPY encoders/cxr-radiograph-2d__torchxrayvision/adapter.py ./
-COPY encoders/cxr-radiograph-2d__torchxrayvision/card.yaml ./
+COPY encoders/cxr-radiograph-2d/torchxrayvision/adapter.py ./
+COPY encoders/cxr-radiograph-2d/torchxrayvision/card.yaml ./
 # Test data travels with the image, so the smoke test needs no dataset access.
-COPY encoders/cxr-radiograph-2d__torchxrayvision/testdata ./testdata
+COPY encoders/cxr-radiograph-2d/torchxrayvision/testdata ./testdata
 
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1
 EXPOSE 8080

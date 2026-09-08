@@ -1,0 +1,65 @@
+{
+ "input.edf": {
+  "encoder_id": "eeg-sleep-6ch-200hz-uv__yasa",
+  "family": "eeg-sleep-6ch-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "events",
+    "items": [
+     {
+      "label": "Wake",
+      "t_start": 0,
+      "t_end": 30
+     },
+     {
+      "label": "Wake",
+      "t_start": 30,
+      "t_end": 60
+     },
+     {
+      "label": "Wake",
+      "t_start": 60,
+      "t_end": 90
+     },
+     {
+      "label": "Wake",
+      "t_start": 90,
+      "t_end": 120
+     },
+     {
+      "label": "Wake",
+      "t_start": 120,
+      "t_end": 150
+     },
+     {
+      "label": "N1",
+      "t_start": 150,
+      "t_end": 180
+     },
+     {
+      "label": "Wake",
+      "t_start": 180,
+      "t_end": 210
+     },
+     {
+      "label": "Wake",
+      "t_start": 210,
+      "t_end": 240
+     },
+     {
+      "label": "Wake",
+      "t_start": 240,
+      "t_end": 270
+     },
+     {
+      "label": "Wake",
+      "t_start": 270,
+      "t_end": 300
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

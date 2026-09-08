@@ -1,0 +1,17 @@
+{
+ "input.jsonl": {
+  "encoder_id": "clinical-measurement-irregular__labs-summary",
+  "family": "clinical-measurement-irregular",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "text",
+    "text": "[{\"count\": 2, \"itemid\": \"50912\", \"latest\": 1.4, \"latest_time\": \"2025-01-02T12:00:00\", \"max\": 1.4, \"mean\": 1.2, \"min\": 1.0, \"name\": \"creatinine\", \"unit\": \"mg/dL\"}, {\"count\": 1, \"itemid\": \"50912\", \"latest\": 110.0, \"latest_time\": \"2025-01-03T12:00:00\", \"max\": 110.0, \"mean\": 110.0, \"min\": 110.0, \"name\": \"creatinine\", \"unit\": \"umol/L\"}]"
+   }
+  ],
+  "notes": [
+   "source declares no units; values are passed through unconverted",
+   "1 wide-format vital measurements excluded from lab summaries"
+  ]
+ }
+}

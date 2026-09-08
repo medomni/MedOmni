@@ -1,0 +1,4 @@
+{"measurement":"creatinine","itemid":50912,"charttime":"2025-01-02 12:00:00","value":1.4,"unit":"mg/dL"}
+{"measurement":"creatinine","itemid":50912,"charttime":"2025-01-01 12:00:00","value":1.0,"unit":"mg/dL"}
+{"measurement":"creatinine","itemid":50912,"charttime":"2025-01-03 12:00:00","value":110,"unit":"umol/L"}
+{"measurement":"ed_vitalsign","charttime":"2025-01-03 12:00:00","heartrate":80}

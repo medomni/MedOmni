@@ -1,4 +1,8 @@
 build/
 __pycache__/
 *.pyc
+.env
+_artifacts/
+data_task/tasks/*/data/
+data_task/tasks/*/tests/gold.csv
 perception/var/

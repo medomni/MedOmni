@@ -1,0 +1,154 @@
+{"t": "2113-08-25 07:29:00", "measurement": "Base Excess", "itemid": "50802", "value": -1.0, "unit": "mEq/L"}
+{"t": "2113-08-25 07:29:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 25.0, "unit": "mEq/L"}
+{"t": "2113-08-25 07:29:00", "measurement": "Chloride, Whole Blood", "itemid": "50806", "value": 114.0, "unit": "mEq/L"}
+{"t": "2113-08-25 07:29:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.16, "unit": "mmol/L"}
+{"t": "2113-08-25 07:29:00", "measurement": "Glucose", "itemid": "50809", "value": 108.0, "unit": "mg/dL"}
+{"t": "2113-08-25 07:29:00", "measurement": "Hematocrit, Calculated", "itemid": "50810", "value": 36.0, "unit": "%"}
+{"t": "2113-08-25 07:29:00", "measurement": "Hemoglobin", "itemid": "50811", "value": 12.0, "unit": "g/dL"}
+{"t": "2113-08-25 07:29:00", "measurement": "Lactate", "itemid": "50813", "value": 1.4, "unit": "mmol/L"}
+{"t": "2113-08-25 07:29:00", "measurement": "pCO2", "itemid": "50818", "value": 41.0, "unit": "mm Hg"}
+{"t": "2113-08-25 07:29:00", "measurement": "pH", "itemid": "50820", "value": 7.37, "unit": "units"}
+{"t": "2113-08-25 07:29:00", "measurement": "pO2", "itemid": "50821", "value": 405.0, "unit": "mm Hg"}
+{"t": "2113-08-25 07:29:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 3.6, "unit": "mEq/L"}
+{"t": "2113-08-25 07:29:00", "measurement": "Sodium, Whole Blood", "itemid": "50824", "value": 142.0, "unit": "mEq/L"}
+{"t": "2113-08-25 09:10:00", "measurement": "Base Excess", "itemid": "50802", "value": 0.0, "unit": "mEq/L"}
+{"t": "2113-08-25 09:10:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 26.0, "unit": "mEq/L"}
+{"t": "2113-08-25 09:10:00", "measurement": "Glucose", "itemid": "50809", "value": 141.0, "unit": "mg/dL"}
+{"t": "2113-08-25 09:10:00", "measurement": "Hematocrit, Calculated", "itemid": "50810", "value": 31.0, "unit": "%"}
+{"t": "2113-08-25 09:10:00", "measurement": "Hemoglobin", "itemid": "50811", "value": 10.2, "unit": "g/dL"}
+{"t": "2113-08-25 09:10:00", "measurement": "Lactate", "itemid": "50813", "value": 2.7, "unit": "mmol/L"}
+{"t": "2113-08-25 09:10:00", "measurement": "pCO2", "itemid": "50818", "value": 41.0, "unit": "mm Hg"}
+{"t": "2113-08-25 09:10:00", "measurement": "pH", "itemid": "50820", "value": 7.4, "unit": "units"}
+{"t": "2113-08-25 09:10:00", "measurement": "pO2", "itemid": "50821", "value": 403.0, "unit": "mm Hg"}
+{"t": "2113-08-25 09:10:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 5.2, "unit": "mEq/L"}
+{"t": "2113-08-25 10:10:00", "measurement": "Base Excess", "itemid": "50802", "value": 0.0, "unit": "mEq/L"}
+{"t": "2113-08-25 10:10:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 24.0, "unit": "mEq/L"}
+{"t": "2113-08-25 10:10:00", "measurement": "Glucose", "itemid": "50809", "value": 171.0, "unit": "mg/dL"}
+{"t": "2113-08-25 10:10:00", "measurement": "Hematocrit, Calculated", "itemid": "50810", "value": 29.0, "unit": "%"}
+{"t": "2113-08-25 10:10:00", "measurement": "Hemoglobin", "itemid": "50811", "value": 9.5, "unit": "g/dL"}
+{"t": "2113-08-25 10:10:00", "measurement": "Lactate", "itemid": "50813", "value": 1.8, "unit": "mmol/L"}
+{"t": "2113-08-25 10:10:00", "measurement": "pCO2", "itemid": "50818", "value": 34.0, "unit": "mm Hg"}
+{"t": "2113-08-25 10:10:00", "measurement": "pH", "itemid": "50820", "value": 7.45, "unit": "units"}
+{"t": "2113-08-25 10:10:00", "measurement": "pO2", "itemid": "50821", "value": 360.0, "unit": "mm Hg"}
+{"t": "2113-08-25 10:10:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 5.1, "unit": "mEq/L"}
+{"t": "2113-08-25 11:20:00", "measurement": "Fibrinogen, Functional", "itemid": "51214", "value": 125.0, "unit": "mg/dL"}
+{"t": "2113-08-25 11:20:00", "measurement": "INR(PT)", "itemid": "51237", "value": 1.6, "unit": null}
+{"t": "2113-08-25 11:20:00", "measurement": "PT", "itemid": "51274", "value": 16.7, "unit": "sec"}
+{"t": "2113-08-25 11:20:00", "measurement": "PTT", "itemid": "51275", "value": 26.1, "unit": "sec"}
+{"t": "2113-08-25 11:20:00", "measurement": "Platelet Count", "itemid": "51265", "value": 85.0, "unit": "K/uL"}
+{"t": "2113-08-25 11:34:00", "measurement": "Base Excess", "itemid": "50802", "value": -2.0, "unit": "mEq/L"}
+{"t": "2113-08-25 11:34:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 24.0, "unit": "mEq/L"}
+{"t": "2113-08-25 11:34:00", "measurement": "Chloride, Whole Blood", "itemid": "50806", "value": 118.0, "unit": "mEq/L"}
+{"t": "2113-08-25 11:34:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.39, "unit": "mmol/L"}
+{"t": "2113-08-25 11:34:00", "measurement": "Glucose", "itemid": "50809", "value": 120.0, "unit": "mg/dL"}
+{"t": "2113-08-25 11:34:00", "measurement": "Hematocrit, Calculated", "itemid": "50810", "value": 24.0, "unit": "%"}
+{"t": "2113-08-25 11:34:00", "measurement": "Hemoglobin", "itemid": "50811", "value": 8.1, "unit": "g/dL"}
+{"t": "2113-08-25 11:34:00", "measurement": "Lactate", "itemid": "50813", "value": 2.7, "unit": "mmol/L"}
+{"t": "2113-08-25 11:34:00", "measurement": "pCO2", "itemid": "50818", "value": 42.0, "unit": "mm Hg"}
+{"t": "2113-08-25 11:34:00", "measurement": "pH", "itemid": "50820", "value": 7.34, "unit": "units"}
+{"t": "2113-08-25 11:34:00", "measurement": "pO2", "itemid": "50821", "value": 241.0, "unit": "mm Hg"}
+{"t": "2113-08-25 11:34:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 4.0, "unit": "mEq/L"}
+{"t": "2113-08-25 11:34:00", "measurement": "Sodium, Whole Blood", "itemid": "50824", "value": 140.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:45:00", "measurement": "Hematocrit", "itemid": "51221", "value": 31.4, "unit": "%"}
+{"t": "2113-08-25 12:45:00", "measurement": "Hemoglobin", "itemid": "51222", "value": 10.8, "unit": "g/dL"}
+{"t": "2113-08-25 12:45:00", "measurement": "MCH", "itemid": "51248", "value": 31.7, "unit": "pg"}
+{"t": "2113-08-25 12:45:00", "measurement": "MCHC", "itemid": "51249", "value": 34.2, "unit": "%"}
+{"t": "2113-08-25 12:45:00", "measurement": "MCV", "itemid": "51250", "value": 93.0, "unit": "fL"}
+{"t": "2113-08-25 12:45:00", "measurement": "Platelet Count", "itemid": "51265", "value": 142.0, "unit": "K/uL"}
+{"t": "2113-08-25 12:45:00", "measurement": "RDW", "itemid": "51277", "value": 12.8, "unit": "%"}
+{"t": "2113-08-25 12:45:00", "measurement": "Red Blood Cells", "itemid": "51279", "value": 3.4, "unit": "m/uL"}
+{"t": "2113-08-25 12:45:00", "measurement": "White Blood Cells", "itemid": "51301", "value": 9.7, "unit": "K/uL"}
+{"t": "2113-08-25 12:45:00", "measurement": "Fibrinogen, Functional", "itemid": "51214", "value": 133.0, "unit": "mg/dL"}
+{"t": "2113-08-25 12:45:00", "measurement": "INR(PT)", "itemid": "51237", "value": 1.3, "unit": null}
+{"t": "2113-08-25 12:45:00", "measurement": "PT", "itemid": "51274", "value": 13.5, "unit": "sec"}
+{"t": "2113-08-25 12:45:00", "measurement": "PTT", "itemid": "51275", "value": 24.8, "unit": "sec"}
+{"t": "2113-08-25 12:45:00", "measurement": "Anion Gap", "itemid": "50868", "value": 9.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:45:00", "measurement": "Bicarbonate", "itemid": "50882", "value": 23.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:45:00", "measurement": "Chloride", "itemid": "50902", "value": 117.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:45:00", "measurement": "Creatinine", "itemid": "50912", "value": 1.0, "unit": "mg/dL"}
+{"t": "2113-08-25 12:45:00", "measurement": "Potassium", "itemid": "50971", "value": 3.9, "unit": "mEq/L"}
+{"t": "2113-08-25 12:45:00", "measurement": "Sodium", "itemid": "50983", "value": 145.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:45:00", "measurement": "Urea Nitrogen", "itemid": "51006", "value": 23.0, "unit": "mg/dL"}
+{"t": "2113-08-25 12:55:00", "measurement": "Base Excess", "itemid": "50802", "value": -1.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:55:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 23.0, "unit": "mEq/L"}
+{"t": "2113-08-25 12:55:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.25, "unit": "mmol/L"}
+{"t": "2113-08-25 12:55:00", "measurement": "Glucose", "itemid": "50809", "value": 101.0, "unit": "mg/dL"}
+{"t": "2113-08-25 12:55:00", "measurement": "pCO2", "itemid": "50818", "value": 38.0, "unit": "mm Hg"}
+{"t": "2113-08-25 12:55:00", "measurement": "pH", "itemid": "50820", "value": 7.38, "unit": "units"}
+{"t": "2113-08-25 12:55:00", "measurement": "pO2", "itemid": "50821", "value": 263.0, "unit": "mm Hg"}
+{"t": "2113-08-25 12:55:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 3.6, "unit": "mEq/L"}
+{"t": "2113-08-25 12:55:00", "measurement": "Sodium, Whole Blood", "itemid": "50824", "value": 140.0, "unit": "mEq/L"}
+{"t": "2113-08-25 14:48:00", "measurement": "Hematocrit", "itemid": "51221", "value": 28.1, "unit": "%"}
+{"t": "2113-08-25 14:48:00", "measurement": "Hemoglobin", "itemid": "51222", "value": 9.5, "unit": "g/dL"}
+{"t": "2113-08-25 14:48:00", "measurement": "MCH", "itemid": "51248", "value": 31.4, "unit": "pg"}
+{"t": "2113-08-25 14:48:00", "measurement": "MCHC", "itemid": "51249", "value": 33.9, "unit": "%"}
+{"t": "2113-08-25 14:48:00", "measurement": "MCV", "itemid": "51250", "value": 93.0, "unit": "fL"}
+{"t": "2113-08-25 14:48:00", "measurement": "Platelet Count", "itemid": "51265", "value": 134.0, "unit": "K/uL"}
+{"t": "2113-08-25 14:48:00", "measurement": "RDW", "itemid": "51277", "value": 13.0, "unit": "%"}
+{"t": "2113-08-25 14:48:00", "measurement": "Red Blood Cells", "itemid": "51279", "value": 3.02, "unit": "m/uL"}
+{"t": "2113-08-25 14:48:00", "measurement": "White Blood Cells", "itemid": "51301", "value": 8.5, "unit": "K/uL"}
+{"t": "2113-08-25 16:45:00", "measurement": "Base Excess", "itemid": "50802", "value": -2.0, "unit": "mEq/L"}
+{"t": "2113-08-25 16:45:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 22.0, "unit": "mEq/L"}
+{"t": "2113-08-25 16:45:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.06, "unit": "mmol/L"}
+{"t": "2113-08-25 16:45:00", "measurement": "Glucose", "itemid": "50809", "value": 115.0, "unit": "mg/dL"}
+{"t": "2113-08-25 16:45:00", "measurement": "pCO2", "itemid": "50818", "value": 36.0, "unit": "mm Hg"}
+{"t": "2113-08-25 16:45:00", "measurement": "pH", "itemid": "50820", "value": 7.38, "unit": "units"}
+{"t": "2113-08-25 16:45:00", "measurement": "pO2", "itemid": "50821", "value": 153.0, "unit": "mm Hg"}
+{"t": "2113-08-25 16:45:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 3.6, "unit": "mEq/L"}
+{"t": "2113-08-25 18:58:00", "measurement": "Hematocrit", "itemid": "51221", "value": 19.5, "unit": "%"}
+{"t": "2113-08-25 18:58:00", "measurement": "Platelet Count", "itemid": "51265", "value": 196.0, "unit": "K/uL"}
+{"t": "2113-08-25 18:58:00", "measurement": "Fibrinogen, Functional", "itemid": "51214", "value": 180.0, "unit": "mg/dL"}
+{"t": "2113-08-25 18:58:00", "measurement": "INR(PT)", "itemid": "51237", "value": 1.3, "unit": null}
+{"t": "2113-08-25 18:58:00", "measurement": "PT", "itemid": "51274", "value": 14.0, "unit": "sec"}
+{"t": "2113-08-25 18:58:00", "measurement": "PTT", "itemid": "51275", "value": 26.1, "unit": "sec"}
+{"t": "2113-08-25 21:01:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.08, "unit": "mmol/L"}
+{"t": "2113-08-25 21:01:00", "measurement": "pH", "itemid": "50820", "value": 7.43, "unit": "units"}
+{"t": "2113-08-25 21:01:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 4.0, "unit": "mEq/L"}
+{"t": "2113-08-25 22:37:00", "measurement": "INR(PT)", "itemid": "51237", "value": 1.2, "unit": null}
+{"t": "2113-08-25 22:37:00", "measurement": "PT", "itemid": "51274", "value": 13.2, "unit": "sec"}
+{"t": "2113-08-25 22:37:00", "measurement": "PTT", "itemid": "51275", "value": 26.5, "unit": "sec"}
+{"t": "2113-08-25 22:37:00", "measurement": "Hematocrit", "itemid": "51221", "value": 24.5, "unit": "%"}
+{"t": "2113-08-25 22:37:00", "measurement": "Platelet Count", "itemid": "51265", "value": 186.0, "unit": "K/uL"}
+{"t": "2113-08-25 22:55:00", "measurement": "Base Excess", "itemid": "50802", "value": 0.0, "unit": "mEq/L"}
+{"t": "2113-08-25 22:55:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 24.0, "unit": "mEq/L"}
+{"t": "2113-08-25 22:55:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.15, "unit": "mmol/L"}
+{"t": "2113-08-25 22:55:00", "measurement": "pCO2", "itemid": "50818", "value": 38.0, "unit": "mm Hg"}
+{"t": "2113-08-25 22:55:00", "measurement": "pH", "itemid": "50820", "value": 7.4, "unit": "units"}
+{"t": "2113-08-25 22:55:00", "measurement": "pO2", "itemid": "50821", "value": 171.0, "unit": "mm Hg"}
+{"t": "2113-08-25 22:55:00", "measurement": "Potassium, Whole Blood", "itemid": "50822", "value": 4.2, "unit": "mEq/L"}
+{"t": "2113-08-26 03:15:00", "measurement": "Hematocrit", "itemid": "51221", "value": 26.6, "unit": "%"}
+{"t": "2113-08-26 03:15:00", "measurement": "Hemoglobin", "itemid": "51222", "value": 9.3, "unit": "g/dL"}
+{"t": "2113-08-26 03:15:00", "measurement": "MCH", "itemid": "51248", "value": 31.7, "unit": "pg"}
+{"t": "2113-08-26 03:15:00", "measurement": "MCHC", "itemid": "51249", "value": 34.9, "unit": "%"}
+{"t": "2113-08-26 03:15:00", "measurement": "MCV", "itemid": "51250", "value": 91.0, "unit": "fL"}
+{"t": "2113-08-26 03:15:00", "measurement": "Platelet Count", "itemid": "51265", "value": 208.0, "unit": "K/uL"}
+{"t": "2113-08-26 03:15:00", "measurement": "RDW", "itemid": "51277", "value": 13.6, "unit": "%"}
+{"t": "2113-08-26 03:15:00", "measurement": "Red Blood Cells", "itemid": "51279", "value": 2.92, "unit": "m/uL"}
+{"t": "2113-08-26 03:15:00", "measurement": "White Blood Cells", "itemid": "51301", "value": 4.8, "unit": "K/uL"}
+{"t": "2113-08-26 03:15:00", "measurement": "Anion Gap", "itemid": "50868", "value": 8.0, "unit": "mEq/L"}
+{"t": "2113-08-26 03:15:00", "measurement": "Bicarbonate", "itemid": "50882", "value": 26.0, "unit": "mEq/L"}
+{"t": "2113-08-26 03:15:00", "measurement": "Chloride", "itemid": "50902", "value": 111.0, "unit": "mEq/L"}
+{"t": "2113-08-26 03:15:00", "measurement": "Creatinine", "itemid": "50912", "value": 0.8, "unit": "mg/dL"}
+{"t": "2113-08-26 03:15:00", "measurement": "Glucose", "itemid": "50931", "value": 76.0, "unit": "mg/dL"}
+{"t": "2113-08-26 03:15:00", "measurement": "Magnesium", "itemid": "50960", "value": 2.4, "unit": "mg/dL"}
+{"t": "2113-08-26 03:15:00", "measurement": "Potassium", "itemid": "50971", "value": 4.2, "unit": "mEq/L"}
+{"t": "2113-08-26 03:15:00", "measurement": "Sodium", "itemid": "50983", "value": 141.0, "unit": "mEq/L"}
+{"t": "2113-08-26 03:15:00", "measurement": "Urea Nitrogen", "itemid": "51006", "value": 15.0, "unit": "mg/dL"}
+{"t": "2113-08-26 03:15:00", "measurement": "INR(PT)", "itemid": "51237", "value": 1.3, "unit": null}
+{"t": "2113-08-26 03:15:00", "measurement": "PT", "itemid": "51274", "value": 13.6, "unit": "sec"}
+{"t": "2113-08-26 03:15:00", "measurement": "PTT", "itemid": "51275", "value": 24.4, "unit": "sec"}
+{"t": "2113-08-26 03:37:00", "measurement": "Base Excess", "itemid": "50802", "value": 1.0, "unit": "mEq/L"}
+{"t": "2113-08-26 03:37:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 27.0, "unit": "mEq/L"}
+{"t": "2113-08-26 03:37:00", "measurement": "Free Calcium", "itemid": "50808", "value": 1.2, "unit": "mmol/L"}
+{"t": "2113-08-26 03:37:00", "measurement": "Lactate", "itemid": "50813", "value": 1.7, "unit": "mmol/L"}
+{"t": "2113-08-26 03:37:00", "measurement": "Oxygen Saturation", "itemid": "50817", "value": 98.0, "unit": "%"}
+{"t": "2113-08-26 03:37:00", "measurement": "pCO2", "itemid": "50818", "value": 40.0, "unit": "mm Hg"}
+{"t": "2113-08-26 03:37:00", "measurement": "pH", "itemid": "50820", "value": 7.42, "unit": "units"}
+{"t": "2113-08-26 03:37:00", "measurement": "pO2", "itemid": "50821", "value": 133.0, "unit": "mm Hg"}
+{"t": "2113-08-26 06:56:00", "measurement": "Base Excess", "itemid": "50802", "value": 3.0, "unit": "mEq/L"}
+{"t": "2113-08-26 06:56:00", "measurement": "Calculated Total CO2", "itemid": "50804", "value": 27.0, "unit": "mEq/L"}
+{"t": "2113-08-26 06:56:00", "measurement": "Lactate", "itemid": "50813", "value": 1.4, "unit": "mmol/L"}
+{"t": "2113-08-26 06:56:00", "measurement": "Oxygen Saturation", "itemid": "50817", "value": 98.0, "unit": "%"}
+{"t": "2113-08-26 06:56:00", "measurement": "pCO2", "itemid": "50818", "value": 36.0, "unit": "mm Hg"}
+{"t": "2113-08-26 06:56:00", "measurement": "pH", "itemid": "50820", "value": 7.47, "unit": "units"}
+{"t": "2113-08-26 06:56:00", "measurement": "pO2", "itemid": "50821", "value": 146.0, "unit": "mm Hg"}

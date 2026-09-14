@@ -1,0 +1,58 @@
+[
+  {
+    "path": "clip.py",
+    "sha256": "cad7578b336821be30996c8ce75b573f2445edb72d1238bc2e121453ee93b76f",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "code/cxr-radiograph-2d__chexzero/clip.py"
+  },
+  {
+    "path": "model.py",
+    "sha256": "e71725f5690d9f0724d3dfc5dc80e7c10f9e39662ec06c8875de9f154b128c1f",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "code/cxr-radiograph-2d__chexzero/model.py"
+  },
+  {
+    "path": "simple_tokenizer.py",
+    "sha256": "c6c554c66cf1d2d5837a89c23a3ce6ce6076dce3469386d0ece6eb775856787f",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "code/cxr-radiograph-2d__chexzero/simple_tokenizer.py"
+  },
+  {
+    "path": "bpe_simple_vocab_16e6.txt.gz",
+    "sha256": "924691ac288e54409236115652ad4aa250f48203de50a9e4722a6ecd48d6804a",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "code/cxr-radiograph-2d__chexzero/bpe_simple_vocab_16e6.txt.gz"
+  },
+  {
+    "path": "LICENSE",
+    "sha256": "df79d7fddeb1395599f38d5f0f4448e9ff9f43aa87c046988f9aef40fdf47cc1",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "code/cxr-radiograph-2d__chexzero/LICENSE"
+  },
+  {
+    "path": "NOTICE.md",
+    "sha256": "a875dbff136eba3e6c35ead19e2fb074b55e01488523be58b94da4e9570ab866",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "code/cxr-radiograph-2d__chexzero/NOTICE.md"
+  },
+  {
+    "path": "model.pt",
+    "sha256": "567a2efbabc6a02370de6e18178afd22ee72d7e6f29a789db1535e5c798d6ae8",
+    "repo": "MedOmni/encoder-assets",
+    "type": "dataset",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "file": "weights/cxr-radiograph-2d__chexzero/checkpoints/chexzero_weights/best_64_5e-05_original_22000_0.864.pt"
+  }
+]

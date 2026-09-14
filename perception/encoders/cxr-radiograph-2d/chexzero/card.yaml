@@ -1,34 +1,44 @@
 id: cxr-radiograph-2d__chexzero
 family: cxr-radiograph-2d
 modality: cxr
-
-summary: >-
-  Zero-shot chest-radiograph classification with a CLIP model trained on image
-  and report pairs. No task-specific training head.
-intended_use: >-
-  The five CheXpert competition pathologies on frontal adult chest radiographs,
-  scored by prompt similarity rather than by a trained classifier.
-limits:
-  - The label vocabulary is defined by the prompts, and is fixed at these five for reproducibility.
-  - Scores are similarities turned into probabilities. They are not calibrated and are best read as a ranking.
-  - The training data is MIMIC-CXR reports. A task that scores on MIMIC-CXR therefore overlaps with the pretraining of this encoder.
-  - Performance on other sources is unmeasured.
+summary: Chest finding scores from one pinned CheXzero checkpoint and positive/negative
+  text prompts.
 outputs:
-  - kind: labels
-    scale: probability
-    labels: [Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion]
-
+- kind: labels
+  scale: score
+  labels:
+  - Atelectasis
+  - Cardiomegaly
+  - Consolidation
+  - Edema
+  - Enlarged Cardiomediastinum
+  - Fracture
+  - Lung Lesion
+  - Lung Opacity
+  - No Finding
+  - Pleural Effusion
+  - Pleural Other
+  - Pneumonia
+  - Pneumothorax
+  - Support Devices
+limits:
+- Uses checkpoint best_64_5e-05_original_22000_0.864.pt, not the ten-checkpoint ensemble.
+- Images are aspect-preserving resized and padded to 320 pixels, normalized, then
+  resized to the checkpoint resolution.
+- Scores use upstream positive/negative cosine-similarity softmax without logit scaling;
+  they are not calibrated clinical probabilities.
+- Test images are pediatric; diagnostic reliability is unmeasured.
 reliability:
   status: unmeasured
 non_training: true
 license: MIT
 source:
   url: https://github.com/rajpurkarlab/CheXzero
-  rev: null                    # TODO pin before the image is built
-weights:
-  sha256: null                 # TODO
-  uri: null
+  rev: 5c341db0fe0db2f663a2c136c7120a8b303f1d11
 runtime:
-  image: null
+  image: ghcr.io/medomni/cxr-radiograph-2d__chexzero
   digest: null
 acceptance: pending
+weights:
+  sha256: 567a2efbabc6a02370de6e18178afd22ee72d7e6f29a789db1535e5c798d6ae8
+  uri: hf://dataset/MedOmni/encoder-assets@cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/weights/cxr-radiograph-2d__chexzero/checkpoints/chexzero_weights/best_64_5e-05_original_22000_0.864.pt

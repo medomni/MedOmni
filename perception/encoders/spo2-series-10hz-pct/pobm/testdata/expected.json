@@ -1,0 +1,152 @@
+{
+ "input-zero.edf": {
+  "encoder_id": "spo2-series-10hz-pct__pobm",
+  "family": "spo2-series-10hz-pct",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "saturation must be finite and within (0,100] percent"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "spo2-series-10hz-pct__pobm",
+  "family": "spo2-series-10hz-pct",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "odi3",
+      "value": 76.0,
+      "unit": "events/h"
+     },
+     {
+      "label": "time_below_90_pct",
+      "value": 10.777777777777779,
+      "unit": "%"
+     },
+     {
+      "label": "hypoxic_area_below_90",
+      "value": 0.3615497232182979,
+      "unit": "percentage points"
+     },
+     {
+      "label": "desaturation_area_from_max",
+      "value": 2.318161728677636,
+      "unit": "percentage points"
+     },
+     {
+      "label": "desaturation_count",
+      "value": 19,
+      "unit": "1"
+     }
+    ]
+   },
+   {
+    "kind": "events",
+    "items": [
+     {
+      "label": "desaturation",
+      "t_start": 50.0,
+      "t_end": 66.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 224.0,
+      "t_end": 270.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 272.0,
+      "t_end": 306.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 311.0,
+      "t_end": 326.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 333.0,
+      "t_end": 372.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 389.0,
+      "t_end": 405.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 414.0,
+      "t_end": 472.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 478.0,
+      "t_end": 498.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 511.0,
+      "t_end": 529.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 536.0,
+      "t_end": 553.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 561.0,
+      "t_end": 587.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 595.0,
+      "t_end": 624.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 626.0,
+      "t_end": 641.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 646.0,
+      "t_end": 673.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 679.0,
+      "t_end": 706.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 712.0,
+      "t_end": 746.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 754.0,
+      "t_end": 800.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 809.0,
+      "t_end": 843.0
+     },
+     {
+      "label": "desaturation",
+      "t_start": 854.0,
+      "t_end": 880.0
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "10 Hz saturation aggregated to one-second medians for POBM"
+  ]
+ }
+}

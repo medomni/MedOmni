@@ -1,0 +1,60 @@
+{
+ "input-flat.edf": {
+  "encoder_id": "ecg-1lead-200hz-uv__neurokit2",
+  "family": "ecg-1lead-200hz-uv",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "ECG contains missing samples or is flat"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "ecg-1lead-200hz-uv__neurokit2",
+  "family": "ecg-1lead-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "heart_rate_mean",
+      "value": 74.224315671254,
+      "unit": "beats/min"
+     },
+     {
+      "label": "beat_count",
+      "value": 370.0,
+      "unit": "1"
+     },
+     {
+      "label": "rr_mean",
+      "value": 808.3604336043361,
+      "unit": "ms"
+     },
+     {
+      "label": "sdnn",
+      "value": 38.6976526620234,
+      "unit": "ms"
+     },
+     {
+      "label": "rmssd",
+      "value": 55.84759443653617,
+      "unit": "ms"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "template_quality_mean",
+      "value": 0.9860431830181043
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

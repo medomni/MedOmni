@@ -1,0 +1,33 @@
+id: cxr-radiograph-2d__biomedclip
+family: cxr-radiograph-2d
+modality: cxr
+summary: Normalized biomedical image embeddings and cosine similarity to fixed normal
+  and pneumonia prompts.
+outputs:
+- kind: embedding
+  dim: 512
+- kind: labels
+  scale: score
+  labels:
+  - normal_prompt_similarity
+  - pneumonia_prompt_similarity
+limits:
+- 'Uses fixed prompts: a normal chest X-ray; a chest X-ray with pneumonia.'
+- Cosine similarities are not probabilities. The 512-dimensional image embedding is
+  unit-normalized.
+- Uses the upstream 224-pixel image transform and a locally packaged tokenizer.
+- General biomedical training does not establish chest-disease diagnostic reliability.
+reliability:
+  status: unmeasured
+non_training: true
+license: MIT
+source:
+  url: https://huggingface.co/microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224
+  rev: 9f341de24bfb00180f1b847274256e9b65a3a32e
+runtime:
+  image: ghcr.io/medomni/cxr-radiograph-2d__biomedclip
+  digest: null
+acceptance: pending
+weights:
+  sha256: 52cc993c5c5ff962bd0c60931874bc001e7e9b41666a385530f4a036294576be
+  uri: hf://model/microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224@9f341de24bfb00180f1b847274256e9b65a3a32e/open_clip_pytorch_model.bin

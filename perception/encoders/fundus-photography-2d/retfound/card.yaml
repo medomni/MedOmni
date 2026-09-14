@@ -1,0 +1,29 @@
+id: fundus-photography-2d__retfound
+family: fundus-photography-2d
+modality: fundus
+summary: A 1024-value RETFound MAE representation of a colour fundus photograph.
+outputs:
+- kind: embedding
+  dim: 1024
+limits:
+- Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported.
+- Infrared and grayscale images are rejected.
+- Uses the pretrained MAE encoder class token, with no disease classification head.
+- Images are resized to a 256-pixel short edge, centre-cropped to 224 pixels, and normalized with ImageNet
+  statistics.
+- The official weights require Hugging Face approval and are licensed for noncommercial use.
+- Embeddings are not diagnoses or calibrated clinical scores.
+reliability:
+  status: unmeasured
+non_training: true
+license: CC-BY-NC-4.0
+source:
+  url: https://github.com/rmaphoh/RETFound
+  rev: ae9a9ecf37857cf47b8aa9f87cd6f710d75db287
+runtime:
+  image: ghcr.io/medomni/fundus-photography-2d__retfound
+  digest: null
+acceptance: pending
+weights:
+  sha256: e1e4f66a1b792eeb6e2efaf158f33be35c8255f36b3d17ed67cd5129da246485
+  uri: https://huggingface.co/YukunZhou/RETFound_mae_natureCFP/resolve/556830f78214f0e8da35af965292ac5a3180ac47/RETFound_mae_natureCFP.pth

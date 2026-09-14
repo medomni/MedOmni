@@ -1,0 +1,178 @@
+{
+ "input-physionet.edf": {
+  "encoder_id": "eeg-sleep-6ch-200hz-uv__yasa",
+  "family": "eeg-sleep-6ch-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "events",
+    "items": [
+     {
+      "label": "Wake",
+      "t_start": 0,
+      "t_end": 30
+     },
+     {
+      "label": "Wake",
+      "t_start": 30,
+      "t_end": 60
+     },
+     {
+      "label": "Wake",
+      "t_start": 60,
+      "t_end": 90
+     },
+     {
+      "label": "Wake",
+      "t_start": 90,
+      "t_end": 120
+     },
+     {
+      "label": "Wake",
+      "t_start": 120,
+      "t_end": 150
+     },
+     {
+      "label": "Wake",
+      "t_start": 150,
+      "t_end": 180
+     },
+     {
+      "label": "Wake",
+      "t_start": 180,
+      "t_end": 210
+     },
+     {
+      "label": "Wake",
+      "t_start": 210,
+      "t_end": 240
+     },
+     {
+      "label": "Wake",
+      "t_start": 240,
+      "t_end": 270
+     },
+     {
+      "label": "Wake",
+      "t_start": 270,
+      "t_end": 300
+     },
+     {
+      "label": "Wake",
+      "t_start": 300,
+      "t_end": 330
+     },
+     {
+      "label": "Wake",
+      "t_start": 330,
+      "t_end": 360
+     },
+     {
+      "label": "N1",
+      "t_start": 360,
+      "t_end": 390
+     },
+     {
+      "label": "N1",
+      "t_start": 390,
+      "t_end": 420
+     },
+     {
+      "label": "REM",
+      "t_start": 420,
+      "t_end": 450
+     },
+     {
+      "label": "Wake",
+      "t_start": 450,
+      "t_end": 480
+     },
+     {
+      "label": "Wake",
+      "t_start": 480,
+      "t_end": 510
+     },
+     {
+      "label": "Wake",
+      "t_start": 510,
+      "t_end": 540
+     },
+     {
+      "label": "Wake",
+      "t_start": 540,
+      "t_end": 570
+     },
+     {
+      "label": "Wake",
+      "t_start": 570,
+      "t_end": 600
+     }
+    ]
+   }
+  ],
+  "notes": []
+ },
+ "input.edf": {
+  "encoder_id": "eeg-sleep-6ch-200hz-uv__yasa",
+  "family": "eeg-sleep-6ch-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "events",
+    "items": [
+     {
+      "label": "Wake",
+      "t_start": 0,
+      "t_end": 30
+     },
+     {
+      "label": "Wake",
+      "t_start": 30,
+      "t_end": 60
+     },
+     {
+      "label": "Wake",
+      "t_start": 60,
+      "t_end": 90
+     },
+     {
+      "label": "Wake",
+      "t_start": 90,
+      "t_end": 120
+     },
+     {
+      "label": "Wake",
+      "t_start": 120,
+      "t_end": 150
+     },
+     {
+      "label": "N1",
+      "t_start": 150,
+      "t_end": 180
+     },
+     {
+      "label": "Wake",
+      "t_start": 180,
+      "t_end": 210
+     },
+     {
+      "label": "Wake",
+      "t_start": 210,
+      "t_end": 240
+     },
+     {
+      "label": "Wake",
+      "t_start": 240,
+      "t_end": 270
+     },
+     {
+      "label": "Wake",
+      "t_start": 270,
+      "t_end": 300
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

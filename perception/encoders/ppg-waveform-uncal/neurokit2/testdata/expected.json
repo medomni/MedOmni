@@ -1,0 +1,94 @@
+{
+ "input.edf": {
+  "encoder_id": "ppg-waveform-uncal__neurokit2",
+  "family": "ppg-waveform-uncal",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "pulse_rate_mean",
+      "value": 91.75967429351275,
+      "unit": "beats/min"
+     },
+     {
+      "label": "pulse_rate_min",
+      "value": 46.2962962962963,
+      "unit": "beats/min"
+     },
+     {
+      "label": "pulse_rate_max",
+      "value": 97.40259740259741,
+      "unit": "beats/min"
+     },
+     {
+      "label": "beat_count",
+      "value": 91,
+      "unit": "1"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "template_quality_mean",
+      "value": 0.9929696387458083
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "PPG amplitude is uncalibrated; native sample rate retained"
+  ]
+ },
+ "input.hea": {
+  "encoder_id": "ppg-waveform-uncal__neurokit2",
+  "family": "ppg-waveform-uncal",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "pulse_rate_mean",
+      "value": 91.75967429351275,
+      "unit": "beats/min"
+     },
+     {
+      "label": "pulse_rate_min",
+      "value": 46.2962962962963,
+      "unit": "beats/min"
+     },
+     {
+      "label": "pulse_rate_max",
+      "value": 97.40259740259741,
+      "unit": "beats/min"
+     },
+     {
+      "label": "beat_count",
+      "value": 91,
+      "unit": "1"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "template_quality_mean",
+      "value": 0.992969588212043
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "PPG amplitude is uncalibrated; native sample rate retained"
+  ]
+ }
+}

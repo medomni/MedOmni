@@ -1,0 +1,84 @@
+{
+ "input-dexcom.json": {
+  "encoder_id": "cgm-5min-mgdl__pyagata",
+  "family": "cgm-5min-mgdl",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "glucose_mean",
+      "value": 96.88927335640139,
+      "unit": "mg/dL"
+     },
+     {
+      "label": "glucose_std",
+      "value": 14.303803974842191,
+      "unit": "mg/dL"
+     },
+     {
+      "label": "glucose_cv",
+      "value": 14.763041851110293,
+      "unit": "%"
+     },
+     {
+      "label": "percent_70_to_180",
+      "value": 95.8477508650519,
+      "unit": "%"
+     },
+     {
+      "label": "percent_missing",
+      "value": 0.0,
+      "unit": "%"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "0 missing five-minute slots; no values imputed"
+  ]
+ },
+ "input.json": {
+  "encoder_id": "cgm-5min-mgdl__pyagata",
+  "family": "cgm-5min-mgdl",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "glucose_mean",
+      "value": 127.5,
+      "unit": "mg/dL"
+     },
+     {
+      "label": "glucose_std",
+      "value": 72.74384280931731,
+      "unit": "mg/dL"
+     },
+     {
+      "label": "glucose_cv",
+      "value": 57.05399436024887,
+      "unit": "%"
+     },
+     {
+      "label": "percent_70_to_180",
+      "value": 50.0,
+      "unit": "%"
+     },
+     {
+      "label": "percent_missing",
+      "value": 20.0,
+      "unit": "%"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "1 missing five-minute slots; no values imputed"
+  ]
+ }
+}

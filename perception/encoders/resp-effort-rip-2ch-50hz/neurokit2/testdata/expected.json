@@ -1,0 +1,45 @@
+{
+ "input-flat.edf": {
+  "encoder_id": "resp-effort-rip-2ch-50hz__neurokit2",
+  "family": "resp-effort-rip-2ch-50hz",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "thorax contains missing samples or is flat"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "resp-effort-rip-2ch-50hz__neurokit2",
+  "family": "resp-effort-rip-2ch-50hz",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "thorax_breathing_rate_mean",
+      "value": 20.945665698880134,
+      "unit": "breaths/min"
+     },
+     {
+      "label": "thorax_cycle_count",
+      "value": 101,
+      "unit": "1"
+     },
+     {
+      "label": "abdomen_breathing_rate_mean",
+      "value": 12.000827643285744,
+      "unit": "breaths/min"
+     },
+     {
+      "label": "abdomen_cycle_count",
+      "value": 58,
+      "unit": "1"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

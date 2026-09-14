@@ -17,13 +17,9 @@ The adapter uses the upstream `RETFound_mae(global_pool=False)` encoder and retu
 It excludes MAE decoder and classification-head weights, then loads all encoder parameters strictly.
 The card records the weight license and preprocessing limits.
 
-Verification status: the dependency image, source imports, DICOM decoding, and monochrome rejection were checked.
-Pretrained loading and colour-image inference remain unverified because the official checkpoint returned HTTP 403.
-No expected embedding has been invented. After model access is approved, check the real colour fixture and create its baseline:
+Verification status: the pinned checkpoint loaded successfully. The colour fixture produced a finite 1024-value embedding.
+The monochrome fixture produced an unhealthy response as required. The frozen responses are in `testdata/expected.json`.
 
 ```sh
-uv run --with pyyaml perception/registry.py freeze fundus-photography-2d__retfound --docker
 uv run --with pyyaml perception/registry.py test fundus-photography-2d__retfound --docker
 ```
-
-Confirm that `input.dcm` returns a healthy, finite 1024-value embedding and that `input-monochrome.dcm` returns `healthy: false`.

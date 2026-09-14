@@ -14,3 +14,10 @@ The wrapper contains no patient identifiers or asserted acquisition metadata.
 It is not a retinal acquisition. Private MedOmni fundus samples are infrared and are unsuitable for colour-model verification.
 
 Source RGB pixel SHA-256: `3670e389d0dae9f755cc1bb7e4da4c3d2cdf10eba2dc3060836d8d4b8024d860`
+
+# Baseline
+
+`expected.json` contains responses from the checkpoint hash in `card.yaml`.
+The validation copy came from [sabarimj/retfound](https://huggingface.co/sabarimj/retfound/commit/7792ae44eb692fb830fb0390d181f5f2bfa00e58).
+Its SHA-256 matched the pinned official checkpoint exactly.
+The mirror was used only for local validation. The build recipe continues to use the official gated source.

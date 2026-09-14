@@ -1,0 +1,12 @@
+{
+  "input.edf": [
+    {
+      "t_start": 103,
+      "t_end": 173
+    }
+  ],
+  "input-background.edf": [],
+  "source_recording_start": "19:39:33",
+  "source_seizure_start": "19:58:36",
+  "source_seizure_end": "19:59:46"
+}

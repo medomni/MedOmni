@@ -1,0 +1,106 @@
+[
+  {
+    "path": "biomedclip/open_clip_pytorch_model.bin",
+    "sha256": "52cc993c5c5ff962bd0c60931874bc001e7e9b41666a385530f4a036294576be",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "open_clip_pytorch_model.bin"
+  },
+  {
+    "path": "biomedclip/LICENSE.md",
+    "sha256": "222c691afe0dcdc498bb9a31cb4b331ce72a55a2351cab8d98ce246dd7799ffa",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "LICENSE.md"
+  },
+  {
+    "path": "biomedclip/tokenizer_config.json",
+    "sha256": "e1790949631401af1bfb6c9c7aeec7fcf612e274d73579d99f704faea40c8ba7",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "tokenizer_config.json"
+  },
+  {
+    "path": "biomedclip/special_tokens_map.json",
+    "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "special_tokens_map.json"
+  },
+  {
+    "path": "biomedclip/tokenizer.json",
+    "sha256": "defc1f91456606e7847af3a2fb4a8abb96441423aa5407a52498395ea68327ff",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "tokenizer.json"
+  },
+  {
+    "path": "biomedclip/README.md",
+    "sha256": "4f23faa276bdeef957a0f7c00088f913214bcaad93d79e7768accb9ab5d0f58e",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "README.md"
+  },
+  {
+    "path": "biomedclip/open_clip_config.json",
+    "sha256": "9a41f334a8c444678772c0ebb9ab854c97ab350bced3a17b803e258d39c23dc0",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "open_clip_config.json"
+  },
+  {
+    "path": "biomedclip/vocab.txt",
+    "sha256": "7b36651908a88bc38bda41b728b2a598191e0d3b553cbacf7b1e5f026d5b5b9f",
+    "repo": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+    "type": "model",
+    "revision": "9f341de24bfb00180f1b847274256e9b65a3a32e",
+    "file": "vocab.txt"
+  },
+  {
+    "path": "biomedbert/LICENSE.md",
+    "sha256": "8542b3a65414366ae3228e8f1658e538ec95f9b8855599c9c6e36751d592be66",
+    "repo": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract",
+    "type": "model",
+    "revision": "d673b8835373c6fa116d6d8006b33d48734e305d",
+    "file": "LICENSE.md"
+  },
+  {
+    "path": "biomedbert/tokenizer_config.json",
+    "sha256": "53b6f42b8b8daddbdc6d3532c324187a92b46c1602bd6e8d4ad5a413b4fc90e1",
+    "repo": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract",
+    "type": "model",
+    "revision": "d673b8835373c6fa116d6d8006b33d48734e305d",
+    "file": "tokenizer_config.json"
+  },
+  {
+    "path": "biomedbert/config.json",
+    "sha256": "56bab767c02bc792897638feb8addc06d483d9c73769a5f554bbabea1f5507a1",
+    "repo": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract",
+    "type": "model",
+    "revision": "d673b8835373c6fa116d6d8006b33d48734e305d",
+    "file": "config.json"
+  },
+  {
+    "path": "biomedbert/README.md",
+    "sha256": "bab6ce712d47e58600106843cae3ccc5d4ff2788ce6cc57183a4bb8813438525",
+    "repo": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract",
+    "type": "model",
+    "revision": "d673b8835373c6fa116d6d8006b33d48734e305d",
+    "file": "README.md"
+  },
+  {
+    "path": "biomedbert/vocab.txt",
+    "sha256": "7b36651908a88bc38bda41b728b2a598191e0d3b553cbacf7b1e5f026d5b5b9f",
+    "repo": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract",
+    "type": "model",
+    "revision": "d673b8835373c6fa116d6d8006b33d48734e305d",
+    "file": "vocab.txt"
+  }
+]

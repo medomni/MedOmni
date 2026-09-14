@@ -1,0 +1,1255 @@
+{
+ "input-background.edf": {
+  "encoder_id": "eeg-scalp-1020-19ch-200hz-uv__iclabel",
+  "family": "eeg-scalp-1020-19ch-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.001254066126421094
+     },
+     {
+      "label": "muscle",
+      "value": 0.0004542683018371463
+     },
+     {
+      "label": "eye",
+      "value": 0.9948415756225586
+     },
+     {
+      "label": "heart",
+      "value": 0.0001469731068937108
+     },
+     {
+      "label": "line_noise",
+      "value": 7.540085789514706e-05
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0003219466598238796
+     },
+     {
+      "label": "other",
+      "value": 0.002905731089413166
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 9.267848508898169e-05
+     },
+     {
+      "label": "muscle",
+      "value": 0.00011350867862347513
+     },
+     {
+      "label": "eye",
+      "value": 0.9992048740386963
+     },
+     {
+      "label": "heart",
+      "value": 9.870799840427935e-05
+     },
+     {
+      "label": "line_noise",
+      "value": 1.5893536328803748e-05
+     },
+     {
+      "label": "channel_noise",
+      "value": 3.699143053381704e-05
+     },
+     {
+      "label": "other",
+      "value": 0.0004373014089651406
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.6965485215187073
+     },
+     {
+      "label": "muscle",
+      "value": 0.004773646593093872
+     },
+     {
+      "label": "eye",
+      "value": 0.0007890689303167164
+     },
+     {
+      "label": "heart",
+      "value": 0.004903785884380341
+     },
+     {
+      "label": "line_noise",
+      "value": 0.10138754546642303
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.05215977504849434
+     },
+     {
+      "label": "other",
+      "value": 0.13943764567375183
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.006061294581741095
+     },
+     {
+      "label": "muscle",
+      "value": 0.752791166305542
+     },
+     {
+      "label": "eye",
+      "value": 0.21569739282131195
+     },
+     {
+      "label": "heart",
+      "value": 0.00016661713016219437
+     },
+     {
+      "label": "line_noise",
+      "value": 0.000523396534845233
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.007723615970462561
+     },
+     {
+      "label": "other",
+      "value": 0.017036456614732742
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.005909622646868229
+     },
+     {
+      "label": "muscle",
+      "value": 0.9825935363769531
+     },
+     {
+      "label": "eye",
+      "value": 0.0005148219643160701
+     },
+     {
+      "label": "heart",
+      "value": 0.00020708615193143487
+     },
+     {
+      "label": "line_noise",
+      "value": 0.00034415078698657453
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0007159156957641244
+     },
+     {
+      "label": "other",
+      "value": 0.009714818559587002
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.7007912993431091
+     },
+     {
+      "label": "muscle",
+      "value": 0.0009414581581950188
+     },
+     {
+      "label": "eye",
+      "value": 0.0036922991275787354
+     },
+     {
+      "label": "heart",
+      "value": 0.004144880920648575
+     },
+     {
+      "label": "line_noise",
+      "value": 0.22793442010879517
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.00308068934828043
+     },
+     {
+      "label": "other",
+      "value": 0.059414952993392944
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.013315475545823574
+     },
+     {
+      "label": "muscle",
+      "value": 0.9420679807662964
+     },
+     {
+      "label": "eye",
+      "value": 0.010225755162537098
+     },
+     {
+      "label": "heart",
+      "value": 0.0015535684069618583
+     },
+     {
+      "label": "line_noise",
+      "value": 0.00020712120749522
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0017023130785673857
+     },
+     {
+      "label": "other",
+      "value": 0.030927786603569984
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.006774448789656162
+     },
+     {
+      "label": "muscle",
+      "value": 0.8813460469245911
+     },
+     {
+      "label": "eye",
+      "value": 0.019559521228075027
+     },
+     {
+      "label": "heart",
+      "value": 0.009330062195658684
+     },
+     {
+      "label": "line_noise",
+      "value": 0.0014285469660535455
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.04520914703607559
+     },
+     {
+      "label": "other",
+      "value": 0.03635212033987045
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.9036120176315308
+     },
+     {
+      "label": "muscle",
+      "value": 0.0002706438535824418
+     },
+     {
+      "label": "eye",
+      "value": 0.0006109560490585864
+     },
+     {
+      "label": "heart",
+      "value": 0.019032079726457596
+     },
+     {
+      "label": "line_noise",
+      "value": 0.039503879845142365
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0005915468209423125
+     },
+     {
+      "label": "other",
+      "value": 0.03637883439660072
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.5321447253227234
+     },
+     {
+      "label": "muscle",
+      "value": 0.04091690853238106
+     },
+     {
+      "label": "eye",
+      "value": 0.0671541839838028
+     },
+     {
+      "label": "heart",
+      "value": 0.004516910761594772
+     },
+     {
+      "label": "line_noise",
+      "value": 0.03728645667433739
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0097650196403265
+     },
+     {
+      "label": "other",
+      "value": 0.30821576714515686
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.6080427169799805
+     },
+     {
+      "label": "muscle",
+      "value": 0.018735967576503754
+     },
+     {
+      "label": "eye",
+      "value": 0.01056160032749176
+     },
+     {
+      "label": "heart",
+      "value": 0.0045907143503427505
+     },
+     {
+      "label": "line_noise",
+      "value": 0.008476171642541885
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0015800222754478455
+     },
+     {
+      "label": "other",
+      "value": 0.3480128049850464
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.4125079810619354
+     },
+     {
+      "label": "muscle",
+      "value": 0.29337555170059204
+     },
+     {
+      "label": "eye",
+      "value": 0.012801546603441238
+     },
+     {
+      "label": "heart",
+      "value": 0.018461935222148895
+     },
+     {
+      "label": "line_noise",
+      "value": 0.03143778815865517
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.005147764924913645
+     },
+     {
+      "label": "other",
+      "value": 0.22626742720603943
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.4799511134624481
+     },
+     {
+      "label": "muscle",
+      "value": 0.08500951528549194
+     },
+     {
+      "label": "eye",
+      "value": 0.011622828431427479
+     },
+     {
+      "label": "heart",
+      "value": 0.010628368705511093
+     },
+     {
+      "label": "line_noise",
+      "value": 0.1068057119846344
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.027478234842419624
+     },
+     {
+      "label": "other",
+      "value": 0.27850422263145447
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.8807687163352966
+     },
+     {
+      "label": "muscle",
+      "value": 0.00024962882162071764
+     },
+     {
+      "label": "eye",
+      "value": 0.0012953723780810833
+     },
+     {
+      "label": "heart",
+      "value": 0.00023911072639748454
+     },
+     {
+      "label": "line_noise",
+      "value": 0.10967890173196793
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.00018269114661961794
+     },
+     {
+      "label": "other",
+      "value": 0.007585577201098204
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.42429864406585693
+     },
+     {
+      "label": "muscle",
+      "value": 0.007498461753129959
+     },
+     {
+      "label": "eye",
+      "value": 0.08712377399206161
+     },
+     {
+      "label": "heart",
+      "value": 0.006550569552928209
+     },
+     {
+      "label": "line_noise",
+      "value": 0.02682247944176197
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.013528408482670784
+     },
+     {
+      "label": "other",
+      "value": 0.4341776967048645
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.5551509261131287
+     },
+     {
+      "label": "muscle",
+      "value": 0.043155789375305176
+     },
+     {
+      "label": "eye",
+      "value": 0.011144746094942093
+     },
+     {
+      "label": "heart",
+      "value": 0.0016448243986815214
+     },
+     {
+      "label": "line_noise",
+      "value": 0.09503065049648285
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.00537629472091794
+     },
+     {
+      "label": "other",
+      "value": 0.288496732711792
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.07089994847774506
+     },
+     {
+      "label": "muscle",
+      "value": 0.00010777928400784731
+     },
+     {
+      "label": "eye",
+      "value": 0.0002519324771128595
+     },
+     {
+      "label": "heart",
+      "value": 0.0005109119229018688
+     },
+     {
+      "label": "line_noise",
+      "value": 0.904312252998352
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.006113369483500719
+     },
+     {
+      "label": "other",
+      "value": 0.017803840339183807
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.8636492490768433
+     },
+     {
+      "label": "muscle",
+      "value": 0.00010974505130434409
+     },
+     {
+      "label": "eye",
+      "value": 0.0005731903947889805
+     },
+     {
+      "label": "heart",
+      "value": 0.00017040289822034538
+     },
+     {
+      "label": "line_noise",
+      "value": 0.11356011033058167
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.009602890349924564
+     },
+     {
+      "label": "other",
+      "value": 0.012334384024143219
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "uV converted to volts; common-average reference; 1-90 Hz filter differs from ICLabel training; blocks follow ICA component order"
+  ]
+ },
+ "input-flat.edf": {
+  "encoder_id": "eeg-scalp-1020-19ch-200hz-uv__iclabel",
+  "family": "eeg-scalp-1020-19ch-200hz-uv",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "EEG contains missing samples or a flat channel"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "eeg-scalp-1020-19ch-200hz-uv__iclabel",
+  "family": "eeg-scalp-1020-19ch-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.23019146919250488
+     },
+     {
+      "label": "muscle",
+      "value": 0.0021155260037630796
+     },
+     {
+      "label": "eye",
+      "value": 0.7367200255393982
+     },
+     {
+      "label": "heart",
+      "value": 0.008638285100460052
+     },
+     {
+      "label": "line_noise",
+      "value": 0.001980477012693882
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.00026147335302084684
+     },
+     {
+      "label": "other",
+      "value": 0.02009269781410694
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.00010059060878120363
+     },
+     {
+      "label": "muscle",
+      "value": 0.00033359398366883397
+     },
+     {
+      "label": "eye",
+      "value": 0.9985716342926025
+     },
+     {
+      "label": "heart",
+      "value": 0.00011682854528771713
+     },
+     {
+      "label": "line_noise",
+      "value": 2.7905643946724012e-05
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.00011936278315261006
+     },
+     {
+      "label": "other",
+      "value": 0.000730066210962832
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.6954111456871033
+     },
+     {
+      "label": "muscle",
+      "value": 0.004189962055534124
+     },
+     {
+      "label": "eye",
+      "value": 0.030612671747803688
+     },
+     {
+      "label": "heart",
+      "value": 0.004197972826659679
+     },
+     {
+      "label": "line_noise",
+      "value": 0.03845468908548355
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.002423559082672
+     },
+     {
+      "label": "other",
+      "value": 0.22470998764038086
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.4676515758037567
+     },
+     {
+      "label": "muscle",
+      "value": 0.001550342538394034
+     },
+     {
+      "label": "eye",
+      "value": 0.015225611627101898
+     },
+     {
+      "label": "heart",
+      "value": 0.005810691975057125
+     },
+     {
+      "label": "line_noise",
+      "value": 0.004501388408243656
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.005968149285763502
+     },
+     {
+      "label": "other",
+      "value": 0.49929219484329224
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.02926693484187126
+     },
+     {
+      "label": "muscle",
+      "value": 0.0598948672413826
+     },
+     {
+      "label": "eye",
+      "value": 0.6936614513397217
+     },
+     {
+      "label": "heart",
+      "value": 0.0005272291018627584
+     },
+     {
+      "label": "line_noise",
+      "value": 0.006869809702038765
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.06985507905483246
+     },
+     {
+      "label": "other",
+      "value": 0.13992470502853394
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.02133856527507305
+     },
+     {
+      "label": "muscle",
+      "value": 0.8883771896362305
+     },
+     {
+      "label": "eye",
+      "value": 0.008762193843722343
+     },
+     {
+      "label": "heart",
+      "value": 0.003123901318758726
+     },
+     {
+      "label": "line_noise",
+      "value": 0.002604581881314516
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.017580972984433174
+     },
+     {
+      "label": "other",
+      "value": 0.058212652802467346
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.055692512542009354
+     },
+     {
+      "label": "muscle",
+      "value": 0.06887483596801758
+     },
+     {
+      "label": "eye",
+      "value": 0.38359159231185913
+     },
+     {
+      "label": "heart",
+      "value": 0.002093401737511158
+     },
+     {
+      "label": "line_noise",
+      "value": 0.07645469903945923
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.24305850267410278
+     },
+     {
+      "label": "other",
+      "value": 0.17023444175720215
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.05849534273147583
+     },
+     {
+      "label": "muscle",
+      "value": 0.8592544198036194
+     },
+     {
+      "label": "eye",
+      "value": 0.027646716684103012
+     },
+     {
+      "label": "heart",
+      "value": 0.0011895839124917984
+     },
+     {
+      "label": "line_noise",
+      "value": 0.0003747106238733977
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.004289557691663504
+     },
+     {
+      "label": "other",
+      "value": 0.04874975606799126
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.03401657193899155
+     },
+     {
+      "label": "muscle",
+      "value": 0.8442138433456421
+     },
+     {
+      "label": "eye",
+      "value": 0.010876916348934174
+     },
+     {
+      "label": "heart",
+      "value": 0.0021913612727075815
+     },
+     {
+      "label": "line_noise",
+      "value": 0.0012172437272965908
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.021242596209049225
+     },
+     {
+      "label": "other",
+      "value": 0.08624143153429031
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.004567725583910942
+     },
+     {
+      "label": "muscle",
+      "value": 0.32083871960639954
+     },
+     {
+      "label": "eye",
+      "value": 0.5700401067733765
+     },
+     {
+      "label": "heart",
+      "value": 0.00041779427556321025
+     },
+     {
+      "label": "line_noise",
+      "value": 0.0005707071395590901
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.015661083161830902
+     },
+     {
+      "label": "other",
+      "value": 0.08790386468172073
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.09933875501155853
+     },
+     {
+      "label": "muscle",
+      "value": 0.6730697154998779
+     },
+     {
+      "label": "eye",
+      "value": 0.0920911505818367
+     },
+     {
+      "label": "heart",
+      "value": 0.0015116574941202998
+     },
+     {
+      "label": "line_noise",
+      "value": 0.0004078109632246196
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.009565412998199463
+     },
+     {
+      "label": "other",
+      "value": 0.12401553988456726
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.37595704197883606
+     },
+     {
+      "label": "muscle",
+      "value": 0.06023529917001724
+     },
+     {
+      "label": "eye",
+      "value": 0.00882893055677414
+     },
+     {
+      "label": "heart",
+      "value": 0.04377250373363495
+     },
+     {
+      "label": "line_noise",
+      "value": 0.24577075242996216
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.012668353505432606
+     },
+     {
+      "label": "other",
+      "value": 0.25276705622673035
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.30196747183799744
+     },
+     {
+      "label": "muscle",
+      "value": 0.4178885817527771
+     },
+     {
+      "label": "eye",
+      "value": 0.047014959156513214
+     },
+     {
+      "label": "heart",
+      "value": 0.01586855761706829
+     },
+     {
+      "label": "line_noise",
+      "value": 0.011587375774979591
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.01079198531806469
+     },
+     {
+      "label": "other",
+      "value": 0.19488103687763214
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.24313852190971375
+     },
+     {
+      "label": "muscle",
+      "value": 0.014070205390453339
+     },
+     {
+      "label": "eye",
+      "value": 0.13248194754123688
+     },
+     {
+      "label": "heart",
+      "value": 0.00907083135098219
+     },
+     {
+      "label": "line_noise",
+      "value": 0.020207786932587624
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.02314227819442749
+     },
+     {
+      "label": "other",
+      "value": 0.5578884482383728
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.08805271983146667
+     },
+     {
+      "label": "muscle",
+      "value": 0.022160105407238007
+     },
+     {
+      "label": "eye",
+      "value": 0.08988535404205322
+     },
+     {
+      "label": "heart",
+      "value": 0.004027462564408779
+     },
+     {
+      "label": "line_noise",
+      "value": 0.03134538233280182
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0037551107816398144
+     },
+     {
+      "label": "other",
+      "value": 0.7607738375663757
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.9194138050079346
+     },
+     {
+      "label": "muscle",
+      "value": 0.0060120271518826485
+     },
+     {
+      "label": "eye",
+      "value": 0.015628796070814133
+     },
+     {
+      "label": "heart",
+      "value": 0.0012941822642460465
+     },
+     {
+      "label": "line_noise",
+      "value": 0.047191355377435684
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.0021629983093589544
+     },
+     {
+      "label": "other",
+      "value": 0.008296800777316093
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.7764618396759033
+     },
+     {
+      "label": "muscle",
+      "value": 0.003945878706872463
+     },
+     {
+      "label": "eye",
+      "value": 0.004016956780105829
+     },
+     {
+      "label": "heart",
+      "value": 0.0007205652073025703
+     },
+     {
+      "label": "line_noise",
+      "value": 0.0071847932413220406
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.00030110409716144204
+     },
+     {
+      "label": "other",
+      "value": 0.2073688507080078
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "brain",
+      "value": 0.5507417321205139
+     },
+     {
+      "label": "muscle",
+      "value": 0.012274397537112236
+     },
+     {
+      "label": "eye",
+      "value": 0.013647983781993389
+     },
+     {
+      "label": "heart",
+      "value": 0.0005661369068548083
+     },
+     {
+      "label": "line_noise",
+      "value": 0.2175084501504898
+     },
+     {
+      "label": "channel_noise",
+      "value": 0.009061217308044434
+     },
+     {
+      "label": "other",
+      "value": 0.19620007276535034
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "uV converted to volts; common-average reference; 1-90 Hz filter differs from ICLabel training; blocks follow ICA component order"
+  ]
+ }
+}

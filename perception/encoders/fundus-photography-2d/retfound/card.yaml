@@ -6,7 +6,8 @@ outputs:
 - kind: embedding
   dim: 1024
 limits:
-- Only single-frame, eight-bit RGB DICOM images are accepted. Infrared and grayscale images are rejected.
+- Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported.
+- Infrared and grayscale images are rejected.
 - Uses the pretrained MAE encoder class token, with no disease classification head.
 - Images are resized to a 256-pixel short edge, centre-cropped to 224 pixels, and normalized with ImageNet
   statistics.

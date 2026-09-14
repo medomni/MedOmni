@@ -1,0 +1,31 @@
+{
+ "input-flat.hea": {
+  "encoder_id": "abp-waveform-125hz-mmhg__pyvital-hpi",
+  "family": "abp-waveform-125hz-mmhg",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "arterial pressure fails upstream amplitude or jump limits"
+  ]
+ },
+ "input.hea": {
+  "encoder_id": "abp-waveform-125hz-mmhg__pyvital-hpi",
+  "family": "abp-waveform-125hz-mmhg",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "hpi",
+      "value": 90
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "first 20 seconds resampled to 100 Hz; pressure normalized as (mmHg-65)/65"
+  ]
+ }
+}

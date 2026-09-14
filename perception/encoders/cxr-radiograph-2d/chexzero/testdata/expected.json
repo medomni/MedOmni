@@ -1,0 +1,155 @@
+{
+ "input-invalid.txt": {
+  "encoder_id": "cxr-radiograph-2d__chexzero",
+  "family": "cxr-radiograph-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "the file is not a readable image: cannot identify image file '/data/input-invalid.txt'"
+  ]
+ },
+ "input-normal.jpeg": {
+  "encoder_id": "cxr-radiograph-2d__chexzero",
+  "family": "cxr-radiograph-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "Atelectasis",
+      "value": 0.49160557985305786
+     },
+     {
+      "label": "Cardiomegaly",
+      "value": 0.4906398355960846
+     },
+     {
+      "label": "Consolidation",
+      "value": 0.495877742767334
+     },
+     {
+      "label": "Edema",
+      "value": 0.4910130798816681
+     },
+     {
+      "label": "Enlarged Cardiomediastinum",
+      "value": 0.49089834094047546
+     },
+     {
+      "label": "Fracture",
+      "value": 0.49911874532699585
+     },
+     {
+      "label": "Lung Lesion",
+      "value": 0.4943358898162842
+     },
+     {
+      "label": "Lung Opacity",
+      "value": 0.49642831087112427
+     },
+     {
+      "label": "No Finding",
+      "value": 0.4969378709793091
+     },
+     {
+      "label": "Pleural Effusion",
+      "value": 0.4893386662006378
+     },
+     {
+      "label": "Pleural Other",
+      "value": 0.4931495189666748
+     },
+     {
+      "label": "Pneumonia",
+      "value": 0.4993809163570404
+     },
+     {
+      "label": "Pneumothorax",
+      "value": 0.4977118670940399
+     },
+     {
+      "label": "Support Devices",
+      "value": 0.4982239603996277
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "image resized and padded to 320 pixels, normalized, then resized for CheXzero"
+  ]
+ },
+ "input-pneumonia.jpeg": {
+  "encoder_id": "cxr-radiograph-2d__chexzero",
+  "family": "cxr-radiograph-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "Atelectasis",
+      "value": 0.5009404420852661
+     },
+     {
+      "label": "Cardiomegaly",
+      "value": 0.5048771500587463
+     },
+     {
+      "label": "Consolidation",
+      "value": 0.5034754276275635
+     },
+     {
+      "label": "Edema",
+      "value": 0.5063350796699524
+     },
+     {
+      "label": "Enlarged Cardiomediastinum",
+      "value": 0.5021722316741943
+     },
+     {
+      "label": "Fracture",
+      "value": 0.5006954073905945
+     },
+     {
+      "label": "Lung Lesion",
+      "value": 0.5034516453742981
+     },
+     {
+      "label": "Lung Opacity",
+      "value": 0.505237340927124
+     },
+     {
+      "label": "No Finding",
+      "value": 0.5019429326057434
+     },
+     {
+      "label": "Pleural Effusion",
+      "value": 0.5023105144500732
+     },
+     {
+      "label": "Pleural Other",
+      "value": 0.5020953416824341
+     },
+     {
+      "label": "Pneumonia",
+      "value": 0.5045311450958252
+     },
+     {
+      "label": "Pneumothorax",
+      "value": 0.4967799782752991
+     },
+     {
+      "label": "Support Devices",
+      "value": 0.4950944781303406
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "image resized and padded to 320 pixels, normalized, then resized for CheXzero"
+  ]
+ }
+}

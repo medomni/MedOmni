@@ -1,0 +1,1 @@
+This is an authored invalid image fixture.

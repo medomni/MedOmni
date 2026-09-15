@@ -1,0 +1,22 @@
+id: psg-cardiorespiratory-4ch-200hz-mixed__wav2sleep
+family: psg-cardiorespiratory-4ch-200hz-mixed
+modality: psg
+summary: Four-class sleep stages from ECG, PPG, abdominal effort, and thoracic effort.
+intended_use: Sleep staging of complete 30-second epochs in cardiorespiratory polysomnography.
+outputs:
+- kind: events
+  labels: [Wake, N1+N2, N3, REM]
+options:
+  max_epochs: Maximum number of 30-second epochs to score. The default and maximum are 1200.
+limits:
+- Uses the published four-signal cardiorespiratory checkpoint and four-class vocabulary.
+- Applies whole-recording z-score normalization separately to each signal.
+- Requires at least two complete epochs and ignores a final partial epoch.
+- The test fixture is derived from restricted DREAMT data; its redistribution status needs review before a public release.
+reliability: {status: unmeasured}
+non_training: true
+license: MIT
+source: {url: https://github.com/joncarter1/wav2sleep, rev: 278e30463c8149c4e6899b8784da492fec695bd9}
+weights: {sha256: ea6fb4410315cf6cce406fe1ffd44cba83e8dc69be6a69101aff62cc2cbee0bc, uri: hf://datasets/MedOmni/encoder-assets@cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/weights/eeg-sleep-6ch-200hz-uv__wav2sleep/state_dict.pth}
+runtime: {image: ghcr.io/medomni/psg-cardiorespiratory-4ch-200hz-mixed__wav2sleep, digest: null}
+acceptance: pending

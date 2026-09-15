@@ -1,0 +1,79 @@
+{
+ "input.edf": {
+  "encoder_id": "eog-2ch-200hz-uv__wav2sleep-eog",
+  "family": "eog-2ch-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "events",
+    "items": [
+     {
+      "label": "Wake",
+      "t_start": 0.0,
+      "t_end": 30.0,
+      "score": 0.475507527589798
+     },
+     {
+      "label": "Wake",
+      "t_start": 30.0,
+      "t_end": 60.0,
+      "score": 0.5410056710243225
+     },
+     {
+      "label": "Wake",
+      "t_start": 60.0,
+      "t_end": 90.0,
+      "score": 0.4883264899253845
+     },
+     {
+      "label": "Wake",
+      "t_start": 90.0,
+      "t_end": 120.0,
+      "score": 0.9264534711837769
+     },
+     {
+      "label": "Wake",
+      "t_start": 120.0,
+      "t_end": 150.0,
+      "score": 0.9904189705848694
+     },
+     {
+      "label": "Wake",
+      "t_start": 150.0,
+      "t_end": 180.0,
+      "score": 0.9843531250953674
+     },
+     {
+      "label": "Wake",
+      "t_start": 180.0,
+      "t_end": 210.0,
+      "score": 0.994088888168335
+     },
+     {
+      "label": "Wake",
+      "t_start": 210.0,
+      "t_end": 240.0,
+      "score": 0.9717446565628052
+     },
+     {
+      "label": "Wake",
+      "t_start": 240.0,
+      "t_end": 270.0,
+      "score": 0.9616750478744507
+     },
+     {
+      "label": "Wake",
+      "t_start": 270.0,
+      "t_end": 300.0,
+      "score": 0.9901319742202759
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "e1 read as e1-m2",
+   "e2 read as e2-m1",
+   "EOG channels resampled from 200 Hz to 4096 samples per 30-second epoch and globally z-scored"
+  ]
+ }
+}

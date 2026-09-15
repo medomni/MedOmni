@@ -1,0 +1,17 @@
+[
+  {
+    "path": "source/net1d.py",
+    "sha256": "832bf90e05e20e62db6f9c7007acf7f0b1f739938ab80fa9b2c1ad438e8da7f7",
+    "url": "https://huggingface.co/datasets/MedOmni/encoder-assets/resolve/cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/code/ecg-12lead-500hz-mv__ecgfounder/net1d.py"
+  },
+  {
+    "path": "source/tasks.txt",
+    "sha256": "7c087a0d383c7ea9ae9b818ad00a551b029334edfa5f1fbb5036bfbaa0df0c39",
+    "url": "https://huggingface.co/datasets/MedOmni/encoder-assets/resolve/cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/code/ecg-12lead-500hz-mv__ecgfounder/tasks.txt"
+  },
+  {
+    "path": "weights/1_lead_ECGFounder.pth",
+    "sha256": "f863a38897fb49a27fec7e44008ea3c7bdbd29c77fa4a02ecbb8c56df4f37603",
+    "url": "https://huggingface.co/datasets/MedOmni/encoder-assets/resolve/cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/weights/ecg-12lead-500hz-mv__ecgfounder/1_lead_ECGFounder.pth"
+  }
+]

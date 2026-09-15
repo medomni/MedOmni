@@ -1,0 +1,5 @@
+{
+  "source": {"url": "https://github.com/joncarter1/wav2sleep/archive/278e30463c8149c4e6899b8784da492fec695bd9.tar.gz", "sha256": "b5cd4619dbbbfec92b6219a7548910d67b32163aca5f20c4a08f62dd7af677ac"},
+  "config": {"sha256": "b92f4e26f3290f5207b53be343d82a4e338968b54782718f13429e800f114509"},
+  "weights": {"sha256": "ea6fb4410315cf6cce406fe1ffd44cba83e8dc69be6a69101aff62cc2cbee0bc"}
+}

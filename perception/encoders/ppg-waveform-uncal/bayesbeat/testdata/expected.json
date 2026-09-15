@@ -1,0 +1,43 @@
+{
+ "input.hea": {
+  "encoder_id": "ppg-waveform-uncal__bayesbeat",
+  "family": "ppg-waveform-uncal",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "non_af",
+      "value": 0.00012845692981500179
+     },
+     {
+      "label": "af",
+      "value": 0.999871551990509
+     },
+     {
+      "label": "non_af_epistemic",
+      "value": 2.7284914327907472e-09
+     },
+     {
+      "label": "af_epistemic",
+      "value": 2.7267728075486275e-09
+     },
+     {
+      "label": "non_af_aleatoric",
+      "value": 0.0001284377067349851
+     },
+     {
+      "label": "af_aleatoric",
+      "value": 0.0001284480094909668
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "PPG amplitude is uncalibrated; native sample rate retained",
+   "selected [0,25) seconds; 0.5-4 Hz filter; resampled to 32 Hz; min-max scaled"
+  ]
+ }
+}

@@ -1,0 +1,9 @@
+{
+  "samples": {
+    "sample-02.edf": {
+      "options": {
+        "start_sec": 75
+      }
+    }
+  }
+}

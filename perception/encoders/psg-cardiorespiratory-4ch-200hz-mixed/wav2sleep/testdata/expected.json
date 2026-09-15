@@ -1,0 +1,29 @@
+{
+ "input.edf": {
+  "encoder_id": "psg-cardiorespiratory-4ch-200hz-mixed__wav2sleep",
+  "family": "psg-cardiorespiratory-4ch-200hz-mixed",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "events",
+    "items": [
+     {
+      "label": "Wake",
+      "t_start": 0.0,
+      "t_end": 30.0,
+      "score": 0.6021066904067993
+     },
+     {
+      "label": "Wake",
+      "t_start": 30.0,
+      "t_end": 60.0,
+      "score": 0.4814448356628418
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "ECG and PPG resampled to 1024, effort signals to 256 samples per epoch; each signal globally z-scored"
+  ]
+ }
+}

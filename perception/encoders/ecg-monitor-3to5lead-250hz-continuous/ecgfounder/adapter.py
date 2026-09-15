@@ -1,0 +1,156 @@
+"""ECGFounder — twelve-lead diagnostic statement probabilities, and an embedding.
+
+A Net1D published by the PKU Digital Health group, used as it is: no fine-tuning
+and no probe. The released checkpoint carries its trained 150-class head, so the
+statements below are the model's own and not ours.
+
+The adapter owns only what is specific to this model — the lead order it expects,
+the ten-second window, and the normalization it was trained with. Reading the
+record and naming its leads is family work and happens upstream, in
+runtime/contract.py.
+
+Card: card.yaml   Contract: perception/spec/container-api.md §5
+"""
+import os
+import sys
+
+import numpy as np
+import torch
+from scipy.signal import resample
+
+from contract import BadRequest, Degraded, embedding, labels
+
+FAMILY = "ecg-monitor-3to5lead-250hz-continuous"
+
+# The image bakes the upstream source and the weights in, and points these at
+# them, so the container reads no network. The source is on the path rather than
+# copied beside this file, so that net1d.py stays the file upstream published.
+LOCAL_ROOT = os.path.dirname(os.path.abspath(__file__))
+SOURCE_DIR = os.environ.get("ECGFOUNDER_SOURCE", os.path.join(LOCAL_ROOT, "assets/source"))
+WEIGHTS = os.environ.get("ECGFOUNDER_WEIGHTS", os.path.join(LOCAL_ROOT, "assets/weights/1_lead_ECGFounder.pth"))
+LABEL_FILE = os.environ.get("ECGFOUNDER_LABELS", os.path.join(LOCAL_ROOT, "assets/source/tasks.txt"))
+
+INPUT_SAMPLES = 5000       # the checkpoint input width
+SOURCE_SAMPLES = 2499
+N_CLASSES = 150
+EMBED_DIM = 1024
+PRECISION = 4
+
+# The order the checkpoint expects: standard limb-lead order, aVL before aVF.
+# The family declares aVF before aVL, so the adapter reorders. Upstream's
+# dataset.py does the same thing when it maps MIMIC's order onto the model's.
+# The architecture as published with the weights. These are not tunable: every
+# value is fixed by the shape of the checkpoint.
+_ARCHITECTURE = dict(
+    in_channels=1,
+    base_filters=64,
+    ratio=1,
+    filter_list=[64, 160, 160, 400, 400, 1024, 1024],
+    m_blocks_list=[2, 2, 2, 3, 3, 4, 4],
+    kernel_size=16,
+    stride=2,
+    groups_width=16,
+    n_classes=N_CLASSES,
+    # The checkpoint was trained with neither, and _check_norm_unused below
+    # verifies that rather than trusting it.
+    use_bn=False,
+    use_do=False,
+)
+
+
+def _check_norm_unused(state):
+    """The checkpoint carries BatchNorm tensors, and the network runs without them.
+
+    That pairing looks like a mistake — weights loaded and then ignored — so it
+    is checked instead of trusted. In the published checkpoint every BatchNorm
+    tensor is still at its initialization value: scale one, shift zero, running
+    mean zero, running variance one, no batches tracked. That is what a network
+    trained with use_bn=False leaves behind, and it is why running it with
+    use_bn=False discards nothing.
+
+    A future checkpoint with trained statistics would be silently wrong here, so
+    it must fail at start rather than answer.
+    """
+    at_init = {"weight": 1.0, "bias": 0.0, "running_mean": 0.0, "running_var": 1.0,
+               "num_batches_tracked": 0}
+    for key, tensor in state.items():
+        field = key.rsplit(".", 1)[-1]
+        if "bn" not in key or field not in at_init:
+            continue
+        if not torch.all(tensor.to(torch.float64) == at_init[field]):
+            raise RuntimeError(
+                f"{key} holds trained statistics, but this network runs with "
+                "use_bn=False and would ignore them. Refusing to answer with a "
+                "model that is not the one the weights describe.")
+
+
+def _read_labels():
+    """The head's vocabulary, from the upstream file at the pinned revision.
+
+    The card declares the same list. Keeping the two independent is deliberate:
+    registry.py test compares what the adapter emits against what the card
+    declares, which only means something while they come from different places.
+    """
+    names = [line.strip() for line in open(LABEL_FILE, encoding="utf-8")
+             if line.strip()]
+    if len(names) != N_CLASSES:
+        raise RuntimeError(f"{LABEL_FILE} lists {len(names)} labels, "
+                           f"the head emits {N_CLASSES}")
+    return names
+
+
+def load():
+    """Read the weights once, at start. The server passes the result to encode."""
+    if SOURCE_DIR and SOURCE_DIR not in sys.path:
+        sys.path.insert(0, SOURCE_DIR)
+    from net1d import Net1D
+
+    model = Net1D(return_features=True, **_ARCHITECTURE)
+    # The file is baked into the image and pinned by sha256, verified during the
+    # build, so it is not untrusted input at run time. It holds an optimizer
+    # state and a numpy scalar besides the weights, which a restricted load
+    # rejects.
+    checkpoint = torch.load(WEIGHTS, map_location="cpu", weights_only=False)
+    state = checkpoint["state_dict"]
+    _check_norm_unused(state)
+    # Strictly: upstream loads with strict=False, which would let a checkpoint
+    # that does not describe this network load anyway and answer with random
+    # weights. Every key in the published file matches, so nothing is lost.
+    model.load_state_dict(state, strict=True)
+    if model.dense.out_features != N_CLASSES or model.dense.in_features != EMBED_DIM:
+        raise RuntimeError(f"the head is {model.dense.in_features} -> "
+                           f"{model.dense.out_features}, expected "
+                           f"{EMBED_DIM} -> {N_CLASSES}")
+    model.eval()
+    return {"model": model, "labels": _read_labels()}
+
+
+def encode(sample, options):
+    unknown = set(options) - {"_model", "start_sec"}
+    if unknown:
+        raise BadRequest("unknown ECGFounder option(s): " + ", ".join(sorted(unknown)))
+    start = options.get("start_sec", 0)
+    if isinstance(start, bool) or not isinstance(start, (int, float)) or start != 0:
+        raise BadRequest("this ECGFounder adapter currently supports start_sec 0 only")
+    model = options["_model"]["model"]
+    names = options["_model"]["labels"]
+    if sample["n_samples"] < SOURCE_SAMPLES:
+        raise Degraded(f"the record is {sample['n_samples']} samples; this encoder requires ten seconds")
+
+    channels = sample["channels"]
+    if "ii" not in channels:
+        raise Degraded("ECGFounder monitor inference requires a lead named II")
+    values = np.asarray(channels["ii"][:SOURCE_SAMPLES], dtype=float)
+    selected = "lead II"
+
+    if not np.isfinite(values).all() or np.ptp(values) == 0:
+        raise Degraded("the selected ECG segment must be finite and non-flat")
+    signal = resample(values, INPUT_SAMPLES)
+    signal = (signal - signal.mean()) / (signal.std() + 1e-8)
+    with torch.no_grad():
+        logits, features = model(torch.from_numpy(signal).float()[None, None, :])
+        scores = torch.sigmoid(logits)[0]
+    sample["notes"].append(f"selected {selected} from [0,10) seconds; resampled to 500 Hz; global z-score")
+    items = [{"label": name, "value": round(float(score), PRECISION)} for name, score in zip(names, scores)]
+    vector = [round(float(value), PRECISION) for value in features[0]]
+    return [labels(items, scale="probability"), embedding(vector)]

@@ -6,3 +6,4 @@ _artifacts/
 data_task/tasks/*/data/
 data_task/tasks/*/tests/gold.csv
 perception/var/
+.DS_Store

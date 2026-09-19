@@ -20,6 +20,7 @@ idle_timeout_s: 900        # stop a container idle this long. 0 disables the rea
 reap_interval_s: 30
 start_timeout_s: 180       # ecgfounder reads 353 MiB of weights before it answers
 acquire_timeout_s: 300     # how long a request waits for a free slot
+encode_timeout_s: 600      # how long one /encode call may take. Keep it above the caller's timeout
 
 # Simultaneous calls one container accepts. The gateway holds the limit, so a
 # container never has to defend itself.

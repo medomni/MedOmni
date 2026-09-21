@@ -1,0 +1,50 @@
+{
+ "input-empty.hea": {
+  "encoder_id": "resp-impedance-62hz-ohm__rule-amplitude",
+  "family": "resp-impedance-62hz-ohm",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "requires a single-segment WFDB header"
+  ]
+ },
+ "input.hea": {
+  "encoder_id": "resp-impedance-62hz-ohm__rule-amplitude",
+  "family": "resp-impedance-62hz-ohm",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "resp_mean",
+      "value": 0.0,
+      "unit": "Ohm"
+     },
+     {
+      "label": "resp_std",
+      "value": 10.0,
+      "unit": "Ohm"
+     },
+     {
+      "label": "resp_rms",
+      "value": 10.0,
+      "unit": "Ohm"
+     },
+     {
+      "label": "resp_peak_to_peak",
+      "value": 20.0,
+      "unit": "Ohm"
+     },
+     {
+      "label": "resp_duration",
+      "value": 4.0017607747408865,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

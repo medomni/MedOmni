@@ -1,0 +1,38 @@
+{
+  "id": "emg-chin-200hz-uv__rule-amplitude",
+  "family": "emg-chin-200hz-uv",
+  "modality": "EMG",
+  "summary": "Chin EMG mean, standard deviation, RMS amplitude, peak-to-peak amplitude and observed duration.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "Amplitude features only; no sleep staging, bruxism, or muscle-event detection.",
+    "No filtering, resampling or missing-value interpolation. Flat signals remain valid amplitude summaries."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "chin1_chin2_mean",
+        "chin1_chin2_std",
+        "chin1_chin2_rms",
+        "chin1_chin2_peak_to_peak",
+        "chin1_chin2_duration"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/emg-chin-200hz-uv__rule-amplitude:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

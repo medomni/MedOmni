@@ -5,7 +5,7 @@ WORKDIR /app
 COPY encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/assets.json encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/prepare_assets.py ./
 COPY encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/assets ./assets
 RUN python prepare_assets.py --verify-only && pip install --no-deps ./assets/source
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/adapter.py encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/card.yaml ./
 COPY encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/testdata ./testdata
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1 OMP_NUM_THREADS=2

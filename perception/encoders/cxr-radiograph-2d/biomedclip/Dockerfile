@@ -4,7 +4,7 @@ WORKDIR /app
 COPY encoders/cxr-radiograph-2d/biomedclip/assets.json encoders/cxr-radiograph-2d/biomedclip/prepare_assets.py ./
 COPY encoders/cxr-radiograph-2d/biomedclip/assets ./assets
 RUN python prepare_assets.py --verify-only
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/cxr-radiograph-2d/biomedclip/adapter.py encoders/cxr-radiograph-2d/biomedclip/card.yaml ./
 COPY encoders/cxr-radiograph-2d/biomedclip/testdata ./testdata
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1 OMP_NUM_THREADS=2

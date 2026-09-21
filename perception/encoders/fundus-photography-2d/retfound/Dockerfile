@@ -9,7 +9,7 @@ COPY encoders/fundus-photography-2d/retfound/assets /opt/retfound
 COPY encoders/fundus-photography-2d/retfound/prepare_assets.py encoders/fundus-photography-2d/retfound/card.yaml ./
 RUN python prepare_assets.py --verify-only --directory /opt/retfound
 ENV PYTHONPATH=/opt/retfound
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/fundus-photography-2d/retfound/adapter.py encoders/fundus-photography-2d/retfound/card.yaml ./
 COPY encoders/fundus-photography-2d/retfound/testdata ./testdata
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1

@@ -10,3 +10,4 @@ perception/var/
 # per-subject row cache holds clinical VALUES - never committed (manifests/L1 beside it are committable)
 data_manifest/dataplane/*/rowcache/
 data_task/atomtasks/
+.DS_Store

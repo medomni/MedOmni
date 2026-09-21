@@ -24,7 +24,7 @@ RUN python -c "import torchxrayvision as xrv; \
        | sha256sum -c -
 
 WORKDIR /app
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/cxr-radiograph-2d/torchxrayvision/adapter.py ./
 COPY encoders/cxr-radiograph-2d/torchxrayvision/card.yaml ./
 # Test data travels with the image, so the smoke test needs no dataset access.

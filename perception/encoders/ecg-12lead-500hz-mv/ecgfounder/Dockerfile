@@ -41,7 +41,7 @@ RUN pip install --no-cache-dir \
         pyyaml==6.0.2
 
 WORKDIR /app
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/ecg-12lead-500hz-mv/ecgfounder/adapter.py ./
 COPY encoders/ecg-12lead-500hz-mv/ecgfounder/card.yaml ./
 # Test data travels with the image, so the smoke test needs no dataset access.

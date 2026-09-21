@@ -5,7 +5,7 @@ WORKDIR /app
 COPY encoders/eog-2ch-200hz-uv/wav2sleep-eog/assets.json encoders/eog-2ch-200hz-uv/wav2sleep-eog/prepare_assets.py ./
 COPY encoders/eog-2ch-200hz-uv/wav2sleep-eog/assets ./assets
 RUN python prepare_assets.py --verify-only && pip install --no-deps ./assets/source
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/eog-2ch-200hz-uv/wav2sleep-eog/adapter.py encoders/eog-2ch-200hz-uv/wav2sleep-eog/card.yaml ./
 COPY encoders/eog-2ch-200hz-uv/wav2sleep-eog/testdata ./testdata
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1 OMP_NUM_THREADS=2

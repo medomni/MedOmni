@@ -5,7 +5,7 @@ WORKDIR /app
 COPY encoders/ecg-monitor-3to5lead-250hz-continuous/ecgfounder/assets.json encoders/ecg-monitor-3to5lead-250hz-continuous/ecgfounder/prepare_assets.py ./
 COPY encoders/ecg-monitor-3to5lead-250hz-continuous/ecgfounder/assets ./assets
 RUN python prepare_assets.py --verify-only
-COPY runtime/serve.py runtime/contract.py ./
+COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
 COPY encoders/ecg-monitor-3to5lead-250hz-continuous/ecgfounder/adapter.py encoders/ecg-monitor-3to5lead-250hz-continuous/ecgfounder/card.yaml ./
 COPY encoders/ecg-monitor-3to5lead-250hz-continuous/ecgfounder/testdata ./testdata
 ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1 OMP_NUM_THREADS=2

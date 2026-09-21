@@ -1,0 +1,57 @@
+{
+ "input-empty.dcm": {
+  "encoder_id": "oct-bscanset-radial24-circle3-mono8__rule-intensity",
+  "family": "oct-bscanset-radial24-circle3-mono8",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read retinal DICOM: File is missing DICOM File Meta Information header or the 'DICM' prefix is missing from the header. Use force=True to force reading."
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "oct-bscanset-radial24-circle3-mono8__rule-intensity",
+  "family": "oct-bscanset-radial24-circle3-mono8",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "intensity_mean",
+      "value": 50.0,
+      "unit": "stored-value"
+     },
+     {
+      "label": "intensity_std",
+      "value": 50.0,
+      "unit": "stored-value"
+     },
+     {
+      "label": "zero_fraction",
+      "value": 0.5,
+      "unit": "1"
+     },
+     {
+      "label": "saturated_fraction",
+      "value": 0.0,
+      "unit": "1"
+     },
+     {
+      "label": "intensity_entropy",
+      "value": 1.0,
+      "unit": "bit"
+     },
+     {
+      "label": "frame_count",
+      "value": 27,
+      "unit": "1"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration."
+  ]
+ }
+}

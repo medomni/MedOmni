@@ -1,0 +1,40 @@
+{
+  "id": "pulse-rate-10hz-bpm__rule-summary",
+  "family": "pulse-rate-10hz-bpm",
+  "modality": "pulse",
+  "summary": "Observed pulse-rate statistics, valid-reading fraction and recording duration at 10 Hz.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "Descriptive pulse-rate features, not beat-to-beat HRV or arrhythmia detection.",
+    "Nonpositive and non-finite readings are excluded with notes. No gap filling."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "pulse_min",
+        "pulse_max",
+        "pulse_mean",
+        "pulse_median",
+        "pulse_std",
+        "valid_fraction",
+        "duration"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/pulse-rate-10hz-bpm__rule-summary:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

@@ -1,0 +1,60 @@
+{
+ "input-empty.edf": {
+  "encoder_id": "pulse-rate-10hz-bpm__rule-summary",
+  "family": "pulse-rate-10hz-bpm",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read EDF: invalid literal for int() with base 10: ''"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "pulse-rate-10hz-bpm__rule-summary",
+  "family": "pulse-rate-10hz-bpm",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "pulse_min",
+      "value": 60.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "pulse_max",
+      "value": 100.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "pulse_mean",
+      "value": 80.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "pulse_median",
+      "value": 80.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "pulse_std",
+      "value": 20.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "valid_fraction",
+      "value": 1.0,
+      "unit": "1"
+     },
+     {
+      "label": "duration",
+      "value": 4.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

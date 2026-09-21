@@ -1,0 +1,75 @@
+{
+ "input-empty.edf": {
+  "encoder_id": "snore-acoustic__rule-amplitude",
+  "family": "snore-acoustic",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read EDF: invalid literal for int() with base 10: ''"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "snore-acoustic__rule-amplitude",
+  "family": "snore-acoustic",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "snore_mean",
+      "value": 0.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "snore_std",
+      "value": 10.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "snore_rms",
+      "value": 10.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "snore_peak_to_peak",
+      "value": 20.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "snore_duration",
+      "value": 4.0,
+      "unit": "s"
+     },
+     {
+      "label": "snoring_sensor_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "snoring_sensor_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "snoring_sensor_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "snoring_sensor_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "snoring_sensor_duration",
+      "value": 4.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

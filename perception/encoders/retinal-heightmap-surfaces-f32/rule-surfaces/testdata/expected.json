@@ -1,0 +1,53 @@
+{
+ "input-empty.dcm": {
+  "encoder_id": "retinal-heightmap-surfaces-f32__rule-surfaces",
+  "family": "retinal-heightmap-surfaces-f32",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read heightmap DICOM: File is missing DICOM File Meta Information header or the 'DICM' prefix is missing from the header. Use force=True to force reading."
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "retinal-heightmap-surfaces-f32__rule-surfaces",
+  "family": "retinal-heightmap-surfaces-f32",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "surface_count",
+      "value": 2,
+      "unit": "1"
+     },
+     {
+      "label": "surface_0_mean",
+      "value": 50.0,
+      "unit": null
+     },
+     {
+      "label": "surface_0_range",
+      "value": 100.0,
+      "unit": null
+     },
+     {
+      "label": "surface_1_mean",
+      "value": 50.0,
+      "unit": null
+     },
+     {
+      "label": "surface_1_range",
+      "value": 100.0,
+      "unit": null
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Float surface order and stored coordinates preserved.",
+   "Stored depth coordinates only; no anatomical surface names or calibrated thickness."
+  ]
+ }
+}

@@ -1,0 +1,125 @@
+{
+ "input-empty.edf": {
+  "encoder_id": "emg-limb-200hz-uv__rule-amplitude",
+  "family": "emg-limb-200hz-uv",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read EDF: invalid literal for int() with base 10: ''"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "emg-limb-200hz-uv__rule-amplitude",
+  "family": "emg-limb-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "leg_left_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_left_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_left_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_left_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_left_duration",
+      "value": 4.0,
+      "unit": "s"
+     },
+     {
+      "label": "leg_right_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_right_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_right_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_right_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "leg_right_duration",
+      "value": 4.0,
+      "unit": "s"
+     },
+     {
+      "label": "arm_left_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_left_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_left_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_left_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_left_duration",
+      "value": 4.0,
+      "unit": "s"
+     },
+     {
+      "label": "arm_right_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_right_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_right_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_right_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "arm_right_duration",
+      "value": 4.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

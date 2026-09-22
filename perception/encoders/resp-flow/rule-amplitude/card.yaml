@@ -1,0 +1,49 @@
+{
+  "id": "resp-flow__rule-amplitude",
+  "family": "resp-flow",
+  "modality": "respiratory",
+  "summary": "Per-transducer respiratory-flow amplitude summaries at native sampling rates.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "Descriptive features only; not apnea detection or calibrated ventilation.",
+    "Nasal pressure, derived flow and thermistor are separate roles with source units; values are not combined.",
+    "At least one declared role is required. Flat signals are retained; no resampling or gap filling."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "nasal_pressure_mean",
+        "nasal_pressure_std",
+        "nasal_pressure_rms",
+        "nasal_pressure_peak_to_peak",
+        "nasal_pressure_duration",
+        "derived_flow_mean",
+        "derived_flow_std",
+        "derived_flow_rms",
+        "derived_flow_peak_to_peak",
+        "derived_flow_duration",
+        "thermistor_mean",
+        "thermistor_std",
+        "thermistor_rms",
+        "thermistor_peak_to_peak",
+        "thermistor_duration"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/resp-flow__rule-amplitude:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

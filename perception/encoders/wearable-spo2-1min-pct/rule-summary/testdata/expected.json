@@ -1,0 +1,68 @@
+{
+ "input-empty.json": {
+  "encoder_id": "wearable-spo2-1min-pct__rule-summary",
+  "family": "wearable-spo2-1min-pct",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read wearable OMH: no measurements"
+  ]
+ },
+ "input.json": {
+  "encoder_id": "wearable-spo2-1min-pct__rule-summary",
+  "family": "wearable-spo2-1min-pct",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "spo2_min",
+      "value": 90.0,
+      "unit": "%"
+     },
+     {
+      "label": "spo2_max",
+      "value": 100.0,
+      "unit": "%"
+     },
+     {
+      "label": "spo2_mean",
+      "value": 95.0,
+      "unit": "%"
+     },
+     {
+      "label": "spo2_median",
+      "value": 95.0,
+      "unit": "%"
+     },
+     {
+      "label": "spo2_std",
+      "value": 4.08248290463863,
+      "unit": "%"
+     },
+     {
+      "label": "valid_count",
+      "value": 3,
+      "unit": "1"
+     },
+     {
+      "label": "excluded_count",
+      "value": 1,
+      "unit": "1"
+     },
+     {
+      "label": "observed_span",
+      "value": 180.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Timestamps sorted; gaps preserved without interpolation.",
+   "1 non-finite or outside (0, 100] readings excluded."
+  ]
+ }
+}

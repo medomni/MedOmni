@@ -1,0 +1,53 @@
+{
+ "input-empty.dcm": {
+  "encoder_id": "flio-tcspc-256x256x1024bin-u16__rule-photons",
+  "family": "flio-tcspc-256x256x1024bin-u16",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read FLIO DICOM: File is missing DICOM File Meta Information header or the 'DICM' prefix is missing from the header. Use force=True to force reading."
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "flio-tcspc-256x256x1024bin-u16__rule-photons",
+  "family": "flio-tcspc-256x256x1024bin-u16",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "photon_count",
+      "value": 262144,
+      "unit": "count"
+     },
+     {
+      "label": "mean_arrival_bin",
+      "value": 15.0,
+      "unit": "bin"
+     },
+     {
+      "label": "std_arrival_bin",
+      "value": 5.0,
+      "unit": "bin"
+     },
+     {
+      "label": "peak_bin",
+      "value": 10,
+      "unit": "bin"
+     },
+     {
+      "label": "nonzero_pixel_fraction",
+      "value": 1.0,
+      "unit": "1"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "One wavelength-band acquisition; frame axis retained as temporal bins.",
+   "Raw arrival-bin moments; no background subtraction, instrument-response correction or lifetime fitting."
+  ]
+ }
+}

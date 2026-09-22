@@ -1,0 +1,54 @@
+{
+  "id": "emg-limb-200hz-uv__rule-amplitude",
+  "family": "emg-limb-200hz-uv",
+  "modality": "EMG",
+  "summary": "Per-limb EMG mean, standard deviation, RMS and peak-to-peak amplitude, with channel duration.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "Amplitude features only; no periodic limb movement or sleep-event diagnosis.",
+    "Available declared limb roles are summarized independently. Missing roles produce no labels.",
+    "No filtering or resampling. Non-finite input degrades."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "leg_left_mean",
+        "leg_left_std",
+        "leg_left_rms",
+        "leg_left_peak_to_peak",
+        "leg_left_duration",
+        "leg_right_mean",
+        "leg_right_std",
+        "leg_right_rms",
+        "leg_right_peak_to_peak",
+        "leg_right_duration",
+        "arm_left_mean",
+        "arm_left_std",
+        "arm_left_rms",
+        "arm_left_peak_to_peak",
+        "arm_left_duration",
+        "arm_right_mean",
+        "arm_right_std",
+        "arm_right_rms",
+        "arm_right_peak_to_peak",
+        "arm_right_duration"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/emg-limb-200hz-uv__rule-amplitude:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

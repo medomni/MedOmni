@@ -1,0 +1,40 @@
+{
+  "id": "octa-enface-slab-mono8-2d__rule-intensity",
+  "family": "octa-enface-slab-mono8-2d",
+  "modality": "retinal",
+  "summary": "OCTA en-face slab intensity distribution, entropy and saturation fractions.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "No vessel segmentation, vessel density or disease prediction.",
+    "Stored intensities depend on acquisition and processing; features are not physical perfusion measures.",
+    "No spatial resampling; all pixels contribute equally."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "intensity_mean",
+        "intensity_std",
+        "zero_fraction",
+        "saturated_fraction",
+        "intensity_entropy",
+        "frame_count"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/octa-enface-slab-mono8-2d__rule-intensity:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

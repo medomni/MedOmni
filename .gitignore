@@ -14,3 +14,7 @@ data_task/atomtasks/
 harness/api-keys.env
 harness/*.env
 data_task/atomtasks-noenc/
+
+# per-subject clinical records (MIMIC/BDSP/AI-READI DUA) — never committed;
+# the aggregate ledger beside them (SOURCE/POOL/DEMAND/FEASIBILITY.json) is committable
+data_manifest/dataplane/*/patients/

@@ -1,0 +1,44 @@
+{
+ "input-infrared.dcm": {
+  "encoder_id": "fundus-photography-2d__dr-grade",
+  "family": "fundus-photography-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "this encoder reads a colour fundus photograph; the decoder returned a single plane, which is an infrared frame and a different acquisition"
+  ]
+ },
+ "input-small.dcm": {
+  "encoder_id": "fundus-photography-2d__dr-grade",
+  "family": "fundus-photography-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "the photograph is 128x128; below 224 on a side the crop would enlarge detail the camera never captured"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "fundus-photography-2d__dr-grade",
+  "family": "fundus-photography-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "dr_severity_score",
+      "value": 0.8362
+     },
+     {
+      "label": "dr_grade_nearest",
+      "value": 1.0
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "nearest whole grade is 1 (mild); the model emits a position on the scale, not a class"
+  ]
+ }
+}

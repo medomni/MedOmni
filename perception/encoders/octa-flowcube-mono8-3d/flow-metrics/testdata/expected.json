@@ -1,0 +1,74 @@
+{
+ "input-blank.dcm": {
+  "encoder_id": "octa-flowcube-mono8-3d__flow-metrics",
+  "family": "octa-flowcube-mono8-3d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "every B-scan is blank"
+  ]
+ },
+ "input-single.dcm": {
+  "encoder_id": "octa-flowcube-mono8-3d__flow-metrics",
+  "family": "octa-flowcube-mono8-3d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read retinal DICOM: frame count does not match family dimensionality"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "octa-flowcube-mono8-3d__flow-metrics",
+  "family": "octa-flowcube-mono8-3d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "flow_mean",
+      "value": 20.6053
+     },
+     {
+      "label": "flow_sd",
+      "value": 52.6759
+     },
+     {
+      "label": "flow_p50",
+      "value": 3.0
+     },
+     {
+      "label": "flow_p95",
+      "value": 154.0
+     },
+     {
+      "label": "enface_otsu_threshold",
+      "value": 3.0
+     },
+     {
+      "label": "vessel_area_density",
+      "value": 0.6875
+     },
+     {
+      "label": "vessel_length_density",
+      "value": 0.1465
+     },
+     {
+      "label": "flow_depth_centroid",
+      "value": 0.3021
+     },
+     {
+      "label": "n_bscans",
+      "value": 6.0
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "measures computed over 6 B-scan(s); en-face is the mean along depth, binarised at Otsu threshold 3"
+  ]
+ }
+}

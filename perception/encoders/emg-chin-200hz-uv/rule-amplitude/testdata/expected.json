@@ -1,0 +1,50 @@
+{
+ "input-empty.edf": {
+  "encoder_id": "emg-chin-200hz-uv__rule-amplitude",
+  "family": "emg-chin-200hz-uv",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read EDF: invalid literal for int() with base 10: ''"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "emg-chin-200hz-uv__rule-amplitude",
+  "family": "emg-chin-200hz-uv",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "chin1_chin2_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "chin1_chin2_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "chin1_chin2_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "chin1_chin2_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "chin1_chin2_duration",
+      "value": 4.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

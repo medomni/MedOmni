@@ -1,0 +1,52 @@
+{
+ "input-empty.edf": {
+  "encoder_id": "body-position-code-10hz__rule-occupancy",
+  "family": "body-position-code-10hz",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read EDF: invalid literal for int() with base 10: ''"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "body-position-code-10hz__rule-occupancy",
+  "family": "body-position-code-10hz",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "code_count",
+      "value": 2,
+      "unit": "1"
+     },
+     {
+      "label": "modal_fraction",
+      "value": 0.5,
+      "unit": "1"
+     },
+     {
+      "label": "code_entropy",
+      "value": 1.0,
+      "unit": "bit"
+     },
+     {
+      "label": "transition_count",
+      "value": 39,
+      "unit": "1"
+     },
+     {
+      "label": "duration",
+      "value": 4.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Device codebook unavailable; no anatomical posture mapping applied."
+  ]
+ }
+}

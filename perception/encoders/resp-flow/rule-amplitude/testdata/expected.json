@@ -1,0 +1,100 @@
+{
+ "input-empty.edf": {
+  "encoder_id": "resp-flow__rule-amplitude",
+  "family": "resp-flow",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read EDF: invalid literal for int() with base 10: ''"
+  ]
+ },
+ "input.edf": {
+  "encoder_id": "resp-flow__rule-amplitude",
+  "family": "resp-flow",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "nasal_pressure_mean",
+      "value": 0.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "nasal_pressure_std",
+      "value": 10.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "nasal_pressure_rms",
+      "value": 10.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "nasal_pressure_peak_to_peak",
+      "value": 20.0,
+      "unit": "ubar"
+     },
+     {
+      "label": "nasal_pressure_duration",
+      "value": 4.0,
+      "unit": "s"
+     },
+     {
+      "label": "derived_flow_mean",
+      "value": 0.0,
+      "unit": "mL/s"
+     },
+     {
+      "label": "derived_flow_std",
+      "value": 10.0,
+      "unit": "mL/s"
+     },
+     {
+      "label": "derived_flow_rms",
+      "value": 10.0,
+      "unit": "mL/s"
+     },
+     {
+      "label": "derived_flow_peak_to_peak",
+      "value": 20.0,
+      "unit": "mL/s"
+     },
+     {
+      "label": "derived_flow_duration",
+      "value": 4.0,
+      "unit": "s"
+     },
+     {
+      "label": "thermistor_mean",
+      "value": 0.0,
+      "unit": "uV"
+     },
+     {
+      "label": "thermistor_std",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "thermistor_rms",
+      "value": 10.0,
+      "unit": "uV"
+     },
+     {
+      "label": "thermistor_peak_to_peak",
+      "value": 20.0,
+      "unit": "uV"
+     },
+     {
+      "label": "thermistor_duration",
+      "value": 4.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

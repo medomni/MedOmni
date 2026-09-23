@@ -11,3 +11,6 @@ perception/var/
 data_manifest/dataplane/*/rowcache/
 data_task/atomtasks/
 .DS_Store
+harness/api-keys.env
+harness/*.env
+data_task/atomtasks-noenc/

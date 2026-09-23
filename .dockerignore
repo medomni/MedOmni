@@ -1,0 +1,9 @@
+# Sidecar image build context needs only perception/, data_task/families/,
+# data_task/family_alias.yaml, harness/perception-image/ — everything else
+# excluded so the build context doesn't drag tens of GB of atom data through
+# docker's storage (a small fixed-size loopback image, easily exhausted).
+data_task/atomtasks/
+data_task/atomtasks-noenc/
+_artifacts/
+.git/
+harness/harbor/snapshots/

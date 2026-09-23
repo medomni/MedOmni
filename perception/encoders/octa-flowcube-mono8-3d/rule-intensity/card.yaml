@@ -1,0 +1,40 @@
+{
+  "id": "octa-flowcube-mono8-3d__rule-intensity",
+  "family": "octa-flowcube-mono8-3d",
+  "modality": "retinal",
+  "summary": "OCTA flowcube intensity distribution and frame-count features.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "No vessel segmentation or calibrated blood-flow estimation.",
+    "Pooled stored-value features depend on device processing and are not perfusion biomarkers.",
+    "No resampling or anatomical registration; original frame order is preserved."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "intensity_mean",
+        "intensity_std",
+        "zero_fraction",
+        "saturated_fraction",
+        "intensity_entropy",
+        "frame_count"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/octa-flowcube-mono8-3d__rule-intensity:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

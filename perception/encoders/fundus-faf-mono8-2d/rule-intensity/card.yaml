@@ -1,0 +1,40 @@
+{
+  "id": "fundus-faf-mono8-2d__rule-intensity",
+  "family": "fundus-faf-mono8-2d",
+  "modality": "retinal",
+  "summary": "Fundus autofluorescence intensity statistics with explicit declared color-to-mono conversion.",
+  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
+  "limits": [
+    "No lesion segmentation, quantitative autofluorescence calibration or diagnosis.",
+    "Declared YBR_FULL_422 supply is decoded to RGB then converted with 0.299R+0.587G+0.114B; conversion is reported.",
+    "Features depend on exposure and device processing. Other undeclared color formats degrade."
+  ],
+  "outputs": [
+    {
+      "kind": "labels",
+      "scale": "physical",
+      "labels": [
+        "intensity_mean",
+        "intensity_std",
+        "zero_fraction",
+        "saturated_fraction",
+        "intensity_entropy",
+        "frame_count"
+      ]
+    }
+  ],
+  "reliability": {
+    "status": "unmeasured"
+  },
+  "non_training": true,
+  "license": "Apache-2.0",
+  "source": {
+    "url": "https://github.com/BosonHwang/MedOmni",
+    "rev": null
+  },
+  "runtime": {
+    "image": "ghcr.io/medomni/fundus-faf-mono8-2d__rule-intensity:dev",
+    "digest": null
+  },
+  "acceptance": "pending"
+}

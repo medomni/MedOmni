@@ -1,0 +1,45 @@
+{
+ "input-blank.dcm": {
+  "encoder_id": "fundus-faf-mono8-2d__retinograd",
+  "family": "fundus-faf-mono8-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "the frame is blank; every pixel has the same value"
+  ]
+ },
+ "input-colour.dcm": {
+  "encoder_id": "fundus-faf-mono8-2d__retinograd",
+  "family": "fundus-faf-mono8-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read retinal DICOM: photometric interpretation is not declared for this family"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "fundus-faf-mono8-2d__retinograd",
+  "family": "fundus-faf-mono8-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "faf_ungradable",
+      "value": 0.792
+     },
+     {
+      "label": "faf_gradable",
+      "value": 0.208
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration."
+  ]
+ }
+}

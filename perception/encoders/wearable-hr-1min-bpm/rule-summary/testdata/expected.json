@@ -1,0 +1,68 @@
+{
+ "input-empty.json": {
+  "encoder_id": "wearable-hr-1min-bpm__rule-summary",
+  "family": "wearable-hr-1min-bpm",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read wearable OMH: no measurements"
+  ]
+ },
+ "input.json": {
+  "encoder_id": "wearable-hr-1min-bpm__rule-summary",
+  "family": "wearable-hr-1min-bpm",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "heart_rate_min",
+      "value": 60.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "heart_rate_max",
+      "value": 100.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "heart_rate_mean",
+      "value": 80.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "heart_rate_median",
+      "value": 80.0,
+      "unit": "bpm"
+     },
+     {
+      "label": "heart_rate_std",
+      "value": 16.32993161855452,
+      "unit": "bpm"
+     },
+     {
+      "label": "valid_count",
+      "value": 3,
+      "unit": "1"
+     },
+     {
+      "label": "excluded_count",
+      "value": 1,
+      "unit": "1"
+     },
+     {
+      "label": "observed_span",
+      "value": 180.0,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "Timestamps sorted; gaps preserved without interpolation.",
+   "1 non-finite or nonpositive readings excluded."
+  ]
+ }
+}

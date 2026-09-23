@@ -1,0 +1,70 @@
+[
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "heart-rate"
+      }
+    },
+    "body": {
+      "heart_rate": {
+        "value": 60,
+        "unit": "beats/min"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:00:00Z"
+      }
+    }
+  },
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "heart-rate"
+      }
+    },
+    "body": {
+      "heart_rate": {
+        "value": 80,
+        "unit": "beats/min"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:01:00Z"
+      }
+    }
+  },
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "heart-rate"
+      }
+    },
+    "body": {
+      "heart_rate": {
+        "value": 100,
+        "unit": "beats/min"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:02:00Z"
+      }
+    }
+  },
+  {
+    "header": {
+      "schema_id": {
+        "namespace": "omh",
+        "name": "heart-rate"
+      }
+    },
+    "body": {
+      "heart_rate": {
+        "value": 0,
+        "unit": "beats/min"
+      },
+      "effective_time_frame": {
+        "date_time": "2024-01-01T00:03:00Z"
+      }
+    }
+  }
+]

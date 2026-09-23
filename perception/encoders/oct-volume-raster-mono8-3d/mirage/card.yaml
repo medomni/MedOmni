@@ -1,0 +1,38 @@
+id: oct-volume-raster-mono8-3d__mirage
+family: oct-volume-raster-mono8-3d
+modality: oct
+
+summary: >-
+  A 768-value representation of a structural OCT volume, from a retinal
+  foundation model pretrained on paired OCT and SLO images.
+intended_use: >-
+  Evidence for an agent that can use a vector: one embedding per volume,
+  averaged over its B-scans. It carries no labels, so a reader that needs a
+  finding needs a different encoder.
+limits:
+  - Returns a representation, not a finding. There is no classification head in the released checkpoint, and none was added.
+  - "Each B-scan is encoded on its own and the embeddings are averaged; the count is reported in the response. Averaging is this adapter's choice, not the paper's — a volume is not a sequence to this model."
+  - Blank B-scans are excluded from the average and reported. A volume whose B-scans are all blank degrades.
+  - Every B-scan is resized to 512 square and scaled to 0..1, as the published wrapper expects. Aspect ratio is not preserved, and the axial and lateral axes are not scaled alike.
+  - "MIRAGE was pretrained on OCT paired with SLO; this family supplies no SLO, so only the B-scan modality is given. The result is the OCT half of a model trained to see both."
+  - B-scan order and spacing are the file's. Nothing is reordered or resampled, and the embedding is invariant to their order by construction.
+  - "Embeddings are comparable within one encoder version and one image. They are not comparable with any other encoder's, and their distances have no clinical calibration."
+  - "License conflict, unresolved: the upstream README claims CC BY 4.0 and permits commercial use, while the repository's own LICENSE file and the Hugging Face model card both say CC BY-NC-ND 4.0. This card records the stricter pair, which is what the authors shipped. Publishing this image needs a licence review first, as the Zhu card does for a different reason."
+outputs:
+  - kind: embedding
+    dim: 768                     # ViT-Base token width; the global token
+
+reliability:
+  status: unmeasured
+non_training: true
+license: CC-BY-NC-ND-4.0
+source:
+  url: https://github.com/j-morano/MIRAGE
+  rev: c73997411485944cdedfc8de44d4202a6af8ca67      # hf/mirage_hf.py at this commit
+weights:
+  sha256: bdb3ad174fd8106f32e692446479966ebf095fa8f9a523f9b29185ed0136c339
+  uri: https://huggingface.co/j-morano/MIRAGE-Base/resolve/d8bdbf167604c6ca021820f268d3edc96851cf35/model.safetensors
+runtime:
+  image: ghcr.io/medomni/oct-volume-raster-mono8-3d__mirage
+  digest: null                 # until the image is pushed. README phase 5.
+acceptance: pending

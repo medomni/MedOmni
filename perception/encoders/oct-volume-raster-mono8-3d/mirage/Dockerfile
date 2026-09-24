@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir \
         safetensors==0.4.5 \
         pydicom==3.0.1 \
         pylibjpeg==2.0.1 \
-        pylibjpeg-libjpeg==2.3.0 \
+        pylibjpeg-libjpeg==2.3.0 pylibjpeg-openjpeg==2.6.0 \
         pillow==11.0.0 \
         numpy==2.2.6 \
         pyyaml==6.0.2

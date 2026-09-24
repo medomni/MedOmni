@@ -1,0 +1,185 @@
+{
+ "input-monochrome.dcm": {
+  "encoder_id": "fundus-photography-2d__retfound-jsiec",
+  "family": "fundus-photography-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "RETFound requires an eight-bit colour fundus image"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "fundus-photography-2d__retfound-jsiec",
+  "family": "fundus-photography-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "normal",
+      "value": 0.8692611455917358
+     },
+     {
+      "label": "tessellated_fundus",
+      "value": 0.0016442243941128254
+     },
+     {
+      "label": "large_optic_cup",
+      "value": 0.10293092578649521
+     },
+     {
+      "label": "diabetic_retinopathy_stage_1",
+      "value": 0.005159074906259775
+     },
+     {
+      "label": "diabetic_retinopathy_stage_2",
+      "value": 0.0003869315260089934
+     },
+     {
+      "label": "diabetic_retinopathy_stage_3",
+      "value": 9.226166002918035e-05
+     },
+     {
+      "label": "possible_glaucoma",
+      "value": 0.00032080209348350763
+     },
+     {
+      "label": "optic_atrophy",
+      "value": 0.000723042176105082
+     },
+     {
+      "label": "severe_hypertensive_retinopathy",
+      "value": 0.0003622211515903473
+     },
+     {
+      "label": "disc_swelling_and_elevation",
+      "value": 0.0003250750887673348
+     },
+     {
+      "label": "dragged_disc",
+      "value": 0.0014086710289120674
+     },
+     {
+      "label": "congenital_disc_abnormality",
+      "value": 9.557067096466199e-05
+     },
+     {
+      "label": "retinitis_pigmentosa",
+      "value": 3.6462726711761206e-05
+     },
+     {
+      "label": "bietti_crystalline_dystrophy",
+      "value": 0.0007121098460629582
+     },
+     {
+      "label": "peripheral_retinal_degeneration_and_break",
+      "value": 8.28664778964594e-05
+     },
+     {
+      "label": "myelinated_nerve_fiber",
+      "value": 0.0006645795656368136
+     },
+     {
+      "label": "vitreous_particles",
+      "value": 0.00038451547152362764
+     },
+     {
+      "label": "fundus_neoplasm",
+      "value": 0.00015768228331580758
+     },
+     {
+      "label": "branch_retinal_vein_occlusion",
+      "value": 0.0031598717905580997
+     },
+     {
+      "label": "central_retinal_vein_occlusion",
+      "value": 0.00016293190128635615
+     },
+     {
+      "label": "massive_hard_exudates",
+      "value": 9.270229929825291e-05
+     },
+     {
+      "label": "yellow_white_spots_flecks",
+      "value": 0.0007027658284641802
+     },
+     {
+      "label": "cotton_wool_spots",
+      "value": 6.37948905932717e-05
+     },
+     {
+      "label": "vessel_tortuosity",
+      "value": 0.0007380341994576156
+     },
+     {
+      "label": "chorioretinal_atrophy_coloboma",
+      "value": 0.00015310633170884103
+     },
+     {
+      "label": "preretinal_hemorrhage",
+      "value": 0.0008192809182219207
+     },
+     {
+      "label": "fibrosis",
+      "value": 2.8743557777488604e-05
+     },
+     {
+      "label": "laser_spots",
+      "value": 5.370624057832174e-05
+     },
+     {
+      "label": "silicone_oil_in_eye",
+      "value": 0.00019508524565026164
+     },
+     {
+      "label": "blurred_fundus_without_proliferative_dr",
+      "value": 0.001825937069952488
+     },
+     {
+      "label": "blurred_fundus_with_suspected_proliferative_dr",
+      "value": 0.0011348383268341422
+     },
+     {
+      "label": "retinal_artery_occlusion",
+      "value": 0.0001694223756203428
+     },
+     {
+      "label": "rhegmatogenous_retinal_detachment",
+      "value": 0.0005341068026609719
+     },
+     {
+      "label": "central_serous_chorioretinopathy",
+      "value": 0.003708776319399476
+     },
+     {
+      "label": "vogt_koyanagi_harada_disease",
+      "value": 0.0007031566929072142
+     },
+     {
+      "label": "maculopathy",
+      "value": 5.978452827548608e-05
+     },
+     {
+      "label": "epiretinal_membrane",
+      "value": 5.759135456173681e-05
+     },
+     {
+      "label": "macular_hole",
+      "value": 0.0006994167342782021
+     },
+     {
+      "label": "pathological_myopia",
+      "value": 0.00018875626847147942
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "text": "Top findings: normal 0.87; large optic cup 0.10; diabetic retinopathy stage 1 0.01"
+   }
+  ],
+  "notes": []
+ }
+}

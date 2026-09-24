@@ -679,6 +679,62 @@ encoders:
         n_units: 5
         source: family-samples
         detail: 5 sample(s)
+  fundus-photography-2d__retfound-glaucoma:
+    build_key: sha256:15ad85b4f5666bf4059d770e03e7bba13cf429271a71c8c31c46c3379381a419
+    source_rev: 9f9a851b9dc147e411350477bcdb465c63fe0059
+    image: ghcr.io/medomni/fundus-photography-2d__retfound-glaucoma:dev
+    image_id: sha256:b2370741044515f2d7c4d47fc5f07db8c47699d59cb9f9ab55a641732bc05ec0
+    built_at: '2026-09-24T07:34:50Z'
+    stages:
+      L0:
+        status: PASS
+        at: '2026-09-24T07:34:50Z'
+        build_key: sha256:15ad85b4f5666bf4059d770e03e7bba13cf429271a71c8c31c46c3379381a419
+      L1:
+        status: PASS
+        at: '2026-09-24T07:34:50Z'
+        build_key: sha256:15ad85b4f5666bf4059d770e03e7bba13cf429271a71c8c31c46c3379381a419
+      L2:
+        status: PASS
+        at: '2026-09-24T07:34:56Z'
+        build_key: sha256:15ad85b4f5666bf4059d770e03e7bba13cf429271a71c8c31c46c3379381a419
+        detail: 2 sample(s)
+      L3:
+        status: PASS
+        at: '2026-09-24T07:35:30Z'
+        build_key: sha256:15ad85b4f5666bf4059d770e03e7bba13cf429271a71c8c31c46c3379381a419
+        draw_key: sha256:2accca00b9b488138ef052ccd8386bc2c74cd111f1373f951615ce212f3f4cc2
+        n_units: 5
+        source: family-samples
+        detail: 5 sample(s)
+  fundus-photography-2d__retfound-jsiec:
+    build_key: sha256:b310bac9fa1e5e242fcb3e8af647d6be1607e6fc09f637842dc180c49d5bfb6a
+    source_rev: 9f9a851b9dc147e411350477bcdb465c63fe0059
+    image: ghcr.io/medomni/fundus-photography-2d__retfound-jsiec:dev
+    image_id: sha256:f4f94166440078019e53147916b87d82b4be52d3eff3bc9fdb12ecf965074b42
+    built_at: '2026-09-24T07:35:40Z'
+    stages:
+      L0:
+        status: PASS
+        at: '2026-09-24T07:35:40Z'
+        build_key: sha256:b310bac9fa1e5e242fcb3e8af647d6be1607e6fc09f637842dc180c49d5bfb6a
+      L1:
+        status: PASS
+        at: '2026-09-24T07:35:40Z'
+        build_key: sha256:b310bac9fa1e5e242fcb3e8af647d6be1607e6fc09f637842dc180c49d5bfb6a
+      L2:
+        status: PASS
+        at: '2026-09-24T07:35:47Z'
+        build_key: sha256:b310bac9fa1e5e242fcb3e8af647d6be1607e6fc09f637842dc180c49d5bfb6a
+        detail: 2 sample(s)
+      L3:
+        status: PASS
+        at: '2026-09-24T07:36:21Z'
+        build_key: sha256:b310bac9fa1e5e242fcb3e8af647d6be1607e6fc09f637842dc180c49d5bfb6a
+        draw_key: sha256:2accca00b9b488138ef052ccd8386bc2c74cd111f1373f951615ce212f3f4cc2
+        n_units: 5
+        source: family-samples
+        detail: 5 sample(s)
   numeric-observation__vitalscore:
     build_key: sha256:754dc089e8e03683ca2b2958cd3c592ae2e5bf49dfe2092d28f3f0c282d29ef5
     source_rev: ae693bd8156bd3af8d1510ac9a2921d1287d82c8

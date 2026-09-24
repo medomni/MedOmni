@@ -1,0 +1,177 @@
+{
+ "input-artifact.hea": {
+  "encoder_id": "pressure-nonarterial-125hz-mmhg__rule-summary",
+  "family": "pressure-nonarterial-125hz-mmhg",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "cvp_median",
+      "value": 398.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_mean",
+      "value": 398.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_p05",
+      "value": 397.5,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_p95",
+      "value": 398.5,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_std",
+      "value": 0.5,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_implausible_fraction",
+      "value": 1.0,
+      "unit": "fraction"
+     },
+     {
+      "label": "cvp_valid_fraction",
+      "value": 1.0,
+      "unit": "fraction"
+     },
+     {
+      "label": "cvp_duration",
+      "value": 8.003521549481773,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "cvp: 100% of samples outside -20 to 150 mmHg; likely an unzeroed transducer, flush or mislabeled channel"
+  ]
+ },
+ "input-empty.hea": {
+  "encoder_id": "pressure-nonarterial-125hz-mmhg__rule-summary",
+  "family": "pressure-nonarterial-125hz-mmhg",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "requires a single-segment WFDB header"
+  ]
+ },
+ "input-frames.hea": {
+  "encoder_id": "pressure-nonarterial-125hz-mmhg__rule-summary",
+  "family": "pressure-nonarterial-125hz-mmhg",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "pap_median",
+      "value": 20.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "pap_mean",
+      "value": 20.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "pap_p05",
+      "value": 10.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "pap_p95",
+      "value": 30.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "pap_std",
+      "value": 10.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "pap_implausible_fraction",
+      "value": 0.0,
+      "unit": "fraction"
+     },
+     {
+      "label": "pap_valid_fraction",
+      "value": 1.0,
+      "unit": "fraction"
+     },
+     {
+      "label": "pap_duration",
+      "value": 8.003521549481773,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": [
+   "channel not read: II"
+  ]
+ },
+ "input.hea": {
+  "encoder_id": "pressure-nonarterial-125hz-mmhg__rule-summary",
+  "family": "pressure-nonarterial-125hz-mmhg",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "cvp_median",
+      "value": 8.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_mean",
+      "value": 8.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_p05",
+      "value": 6.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_p95",
+      "value": 10.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_std",
+      "value": 2.0,
+      "unit": "mmHg"
+     },
+     {
+      "label": "cvp_implausible_fraction",
+      "value": 0.0,
+      "unit": "fraction"
+     },
+     {
+      "label": "cvp_valid_fraction",
+      "value": 1.0,
+      "unit": "fraction"
+     },
+     {
+      "label": "cvp_duration",
+      "value": 8.003521549481773,
+      "unit": "s"
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

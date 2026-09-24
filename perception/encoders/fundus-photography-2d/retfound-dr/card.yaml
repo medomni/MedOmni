@@ -1,0 +1,34 @@
+id: fundus-photography-2d__retfound-dr
+family: fundus-photography-2d
+modality: fundus
+summary: >-
+  SEMANTIC: named diabetic retinopathy findings, not an embedding. Probability of each DR grade
+  (none to proliferative) and of referable DR, from RETFound fine-tuned on APTOS-2019.
+intended_use: >-
+  Read the grade probabilities directly: a high dr_referable means the model sees
+  moderate or worse diabetic retinopathy in this photograph.
+limits:
+- Calibrated on APTOS-2019 (Kaggle, Aravind Eye Hospital cameras), not on this cohort's devices; probabilities are interpretable but not calibrated here.
+- Trained with label smoothing 0.1, so probabilities are compressed away from 0 and 1.
+- One photograph per call; no eye-level or patient-level aggregation.
+- Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported; infrared and grayscale images are rejected.
+- Images are resized to a 256-pixel short edge, centre-cropped to 224 pixels, and normalized with ImageNet statistics (the RETFound fine-tuning evaluation transform).
+- The fine-tuned checkpoint states no licence; RETFound's code and backbone are CC-BY-NC-4.0. Local use only until clarified.
+outputs:
+- kind: labels
+  scale: probability
+  labels: [dr_none, dr_mild, dr_moderate, dr_severe, dr_proliferative, dr_referable]
+reliability:
+  status: unmeasured
+non_training: true
+license: CC-BY-NC-4.0
+source:
+  url: https://github.com/rmaphoh/RETFound
+  rev: ae9a9ecf37857cf47b8aa9f87cd6f710d75db287
+weights:
+  sha256: a96b9dbcb78eff373912fb0a48d316dc35ffb0715bb2a1b9128b096d780edbbf
+  uri: hf://datasets/MedOmni/encoder-assets@824b0679613dce05d3e89b173c179963523790bd/weights/fundus-photography-2d__retfound-dr/RETFound_APTOS2019_checkpoint-best.pth
+runtime:
+  image: ghcr.io/medomni/fundus-photography-2d__retfound-dr
+  digest: null
+acceptance: pending

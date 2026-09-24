@@ -1,0 +1,49 @@
+{
+ "input-monochrome.dcm": {
+  "encoder_id": "fundus-photography-2d__retfound-dr",
+  "family": "fundus-photography-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "RETFound DR requires an eight-bit colour fundus image"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "fundus-photography-2d__retfound-dr",
+  "family": "fundus-photography-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "dr_none",
+      "value": 0.9417823553085327
+     },
+     {
+      "label": "dr_mild",
+      "value": 0.016158713027834892
+     },
+     {
+      "label": "dr_moderate",
+      "value": 0.012886369600892067
+     },
+     {
+      "label": "dr_severe",
+      "value": 0.016204390674829483
+     },
+     {
+      "label": "dr_proliferative",
+      "value": 0.012968217954039574
+     },
+     {
+      "label": "dr_referable",
+      "value": 0.042058978229761124
+     }
+    ]
+   }
+  ],
+  "notes": []
+ }
+}

@@ -624,29 +624,29 @@ encoders:
         source: family-samples
         detail: 5 sample(s)
   fundus-photography-2d__flair:
-    build_key: sha256:b9a75c44b939f4cb08a7e794a25b761e3a3382fdb5a04f94012701036274aecd
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
+    build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
+    source_rev: a646d4d5112d86bbe7e9a3e2e5adf8e042f7938d
     image: ghcr.io/medomni/fundus-photography-2d__flair:dev
-    image_id: sha256:f5ccc6529fd6c66444de0fd92134cdefa9c82720ad994785f742d0c91cdc33e3
-    built_at: '2026-09-24T08:52:02Z'
+    image_id: sha256:277d247045fb42b1e556f4a0225be3ba6dbf7c3bcfd4799467a95d56d3ff474f
+    built_at: '2026-09-24T09:21:55Z'
     stages:
       L0:
         status: PASS
-        at: '2026-09-24T08:52:02Z'
-        build_key: sha256:b9a75c44b939f4cb08a7e794a25b761e3a3382fdb5a04f94012701036274aecd
+        at: '2026-09-24T09:21:55Z'
+        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
       L1:
         status: PASS
-        at: '2026-09-24T08:52:02Z'
-        build_key: sha256:b9a75c44b939f4cb08a7e794a25b761e3a3382fdb5a04f94012701036274aecd
+        at: '2026-09-24T09:21:55Z'
+        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
       L2:
         status: PASS
-        at: '2026-09-24T08:53:46Z'
-        build_key: sha256:b9a75c44b939f4cb08a7e794a25b761e3a3382fdb5a04f94012701036274aecd
+        at: '2026-09-24T09:22:00Z'
+        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-09-24T09:00:16Z'
-        build_key: sha256:b9a75c44b939f4cb08a7e794a25b761e3a3382fdb5a04f94012701036274aecd
+        at: '2026-09-24T09:22:26Z'
+        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
         draw_key: sha256:2accca00b9b488138ef052ccd8386bc2c74cd111f1373f951615ce212f3f4cc2
         n_units: 5
         source: family-samples

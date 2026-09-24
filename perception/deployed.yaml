@@ -707,34 +707,6 @@ encoders:
         n_units: 5
         source: family-samples
         detail: 5 sample(s)
-  fundus-photography-2d__retfound-glaucoma:
-    build_key: sha256:b79944339f1460f9f6a0431121ff2e90fae1908d672e07943c756a2c07f73f93
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
-    image: ghcr.io/medomni/fundus-photography-2d__retfound-glaucoma:dev
-    image_id: sha256:001eddc4749d59d195314cc6d5b72b577a5abfdc81be6230ebd54e57d2b62c04
-    built_at: '2026-09-24T08:52:13Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T08:52:13Z'
-        build_key: sha256:b79944339f1460f9f6a0431121ff2e90fae1908d672e07943c756a2c07f73f93
-      L1:
-        status: PASS
-        at: '2026-09-24T08:52:13Z'
-        build_key: sha256:b79944339f1460f9f6a0431121ff2e90fae1908d672e07943c756a2c07f73f93
-      L2:
-        status: PASS
-        at: '2026-09-24T08:54:08Z'
-        build_key: sha256:b79944339f1460f9f6a0431121ff2e90fae1908d672e07943c756a2c07f73f93
-        detail: 2 sample(s)
-      L3:
-        status: PASS
-        at: '2026-09-24T09:02:12Z'
-        build_key: sha256:b79944339f1460f9f6a0431121ff2e90fae1908d672e07943c756a2c07f73f93
-        draw_key: sha256:2accca00b9b488138ef052ccd8386bc2c74cd111f1373f951615ce212f3f4cc2
-        n_units: 5
-        source: family-samples
-        detail: 5 sample(s)
   fundus-photography-2d__retfound-jsiec:
     build_key: sha256:6396b0a046648ab2d22bb72581aafe79dd1d807135f9d8efa8eeb6b7b1a25bc0
     source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd

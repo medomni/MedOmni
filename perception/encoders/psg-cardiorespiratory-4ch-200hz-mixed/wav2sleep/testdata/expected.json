@@ -11,18 +11,19 @@
       "label": "Wake",
       "t_start": 0.0,
       "t_end": 30.0,
-      "score": 0.6021066904067993
+      "score": 0.6021060347557068
      },
      {
       "label": "Wake",
       "t_start": 30.0,
       "t_end": 60.0,
-      "score": 0.4814448356628418
+      "score": 0.48144450783729553
      }
     ]
    }
   ],
   "notes": [
+   "ppg read as pleth",
    "ECG and PPG resampled to 1024, effort signals to 256 samples per epoch; each signal globally z-scored"
   ]
  }

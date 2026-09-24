@@ -1,0 +1,49 @@
+id: retinal-heightmap-surfaces-f32__layer-thickness
+family: retinal-heightmap-surfaces-f32
+modality: retinal
+summary: 'SEMANTIC: macular retinal thickness in micrometres per ETDRS region (centre, inner, outer ring)
+  and GCL+IPL, with z-scores against published device norms. Rules on the device segmentation; no model.'
+intended_use: 'Read thickness directly: a high thickness_center_um (z above +2) suggests macular oedema;
+  a low one or a low GCL+IPL suggests atrophy or neurodegeneration. The text line states each region against
+  its norm.'
+limits:
+- Macular scans only (ProtocolName names the macula). An optic-disc scan returns a text line saying so
+  and no measurement; an unidentified protocol degrades.
+- Surfaces are named from the file; where the file labels contradict their depth order (Topcon exports),
+  surfaces are named by anatomical depth order and the response says so.
+- Axial micrometres per A-scan pixel come from the same device models' structural OCT DICOMs in AI-READI
+  (Spectralis 3.872, Maestro2 2.6, Triton 2.575, Cirrus 1.953); other devices degrade.
+- The ETDRS grid is centred on the thinnest point of the smoothed thickness map within 1 mm of the scan
+  centre, not on a located foveal reflex; the offset is reported.
+- Total thickness is ILM to BM where the device exports BM, else ILM to RPE (Cirrus); norms are matched
+  to device and boundary. Regions less than 80% covered or more than 20% unsegmented are omitted.
+- Reference values are published healthy-adult norms, not this cohort; z-scores and flags are unreviewed
+  (no clinical review).
+outputs:
+- kind: labels
+  scale: physical
+  labels:
+  - thickness_center_um
+  - thickness_inner_um
+  - thickness_outer_um
+  - gcipl_inner_um
+  - gcipl_outer_um
+  - fovea_offset_mm
+- kind: labels
+  scale: score
+  labels:
+  - thickness_center_z
+  - thickness_inner_z
+  - thickness_outer_z
+- kind: text
+reliability:
+  status: unmeasured
+non_training: true
+license: Apache-2.0
+source:
+  url: https://github.com/BosonHwang/MedOmni
+  rev: null
+runtime:
+  image: ghcr.io/medomni/retinal-heightmap-surfaces-f32__layer-thickness
+  digest: null
+acceptance: pending

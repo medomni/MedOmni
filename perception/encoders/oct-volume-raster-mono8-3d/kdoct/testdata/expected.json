@@ -1,0 +1,113 @@
+{
+ "input-blank.dcm": {
+  "encoder_id": "oct-volume-raster-mono8-3d__kdoct",
+  "family": "oct-volume-raster-mono8-3d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "No pixel spacing in the file; B-scans are not resampled to the training geometry.",
+   "every B-scan is blank"
+  ]
+ },
+ "input-single.dcm": {
+  "encoder_id": "oct-volume-raster-mono8-3d__kdoct",
+  "family": "oct-volume-raster-mono8-3d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read retinal DICOM: frame count does not match family dimensionality"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "oct-volume-raster-mono8-3d__kdoct",
+  "family": "oct-volume-raster-mono8-3d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "probability",
+    "items": [
+     {
+      "label": "central_cnv",
+      "value": 0.27043402194976807
+     },
+     {
+      "label": "central_dme",
+      "value": 0.12164407968521118
+     },
+     {
+      "label": "central_drusen",
+      "value": 0.2040027529001236
+     },
+     {
+      "label": "central_normal",
+      "value": 0.40391919016838074
+     },
+     {
+      "label": "mean_cnv",
+      "value": 0.26475200057029724
+     },
+     {
+      "label": "mean_dme",
+      "value": 0.1248144656419754
+     },
+     {
+      "label": "mean_drusen",
+      "value": 0.20095963776111603
+     },
+     {
+      "label": "mean_normal",
+      "value": 0.4094739258289337
+     },
+     {
+      "label": "max_cnv",
+      "value": 0.2765839099884033
+     },
+     {
+      "label": "max_dme",
+      "value": 0.13036642968654633
+     },
+     {
+      "label": "max_drusen",
+      "value": 0.20777474343776703
+     },
+     {
+      "label": "max_normal",
+      "value": 0.42588502168655396
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "top_share_cnv",
+      "value": 0.0
+     },
+     {
+      "label": "top_share_dme",
+      "value": 0.0
+     },
+     {
+      "label": "top_share_drusen",
+      "value": 0.0
+     },
+     {
+      "label": "top_share_normal",
+      "value": 1.0
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "text": "Central B-scan: normal 0.40; choroidal neovascularisation 0.27; drusen 0.20 (uncertain). Top finding across 8 B-scans: normal on 8; 0% of B-scans read with probability >= 0.6."
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "No pixel spacing in the file; B-scans are not resampled to the training geometry."
+  ]
+ }
+}

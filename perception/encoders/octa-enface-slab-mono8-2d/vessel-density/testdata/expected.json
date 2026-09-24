@@ -1,0 +1,124 @@
+{
+ "input-disc.dcm": {
+  "encoder_id": "octa-enface-slab-mono8-2d__vessel-density",
+  "family": "octa-enface-slab-mono8-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": []
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": []
+   },
+   {
+    "kind": "text",
+    "text": "Optic-disc slab (protocol 'synthetic ONH-Angiography 6x6 mm'): macular FAZ and parafoveal density do not apply; no measurement."
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration."
+  ]
+ },
+ "input-unidentified.dcm": {
+  "encoder_id": "octa-enface-slab-mono8-2d__vessel-density",
+  "family": "octa-enface-slab-mono8-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "faz_area_mm2",
+      "value": 0.286,
+      "unit": "mm2"
+     },
+     {
+      "label": "parafovea_vessel_density",
+      "value": 0.579,
+      "unit": "1"
+     },
+     {
+      "label": "fovea_offset_mm",
+      "value": 0.001,
+      "unit": "mm"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": []
+   },
+   {
+    "kind": "text",
+    "text": "OCTA unidentified slab (Triton plus): FAZ area 0.29 mm2 (no reference); parafoveal vessel density 0.58 (no reference)."
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "Slab not identified as superficial; values are reported without a reference.",
+   "Otsu threshold 126 on the slab smoothed at 10 um; pixel 0.0200 x 0.0200 mm."
+  ]
+ },
+ "input-unknown.dcm": {
+  "encoder_id": "octa-enface-slab-mono8-2d__vessel-density",
+  "family": "octa-enface-slab-mono8-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "slab is not identified as macular (no fovea structure or macular protocol)"
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "octa-enface-slab-mono8-2d__vessel-density",
+  "family": "octa-enface-slab-mono8-2d",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "faz_area_mm2",
+      "value": 0.286,
+      "unit": "mm2"
+     },
+     {
+      "label": "parafovea_vessel_density",
+      "value": 0.579,
+      "unit": "1"
+     },
+     {
+      "label": "fovea_offset_mm",
+      "value": 0.001,
+      "unit": "mm"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "faz_area_z",
+      "value": -0.38
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "text": "OCTA superficial slab (Triton plus): FAZ area 0.29 mm2 (within norm 0.33+-0.12, z -0.4); parafoveal vessel density 0.58 (no reference). Reference: Shiihara H et al., Sci Rep 2018;8:10143, Table 2 (Triton SCP FAZ, manual, 3x3, n=70, age 20-61) (unreviewed)."
+   }
+  ],
+  "notes": [
+   "Stored pixel intensities; no spatial resampling, modality LUT or physical calibration.",
+   "Otsu threshold 126 on the slab smoothed at 10 um; pixel 0.0200 x 0.0200 mm."
+  ]
+ }
+}

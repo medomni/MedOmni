@@ -1,0 +1,174 @@
+{
+ "input-disc.dcm": {
+  "encoder_id": "retinal-heightmap-surfaces-f32__layer-thickness",
+  "family": "retinal-heightmap-surfaces-f32",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": []
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": []
+   },
+   {
+    "kind": "text",
+    "text": "Optic-disc scan (protocol 'synthetic ONH 6x6'): macular ETDRS thickness does not apply; no measurement."
+   }
+  ],
+  "notes": [
+   "Float surface order and stored coordinates preserved."
+  ]
+ },
+ "input-empty.dcm": {
+  "encoder_id": "retinal-heightmap-surfaces-f32__layer-thickness",
+  "family": "retinal-heightmap-surfaces-f32",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "cannot read heightmap DICOM: File is missing DICOM File Meta Information header or the 'DICM' prefix is missing from the header. Use force=True to force reading."
+  ]
+ },
+ "input-topcon.dcm": {
+  "encoder_id": "retinal-heightmap-surfaces-f32__layer-thickness",
+  "family": "retinal-heightmap-surfaces-f32",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "thickness_center_um",
+      "value": 157.1,
+      "unit": "um"
+     },
+     {
+      "label": "thickness_inner_um",
+      "value": 192.3,
+      "unit": "um"
+     },
+     {
+      "label": "thickness_outer_um",
+      "value": 195.0,
+      "unit": "um"
+     },
+     {
+      "label": "gcipl_inner_um",
+      "value": 52.0,
+      "unit": "um"
+     },
+     {
+      "label": "gcipl_outer_um",
+      "value": 52.0,
+      "unit": "um"
+     },
+     {
+      "label": "fovea_offset_mm",
+      "value": 0.0,
+      "unit": "mm"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "thickness_center_z",
+      "value": -5.76
+     },
+     {
+      "label": "thickness_inner_z",
+      "value": -8.95
+     },
+     {
+      "label": "thickness_outer_z",
+      "value": -6.96
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "text": "Total retinal thickness (ILM-BM, Maestro2): center 157 um (below norm 285+-22, z -5.8); inner 192 um (below norm 334+-16, z -8.9); outer 195 um (below norm 290+-14, z -7.0). Reference: Myers CE et al., Am J Ophthalmol 2015;159:445-456, Tables 2-3 (Topcon 3D OCT-1000, ILM-BM, Beaver Dam, n=977, age 63-85+) (unreviewed)."
+   }
+  ],
+  "notes": [
+   "Float surface order and stored coordinates preserved.",
+   "File surface labels contradict their depth order; surfaces named by anatomical depth order.",
+   "Axial 2.6 um per A-scan pixel for Maestro2; lateral 0.0500 x 0.0500 mm."
+  ]
+ },
+ "input.dcm": {
+  "encoder_id": "retinal-heightmap-surfaces-f32__layer-thickness",
+  "family": "retinal-heightmap-surfaces-f32",
+  "healthy": true,
+  "outputs": [
+   {
+    "kind": "labels",
+    "scale": "physical",
+    "items": [
+     {
+      "label": "thickness_center_um",
+      "value": 233.9,
+      "unit": "um"
+     },
+     {
+      "label": "thickness_inner_um",
+      "value": 286.3,
+      "unit": "um"
+     },
+     {
+      "label": "thickness_outer_um",
+      "value": 290.4,
+      "unit": "um"
+     },
+     {
+      "label": "gcipl_inner_um",
+      "value": 77.4,
+      "unit": "um"
+     },
+     {
+      "label": "gcipl_outer_um",
+      "value": 77.4,
+      "unit": "um"
+     },
+     {
+      "label": "fovea_offset_mm",
+      "value": 0.0,
+      "unit": "mm"
+     }
+    ]
+   },
+   {
+    "kind": "labels",
+    "scale": "score",
+    "items": [
+     {
+      "label": "thickness_center_z",
+      "value": -1.37
+     },
+     {
+      "label": "thickness_inner_z",
+      "value": -2.86
+     },
+     {
+      "label": "thickness_outer_z",
+      "value": -0.21
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "text": "Total retinal thickness (ILM-BM, SPECTRALIS): center 234 um (within norm 264+-22, z -1.4); inner 286 um (below norm 334+-16, z -2.9); outer 290 um (within norm 294+-14, z -0.2). Reference: Aghamirsalim M et al., Sci Rep 2026;16:21144, Table 1 (Spectralis, ILM-BM, n=2205, age 50-74; rings from sectors) (unreviewed)."
+   }
+  ],
+  "notes": [
+   "Float surface order and stored coordinates preserved.",
+   "Axial 3.872 um per A-scan pixel for SPECTRALIS; lateral 0.0500 x 0.0500 mm."
+  ]
+ }
+}

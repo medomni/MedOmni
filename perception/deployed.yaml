@@ -623,6 +623,34 @@ encoders:
         n_units: 5
         source: family-samples
         detail: 5 sample(s)
+  fundus-photography-2d__flair:
+    build_key: sha256:d6a7b5dc39438b7eda1f15147e1df5ec61ffbbc60293338325fd69a1f46ffbc0
+    source_rev: a0801369e3d3fb65a8e89ec279258e31541c121e
+    image: ghcr.io/medomni/fundus-photography-2d__flair:dev
+    image_id: sha256:6dc0d744d6298d14d65e043491b9180982257175a22b1f4bd5e216eea1c88340
+    built_at: '2026-09-24T07:41:49Z'
+    stages:
+      L0:
+        status: PASS
+        at: '2026-09-24T07:41:49Z'
+        build_key: sha256:d6a7b5dc39438b7eda1f15147e1df5ec61ffbbc60293338325fd69a1f46ffbc0
+      L1:
+        status: PASS
+        at: '2026-09-24T07:41:49Z'
+        build_key: sha256:d6a7b5dc39438b7eda1f15147e1df5ec61ffbbc60293338325fd69a1f46ffbc0
+      L2:
+        status: PASS
+        at: '2026-09-24T07:41:54Z'
+        build_key: sha256:d6a7b5dc39438b7eda1f15147e1df5ec61ffbbc60293338325fd69a1f46ffbc0
+        detail: 2 sample(s)
+      L3:
+        status: PASS
+        at: '2026-09-24T07:42:19Z'
+        build_key: sha256:d6a7b5dc39438b7eda1f15147e1df5ec61ffbbc60293338325fd69a1f46ffbc0
+        draw_key: sha256:2accca00b9b488138ef052ccd8386bc2c74cd111f1373f951615ce212f3f4cc2
+        n_units: 5
+        source: family-samples
+        detail: 5 sample(s)
   fundus-photography-2d__retfound:
     build_key: sha256:876cda64ddb82f840f5f0242a0018047b3f0ba568a807bfc6eac396d46ad5d58
     source_rev: ae693bd8156bd3af8d1510ac9a2921d1287d82c8

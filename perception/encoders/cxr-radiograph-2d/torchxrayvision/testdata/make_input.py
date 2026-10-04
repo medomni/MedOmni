@@ -6,7 +6,7 @@ bright body, two dark lung fields, and a bright spine. It proves that the
 container reads an image, runs the model, and answers with the labels its card
 declares. It proves nothing about clinical behavior.
 
-Data & Task owns real samples, in HF MedOmni/family-samples. When the published
+Real samples live in an access-controlled sample set, not distributed. When a published
 cxr-radiograph-2d sample lands, replace input.png with it and freeze the
 response again.
 

@@ -2,6 +2,8 @@ id: eeg-sleep-6ch-200hz-uv__yasa
 family: eeg-sleep-6ch-200hz-uv
 modality: eeg
 summary: Thirty-second sleep stages from the C3-M2 EEG channel using the pretrained YASA classifier.
+intended_use: >-
+  Whole-night sleep EEG carrying a C3-M2 channel, in adults. Not intended for fragmentary recordings or for paediatric montages.
 outputs:
 - kind: events
   labels:

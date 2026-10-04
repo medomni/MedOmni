@@ -5,6 +5,9 @@ license permits.
 
 ## The three samples
 
+PTB-XL is in distribution for this checkpoint: ECGFounder's pretraining corpus
+includes PTB-XL, so these fixtures exercise the model on data it has seen.
+
 All three are real twelve-lead ECGs from PTB-XL, at 500 Hz, ten seconds long —
 exactly the input this checkpoint declares. Each was chosen because it carries a
 finding the card declares, so a reader can tell a working container from a broken
@@ -102,7 +105,10 @@ encoder; both belong on the record.
 
 No MIMIC-ECG record. MIMIC is under the PhysioNet credentialed license, which
 does not permit redistribution. A container image goes to a registry, and anyone
-who can pull it receives every file inside. MIMIC samples belong in HF
-[`MedOmni/family-samples`](https://huggingface.co/datasets/MedOmni/family-samples),
-which Data & Task owns. They reach a container through the `/data` mount at run
-time, and they are never built into an image.
+who can pull it receives every file inside. MIMIC samples belong in an access-controlled sample set, not distributed.
+They reach a container through the `/data` mount at run time, and they are never
+built into an image.
+
+## Bad-input fixture
+
+`input-bad-missing.hea` — Authored for this repository; covered by this repository's licence. A well-formed twelve-lead WFDB header naming a signal file that is absent, so the record cannot be read. Holds no patient data.

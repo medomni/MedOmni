@@ -1,4 +1,13 @@
 {
+ "input-bad-truncated.edf": {
+  "encoder_id": "eeg-sleep-6ch-200hz-uv__yasa",
+  "family": "eeg-sleep-6ch-200hz-uv",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "YASA requires at least five minutes of EEG"
+  ]
+ },
  "input-physionet.edf": {
   "encoder_id": "eeg-sleep-6ch-200hz-uv__yasa",
   "family": "eeg-sleep-6ch-200hz-uv",

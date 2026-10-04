@@ -74,7 +74,10 @@ because 4.2 MB does not belong in a git repository. The recipe, with Pillow
 
 No MIMIC image. MIMIC-CXR is under the PhysioNet credentialed license, which
 does not permit redistribution. A container image goes to a registry, and
-anyone who can pull it receives every file inside. MIMIC samples belong in HF
-[`MedOmni/family-samples`](https://huggingface.co/datasets/MedOmni/family-samples),
-which Data & Task owns. They reach a container through the `/data` mount at run
-time, and they are never built into an image.
+anyone who can pull it receives every file inside. MIMIC samples belong in an access-controlled sample set, not distributed.
+They reach a container through the `/data` mount at run time, and they are never
+built into an image.
+
+## Bad-input fixture
+
+`input-bad-truncated.png` — The first 120 bytes of `input.png`, this repository's synthetic phantom; same licence. A PNG header with no image data, so decoding must fail cleanly. Holds no patient data.

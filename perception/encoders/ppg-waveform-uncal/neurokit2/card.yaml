@@ -2,6 +2,8 @@ id: ppg-waveform-uncal__neurokit2
 family: ppg-waveform-uncal
 modality: ppg
 summary: Pulse rate, detected beat count, and template similarity from an uncalibrated PPG waveform.
+intended_use: >-
+  Continuous uncalibrated PPG of sufficient length to contain several beats. Reports waveform-derived rate and beat quality, not blood pressure or oxygenation.
 outputs:
 - kind: labels
   scale: physical

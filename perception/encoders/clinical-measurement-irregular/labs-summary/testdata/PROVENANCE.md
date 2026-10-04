@@ -21,3 +21,7 @@ Files: `hosp/labevents.csv.gz` and `hosp/d_labitems.csv.gz`.
 Citation: Johnson et al. (2023), MIMIC-IV Clinical Database Demo 2.2, DOI 10.13026/dp1f-ex47.
 This derived lab fixture is available under ODbL 1.0; see LICENSE-MIMIC-DEMO.txt.
 Source SHA-256: labevents `d51a4cf1ea63245abe7d544b0d50a928e9ee2ec5eb9a5ce85500aed0bd6c6dfc`; d_labitems `72ea5f020469fd24543bd98ab3bd0a4f645a5a4b7802d9d52af20d736f9d76db`.
+
+## Bad-input fixture
+
+`input-bad-nonutf8.jsonl` — Authored for this repository; covered by this repository's licence. One valid JSONL lab row followed by raw bytes that are not UTF-8, so the reader must degrade rather than raise. Holds no patient data.

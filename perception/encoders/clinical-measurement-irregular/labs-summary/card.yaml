@@ -2,6 +2,8 @@ id: clinical-measurement-irregular__labs-summary
 family: clinical-measurement-irregular
 modality: labs
 summary: Summary statistics for numeric lab measurements, grouped by name, item ID, and source unit.
+intended_use: >-
+  Any source decoding to the clinical-measurement-irregular family. Describes the numeric lab rows present; it does not interpret them clinically.
 outputs:
 - kind: text
 limits:
@@ -15,8 +17,8 @@ reliability:
 non_training: true
 license: Apache-2.0
 source:
-  url: https://github.com/BosonHwang/MedOmni
-  rev: null
+  url: "in-repository rule extractor"
+  rev: v0.1.1
 runtime:
   image: ghcr.io/medomni/clinical-measurement-irregular__labs-summary
   digest: null

@@ -1,4 +1,14 @@
 {
+ "input-bad-truncated.edf": {
+  "encoder_id": "ppg-waveform-uncal__neurokit2",
+  "family": "ppg-waveform-uncal",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "PPG amplitude is uncalibrated; native sample rate retained",
+   "PPG requires at least 30 seconds sampled at 25 Hz or higher"
+  ]
+ },
  "input.edf": {
   "encoder_id": "ppg-waveform-uncal__neurokit2",
   "family": "ppg-waveform-uncal",

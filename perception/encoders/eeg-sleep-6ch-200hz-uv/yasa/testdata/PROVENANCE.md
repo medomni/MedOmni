@@ -5,7 +5,7 @@ It contains six 200 Hz channels in microvolts for five minutes.
 Each channel is a sum of 2 Hz and 10 Hz sinusoids, with a channel-specific phase.
 The frozen stages verify deterministic inference, not sleep-stage accuracy.
 
-Local checks also use authorized MedOmni/family-samples EEG samples 01 and 03.
+Local checks also use two authorized EEG samples from an access-controlled sample set, not distributed.
 These BDSP excerpts cover separate mastoid electrodes and explicit A1/A2 references.
 Restricted patient recordings are not included in this repository or image.
 
@@ -31,3 +31,7 @@ Source annotations SHA-256: `aba4cc9495098a249eac8339aafc698f328912e2f37206e3e44
 `reference-stages.json` contains 20 clinician-labelled epochs derived from `.arousal` stage transitions.
 Times are seconds relative to the excerpt. W becomes Wake and R becomes REM; the other stage names are unchanged.
 These reference labels are independent of YASA. Frozen model output is not clinical ground truth and need not match every epoch.
+
+## Bad-input fixture
+
+`input-bad-truncated.edf` — The first 2048 bytes of `input.edf`, this repository's synthetic recording; same licence. Header only, far shorter than the five minutes YASA requires. The EDF patient and recording fields remain 'X X X X'. Holds no patient data.

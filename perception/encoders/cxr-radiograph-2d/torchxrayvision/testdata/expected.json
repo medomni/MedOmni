@@ -1,4 +1,13 @@
 {
+ "input-bad-truncated.png": {
+  "encoder_id": "cxr-radiograph-2d__torchxrayvision",
+  "family": "cxr-radiograph-2d",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "the file is not a readable image: image file is truncated"
+  ]
+ },
  "input-cc0.png": {
   "encoder_id": "cxr-radiograph-2d__torchxrayvision",
   "family": "cxr-radiograph-2d",

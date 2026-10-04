@@ -1,0 +1,13 @@
+input-bad-missing 12 500 5000
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 I
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 II
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 III
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 aVR
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 aVL
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 aVF
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 V1
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 V2
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 V3
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 V4
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 V5
+input-bad-missing.dat 16 1000.0(0)/mV 16 0 0 0 0 V6

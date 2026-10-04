@@ -1,4 +1,13 @@
 {
+ "input-bad-nonutf8.jsonl": {
+  "encoder_id": "clinical-measurement-irregular__labs-summary",
+  "family": "clinical-measurement-irregular",
+  "healthy": false,
+  "outputs": [],
+  "notes": [
+   "the file is not UTF-8 text: 'utf-8' codec can't decode byte 0xff in position 56: invalid start byte"
+  ]
+ },
  "input-mimic-demo.jsonl": {
   "encoder_id": "clinical-measurement-irregular__labs-summary",
   "family": "clinical-measurement-irregular",

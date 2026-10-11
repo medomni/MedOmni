@@ -1,9 +1,11 @@
-# Sidecar image build context needs only perception/, data_task/families/,
-# data_task/family_alias.yaml, harness/perception-image/ — everything else
-# excluded so the build context doesn't drag tens of GB of atom data through
-# docker's storage (a small fixed-size loopback image, easily exhausted).
-data_task/atomtasks/
-data_task/atomtasks-noenc/
-_artifacts/
-.git/
-harness/harbor/snapshots/
+# ALLOWLIST (fix roadmap F3, 2026-09-24): the sidecar image build context is exactly what
+# harness/perception-image/Dockerfile COPYs — nothing else. A denylist leaked every new tree
+# (runs/ traces are DUA; atomtasks*/ are tens of GB) into docker's small loopback storage.
+*
+!perception
+!data_task/families
+!data_task/family_alias.yaml
+!harness/perception-image
+# inside the allowed trees: never ship runtime state
+perception/var
+**/__pycache__

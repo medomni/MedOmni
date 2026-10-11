@@ -21,3 +21,14 @@ data_manifest/dataplane/*/patients/
 
 # gold labels anywhere: ground truth, and MIMIC/AI-READI rows are per-subject (DUA)
 **/gold.csv
+
+# every run trace + the ledger (DUA) — only the layout README is committed
+runs/*
+!runs/README.md
+
+# rendered atoms, every variant (-noenc/-ladder/-forced/...) and the prerun render
+# trees: each atom folder is named after its subject and stages that subject's
+# signals, tables and demographics under <atom>/data/ (MIMIC/BDSP/AI-READI DUA).
+# Globs, not per-variant lines, so the next emitter sweep is covered too.
+data_task/atomtasks-*/
+data_task/taskbuilder/prerun/*-review/

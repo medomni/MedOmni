@@ -12,12 +12,10 @@ This page takes you from a fresh checkout to a scored experiment: two patients o
 
 ## 1. Check out v0.2.0
 
-```bash
-git clone https://github.com/BosonHwang/MedOmni.git
-```
+Clone the MedOmni repository (access is granted by the MedOmni team), then check out the tag:
 
 ```bash
-cd MedOmni && git checkout v0.2.0
+git checkout v0.2.0
 ```
 
 ## 2. Set up Python

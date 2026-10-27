@@ -1,0 +1,68 @@
+site_name: MedOmni
+site_description: A benchmark for medical multimodal agents
+site_url: https://medomni.ai/
+
+theme:
+  name: material
+  logo: assets/logo.png
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: {icon: material/brightness-7, name: Dark mode}
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: {icon: material/brightness-4, name: Light mode}
+
+extra:
+  version:
+    provider: mike
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Get started: get-started.md
+  - Learn:
+      - Concepts: learn/concepts.md
+      - Constitution: learn/constitution.md
+      - Architecture: learn/architecture.md
+      - Contracts:
+          - learn/contracts/index.md
+          - Families: learn/contracts/families.md
+          - Task layout: learn/contracts/task-layout.md
+          - Service API: learn/contracts/service-api.md
+          - Card: learn/contracts/card.md
+          - Dataset policy: learn/contracts/dataset-policy.md
+          - Ledger row: learn/contracts/ledger-row.md
+          - Fingerprint: learn/contracts/fingerprint.md
+  - Guides:
+      - Evaluate:
+          - Run your agent: guides/run-your-agent.md
+          - Connect your data: guides/connect-your-data.md
+      - Perception:
+          - Use the encoders: guides/use-the-encoders.md
+      - Contribute:
+          - Add a task, adapter or encoder: guides/contribute.md
+  - Catalog:
+      - Datasets: catalog/datasets.md
+      - Encoders: catalog/encoders.md
+      - Benchmarks: catalog/benchmarks.md
+  - CLI: cli/index.md
+  - API reference: api/index.md

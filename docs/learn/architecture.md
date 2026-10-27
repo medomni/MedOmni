@@ -1,70 +1,55 @@
 # Architecture
 
-MedOmni is shown here in three C4 views, from the outside in: who uses it, which containers it has, and which components make up the package.
-
-!!! note "Draft"
-    These views show v1.0.0. The figures are the single source; the lines under each figure name its elements.
+MedOmni v0.2.0 is shown here in three C4 views, from the outside in: who uses it, which containers it has, and which components do the work.
 
 ## Context (C1)
 
-![C1: three stakeholders, one entrance](../assets/c1-context.drawio.svg)
+![C1: MedOmni v0.2.0 in context](../assets/c1-context.drawio.svg)
 
-- **Model tester and practitioner** (primary): brings an agent, runs it with the `medomni` command, reads the scores.
-- **Perception service user**: calls the encoders over HTTP.
-- **Task adder**: adds tasks on open data, dataset adapters and encoders by pull request, checked by `medomni` check commands.
-- **MedOmni**: one package, `pip install medomni`. Runs agents on medical tasks, scores them, serves perception encoders.
-- **medomni.ai**: these docs, one path per stakeholder.
-- **PyPI**: versioned `medomni` releases.
-- **Datasets**: dummy data and VitalDB built in; MIMIC-IV, AI-READI and BDSP from the user's own access, read from local disk.
-- **Model behind the agent**: local open model by default; cloud routes opt-in, checked against each dataset's policy.
-- **Container registry** (ghcr.io): encoder images, built by the encoder repository.
-- **Hugging Face Hub**: public task samples and encoder model cards.
+- **Model tester**: declares an experiment, runs it, reads the scores.
+- **Perception service user**: calls the encoders through the gateway over HTTP.
+- **Task or encoder author**: adds task specs, agent configs or encoders to the repository.
+- **MedOmni**: one repository, run from a checkout. It builds tasks from raw data, runs agents on them and scores the runs.
+- **Datasets**: MIMIC-IV, AI-READI and BDSP, read from local disk under each user's own license.
+- **Model provider**: the API behind the agent's model (DeepSeek, OpenAI and others), reached with the user's own key.
+- **Harbor**: the agent-evaluation framework that runs each atom task in Docker.
+- **Hugging Face Hub**: private MedOmni datasets for family samples, tasks and encoder assets, for team members.
 
 ## Containers (C2)
 
-![C2: two repositories, one package, one contract layer](../assets/c2-containers.drawio.svg)
+![C2: the repository's parts](../assets/c2-containers.drawio.svg)
 
-Main repository `MedOmni`, installed as `medomni`:
+| Part | Folder | Does |
+|---|---|---|
+| Data & Task | `data_task/` | Families, task specs, the task builder (spec tasks and atom tasks), batches. |
+| Data manifest | `data_manifest/` | The data plane the atomic builder reads: which files exist for each subject. |
+| Perception | `perception/` | One container image per encoder, its card, the registry that builds and tests them, and the gateway. |
+| Harness | `harness/` | Experiment declarations, the job builder, Harbor configs, the perception sidecar image, the scorer and the analysis tables. |
+| Assurance | `assurance/` | The audit matrix: machine checks, LLM reviews and human sign-offs over families, tasks, encoders, the gateway and runs. |
+| Runs | `runs/` | Every trace and the ledger. Local only; never committed. |
+| Internal docs | `internal_docs/` | Roadmaps, design references and reports for the MedOmni team. |
 
-- **medomni CLI**: the one entrance: `run`, `score`, `task new`, `task check`, `encoder check`.
-- **datasets**: one adapter and one policy per dataset, plus the dummy-data generator.
-- **tasks**: task specs, the task builder, and verification against published fingerprints.
-- **harness**: the Harbor environment, agent routes, the scorer and metrics.
-- **assurance**: the audit engine. Audit records stay private to the MedOmni team.
-- **contracts**: schemas and validators, versioned: the family registry, task layout, Service API, card, dataset policy, ledger row and fingerprint. Every other part depends on contracts and on nothing else; no part reads another part's files by path.
-- **perception client**: pulls encoder images and starts the gateway.
-- **docs/**: these pages, built to medomni.ai.
-- **templates/ and CI**: templates for each extension point; GitHub Actions checks every pull request.
-
-Encoder repository:
-
-- **Gateway**: the HTTP service with `list_encoders`, `get_card` and `encode`.
-- **Encoders**: one container per encoder, each reading one family. The repository pins a `medomni` version for the contracts, publishes images to ghcr.io and cards to Hugging Face.
+Inside one atom task, Harbor starts three containers on a closed network: the agent's workspace (`main`), a `bootstrap` step that stages the patient's files, and, in the encoder variants, the `perception` sidecar. The sidecar runs the gateway and starts encoder containers on demand.
 
 ## Components (C3)
 
-![C3: a locked core and four extension points](../assets/c3-components.drawio.svg)
+![C3: the components on the run path](../assets/c3-components.drawio.svg)
 
-Core, changed only by the MedOmni team:
-
-- **Contracts**: the schemas and validators listed above.
-- **Task pipeline**: intake, freeze, emit, validate, verify.
-- **Runner and scorer**: the Harbor environment, the route check against dataset policies, and the scorer, which is the only thing that writes scores.
-- **Audit engine**: the audit matrix over fingerprints and ledger rows.
-- **Gateway and perception client**: serve whichever encoders are registered.
-- **medomni CLI**: the commands above.
-
-Extension points, open to contributors. Each has a template and one check command, and CI runs the same check on every pull request:
-
-| Extension point | What you bring | Template | Check |
-|---|---|---|---|
-| Agent | Your agent config, naming a route rather than a vendor | `templates/agent/` | `medomni run` on dummy tasks |
-| Dataset adapter | An adapter and policy for an openly licensed dataset, with a data sample on Hugging Face | `templates/dataset/` | `medomni task check` |
-| Task | A task spec on a supported dataset and family | `medomni task new` | `medomni task check` |
-| Encoder | An encoder adapter, Dockerfile, card and test data for one family, in the encoder repository | `templates/encoder/` | `medomni encoder check` |
+| Component | Where | Does |
+|---|---|---|
+| Family registry | `data_task/families/`, `data_task/family_alias.yaml` | Declares every input family and what it accepts. |
+| Spec pipeline | `data_task/taskbuilder/intake/`, `emit.py`, `validate.py`, `push.py`, `pin_batch.py` | Turns a proposal into a frozen spec, a task folder, a fingerprint and a batch entry. |
+| Atomic builder | `data_task/taskbuilder/emit_atomic.py` | Builds one atom per task type and patient, in each variant, with the parent's cohort, gold and fingerprint. |
+| Encoder registry | `perception/registry.py`, `perception/encoders.yaml` | Validates cards, builds images, tests them against expected responses, reports status. |
+| Gateway | `perception/gateway/` | Serves `list_encoders`, `get_card` and `encode`, and manages a pool of encoder containers. |
+| Perception sidecar | `harness/perception-image/` | The gateway inside a task: call budget, scoped catalogue, and a call log for scoring. |
+| Job builder | `harness/build.py` | `emit` turns an experiment into Harbor jobs and a prerun sheet; `import` writes atom rows; `status` shows completeness. |
+| Scorer | `harness/score.py`, `harness/metrics.py` | The only thing that writes scores: one cell row per task type, condition and repetition. |
+| Analysis | `harness/analyze.py` | Turns the ledger into the experiment's task × model × variant table. |
+| Audit matrix | `assurance/audit_matrix_v2/` | Records verdicts bound to fingerprints; a verdict goes stale when its subject changes. |
 
 ## Where next
 
 - [Contracts](contracts/index.md): the interfaces between the parts.
-- [Contribute](../guides/contribute.md): how the extension points work in practice.
+- [Code map](../api/index.md): every folder and its entry points.
 - [Concepts](concepts.md): the terms used above.

@@ -1,76 +1,51 @@
-# CLI
+# Commands
 
-The `medomni` command is the one entrance to MedOmni, with one section per subcommand below.
+v0.2.0 has no single command. Each step is a script, run from the repository root; this page lists them in the order a run uses them.
 
-!!! note "Draft"
-    The CLI arrives in v1.0.0 (roadmap phase 3). Each command wraps scripts that exist today, with the same code underneath; flags may still change.
+## Build tasks
 
-## medomni run
+| Command | Does |
+|---|---|
+| `python data_task/taskbuilder/emit_atomic.py <type> [...] --variant <v> --batch <b> -n <N>` | Builds atom tasks: one per task type and patient, in one variant (`enc`, `noenc`, `enc-forced`). `--all` takes every type; `--seed` fixes the patients; `--ladder` builds the modality-ladder rungs. |
+| `python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/<id>.yaml` | Emits a spec's task folder into `data_task/tasks/<id>/`. |
+| `python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<id>.yaml` | Checks a spec and its emitted folder; JSON report, exit 1 on any failure. |
+| `python data_task/taskbuilder/pin_batch.py <batch> [<id> ...]` | Writes a batch file from the listed tasks' fingerprints. |
+| `python data_task/taskbuilder/intake/compile.py <csv>` | Turns proposal rows into draft specs. |
+| `python data_task/taskbuilder/intake/freeze.py <id>` | Freezes a resolved draft spec. |
+| `python data_task/taskbuilder/family_audit.py audit` | Checks the family registry and its samples. |
 
-Runs an agent on a batch: builds the job, runs every atom task in Harbor, and imports the results into the ledger.
+## Run and score
 
-```bash
-medomni run --agent my-agent.yaml --batch v1-mini
-```
+| Command | Does |
+|---|---|
+| `python harness/build.py emit <experiment>` | Turns `harness/experiments/<experiment>.yaml` into one Harbor job per agent × variant × repetition, writes a prerun sheet per job, and dry-runs the first. |
+| `harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/<agent>.yaml -c harness/harbor/jobs/<job>.yaml` | Runs one job. Printed verbatim in the job's prerun sheet; run it after signing. |
+| `python harness/build.py import runs/experiments/<experiment>/jobs/<job>` | Writes one unscored atom row per run to the ledger. `--new-ledger` creates the ledger the first time. |
+| `python harness/build.py status <experiment>` | Shows which atoms of each cell are present. |
+| `python harness/score.py [--experiment <experiment>]` | Scores every complete cell: one cell row per task type, condition and repetition. The only script that writes scores. `--dry-run` shows what it would score; `--force` re-scores under the current metrics. |
+| `python harness/analyze.py grid <experiment>` | Writes the task × model × variant table to `runs/experiments/<experiment>/analysis/grid.md`. |
 
-Checks the agent's route against each dataset policy before it starts. Wraps `harness/build.py emit`, `harbor run` and `harness/build.py import`.
+## Encoders
 
-## medomni score
+| Command | Does |
+|---|---|
+| `uv run perception/registry.py plan [<id> ...]` | Status of every encoder: runnable, unbuilt, stale, failing or retired. |
+| `uv run perception/registry.py build [<id> ...]` | Builds encoder images, tagged `:dev`. |
+| `uv run perception/registry.py validate [<id> ...]` | Checks cards against the schema and the family registry. |
+| `uv run perception/registry.py test --docker [<id> ...]` | Runs built images on their test data and compares with `expected.json`. |
+| `uv run perception/registry.py freeze --docker [<id> ...]` | Records `expected.json` from the current responses. |
+| `uv run perception/registry.py index` | Regenerates `perception/encoders.yaml`. |
+| `uv run perception/gateway/main.py --data-root <dir>` | Starts the gateway on `127.0.0.1:8000`. |
+| `docker build -f harness/perception-image/Dockerfile -t medomni-perception .` | Builds the perception sidecar used inside tasks. |
 
-Scores the runs of a batch or experiment: one cell row per task in the ledger, and a summary table.
+## Tests
 
-```bash
-medomni score --batch v1-mini
-```
-
-The only command that writes scores. Wraps `harness/score.py` and `harness/analyze.py`.
-
-## medomni task new
-
-Creates a task spec from the template.
-
-```bash
-medomni task new my-task --dataset vitaldb
-```
-
-## medomni task check
-
-Validates a spec, builds its task, confirms nothing leaks to the agent, and checks the fingerprint. With `--batch`, checks every task of a batch against its published fingerprints.
-
-```bash
-medomni task check specs/my-task.yaml
-```
-
-```bash
-medomni task check --batch v1-mini
-```
-
-Wraps `data_task/taskbuilder/validate.py`.
-
-## medomni encoder check
-
-Validates an encoder's card, builds its image, runs it on the family's samples, and compares the evidence with the expected responses.
-
-```bash
-medomni encoder check encoders/<family>/<encoder>
-```
-
-Wraps the encoder gate in `perception/registry.py`.
-
-## Proposed additions
-
-!!! note "Not yet decided"
-    The guides need four more commands. They are proposals until the CLI is designed in phase 3.
-
-| Command | Does | Used in |
-|---|---|---|
-| `medomni data connect <dataset> --path <dir>` | Records where your licensed copy of a dataset is | [Connect your data](../guides/connect-your-data.md) |
-| `medomni task build --batch <batch>` | Builds a batch's tasks from your local data | [Connect your data](../guides/connect-your-data.md) |
-| `medomni encoders pull <family-or-encoder>` | Pulls encoder images from ghcr.io | [Use the encoders](../guides/use-the-encoders.md) |
-| `medomni gateway up` | Starts the gateway on the pulled encoders | [Use the encoders](../guides/use-the-encoders.md) |
+| Command | Does |
+|---|---|
+| `python3 -m unittest discover -s harness/tests` | The harness gates, Assurance's mutation tests and the sidecar guard tests. |
 
 ## Where next
 
 - [Get started](../get-started.md): the commands in order on a first run.
-- [API reference](../api/index.md): the same functions from Python.
-- [Contracts](../learn/contracts/index.md): what the check commands enforce.
+- [Code map](../api/index.md): where each script sits.
+- [Contracts](../learn/contracts/index.md): what the checks enforce.

@@ -2,10 +2,9 @@
 
 The Service API is the HTTP interface between an agent and the encoders: find an encoder, read its card, and send it an input to get evidence back.
 
-Version: v1 · Schema: `medomni/contracts/schemas/{encode-request,evidence}.schema.json`
+Defined in: `perception/gateway/schemas.py` (the models the gateway serves) · prose spec `perception/spec/service-api.md` · evidence schema `perception/spec/evidence.schema.json`
 
-!!! note "Draft"
-    Today the gateway is `perception/gateway/` and the spec is `perception/spec/service-api.md`. The schemas are frozen as v1 in roadmap phase 2 and move with the gateway to the encoder repository in phase 5.
+The gateway also serves its own OpenAPI page at `/docs`.
 
 ## Fields
 
@@ -47,14 +46,13 @@ Output blocks: `labels` carries a `scale` (`probability`, `logit`, `score`, `phy
 - Unknown request fields are rejected (422).
 - Unknown encoder: 404. Path outside the data root or missing: 400. Card-only encoder: 409. Container crash or a reply naming the wrong encoder or family: 502. No free slot: 503.
 - Evidence is composed from the card and the container's reply; the gateway never invents outputs.
+- Inside a task the perception sidecar adds three rules: a call budget (`MAX_CALLS`, 300 in `enc`, 1000 in `enc-forced`), a catalogue scoped to the families staged for that patient, and a call log at `GET /usage` that the harness copies into the trial for scoring.
 
 ## Check
 
 ```bash
-medomni encoder check encoders/<family>/<encoder>
+uv run --with fastapi --with httpx --with pyyaml --with pydantic python -m unittest discover -s perception/tests -p test_gateway_api.py
 ```
-
-Today: the gateway tests in `perception/tests/test_gateway_api.py`.
 
 ## Where next
 

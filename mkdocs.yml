@@ -49,7 +49,6 @@ nav:
           - Task layout: learn/contracts/task-layout.md
           - Service API: learn/contracts/service-api.md
           - Card: learn/contracts/card.md
-          - Dataset policy: learn/contracts/dataset-policy.md
           - Ledger row: learn/contracts/ledger-row.md
           - Fingerprint: learn/contracts/fingerprint.md
   - Guides:
@@ -59,10 +58,10 @@ nav:
       - Perception:
           - Use the encoders: guides/use-the-encoders.md
       - Contribute:
-          - Add a task, adapter or encoder: guides/contribute.md
+          - Add a task, agent or encoder: guides/contribute.md
   - Catalog:
       - Datasets: catalog/datasets.md
       - Encoders: catalog/encoders.md
       - Benchmarks: catalog/benchmarks.md
-  - CLI: cli/index.md
-  - API reference: api/index.md
+  - Commands: cli/index.md
+  - Code map: api/index.md

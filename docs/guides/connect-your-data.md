@@ -1,9 +1,6 @@
 # Connect your data
 
-This guide is for model testers who hold access to a credentialed dataset: you end up with the tasks of a published batch built on your machine and proven identical to everyone else's.
-
-!!! note "Draft"
-    The dataset adapter interface arrives in v1.0.0 (roadmap phase 4).
+This guide is for model testers who hold access to a credentialed dataset: you end up with MedOmni tasks built from your own copy.
 
 ## Before you start
 
@@ -12,35 +9,41 @@ This guide is for model testers who hold access to a credentialed dataset: you e
 
 ## Steps
 
-1. Tell MedOmni where the dataset is.
+1. Tell the task builder where each dataset is, in `data_task/data_roots.yaml`:
 
-    ```bash
-    medomni data connect mimic-iv --path /path/to/your/copy
+    ```yaml
+    mimic: /path/to/mimic-iv
+    aireadi: /path/to/aireadi
+    bdsp: /path/to/bdsp
     ```
 
-2. Build the batch. The dataset adapter surveys your copy into a catalog, then each task spec emits its task folders locally.
+2. Build atom tasks for the types and variants you want. `-n` is the number of patients per type; `--seed` fixes which ones.
 
     ```bash
-    medomni task build --batch v1-mini
+    python data_task/taskbuilder/emit_atomic.py --all --variant enc --batch smoke -n 2
     ```
 
-3. Verify the build against the published fingerprints.
+3. To rebuild a pinned spec task instead, emit it from its spec and validate it.
 
     ```bash
-    medomni task check --batch v1-mini
+    python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/mimic_icu-stay-radiology-mini.yaml
     ```
 
-4. Run your agent on the batch, as in [Run your agent](run-your-agent.md).
+    ```bash
+    python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/mimic_icu-stay-radiology-mini.yaml
+    ```
+
+4. Compare the fingerprint in `data_task/tasks/<task-id>/FINGERPRINT` with the task's entry in `data_task/tasks/batches/v1-mini.yaml`.
 
 ## Check
 
-`medomni task check` reports every task as matching or not matching its published fingerprint. A mismatch means your copy differs (version, missing module) or the build did; do not report scores from a mismatched task.
+`validate.py` prints a JSON report and exits 1 on any failure: a missing key, a metric outside the vocabulary, a leaking input, gold under `data/`, or a folder that no longer matches its `FINGERPRINT`. A fingerprint that differs from the batch's means your copy (version, missing module) or the build differs; do not compare scores across the two.
 
 !!! warning "Keep data local"
-    Built tasks contain patient data. Never upload them, share them, or send them to a model route the dataset policy does not allow.
+    Built tasks, gold answers, traces and ledger rows all contain patient data. Never commit, upload or share them, and only send a task to a model provider the dataset's license allows (see [Datasets](../catalog/datasets.md)).
 
 ## Where next
 
 - [Fingerprint](../learn/contracts/fingerprint.md): how the match is computed.
-- [Dataset policy](../learn/contracts/dataset-policy.md): what each policy controls.
-- [Benchmarks](../catalog/benchmarks.md): the batches you can build.
+- [Task layout](../learn/contracts/task-layout.md): what a built task contains.
+- [Benchmarks](../catalog/benchmarks.md): the pinned batches.

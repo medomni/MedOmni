@@ -34,6 +34,7 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+  - def_list
   - pymdownx.details
   - pymdownx.superfences
 
@@ -41,28 +42,19 @@ nav:
   - Home: index.md
   - Get started: get-started.md
   - Learn:
+      - Design principles: learn/principles.md
       - Concepts: learn/concepts.md
-      - Constitution: learn/constitution.md
       - Architecture: learn/architecture.md
-      - Contracts:
-          - learn/contracts/index.md
-          - Families: learn/contracts/families.md
-          - Task layout: learn/contracts/task-layout.md
-          - Service API: learn/contracts/service-api.md
-          - Card: learn/contracts/card.md
-          - Ledger row: learn/contracts/ledger-row.md
-          - Fingerprint: learn/contracts/fingerprint.md
   - Guides:
-      - Evaluate:
-          - Run your agent: guides/run-your-agent.md
-          - Connect your data: guides/connect-your-data.md
-      - Perception:
-          - Use the encoders: guides/use-the-encoders.md
-      - Contribute:
-          - Add a task, agent or encoder: guides/contribute.md
-  - Catalog:
-      - Datasets: catalog/datasets.md
-      - Encoders: catalog/encoders.md
-      - Benchmarks: catalog/benchmarks.md
+      - Run your agent: guides/run-your-agent.md
+      - Connect your data: guides/connect-your-data.md
+      - Use the encoders: guides/use-the-encoders.md
+      - Contribute: guides/contribute.md
+  - Reference:
+      - Tasks: reference/tasks.md
+      - Encoders: reference/encoders.md
+      - Families: reference/families.md
+      - Datasets: reference/datasets.md
+      - Gateway API: reference/gateway-api.md
+      - Audit: reference/audit.md
   - Commands: cli/index.md
-  - Code map: api/index.md

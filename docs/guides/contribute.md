@@ -1,8 +1,8 @@
 # Contribute
 
-This guide is for task and encoder authors: you end up with a new task, agent config or encoder in the repository, checked by the same commands the team uses.
+This guide is for contributors: you end up with a new task, agent config or encoder in the repository, checked by the same commands the team uses.
 
-In v0.2.0 contributions come from MedOmni team members and collaborators with repository access. Each area has an owner who reviews changes to it (see the ownership table in the repository README). Contracts change only through their owning team.
+Each area of the repository has an owner who reviews changes to it; the repository README lists them.
 
 ## Add a task
 
@@ -11,7 +11,7 @@ For a task on MIMIC-IV, AI-READI or BDSP, using families MedOmni already declare
 ### Before you start
 
 - Access to the dataset, and its root set in `data_task/data_roots.yaml`.
-- The task's inputs map to existing families. See [Families](../learn/contracts/families.md).
+- The task's inputs map to existing families. See [Families](../reference/families.md).
 
 ### Steps
 
@@ -34,7 +34,7 @@ For a task on MIMIC-IV, AI-READI or BDSP, using families MedOmni already declare
     ```
 
 4. To run the task type as atom tasks, add its targets to the atomic builder's census in `emit_atomic.py` and build it, as in [Connect your data](connect-your-data.md).
-5. Pin the task into a batch. `pin_batch.py` rewrites the whole batch file from the task ids you list, so list every task the batch should hold. Task data is never pushed anywhere: the constitution keeps new tasks local.
+5. Pin the task into a batch. `pin_batch.py` rewrites the whole batch file from the task ids you list, so list every task the batch should hold. Task data stays local.
 
     ```bash
     python data_task/taskbuilder/pin_batch.py <batch> <task-id> [<task-id> ...]
@@ -46,7 +46,7 @@ For a task on MIMIC-IV, AI-READI or BDSP, using families MedOmni already declare
 python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<task-id>.yaml
 ```
 
-It checks the spec's keys and metric, that the label derivation resolves, that no gold or leaking input reaches `data/`, that staged files match their families, and that the folder matches its `FINGERPRINT`.
+It checks the spec's keys and metric, that the label derivation resolves, that no answers or leaking inputs reach `data/`, that staged files match their families, and that the folder matches its `FINGERPRINT`.
 
 ## Add an agent
 
@@ -85,7 +85,7 @@ For a new model or provider behind the `terminus-2` scaffold.
     ```
 
 2. Implement `FAMILY` and `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`. Build the Dockerfile on the shared runtime and pin the base image, dependencies, source revision and weight hashes.
-3. Write the card. It declares the family, outputs, options, license and source; nothing is discovered at run time.
+3. Write the model card. It declares the family, outputs, options, license and source; see [Encoders](../reference/encoders.md).
 4. Build the image, record its expected responses, and regenerate the encoder index.
 
     ```bash
@@ -116,10 +116,9 @@ uv run perception/registry.py test --docker <family>__<encoder>
 uv run perception/registry.py plan <family>__<encoder>
 ```
 
-`validate` checks the card against the schema and the family registry; `test` runs the built image on its test data and compares the responses with `expected.json`; `plan` should report the encoder as runnable.
+`validate` checks the model card against the schema and the family registry; `test` runs the built image on its test data and compares the responses with `expected.json`; `plan` should report the encoder as runnable.
 
 ## Where next
 
-- [Contracts](../learn/contracts/index.md): the interfaces your contribution must meet.
-- [Constitution](../learn/constitution.md): the rules every task and encoder follows.
-- [Datasets](../catalog/datasets.md): what each dataset's license allows.
+- [Tasks](../reference/tasks.md): the spec format.
+- [Design principles](../learn/principles.md): including the rules for editing these docs.

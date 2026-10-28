@@ -1,19 +1,18 @@
 # Run your agent
 
-This guide is for model testers: you end up with your own model scored on MedOmni atom tasks, with and without encoders.
+This guide is for agent evaluators: you end up with your own model scored on MedOmni, with and without encoders.
 
 ## Before you start
 
-- The first experiment in [Get started](../get-started.md) working.
-- Atom tasks built for the task types you want, in each variant you want to compare. Build the `noenc` arm with `--variant noenc`; it lands in `data_task/atomtasks-noenc/`.
-- An API key for your model in the keys file named by `harness/config.yaml`.
+- [Get started](../get-started.md) working end to end.
+- Atom tasks built for each condition you compare. Build the no-encoder ones with `--variant noenc`; they land in `data_task/atomtasks-noenc/`.
 
 ## Steps
 
-1. Add an agent config. Copy an existing one and change the model. Keys travel only as `${VARNAME}` references to the keys file, never as values.
+1. Add an agent config by copying an existing one and changing the model. Keys appear only as `${VARNAME}` references to your keys file.
 
     ```bash
-    cp harness/harbor/agents/terminus-2-sol.yaml harness/harbor/agents/terminus-2-mymodel.yaml
+    cp harness/harbor/agents/terminus-2-gpt.yaml harness/harbor/agents/terminus-2-mymodel.yaml
     ```
 
     ```yaml
@@ -26,13 +25,13 @@ This guide is for model testers: you end up with your own model scored on MedOmn
           max_turns: 300
     ```
 
-2. Probe the model and note the name the provider reports back. A requested alias is not proof of what answered: `deepseek-chat` is served as `deepseek-flash`. Record the model in `harness/models.yaml` with that served name.
-3. Declare the experiment: your agent, both arms, and the repetitions. Each agent × variant × repetition becomes one Harbor job.
+2. Send the model one request and note the model name the provider reports back. A requested alias can be served by a different model, so record the served name in `harness/models.yaml` and in the experiment's `expect`.
+3. Declare the experiment. Each agent × condition × repetition becomes one Harbor job.
 
     ```yaml
     experiment: my-model-v1
     tier: SMOKE
-    description: my model, encoder vs no-encoder arm
+    description: my model, with and without encoders
     generation: fix-smoke
     types: all
     variants: {enc: data_task/atomtasks, noenc: data_task/atomtasks-noenc}
@@ -42,17 +41,19 @@ This guide is for model testers: you end up with your own model scored on MedOmn
     expect: {terminus-2-mymodel: {model_served: my-model-2026-10-01}}
     ```
 
-4. Emit, sign each prerun sheet, and run each job's `harbor run` command, as in [Get started](../get-started.md).
+4. Emit, run each job's `harbor run` command and import each job, as in [Get started](../get-started.md).
 
     ```bash
     python harness/build.py emit my-model-v1
     ```
 
-5. Import every job, then score and tabulate.
-
     ```bash
-    python harness/build.py import runs/experiments/my-model-v1/jobs/<job>
+    python harness/build.py status my-model-v1
     ```
+
+    `status` shows which patients of each task type have a run, so you know when the experiment is complete.
+
+5. Score and tabulate.
 
     ```bash
     python harness/score.py --experiment my-model-v1
@@ -64,12 +65,20 @@ This guide is for model testers: you end up with your own model scored on MedOmn
 
 ## Check
 
-`python harness/build.py status my-model-v1` shows which atoms of each cell are present. The scorer refuses a cell, rather than scoring it, when a cohort subject is missing, when its runs disagree on fingerprint or served model, or when the verifier crashes. Agent failures are real results: they count as chance for AUC targets. Infrastructure failures refuse the cell.
+`runs/experiments/my-model-v1/analysis/grid.md` shows task × agent × condition, with patient counts, failure rate, cost and encoder use. A task type with missing patients, or with runs that disagree on fingerprint or served model, is refused rather than scored. An agent's failure scores as chance; an infrastructure failure refuses the score.
 
-The grid in `runs/experiments/my-model-v1/analysis/grid.md` shows task × model × variant, with atom counts, failure rate, cost and encoder use.
+## Results file
+
+Every run and every score is one line in `runs/ledger/results.jsonl`, written only by `build.py import` and `score.py`. You need it only to analyse results beyond the grid. Lines are never edited; for a repeated `run_id`, the latest line wins.
+
+| Record | One per | Key fields |
+|---|---|---|
+| Run (`kind: atom`) | agent run on one atom task | `run_id`, `task`, `agent`, `variant`, `fingerprint`, `model_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
+| Score (`kind: cell`) | task type × agent × condition × repetition | `run_id`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
+
+!!! warning "The results file is patient data"
+    Run ids contain the dataset's subject ids, so the file falls under each dataset's data use agreement. Keep it under `runs/`, which git ignores.
 
 ## Where next
 
-- [Ledger row](../learn/contracts/ledger-row.md): what each run and score records.
-- [Use the encoders](use-the-encoders.md): what the encoder arm gives your agent.
-- [Constitution](../learn/constitution.md): the rules on scoring and evidence.
+- [Use the encoders](use-the-encoders.md): what the encoder condition gives your agent.

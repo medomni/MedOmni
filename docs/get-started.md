@@ -1,87 +1,67 @@
 # Get started
 
-This page takes you from a fresh checkout to a scored experiment: two patients on one task type, one agent, one repetition.
+This page takes you from a checkout to a scored experiment: two patients, one task type, one agent.
 
 ## Before you start
 
-- Linux with Docker, and Python 3 with [uv](https://docs.astral.sh/uv/).
-- The [Harbor](https://github.com/laude-institute/harbor) CLI. The team runs 0.23.0.
-- Access to the MedOmni repository, and to at least one dataset under its own license: MIMIC-IV, AI-READI or BDSP. See [Datasets](catalog/datasets.md).
-- An ext4 disk for `runs/`. Harbor sets file permissions on trial folders, which exFAT cannot do.
+- Docker, [uv](https://docs.astral.sh/uv/) and the [Harbor](https://github.com/laude-institute/harbor) CLI (0.23.0).
+- Licensed access to at least one dataset. See [Datasets](reference/datasets.md).
 - An API key for the agent's model.
 
-## 1. Check out v0.2.0
+## 1. Set up
 
-Clone the MedOmni repository (access is granted by the MedOmni team), then check out the tag:
+Check out the tag and create a Python environment outside the checkout:
 
 ```bash
 git checkout v0.2.0
 ```
 
-## 2. Set up Python
-
-The harness needs PyYAML; the task builder also reads clinical file formats. One environment, kept outside the checkout, covers both:
-
 ```bash
-uv venv ~/.venvs/medomni
+uv venv ~/.venvs/medomni && source ~/.venvs/medomni/bin/activate && uv pip install pyyaml numpy pandas pydicom pyedflib h5py pillow wfdb
 ```
 
-```bash
-source ~/.venvs/medomni/bin/activate && uv pip install pyyaml numpy pandas pydicom pyedflib h5py pillow wfdb
-```
+Every `python` command below runs in this environment.
 
-Every `python` command in these docs runs in this environment. Commands that start with `uv run` bring their own dependencies.
+## 2. Configure
 
-## 3. Point MedOmni at your machine
+| File | Set |
+|---|---|
+| `data_task/data_roots.yaml` | Where each dataset is (`mimic`, `aireadi`, `bdsp`). |
+| `harness/config.yaml` | Where runs are written (`runs_root`) and your keys file (`keys_file`). |
+| keys file | Your API key in dotenv form, for example `DEEPSEEK_API_KEY=...`. Never commit it. |
 
-Machine settings live in two files. Neither holds task content.
+v0.2.0 also hard-codes one path that you must change: `BRIDGE_CACHE` in `data_task/taskbuilder/emit_atomic.py`.
 
-- `data_task/data_roots.yaml`: where each dataset is on disk, one line per dataset (`mimic`, `aireadi`, `bdsp`).
-- `harness/config.yaml`: where runs are written (`runs_root`) and where your API keys file is (`keys_file`, default `harness/api-keys.env`).
+## 3. Build images
 
-Put your keys in the keys file in dotenv form, for example `DEEPSEEK_API_KEY=...`. Never commit it.
-
-!!! warning "Machine-specific paths in v0.2.0"
-    Two paths are written for the team's machine and need editing on yours: `jobs_dir` in `harness/harbor/base.yaml`, and `BRIDGE_CACHE` near the top of `data_task/taskbuilder/emit_atomic.py`.
-
-## 4. Build the images
-
-The gateway sidecar that serves encoders inside each task:
+The perception sidecar, and the encoders your task needs:
 
 ```bash
 docker build -f harness/perception-image/Dockerfile -t medomni-perception .
 ```
 
-The encoder images the task needs. Each is built locally and tagged `:dev`:
-
 ```bash
 uv run perception/registry.py build cxr-radiograph-2d__torchxrayvision
 ```
 
-```bash
-uv run perception/registry.py plan
-```
+## 4. Build tasks
 
-`plan` shows every encoder as runnable, unbuilt, stale, failing or retired.
-
-## 5. Build atom tasks
-
-An atom task is one task for one patient. This builds two atoms of one MIMIC-IV task type, in the encoder arm:
+Two patients of one MIMIC-IV task type, with encoders available:
 
 ```bash
 python data_task/taskbuilder/emit_atomic.py mimic_icu-stay-radiology --variant enc --batch smoke -n 2
 ```
 
-The atoms land in `data_task/atomtasks/`, with the parent task's cohort, gold answers and fingerprint in `data_task/atomtasks/_parents/mimic_icu-stay-radiology/`. Both stay on your machine.
+The tasks land in `data_task/atomtasks/` and stay on your machine.
 
-## 6. Declare an experiment
+## 5. Run
 
-An experiment is one yaml file in `harness/experiments/`. Save this as `harness/experiments/my-first.yaml`:
+Save this as `harness/experiments/my-first.yaml`:
 
 ```yaml
 experiment: my-first
 tier: SMOKE
-description: two atoms of one type, encoder arm, one rep
+description: two patients, one task type, with encoders
 generation: fix-smoke
 types: [mimic_icu-stay-radiology]
 variants: {enc: data_task/atomtasks}
@@ -90,49 +70,43 @@ reps: [1]
 expect: {terminus-2: {model_served: deepseek-flash}}
 ```
 
-`generation` must match the atoms you built (`fix-smoke` is the builder's default). `expect.model_served` is the model name the provider reports back; a run that reports any other name is failed at import.
+`expect.model_served` is the model name the provider reports back; a run that reports another name is recorded as an error and never scored.
 
-## 7. Run it
+Emit the job. This dry-runs it and writes a prerun sheet to `harness/prerun/` with the exact `harbor run` command:
 
-1. Emit the job. This writes a Harbor job overlay, pre-mints the run ids, writes a prerun sheet to `harness/prerun/`, and dry-runs the job in Harbor.
+```bash
+python harness/build.py emit my-first
+```
 
-    ```bash
-    python harness/build.py emit my-first
-    ```
+Load your keys and run that command:
 
-2. Read the prerun sheet and sign its approval block.
-3. Load your keys and run the `harbor run` command printed in the sheet. It has this shape:
+```bash
+set -a; source harness/api-keys.env; set +a
+```
 
-    ```bash
-    set -a; source harness/api-keys.env; set +a
-    ```
+```bash
+harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/terminus-2.yaml -c harness/harbor/jobs/<job>.yaml
+```
 
-    ```bash
-    harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/terminus-2.yaml -c harness/harbor/jobs/<job>.yaml
-    ```
+The sheet also prints `harness/docker_hygiene.py` lines. That script is not in v0.2.0; skip them.
 
-    The sheet also prints `harness/docker_hygiene.py` lines before and after the run. That script is not in v0.2.0; skip those lines.
+## 6. Score
 
-4. Import the job into the ledger, score it, and print the table.
+```bash
+python harness/build.py import runs/experiments/my-first/jobs/<job>
+```
 
-    ```bash
-    python harness/build.py import runs/experiments/my-first/jobs/<job>
-    ```
+```bash
+python harness/score.py --experiment my-first
+```
 
-    ```bash
-    python harness/score.py --experiment my-first
-    ```
+```bash
+python harness/analyze.py grid my-first
+```
 
-    ```bash
-    python harness/analyze.py grid my-first
-    ```
-
-## Check
-
-`analyze.py grid` prints one row per task type with the score, the number of atoms and the failure rate, and writes it to `runs/experiments/my-first/analysis/grid.md`. Two patients give a number that means nothing clinically; it shows the pipeline works.
+The last command prints one row per task type (score, patients, failure rate) and writes it to `runs/experiments/my-first/analysis/grid.md`. Two patients only show that the pipeline works; the number means nothing clinically.
 
 ## Where next
 
-- [Run your agent](guides/run-your-agent.md): your own model, more types, both arms.
-- [Concepts](learn/concepts.md): what a task, an atom task and a generation are.
-- [Commands](cli/index.md): every script used above.
+- [Run your agent](guides/run-your-agent.md): your own model, more task types, with and without encoders.
+- [Concepts](learn/concepts.md): the terms used above.

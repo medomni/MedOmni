@@ -3,7 +3,7 @@
 Every dataset v0.2.0 builds tasks from, with how to get access and what its license lets you publish and send to a model provider.
 
 !!! note "A reading, not legal advice"
-    The license readings below were checked on 2026-10-18 against each data owner's license, data use agreement or FAQ. v0.2.0 does not enforce them in code: you are responsible for following your own agreement.
+    The readings below summarise each data owner's license and data use agreement. MedOmni does not enforce them in code: you are responsible for following your own agreement.
 
 | Dataset | Access | Adapter | License | What may be published | Model providers |
 |---|---|---|---|---|---|
@@ -17,5 +17,5 @@ Adapters are in `data_task/taskbuilder/adapters/`, and each dataset's root on yo
 ## Where next
 
 - [Connect your data](../guides/connect-your-data.md): build tasks from your own access.
-- [Benchmarks](benchmarks.md): which batches use which datasets.
-- [Constitution](../learn/constitution.md): the rules on data and publication.
+- [Tasks](tasks.md): the task types and batches on each dataset.
+- [Design principles](../learn/principles.md): why patient data stays local.

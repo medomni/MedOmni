@@ -6,7 +6,7 @@ v0.2.0 has no single command. Each step is a script, run from the repository roo
 
 | Command | Does |
 |---|---|
-| `python data_task/taskbuilder/emit_atomic.py <type> [...] --variant <v> --batch <b> -n <N>` | Builds atom tasks: one per task type and patient, in one variant (`enc`, `noenc`, `enc-forced`). `--all` takes every type; `--seed` fixes the patients; `--ladder` builds the modality-ladder rungs. |
+| `python data_task/taskbuilder/emit_atomic.py <type> [...] --variant <v> --batch <b> -n <N>` | Builds atom tasks: one per task type and patient, in one condition (`enc`, `noenc`, `enc-forced`). `--all` takes every type; `--seed` fixes the patients; `--ladder` builds the modality-ladder rungs. |
 | `python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/<id>.yaml` | Emits a spec's task folder into `data_task/tasks/<id>/`. |
 | `python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<id>.yaml` | Checks a spec and its emitted folder; JSON report, exit 1 on any failure. |
 | `python data_task/taskbuilder/pin_batch.py <batch> [<id> ...]` | Writes a batch file from the listed tasks' fingerprints. |
@@ -18,12 +18,12 @@ v0.2.0 has no single command. Each step is a script, run from the repository roo
 
 | Command | Does |
 |---|---|
-| `python harness/build.py emit <experiment>` | Turns `harness/experiments/<experiment>.yaml` into one Harbor job per agent × variant × repetition, writes a prerun sheet per job, and dry-runs the first. |
-| `harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/<agent>.yaml -c harness/harbor/jobs/<job>.yaml` | Runs one job. Printed verbatim in the job's prerun sheet; run it after signing. |
-| `python harness/build.py import runs/experiments/<experiment>/jobs/<job>` | Writes one unscored atom row per run to the ledger. `--new-ledger` creates the ledger the first time. |
-| `python harness/build.py status <experiment>` | Shows which atoms of each cell are present. |
-| `python harness/score.py [--experiment <experiment>]` | Scores every complete cell: one cell row per task type, condition and repetition. The only script that writes scores. `--dry-run` shows what it would score; `--force` re-scores under the current metrics. |
-| `python harness/analyze.py grid <experiment>` | Writes the task × model × variant table to `runs/experiments/<experiment>/analysis/grid.md`. |
+| `python harness/build.py emit <experiment>` | Turns `harness/experiments/<experiment>.yaml` into one Harbor job per agent × condition × repetition, writes a prerun sheet per job, and dry-runs the first. |
+| `harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/<agent>.yaml -c harness/harbor/jobs/<job>.yaml` | Runs one job. Printed verbatim in the job's prerun sheet. |
+| `python harness/build.py import runs/experiments/<experiment>/jobs/<job>` | Writes one record per run to the results file. `--new-ledger` creates the file the first time. |
+| `python harness/build.py status <experiment>` | Shows which patients of each task type have a run. |
+| `python harness/score.py [--experiment <experiment>]` | Scores every complete task type per agent, condition and repetition. The only script that writes scores. `--dry-run` shows what it would score; `--force` re-scores under the current metrics. |
+| `python harness/analyze.py grid <experiment>` | Writes the task × agent × condition table to `runs/experiments/<experiment>/analysis/grid.md`. |
 
 ## Encoders
 
@@ -31,7 +31,7 @@ v0.2.0 has no single command. Each step is a script, run from the repository roo
 |---|---|
 | `uv run perception/registry.py plan [<id> ...]` | Status of every encoder: runnable, unbuilt, stale, failing or retired. |
 | `uv run perception/registry.py build [<id> ...]` | Builds encoder images, tagged `:dev`. |
-| `uv run perception/registry.py validate [<id> ...]` | Checks cards against the schema and the family registry. |
+| `uv run perception/registry.py validate [<id> ...]` | Checks model cards against the schema and the family registry. |
 | `uv run perception/registry.py test --docker [<id> ...]` | Runs built images on their test data and compares with `expected.json`. |
 | `uv run perception/registry.py freeze --docker [<id> ...]` | Records `expected.json` from the current responses. |
 | `uv run perception/registry.py index` | Regenerates `perception/encoders.yaml`. |
@@ -47,5 +47,4 @@ v0.2.0 has no single command. Each step is a script, run from the repository roo
 ## Where next
 
 - [Get started](../get-started.md): the commands in order on a first run.
-- [Code map](../api/index.md): where each script sits.
-- [Contracts](../learn/contracts/index.md): what the checks enforce.
+- [Architecture](../learn/architecture.md): where each script sits.

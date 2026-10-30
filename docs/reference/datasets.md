@@ -1,6 +1,6 @@
 # Datasets
 
-Every dataset v0.2.0 builds tasks from, with how to get access and what its license lets you publish and send to a model provider.
+Every dataset v0.2.1 builds tasks from, with how to get access and what its license lets you publish and send to a model provider.
 
 !!! note "A reading, not legal advice"
     The readings below summarise each data owner's license and data use agreement. MedOmni does not enforce them in code: you are responsible for following your own agreement.

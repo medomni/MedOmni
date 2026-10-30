@@ -2,7 +2,7 @@
 
 A task type is defined by a spec. The task builder turns a spec and your data into atom tasks, one per patient, and a fingerprint proves the result matches anyone else's build.
 
-## Task types in v0.2.0
+## Task types in v0.2.1
 
 30 task types, one spec each in `data_task/taskbuilder/specs/`: 15 on AI-READI, 9 on MIMIC-IV and 6 on BDSP. Each type also has a `-mini` spec (a small cohort), and 28 have a `-full` spec (the whole record minus inputs that leak the answer).
 

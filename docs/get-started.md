@@ -13,7 +13,7 @@ This page takes you from a checkout to a scored experiment: two patients, one ta
 Check out the tag and create a Python environment outside the checkout:
 
 ```bash
-git checkout v0.2.0
+git checkout v0.2.1
 ```
 
 ```bash
@@ -30,7 +30,7 @@ Every `python` command below runs in this environment.
 | `harness/config.yaml` | Where runs are written (`runs_root`) and your keys file (`keys_file`). |
 | keys file | Your API key in dotenv form, for example `DEEPSEEK_API_KEY=...`. Never commit it. |
 
-v0.2.0 also hard-codes one path that you must change: `BRIDGE_CACHE` in `data_task/taskbuilder/emit_atomic.py`.
+v0.2.1 also hard-codes one path that you must change: `BRIDGE_CACHE` in `data_task/taskbuilder/emit_atomic.py`.
 
 ## 3. Build images
 
@@ -88,7 +88,7 @@ set -a; source harness/api-keys.env; set +a
 harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/terminus-2.yaml -c harness/harbor/jobs/<job>.yaml
 ```
 
-The sheet also prints `harness/docker_hygiene.py` lines. That script is not in v0.2.0; skip them.
+The sheet also prints `harness/docker_hygiene.py` lines. That script is not in v0.2.1; skip them.
 
 ## 6. Score
 

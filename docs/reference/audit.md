@@ -25,7 +25,7 @@ Each cell is one asset type × one criterion, checked by one or more auditors.
 - **Only threats to the main claim fail.** An item fails if the answer is reachable in the evidence, an encoder has seen the evaluation data, or a target does not mean what it says. Every other failed check is shown as a warning with its reason.
 - **Patient-level traces never go to an LLM.** Checks that need them are left for a human and reported as unassessed, so coverage never hides a gap.
 
-In v0.2.0 no human sign-off has been recorded, so every human cell is reported as unassessed.
+In v0.2.1 no human sign-off has been recorded, so every human cell is reported as unassessed.
 
 ## Check
 

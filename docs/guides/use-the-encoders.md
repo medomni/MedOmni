@@ -4,7 +4,7 @@ This guide is for encoder users: you end up with the MedOmni gateway running loc
 
 ## Before you start
 
-- A checkout of v0.2.0, Docker, and [uv](https://docs.astral.sh/uv/).
+- A checkout of v0.2.1, Docker, and [uv](https://docs.astral.sh/uv/).
 - Inputs in a supported family. Each encoder reads exactly one family; see [Encoders](../reference/encoders.md) and [Families](../reference/families.md).
 - A GPU for some encoders. Each encoder's model card says what it needs.
 

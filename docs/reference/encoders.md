@@ -1,6 +1,6 @@
 # Encoders
 
-An encoder is a containerised model or rule that reads one family and returns evidence. Each declares itself in a model card; this page gives the card's format and lists every encoder in v0.2.0.
+An encoder is a containerised model or rule that reads one family and returns evidence. Each declares itself in a model card; this page gives the card's format and lists every encoder in v0.2.1.
 
 ## Model card
 
@@ -30,7 +30,7 @@ A model card has no extra keys, its family exists, and an encoder never returns 
 uv run perception/registry.py validate <encoder-id>
 ```
 
-## Encoders in v0.2.0
+## Encoders in v0.2.1
 
 The 44 encoders that `uv run perception/registry.py plan` reports as runnable. Images are not published: build each one locally with `uv run perception/registry.py build <encoder>`, which tags it `ghcr.io/medomni/<encoder>:dev`.
 

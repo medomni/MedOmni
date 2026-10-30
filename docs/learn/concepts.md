@@ -3,7 +3,7 @@
 The terms used across MedOmni, in the order a run meets them.
 
 **Dataset**
-:   A source of patient data you obtain under its own license: MIMIC-IV, AI-READI or BDSP in v0.2.0. MedOmni ships none.
+:   A source of patient data you obtain under its own license: MIMIC-IV, AI-READI or BDSP in v0.2.1. MedOmni ships none.
 
 **Task**
 :   A clinical question asked of each patient in a cohort, with a fixed way to score the answers. Each task type is defined by a task spec, a yaml file in `data_task/taskbuilder/specs/`.
@@ -30,7 +30,7 @@ The terms used across MedOmni, in the order a run meets them.
 :   The HTTP service through which an agent finds encoders, reads their model cards and calls them.
 
 **Agent**
-:   The system being evaluated: a scaffold (`terminus-2` in v0.2.0) driving a model.
+:   The system being evaluated: a scaffold (`terminus-2` in v0.2.1) driving a model.
 
 **Condition**
 :   What encoder access an agent gets: with encoders (`enc`), without (`noenc`), or required to use at least one (`enc-forced`). Only the encoder access, and the instruction paragraph that describes it, differ. The config calls it `variant`.

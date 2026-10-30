@@ -1,6 +1,6 @@
 # Commands
 
-v0.2.0 has no single command. Each step is a script, run from the repository root; this page lists them in the order a run uses them.
+v0.2.1 has no single command. Each step is a script, run from the repository root; this page lists them in the order a run uses them.
 
 ## Build tasks
 

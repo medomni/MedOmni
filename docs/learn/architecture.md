@@ -1,10 +1,10 @@
 # Architecture
 
-MedOmni v0.2.0 in the [C4 model](https://c4model.com): who uses it (C1), its parts (C2), the components inside the harness (C3), the code inside the job builder (C4), and C1 to C3 nested in one picture.
+MedOmni v0.2.1 in the [C4 model](https://c4model.com): who uses it (C1), its parts (C2), the components inside the harness (C3), the code inside the job builder (C4), and C1 to C3 nested in one picture.
 
 ## Context (C1)
 
-![C1: MedOmni v0.2.0 in context](../assets/c1-context.drawio.svg)
+![C1: MedOmni v0.2.1 in context](../assets/c1-context.drawio.svg)
 
 - **Agent evaluator**: declares an experiment, runs it, reads the scores.
 - **Encoder user**: calls the encoders through the gateway.

@@ -4,8 +4,8 @@ MedOmni is a benchmark that runs AI agents on medical tasks across many data mod
 
 Each task gives an agent one patient's evidence (tables, waveforms, images, notes) and asks a clinical question. The agent can call perception encoders as tools, and a fixed verifier scores its answer. Like Terminal-Bench and SWE-bench, MedOmni measures agent behaviour, not a single model.
 
-!!! info "This is v0.2.0"
-    These docs describe MedOmni v0.2.0 (git tag `v0.2.0`), the first version that works end to end, from raw clinical data to scored agent runs. It runs from a checkout of the repository; there is no installable package yet.
+!!! info "This is v0.2.1"
+    These docs describe MedOmni v0.2.1 (git tag `v0.2.1`). Its code is that of v0.2.0, the first version that works end to end, from raw clinical data to scored agent runs. It runs from a checkout of the repository; there is no installable package yet.
 
 !!! warning "No patient data ships with MedOmni"
     The repository holds code and task specs. Tasks are built locally from MIMIC-IV, AI-READI and BDSP, which you must be licensed to use.

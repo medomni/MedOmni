@@ -1,8 +1,8 @@
 # Tasks
 
-The task spec, the atom task layout, the fingerprint algorithm and the batches. [Tasks](../learn/bench/tasks.md) explains how they fit together.
+The task spec, the atom task layout, the fingerprint algorithm and the task suites. [Tasks](../learn/bench/tasks.md) explains how they fit together.
 
-Contract: task spec v1, `src/medomni/core/contracts/schemas/task-spec.schema.json`
+Contract: task spec, `src/medomni/core/contracts/schemas/task-spec.schema.json`
 
 ## Tasks in v0.3.0
 
@@ -46,7 +46,7 @@ What an agent runs, built in the workspace under `atomtasks/<condition>/<atom>/`
 |---|---|
 | `task.toml` | Task metadata, condition, resources, and the parent task and patient. |
 | `instruction.md` | The question, the patient's record and the targets to predict. |
-| `environment/` | The closed-network containers, with Bench's sidecar and Perception's gateway when encoders are available. |
+| `environment/` | The closed-network containers, with the perception service when encoders are available. |
 | `tests/` | A format check on the answer. It never scores. |
 | `data/` | The patient's staged files, minus anything that leaks a target. |
 
@@ -54,13 +54,13 @@ The answers sit with the task, in `atomtasks/_parents/<task>/`, never in an atom
 
 ## Fingerprint
 
-A task's fingerprint is the SHA-256 over every file in its folder, in path order. Each file adds its relative path, a separator, its length and its bytes. `FINGERPRINT` itself is excluded, and no file holds a build time or a local path. It is written to the folder's `FINGERPRINT` file. `medomni bench task check` recomputes it and fails if it differs.
+A task's fingerprint is the SHA-256 over every file in its folder, in path order. Each file adds its relative path, a separator, its length and its bytes. `FINGERPRINT` itself is excluded, and no file holds a build time or a local path. It is written to the folder's `FINGERPRINT` file as `fp1:<hex>`, where `fp1` names this algorithm. A later algorithm gets a new prefix, so published fingerprints stay checkable across releases. `medomni bench task check` recomputes it and fails if it differs.
 
-## Batches
+## Task suites
 
-A batch pins task ids to fingerprints, in `bench/batches/<name>.yaml`.
+A task suite pins task ids to fingerprints, in `bench/suites/<name>.yaml`. Suites only grow.
 
-| Batch | Data | Tasks |
+| Suite | Data | Tasks |
 |---|---|---|
 | `smoke-dummy` | Dummy data | One per task, on generated data. |
 | `vitaldb` | VitalDB | The VitalDB tasks. |

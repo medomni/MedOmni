@@ -8,7 +8,7 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni --version` | Prints the MedOmni version. |
 | `medomni plugins` | Lists the installed plug-in packages and what each adds. |
-| `medomni contracts check [<contract> ...]` | Validates the contracts: family registry, task spec, model card, Gateway API, dataset policy, results row. |
+| `medomni contracts check [<contract> ...]` | Validates the contracts: family registry, task spec, task suite, model card, Gateway API, dataset policy, result record, workspace config. |
 | `medomni audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. |
 
 ## Bench
@@ -18,11 +18,11 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni bench data connect <dataset> --path <dir>` | Records where your copy of a dataset is, in the workspace configuration. |
 | `medomni bench data check <dataset>` | Runs the dataset's adapter on its data sample and validates its policy. |
 | `medomni bench task new <task-id> --dataset <dataset>` | Creates a task spec from the template. |
-| `medomni bench task build --batch <batch>` or `<spec>` | Builds tasks and their atom tasks in the workspace, for every condition. Dummy data for `smoke-dummy` is generated on the fly. |
+| `medomni bench task build --suite <suite>` or `<spec>` | Builds tasks and their atom tasks in the workspace, for every condition. Dummy data for `smoke-dummy` is generated on the fly. |
 | `medomni bench task check <spec>` | Checks a spec and the task it builds: fields, metrics, leakage, families, fingerprint. |
-| `medomni bench task check --batch <batch>` | Checks every built task of a batch against its published fingerprint. |
-| `medomni bench run --agent <config> --batch <batch>` | Checks the route against each dataset policy, pulls the encoder images the tasks need, runs every atom task in Harbor and records each run. `--condition` (repeatable; default `enc`), `--reps <n>`, `--concurrency <n>`. Resumes where it stopped. |
-| `medomni bench score --batch <batch>` | Scores every target of every complete task per agent, condition and repetition, and prints and saves the table. The only command that writes scores. `--agent` limits it to one agent. |
+| `medomni bench task check --suite <suite>` | Checks every built task of a suite against its published fingerprint. |
+| `medomni bench run --agent <config> --suite <suite>` | Checks the route against each dataset policy, pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run. `--condition` (repeatable; default `enc`), `--reps <n>`, `--concurrency <n>`. Resumes where it stopped. |
+| `medomni bench score --suite <suite>` | Scores every target of every complete task per agent, condition and repetition, and prints and saves the table. The only command that writes scores. `--agent` limits it to one agent. |
 
 ## Perception
 

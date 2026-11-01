@@ -1,6 +1,6 @@
 # Connect your data
 
-For agent evaluators with access to a credentialed dataset. You build a published batch from your own copy and check it against the published fingerprints.
+For agent evaluators with access to a credentialed dataset. You build a published task suite from your own copy and check it against the published fingerprints.
 
 ## Before you start
 
@@ -15,16 +15,16 @@ For agent evaluators with access to a credentialed dataset. You build a publishe
     medomni bench data connect mimic-iv --path /path/to/mimic-iv
     ```
 
-2. Build the batch. The dataset adapter surveys your copy, and each task spec builds its tasks and atom tasks in the workspace.
+2. Build the suite. The dataset adapter surveys your copy, and each task spec builds its tasks and atom tasks in the workspace.
 
     ```bash
-    medomni bench task build --batch v1-mini
+    medomni bench task build --suite v1-mini
     ```
 
-3. Check the build against the batch's published fingerprints.
+3. Check the build against the suite's published fingerprints.
 
     ```bash
-    medomni bench task check --batch v1-mini
+    medomni bench task check --suite v1-mini
     ```
 
 ## Check
@@ -36,5 +36,5 @@ For agent evaluators with access to a credentialed dataset. You build a publishe
 
 ## Where next
 
-- [Tasks](../reference/tasks.md): what a built task contains, how its fingerprint is computed, and the published batches.
-- [Run your agent](run-your-agent.md): run on the batch you built.
+- [Tasks](../reference/tasks.md): what a built task contains, how its fingerprint is computed, and the published task suites.
+- [Run your agent](run-your-agent.md): run on the suite you built.

@@ -23,7 +23,7 @@ For a new scaffold or model.
 ### Check
 
 ```bash
-medomni bench run --agent my-agent.yaml --batch smoke-dummy
+medomni bench run --agent my-agent.yaml --suite smoke-dummy
 ```
 
 Every atom task of `smoke-dummy` must finish with a run and no infrastructure error.

@@ -1,9 +1,9 @@
 # Runs
 
-A run is one agent on one atom task, once. The harness turns a batch into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file.
+A run is one agent on one atom task, once. The harness turns a task suite into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file.
 
 ```text
-agent config + batch ──harness──▶ Harbor jobs ──▶ one run per atom task × condition × repetition
+agent config + suite ──harness──▶ Harbor jobs ──▶ one run per atom task × condition × repetition
                                                      └──▶ results file
 ```
 
@@ -11,7 +11,7 @@ agent config + batch ──harness──▶ Harbor jobs ──▶ one run per at
 
 An agent is a scaffold driving a model, described in an agent config. The config names the scaffold (a Harbor agent such as `terminus-2`), the model, the model name the provider must report back, and the route (`local` or `cloud`). [Run your agent](../../guides/run-your-agent.md) lists every field.
 
-The replay agent repeats recorded runs with no model calls. MedOmni's own tests use it to run a batch at no cost.
+The replay agent repeats recorded runs with no model calls. MedOmni's own tests use it to run a suite at no cost.
 
 ## Conditions
 
@@ -30,7 +30,7 @@ Each condition is its own built set of atom tasks.
 ## Inside an atom task
 
 - The agent works in a closed-network container with the patient's files.
-- Under every condition except `noenc`, Bench's sidecar runs beside it. The sidecar passes the agent's calls to Perception's [gateway](../perception/gateway.md) through the Gateway API, and adds:
+- Under every condition except `noenc`, the perception service runs beside it, at `http://perception:8899`. It is Perception's [gateway](../perception/gateway.md), run by Bench, which adds:
     - a call budget per atom task
     - a family filter: only the families staged for that patient are listed
     - a call log, recorded with the run
@@ -40,17 +40,17 @@ Each condition is its own built set of atom tasks.
 
 `medomni bench run`:
 
-1. checks the agent's route against every dataset policy in the batch
-2. pulls the encoder images the tasks need
+1. checks the agent's route against every dataset policy in the suite
+2. pulls the encoder images for the families the tasks stage
 3. writes one Harbor job per condition and repetition, and runs them
-4. records each run: ids, fingerprint, served model, encoder calls, files opened, cost, errors
+4. records each run: ids, fingerprint, served model, the encoders served (id and image digest), encoder calls, files opened, cost, errors
 
 Running it again resumes: atom tasks that already have a run are skipped.
 
 ## Where it lives
 
 - `src/medomni/bench/harness/`: Harbor jobs, the route check, run records, the replay agent
-- `src/medomni/bench/sidecar/`: the sidecar
+- `src/medomni/bench/service/`: the perception service and its call budget, family filter and call log
 - `bench/agents/`: contributed agent configs
 - your workspace: runs and the results file
 
@@ -58,4 +58,4 @@ Running it again resumes: atom tasks that already have a run are skipped.
 
 - [Run your agent](../../guides/run-your-agent.md): the agent config fields and the commands.
 - [Scoring](scoring.md): how runs become scores.
-- [Gateway](../perception/gateway.md): what the sidecar calls.
+- [Gateway](../perception/gateway.md): what the perception service runs.

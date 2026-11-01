@@ -41,16 +41,20 @@ The unit an agent runs: one patient, all of the task's targets, at the task's pr
 
 ## Fingerprint
 
-A hash of the task's content: its files, instruction, environment and answers. It never includes build time or paths on your machine. Anyone with the data can rebuild the task and check it against the published fingerprint. A changed task is a new task with a new fingerprint. Scores are refused for runs whose fingerprints differ.
+A hash of the task's content: its files, instruction, environment and answers. It never includes build time, paths on your machine or the encoders served; the run record holds those. Anyone with the data can rebuild the task and check it against the published fingerprint. A changed task is a new task with a new fingerprint. Scores are refused for runs whose fingerprints differ.
 
-## Batch
+## Task suite
 
-A named list of task ids pinned to fingerprints, such as `v1-mini`. Batches only grow: tasks are added, never changed. Credentialed batches publish fingerprints only; you build them from your own access.
+A named list of task ids pinned to fingerprints, such as `v1-mini`. Suites are what MedOmni publishes and what scores are compared on.
+
+- Suites only grow: tasks are added, never changed.
+- Credentialed suites publish fingerprints only; you build them from your own access.
+- To build tasks outside a suite, for example while writing a spec, name the spec directly: `medomni bench task build <spec>`.
 
 ## Where it lives
 
 - `bench/specs/`: one spec per task
-- `bench/batches/`: the batches
+- `bench/suites/`: the task suites
 - `src/medomni/bench/tasks/`: the task pipeline
 - your workspace: built tasks, their atom tasks, and the pipeline's caches
 

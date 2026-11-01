@@ -36,27 +36,27 @@ cp bench/templates/agent/agent.yaml my-agent.yaml
 Dummy data is generated from each family's declared format. It needs no credentials and contains no patient values.
 
 ```bash
-medomni bench task build --batch smoke-dummy
+medomni bench task build --suite smoke-dummy
 ```
 
 ```bash
-medomni bench run --agent my-agent.yaml --batch smoke-dummy
+medomni bench run --agent my-agent.yaml --suite smoke-dummy
 ```
 
-`medomni bench run` pulls the encoder images the tasks need, runs every atom task in Harbor and records each run in the results file.
+`medomni bench run` pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run in the results file.
 
 ## 4. Score
 
 ```bash
-medomni bench score --batch smoke-dummy
+medomni bench score --suite smoke-dummy
 ```
 
 It prints one row per task, target, agent and condition: the score, the number of patients and the failure rate. Scores on dummy data only show that the pipeline works.
 
 ## 5. Run on real data
 
-- **VitalDB** is openly licensed. Build and run the `vitaldb` batch as above.
-- **MIMIC-IV, AI-READI and BDSP** need your own access. Connect your copy and build the `v1-mini` batch, as in [Connect your data](guides/connect-your-data.md).
+- **VitalDB** is openly licensed. Build and run the `vitaldb` suite as above.
+- **MIMIC-IV, AI-READI and BDSP** need your own access. Connect your copy and build the `v1-mini` suite, as in [Connect your data](guides/connect-your-data.md).
 
 ## Where next
 

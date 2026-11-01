@@ -43,7 +43,7 @@ Evidence contains only the model card and the container's reply. Identical reque
 medomni perception up --data-root <dir>
 ```
 
-It reads inputs from your data root, mounted read-only. Inside Bench's atom tasks, Bench starts the gateway behind its [sidecar](../bench/runs.md#inside-an-atom-task), which adds a call budget, a family filter and a call log. The gateway itself has none of these.
+It reads inputs from your data root, mounted read-only. Inside an atom task, Bench runs the gateway as the [perception service](../bench/runs.md#inside-an-atom-task), adding a call budget, a family filter and a call log. The gateway itself has none of these.
 
 ## Where it lives
 

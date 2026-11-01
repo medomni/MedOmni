@@ -1,49 +1,51 @@
 # Plug-ins
 
-MedOmni loads its own projects and outside packages the same way: through Python entry points. Core imports no project.
+A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, dataset adapters, tasks or encoders without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
 
-## Projects
+## Register pieces
 
-- Each project registers itself in the `medomni.projects` entry-point group.
-- A project registers three kinds of piece with Core:
-    - its subcommands, such as `medomni bench …`
-    - the checks behind its check commands
-    - its audit checks
-- Bench and Perception are registered by MedOmni's own `pyproject.toml`. A later project joins the same way.
+A package registers each piece in the entry-point group for its kind. It does not register with Bench or Perception: MedOmni sends each kind to the project that uses it.
 
-## Plug-in packages
-
-A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, dataset adapters, tasks or encoders without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution.
-
-| Group | Registers | Owned by | Same as in-repo |
+| Group | Registers | Used by | Same as in-repo |
 |---|---|---|---|
 | `medomni.agents` | An agent config | Bench | `bench/agents/` |
 | `medomni.datasets` | A dataset adapter and its policy | Bench | `src/medomni/bench/datasets/<dataset>/` |
 | `medomni.tasks` | A task spec | Bench | `bench/specs/` |
 | `medomni.encoders` | A model card and its image | Perception | `perception/encoders/<family>/<encoder>/` |
 
+One package can add several kinds. A package with a task and an encoder lists both in its own `pyproject.toml`:
+
 ```toml
+[project]
+name = "medomni-myname"
+dependencies = ["medomni>=0.3,<0.4"]
+
 [project.entry-points."medomni.tasks"]
 my-task = "medomni_myname.tasks:SPEC"
+
+[project.entry-points."medomni.encoders"]
+my-encoder = "medomni_myname.encoders:CARD"
 ```
+
+After `pip install medomni-myname`, `my-task` appears in Bench's commands and `my-encoder` in Perception's.
 
 ## How MedOmni loads them
 
-- **Names.** Each piece is named `<package>:<name>`. Built-in pieces use the package `medomni`.
+- **Names.** Each piece is named `<package>:<name>`, such as `medomni-myname:my-task`. Built-in pieces use the package `medomni`.
 - **Collisions.** Two pieces with the same name: both are listed with an error, and neither is loaded.
-- **Lazy loading.** At start, the command reads the entry-point names only. A piece is imported when a command first uses it.
-- **Validation.** On import, each piece is validated against its contract. A piece that fails is listed with its error and not used.
+- **Lazy loading.** At start, a command reads the entry-point names only. A piece is imported when a command first uses it.
+- **Validation.** On import, each piece is checked against its [contract](contracts.md). A piece that fails is listed with its error and not used.
 - **Same as built-in.** A loaded piece works in every command as a built-in piece does.
 
 ```bash
 medomni plugins
 ```
 
-It imports every installed piece, validates it, and lists each package with what it adds and any errors.
+It imports every installed piece, checks it, and lists each package with what it adds and any errors.
 
 ## The testing kit
 
-`medomni.core.testing` runs the checks the projects register. A plug-in package runs them in its own CI, so it passes the same checks as a pull request.
+`medomni.core.testing` runs the same checks as MedOmni's CI. A plug-in package runs them in its own CI, so it passes the same checks as a pull request.
 
 ## Where it lives
 
@@ -52,5 +54,5 @@ It imports every installed piece, validates it, and lists each package with what
 
 ## Where next
 
+- [Extend MedOmni](../extend.md): every way to add to MedOmni.
 - [Contribute](../../guides/contribute.md#publish-a-plug-in-package): publish a plug-in package step by step.
-- [Contracts](contracts.md): what each piece is validated against.

@@ -58,6 +58,7 @@ nav:
       - Perception:
           - Encoders: learn/perception/encoders.md
           - Gateway: learn/perception/gateway.md
+      - Extend MedOmni: learn/extend.md
   - Guides:
       - Run your agent: guides/run-your-agent.md
       - Connect your data: guides/connect-your-data.md

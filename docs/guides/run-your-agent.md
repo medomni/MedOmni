@@ -1,11 +1,11 @@
 # Run your agent
 
-For agent evaluators. You score your own agent on a MedOmni batch, with and without encoders.
+For agent evaluators. You score your own agent on a MedOmni task suite, with and without encoders.
 
 ## Before you start
 
 - [Get started](../get-started.md) working end to end on `smoke-dummy`.
-- The batch built from your data. See [Connect your data](connect-your-data.md).
+- The suite built from your data. See [Connect your data](connect-your-data.md).
 
 ## Steps
 
@@ -34,10 +34,10 @@ For agent evaluators. You score your own agent on a MedOmni batch, with and with
     | `model_served` | The model name the provider reports back. A requested alias can be served by a different model; a run that reports another name is recorded as an error and never scored. |
     | `env` | Keys, only as `${VARNAME}` references to `keys.env` in your workspace. Never write a key into the config. |
 
-2. Run the agent on a batch, under each condition you want to compare, as many times as you need:
+2. Run the agent on a suite, under each condition you want to compare, as many times as you need:
 
     ```bash
-    medomni bench run --agent my-agent.yaml --batch v1-mini --condition enc --condition noenc --reps 2
+    medomni bench run --agent my-agent.yaml --suite v1-mini --condition enc --condition noenc --reps 2
     ```
 
     Conditions: `enc` (with encoders), `noenc` (without), `enc-forced` (must call at least one) and `ladder` (six rungs of input families). `medomni bench run` checks the route against each dataset policy first, and resumes if run again. [Runs](../learn/bench/runs.md) explains both.
@@ -45,7 +45,7 @@ For agent evaluators. You score your own agent on a MedOmni batch, with and with
 3. Score:
 
     ```bash
-    medomni bench score --batch v1-mini --agent my-agent
+    medomni bench score --suite v1-mini --agent my-agent
     ```
 
 ## Check
@@ -54,14 +54,14 @@ For agent evaluators. You score your own agent on a MedOmni batch, with and with
 
 ## Results file
 
-Every run and every score is one line in `results.jsonl` in your workspace. You need it only to analyse results beyond the table. [Scoring](../learn/bench/scoring.md#results-file) explains how it is written.
+Every run and every score is one result record, one line in `results.jsonl` in your workspace. You need it only to analyse results beyond the table. [Scoring](../learn/bench/scoring.md#results-file) explains how it is written.
 
-Contract: results row v1, `src/medomni/core/contracts/schemas/results-row.schema.json`.
+Contract: result record, `src/medomni/core/contracts/schemas/result-record.schema.json`.
 
 | Record | One per | Key fields |
 |---|---|---|
-| Run (`kind: atom`) | agent run on one atom task | `run_id`, `task`, `agent`, `condition`, `fingerprint`, `model_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
-| Score (`kind: cell`) | task × target × agent × condition × repetition | `run_id`, `target`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
+| Run (`kind: run`) | agent run on one atom task | `run_id`, `suite`, `task`, `agent`, `condition`, `fingerprint`, `model_served`, `encoders_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
+| Score (`kind: score`) | task × target × agent × condition × repetition | `run_id`, `target`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
 
 !!! warning "The results file is patient data"
     Run ids name the patients they ran on, so the file falls under each dataset's data use agreement. Keep it in the workspace.

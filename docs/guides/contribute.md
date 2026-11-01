@@ -1,67 +1,95 @@
 # Contribute
 
-This guide is for contributors: you end up with a new task, agent config or encoder in the repository, checked by the same commands the team uses.
+For contributors who add an agent, dataset adapter or task to Bench, or an encoder to Perception.
 
-Each area of the repository has an owner who reviews changes to it; the repository README lists them.
+There are two routes. Both run the same check.
 
-## Add a task
+- **Pull request.** Start from the template, fill it in, run its check command locally, and open a pull request; CI runs the same check.
+- **Plug-in package.** Publish your own `medomni-*` package that registers the same pieces through entry points. Use this when your work should stay in your own repository, for example a task on data that cannot leave your institution. See [Publish a plug-in package](#publish-a-plug-in-package).
 
-For a task on MIMIC-IV, AI-READI or BDSP, using families MedOmni already declares.
+Contributions change only extension points. Only the MedOmni team changes Core and the contracts; if you need a contract change, such as a new family, open an issue first.
 
-### Before you start
+Every model card and task spec lists its `authors`.
 
-- Access to the dataset, and its root set in `data_task/data_roots.yaml`.
-- The task's inputs map to existing families. See [Families](../reference/families.md).
+## Add an agent (Bench)
+
+For a new scaffold or model.
 
 ### Steps
 
-1. Add the proposal as a row in `data_task/taskbuilder/intake/proposals.csv` (timestamp, proposer, org, dataset, title, statement, mode, target, streams, optional prediction time), then compile it into a draft spec.
-
-    ```bash
-    python data_task/taskbuilder/intake/compile.py data_task/taskbuilder/intake/proposals.csv
-    ```
-
-2. Resolve every item in the draft's `unresolved:` list, record the decisions in `data_task/taskbuilder/intake/resolutions/<task-id>.yaml`, and freeze the spec.
-
-    ```bash
-    python data_task/taskbuilder/intake/freeze.py <task-id>
-    ```
-
-3. Emit the task folder and validate it.
-
-    ```bash
-    python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/<task-id>.yaml
-    ```
-
-4. To run the task type as atom tasks, add its targets to the atomic builder's census in `emit_atomic.py` and build it, as in [Connect your data](connect-your-data.md).
-5. Pin the task into a batch. `pin_batch.py` rewrites the whole batch file from the task ids you list, so list every task the batch should hold. Task data stays local.
-
-    ```bash
-    python data_task/taskbuilder/pin_batch.py <batch> <task-id> [<task-id> ...]
-    ```
+1. Copy `bench/templates/agent/agent.yaml` and fill it in, as in [Run your agent](run-your-agent.md).
+2. Open a pull request adding it as `bench/agents/<name>.yaml`.
 
 ### Check
 
 ```bash
-python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<task-id>.yaml
+medomni bench run --agent my-agent.yaml --batch smoke-dummy
 ```
 
-It checks the spec's keys and metric, that the label derivation resolves, that no answers or leaking inputs reach `data/`, that staged files match their families, and that the folder matches its `FINGERPRINT`.
+Every atom task of `smoke-dummy` must finish with a run and no infrastructure error.
 
-## Add an agent
+## Add a dataset adapter (Bench)
 
-For a new model or provider behind the `terminus-2` scaffold.
+For a new openly licensed dataset, such as VitalDB. Pull requests add tasks only on openly licensed datasets; use a plug-in package for others.
+
+### Before you start
+
+- The dataset's license allows redistribution of samples (for example CC BY 4.0).
+- Its signals map to existing families. See [Families](../reference/families.md).
 
 ### Steps
 
-1. Add `harness/harbor/agents/terminus-2-<name>.yaml` with the model name, the key as a `${VARNAME}` reference, and `max_turns: 300`. See [Run your agent](run-your-agent.md).
-2. Probe the model, then add it to `harness/models.yaml` with the name the provider actually serves.
+1. Copy the template into the package:
+
+    ```bash
+    cp -r bench/templates/dataset bench/datasets/my-dataset
+    ```
+
+2. Implement the adapter: locate the dataset on disk, survey what each patient has, and extract the files a task needs.
+3. Write the dataset policy from the license: what may be published and which routes may see the data. See [Datasets](../reference/datasets.md).
+4. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
+5. Add at least one task on the dataset, as below, and open a pull request.
 
 ### Check
 
-`python harness/build.py emit <experiment>` dry-runs the first job in Harbor and prints `dry-run OK` or the error.
+```bash
+medomni bench data check my-dataset
+```
 
-## Add an encoder
+It runs the adapter on the data sample and validates the policy. Check the dataset's tasks with `medomni bench task check`, as below.
+
+## Add a task (Bench)
+
+For a task on a supported dataset, using families MedOmni already declares.
+
+### Steps
+
+1. Create the spec from the template:
+
+    ```bash
+    medomni bench task new vitaldb_my-task --dataset vitaldb
+    ```
+
+2. Fill in the spec: the question, the target and its metric, the cohort, the prediction time and the allowed evidence. Inputs that would leak the target are banned automatically; do not list them. The fields are in [Tasks](../reference/tasks.md).
+3. Build the task on dummy data and on the real dataset, and open a pull request with the spec.
+
+### Check
+
+```bash
+medomni bench task check bench/tasks/specs/vitaldb_my-task.yaml
+```
+
+It checks:
+
+- the spec's fields and metric
+- that the target derivation resolves
+- that no answers or leaking inputs reach the agent
+- that staged files match their families
+- that the built task matches its fingerprint
+
+## Add an encoder (Perception)
+
+Encoder folders live in `perception/encoders/` and are built into images; they are not part of the installed package.
 
 ### Before you start
 
@@ -70,13 +98,12 @@ For a new model or provider behind the `terminus-2` scaffold.
 
 ### Steps
 
-1. Create the encoder's folder by adapting the nearest existing encoder:
+1. Copy `perception/templates/encoder/` to a new folder:
 
     ```text
     perception/encoders/<family>/<encoder>/
     ├── adapter.py
     ├── card.yaml
-    ├── demo.py
     ├── Dockerfile
     └── testdata/
         ├── input.*
@@ -84,41 +111,50 @@ For a new model or provider behind the `terminus-2` scaffold.
         └── PROVENANCE.md
     ```
 
-2. Implement `FAMILY` and `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`. Build the Dockerfile on the shared runtime and pin the base image, dependencies, source revision and weight hashes.
-3. Write the model card. It declares the family, outputs, options, license and source; see [Encoders](../reference/encoders.md).
-4. Build the image, record its expected responses, and regenerate the encoder index.
+2. Implement the adapter and pin the image:
+    - `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`
+    - base image, dependencies, source revision and weight hashes pinned in the Dockerfile
+3. Write the model card: the family, outputs, options, license and source. See [Encoders](../reference/encoders.md).
+4. Record the expected responses on the test data, and open a pull request.
 
     ```bash
-    uv run perception/registry.py build <family>__<encoder>
+    medomni perception check perception/encoders/<family>/<encoder> --freeze
     ```
-
-    ```bash
-    uv run perception/registry.py freeze --docker <family>__<encoder>
-    ```
-
-    ```bash
-    uv run perception/registry.py index
-    ```
-
-`perception/AGENTS.md` has the full onboarding notes.
 
 ### Check
 
 ```bash
-uv run perception/registry.py validate <family>__<encoder>
+medomni perception check perception/encoders/<family>/<encoder>
 ```
+
+It validates the model card against its contract and the family registry, builds the image, runs it on the test data and compares the responses with `expected.json`. GPU encoders may run on a self-hosted runner.
+
+## Publish a plug-in package
+
+For agents, dataset adapters, tasks or encoders that live in your own repository.
+
+### Steps
+
+1. Create a Python package named `medomni-<name>` that depends on `medomni`.
+2. Build each piece from its template, as in the sections above.
+3. Register each piece under its entry-point group in `pyproject.toml`: `medomni.agents`, `medomni.datasets`, `medomni.tasks` or `medomni.encoders`.
+
+    ```toml
+    [project.entry-points."medomni.tasks"]
+    my-task = "medomni_myname.tasks:SPEC"
+    ```
+
+4. In your package's tests, run the same checks with `medomni.core.testing`.
+
+### Check
 
 ```bash
-uv run perception/registry.py test --docker <family>__<encoder>
+medomni plugins
 ```
 
-```bash
-uv run perception/registry.py plan <family>__<encoder>
-```
-
-`validate` checks the model card against the schema and the family registry; `test` runs the built image on its test data and compares the responses with `expected.json`; `plan` should report the encoder as runnable.
+Your package and each piece it adds are listed, and the commands above (`medomni bench task check`, `medomni perception check` and the rest) work on them as on built-in pieces.
 
 ## Where next
 
-- [Tasks](../reference/tasks.md): the spec format.
-- [Design principles](../learn/principles.md): including the rules for editing these docs.
+- [Design principles](../learn/principles.md): what Core and the extension points are.
+- [Tasks](../reference/tasks.md): the task spec contract.

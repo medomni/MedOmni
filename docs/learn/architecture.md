@@ -1,59 +1,116 @@
 # Architecture
 
-MedOmni v0.2.1 in the [C4 model](https://c4model.com): who uses it (C1), its parts (C2), the components inside the harness (C3), the code inside the job builder (C4), and C1 to C3 nested in one picture.
+MedOmni v0.3.0 in five views:
+
+- the repository layout
+- who uses it ([C4](https://c4model.com) C1)
+- its containers (C2)
+- the components inside the `medomni` package (C3)
+- C1 to C3 nested in one picture
+
+## Repository layout
+
+The repository holds one package, `medomni`: Core and two projects. Each folder below maps to a component in the C3 view.
+
+```text
+MedOmni/
+├── core/                 medomni.core
+│   ├── cli/              the medomni command
+│   ├── contracts/
+│   │   ├── schemas/      task spec, model card, Gateway API, dataset policy, results row
+│   │   └── families/     family registry and aliases
+│   ├── plugins/          entry-point loading
+│   ├── testing/          the checks behind every check command
+│   └── audit/            the audit matrix
+├── bench/                medomni.bench
+│   ├── datasets/         <dataset>/: adapter and policy; the dummy-data generator
+│   ├── tasks/
+│   │   ├── builder/      spec to atom tasks, fingerprints
+│   │   ├── specs/        one spec per task
+│   │   └── batches/      pinned task lists
+│   ├── harness/          Harbor jobs, route check, run records
+│   ├── scoring/          scorer and metrics
+│   ├── agents/           contributed agent configs
+│   ├── templates/        agent, dataset
+│   └── tests/
+├── perception/           medomni.perception
+│   ├── registry/         catalogue, image pulls, encoder check
+│   ├── gateway/          the HTTP service and its sidecar rules
+│   ├── runtime/          serving code inside every encoder image
+│   ├── encoders/         <family>/<encoder>/: built into images, not installed
+│   ├── templates/        encoder
+│   └── tests/
+├── docs/                 this site
+└── pyproject.toml
+```
+
+- **One name per project.** Its folder, package, command and docs section use the same name: `perception/`, `medomni.perception`, `medomni perception …`, Perception.
+- **Projects depend only on Core.** Each project folder holds its own code, templates and tests. [Design principles](principles.md#structure) gives the rules.
+- **One page per component.** Core: [Contracts](core/contracts.md), [Families](core/families.md), [Plug-ins](core/plugins.md), [Audit](core/audit.md). Bench: [Datasets](bench/datasets.md), [Tasks](bench/tasks.md), [Runs](bench/runs.md), [Scoring](bench/scoring.md). Perception: [Encoders](perception/encoders.md), [Gateway](perception/gateway.md).
 
 ## Context (C1)
 
-![C1: MedOmni v0.2.1 in context](../assets/c1-context.drawio.svg)
+![C1: MedOmni v0.3.0 in context](../assets/c1-context.drawio.svg)
 
-- **Agent evaluator**: declares an experiment, runs it, reads the scores.
-- **Encoder user**: calls the encoders through the gateway.
-- **Contributor**: adds task specs, agent configs or encoders.
-- **MedOmni**: one repository, run from a checkout. It builds tasks from raw data, runs agents on them and scores the runs.
-- **Datasets**: MIMIC-IV, AI-READI and BDSP, read from local disk under the user's own license.
-- **Model provider**: the API behind the agent's model, reached with the user's own key.
+- **Agent evaluator**: describes an agent, runs it on a batch with Bench, reads the scores.
+- **Encoder user**: calls the encoders through Perception's gateway.
+- **Contributor**: adds an agent, a dataset adapter, a task or an encoder through its extension point.
+- **MedOmni**: one package with one command, holding Core, Bench and Perception.
+- **Plug-in packages**: outside `medomni-*` packages that add agents, dataset adapters, tasks or encoders without a pull request.
+- **Datasets**: MIMIC-IV, AI-READI and BDSP under your own license, and VitalDB, read from local disk.
 - **Harbor**: the agent-evaluation framework that runs each atom task in Docker.
+- **Model provider**: the API behind an agent's model on a `cloud` route. A `local` route needs none.
+- **Container registry**: the published gateway and encoder images (`ghcr.io/medomni`).
+- **Hugging Face**: model cards and the public task samples of open datasets.
 
 ## Containers (C2)
 
-![C2: the repository's parts](../assets/c2-containers.drawio.svg)
+![C2: the containers, grouped by project](../assets/c2-containers.drawio.svg)
 
-| Part | Folder | Does |
+| Container | Project | Does |
 |---|---|---|
-| Data & Task | `data_task/` | Families, task specs, the task builder and batches. |
-| Data manifest | `data_manifest/` | Which files exist for each patient, read by the task builder. |
-| Perception | `perception/` | One container image per encoder, its model card, the registry that builds and tests them, and the gateway. |
-| Harness | `harness/` | Experiments, the job builder, Harbor configs, the perception sidecar image, the scorer and the analysis tables. |
-| Assurance | `assurance/` | [Audits](../reference/audit.md) of data, families, encoders, tasks and runs, each verdict bound to a fingerprint. |
-| Runs | `runs/` | Traces and the results file. Local only; never committed. |
+| `medomni` command | Core | The entrance: loads the contracts and any plug-in packages, then hands each subcommand to its project. Also runs the audit. |
+| Workspace | Core | Configuration, built tasks, runs and the results file, on your machine. Never committed. |
+| Bench library | Bench | Builds tasks from your data, turns a batch into Harbor jobs, records runs and scores them. |
+| Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
+| Gateway | Perception | The HTTP service that lists encoders, serves model cards and runs encoders. Also runs inside each atom task as the perception sidecar. |
+| Encoders | Perception | One image per encoder, each reading one family. Published to the container registry; model cards to Hugging Face. |
 
-Inside one atom task, Harbor starts three containers on a closed network: the agent's workspace, a bootstrap step that stages the patient's files, and, when encoders are available, the perception sidecar, which runs the gateway and starts encoder containers on demand.
+Gateway and encoder images are tagged with the MedOmni version that built them, so every image names the contract version it implements.
 
-## Components of the harness (C3)
+## Components of the package (C3)
 
-![C3: the components inside the harness](../assets/c3-components.drawio.svg)
+![C3: the components inside the medomni package](../assets/c3-components.drawio.svg)
 
-| Component | Where | Does |
-|---|---|---|
-| Experiments | `harness/experiments/` | One yaml per experiment: agents, task types, conditions, repetitions. |
-| Job builder | `harness/build.py` | `emit` turns an experiment into Harbor job overlays and prerun sheets; `import` turns finished trials into run records; `status` shows completeness. |
-| Harbor configs | `harness/harbor/` | The base settings, one file per agent, and the generated job overlays that `harbor run` reads. |
-| Perception sidecar | `harness/perception-image/` | The gateway inside each task, with a call budget and a call log. |
-| Scorer | `harness/score.py`, `harness/metrics.py` | Scores each task type against its hidden answers; the only component that writes scores. |
-| Analysis | `harness/analyze.py` | Turns scores into the experiment's task × agent × condition table. |
+| Project | Component | Module | Does |
+|---|---|---|---|
+| Core | Command | `medomni.core.cli` | The `medomni` command: every subcommand in [Commands](../cli/index.md). |
+| Core | Contracts | `medomni.core.contracts` | The versioned formats and their validators: family registry, task spec, model card, Gateway API, dataset policy, results row, fingerprint. |
+| Core | Plug-ins | `medomni.core.plugins` | Finds installed plug-in packages through their entry points. |
+| Core | Testing kit | `medomni.core.testing` | The checks behind every check command, importable by plug-in packages. |
+| Core | Audit | `medomni.core.audit` | The [audit](../reference/audit.md) of data, families, encoders, tasks and runs. |
+| Bench | Datasets | `medomni.bench.datasets` | One adapter and one policy per dataset, and the dummy-data generator. |
+| Bench | Tasks | `medomni.bench.tasks` | Task specs, the task builder, batches, and the check against published fingerprints. |
+| Bench | Harness | `medomni.bench.harness` | Turns a batch into Harbor jobs, checks the route against each dataset policy and records runs. |
+| Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks. The only thing that writes scores. |
+| Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |
+| Perception | Gateway | `medomni.perception.gateway` | The gateway service, built into the gateway image. |
 
-## Code of the job builder (C4)
+The four extension points plug into the projects, by pull request or from a plug-in package:
 
-![C4: the functions inside the job builder](../assets/c4-code-job-builder.drawio.svg)
-
-`harness/build.py` has three commands and never scores. `emit` refuses to write jobs if a referenced file is missing or, in a scored experiment, an encoder in use is not runnable, and it copies the shared format check into each atom task's `tests/`. `import` records one run per trial and marks a run as an error when the served model differs from the experiment's declared one.
+| Extension point | Project | Template | Check | Entry-point group |
+|---|---|---|---|---|
+| Agent | Bench | `bench/templates/agent/` | `medomni bench run` on `smoke-dummy` | `medomni.agents` |
+| Dataset adapter | Bench | `bench/templates/dataset/` | `medomni bench data check` | `medomni.datasets` |
+| Task | Bench | `medomni bench task new` | `medomni bench task check` | `medomni.tasks` |
+| Encoder | Perception | `perception/templates/encoder/` | `medomni perception check` | `medomni.encoders` |
 
 ## All levels
 
-![C1 to C3 nested: the system, its containers, and the harness components](../assets/c1-c3-overview.drawio.svg)
+![C1 to C3 nested: the system, its containers, and the package components](../assets/c1-c3-overview.drawio.svg)
 
 ## Where next
 
-- [Design principles](principles.md): the principles behind these parts.
-- [Reference](../reference/tasks.md): the formats each part reads and writes.
-- [Commands](../cli/index.md): every entry point.
+- [Design principles](principles.md): the principles behind this layout.
+- [Reference](../reference/tasks.md): the contracts each project reads and writes.
+- [Commands](../cli/index.md): every subcommand.

@@ -1,50 +1,38 @@
 # Commands
 
-v0.2.1 has no single command. Each step is a script, run from the repository root; this page lists them in the order a run uses them.
+Shared commands are at the top level; each project's commands are under its name. Every subcommand prints its options with `--help`, and every check exits 1 on any failure.
 
-## Build tasks
-
-| Command | Does |
-|---|---|
-| `python data_task/taskbuilder/emit_atomic.py <type> [...] --variant <v> --batch <b> -n <N>` | Builds atom tasks: one per task type and patient, in one condition (`enc`, `noenc`, `enc-forced`). `--all` takes every type; `--seed` fixes the patients; `--ladder` builds the modality-ladder rungs. |
-| `python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/<id>.yaml` | Emits a spec's task folder into `data_task/tasks/<id>/`. |
-| `python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<id>.yaml` | Checks a spec and its emitted folder; JSON report, exit 1 on any failure. |
-| `python data_task/taskbuilder/pin_batch.py <batch> [<id> ...]` | Writes a batch file from the listed tasks' fingerprints. |
-| `python data_task/taskbuilder/intake/compile.py <csv>` | Turns proposal rows into draft specs. |
-| `python data_task/taskbuilder/intake/freeze.py <id>` | Freezes a resolved draft spec. |
-| `python data_task/taskbuilder/family_audit.py audit` | Checks the family registry and its samples. |
-
-## Run and score
+## Core
 
 | Command | Does |
 |---|---|
-| `python harness/build.py emit <experiment>` | Turns `harness/experiments/<experiment>.yaml` into one Harbor job per agent × condition × repetition, writes a prerun sheet per job, and dry-runs the first. |
-| `harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/<agent>.yaml -c harness/harbor/jobs/<job>.yaml` | Runs one job. Printed verbatim in the job's prerun sheet. |
-| `python harness/build.py import runs/experiments/<experiment>/jobs/<job>` | Writes one record per run to the results file. `--new-ledger` creates the file the first time. |
-| `python harness/build.py status <experiment>` | Shows which patients of each task type have a run. |
-| `python harness/score.py [--experiment <experiment>]` | Scores every complete task type per agent, condition and repetition. The only script that writes scores. `--dry-run` shows what it would score; `--force` re-scores under the current metrics. |
-| `python harness/analyze.py grid <experiment>` | Writes the task × agent × condition table to `runs/experiments/<experiment>/analysis/grid.md`. |
+| `medomni --version` | Prints the MedOmni version. |
+| `medomni plugins` | Lists the installed plug-in packages and what each adds. |
+| `medomni contracts check [<contract> ...]` | Validates the contracts: family registry, task spec, model card, Gateway API, dataset policy, results row. |
+| `medomni audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. |
 
-## Encoders
+## Bench
 
 | Command | Does |
 |---|---|
-| `uv run perception/registry.py plan [<id> ...]` | Status of every encoder: runnable, unbuilt, stale, failing or retired. |
-| `uv run perception/registry.py build [<id> ...]` | Builds encoder images, tagged `:dev`. |
-| `uv run perception/registry.py validate [<id> ...]` | Checks model cards against the schema and the family registry. |
-| `uv run perception/registry.py test --docker [<id> ...]` | Runs built images on their test data and compares with `expected.json`. |
-| `uv run perception/registry.py freeze --docker [<id> ...]` | Records `expected.json` from the current responses. |
-| `uv run perception/registry.py index` | Regenerates `perception/encoders.yaml`. |
-| `uv run perception/gateway/main.py --data-root <dir>` | Starts the gateway on `127.0.0.1:8000`. |
-| `docker build -f harness/perception-image/Dockerfile -t medomni-perception .` | Builds the perception sidecar used inside tasks. |
+| `medomni bench data connect <dataset> --path <dir>` | Records where your copy of a dataset is, in the workspace configuration. |
+| `medomni bench data check <dataset>` | Runs the dataset's adapter on its data sample and validates its policy. |
+| `medomni bench task new <task-id> --dataset <dataset>` | Creates a task spec from the template. |
+| `medomni bench task build --batch <batch>` or `<spec>` | Builds tasks and their atom tasks in the workspace, for every condition. Dummy data for `smoke-dummy` is generated on the fly. |
+| `medomni bench task check <spec>` | Checks a spec and the task it builds: fields, metric, leakage, families, fingerprint. |
+| `medomni bench task check --batch <batch>` | Checks every built task of a batch against its published fingerprint. |
+| `medomni bench run --agent <config> --batch <batch>` | Checks the route against each dataset policy, pulls the encoder images the tasks need, runs every atom task in Harbor and records each run. `--condition` (repeatable; default `enc`), `--reps <n>`, `--concurrency <n>`. Resumes where it stopped. |
+| `medomni bench score --batch <batch>` | Scores every complete task per agent, condition and repetition, and prints and saves the table. The only command that writes scores. `--agent` limits it to one agent. |
 
-## Tests
+## Perception
 
 | Command | Does |
 |---|---|
-| `python3 -m unittest discover -s harness/tests` | The harness gates, Assurance's mutation tests and the sidecar guard tests. |
+| `medomni perception pull [<family-or-encoder> ...]` | Pulls encoder images from `ghcr.io/medomni`. |
+| `medomni perception up --data-root <dir>` | Starts the gateway on the pulled encoders, on `127.0.0.1:8000`. |
+| `medomni perception check <encoder-folder>` | Validates the model card, builds the image, runs it on its test data and compares with `expected.json`. `--freeze` records `expected.json` instead. |
 
 ## Where next
 
 - [Get started](../get-started.md): the commands in order on a first run.
-- [Architecture](../learn/architecture.md): where each script sits.
+- [Python API](../api/index.md): the same functions from Python.

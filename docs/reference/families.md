@@ -1,8 +1,8 @@
 # Families
 
-Inputs that can share an encoder are one family, defined by a declared format. Datasets supply families and encoders read them, so a family is where the two meet.
+The fields of a family file and of `aliases.yaml`. [Families](../learn/core/families.md) explains how the registry is used.
 
-One file per family in `data_task/families/<id>.yaml`, plus `data_task/family_alias.yaml`.
+Contract: family registry v1, one file per family in `core/contracts/families/<id>.yaml`, plus `core/contracts/families/aliases.yaml`.
 
 ## Family file
 
@@ -20,7 +20,14 @@ One file per family in `data_task/families/<id>.yaml`, plus `data_task/family_al
 
 ## Aliases
 
-`family_alias.yaml` lists what each family accepts beyond its protocol: channel and role relabels, extra sampling rates, label prefixes and DICOM colour modes. Reusable alias blocks are declared once under `vocab` and referenced by name. Aliases are strict: an unknown key, family or target fails.
+`aliases.yaml` lists, per family:
+
+- channel and role relabels
+- extra sampling rates
+- label prefixes
+- DICOM colour modes
+
+Reusable alias blocks are declared once under `vocab` and referenced by name.
 
 ## Rules
 
@@ -30,14 +37,10 @@ One file per family in `data_task/families/<id>.yaml`, plus `data_task/family_al
 ## Check
 
 ```bash
-python data_task/taskbuilder/family_audit.py audit
+medomni contracts check families
 ```
 
-```bash
-uv run --with pyyaml --with pydantic python data_task/materialize_family_aliases.py --check
-```
-
-The first checks the families and their samples; the second checks the aliases.
+It checks every family file, its samples and the aliases.
 
 ## Where next
 

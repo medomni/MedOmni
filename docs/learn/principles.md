@@ -2,18 +2,39 @@
 
 ## Data governance
 
-- **License compliance.** Every use of a source dataset follows its data use agreement and license, and leakage of source data is strictly prevented. MedOmni works directly with raw clinical data and the tasks built from it, so this is the foundational concern at every stage of building and running it.
-- **Derived artifacts.** Everything generated from source data is handled as patient data: tasks, answers, traces and results. They are built and kept on the machine that holds your dataset access; the repository holds code and task specs only, and nothing commits or uploads the rest.
+- **Licenses.** Every use of a dataset follows its license and data use agreement. Source data never leaves the machine that holds the access.
+- **Derived data.** Tasks, answers, traces and results built from a dataset count as patient data. They stay in the workspace. The repository holds only code, contracts and task specs.
+- **Policies.** Each dataset has a policy read from its license. `medomni bench run` refuses a model route the policy does not allow.
 
 ## Task reproducibility
 
 - **Determinism.** The same spec on the same data builds the same task, byte for byte.
-- **Verifiability.** A task's fingerprint lets anyone with the data rebuild it and check that it matches.
+- **Verification.** Anyone with the data can rebuild a task and check it against its fingerprint.
+
+## Structure
+
+The last column names the projects each principle comes from.
+
+| Principle | In MedOmni | Learned from |
+|---|---|---|
+| **One command** | Every user task is a `medomni` subcommand, grouped by project: `medomni bench …`, `medomni perception …`. | Terminal-Bench, SWE-bench |
+| **Projects in one repository** | Bench and Perception each have their own folder and depend only on Core. A project moves to its own repository, with its history, when it has its own owner, users and release schedule. | HELM and MedHELM, PyHealth; MONAI and OpenMMLab, which merged repositories back |
+| **Versioned contracts** | Projects and plug-in packages depend only on contracts. A deprecated contract version stays usable for at least two minor releases. | MONAI bundles, scverse AnnData, `langchain-core`, the Harbor task format |
+| **Locked core** | Only the MedOmni team changes Core. Contributors add agents, dataset adapters, tasks and encoders, each from a template, with one check command. | pytest and MkDocs plug-ins, OpenMMLab registries |
+| **Plug-in packages** | An outside `medomni-*` package adds agents, dataset adapters, tasks or encoders through Python entry points, without a pull request. Tasks on data that cannot leave an institution join this way. | HELM, Inspect, lm-eval-harness, Harbor registries |
+| **Shared checks** | `medomni.core.testing` runs the same checks in MedOmni's CI and in a plug-in package's CI. | `langchain-tests`, `nf-core lint`, MONAI bundle CI |
+| **Harbor as the runner** | Bench runs agents on Harbor. | Terminal-Bench |
+| **Credit** | The full history is kept. Every model card and task spec lists its authors. | MONAI bundles, MTEB, Terminal-Bench |
 
 ## Docs composition
 
-- **Necessary.** Keep a line only if, without it, a reader would lose how to use MedOmni or a correct understanding of it.
+- **Plain language.** Use the most direct word and the fewest words that state the fact. Avoid:
+    - slogans and paired phrases ("one X, one Y")
+    - contrasts set up for effect ("X, not Y")
+    - modifiers that add no fact
+- **Bullets.** When content is a list of items, steps or facts, write short bullets, one point each. A bullet need not be a full sentence.
+- **Necessary.** Keep a line only if a reader needs it to use or understand MedOmni.
 - **No overlap.** Each fact lives on one page; other pages link to it.
-- **Nothing key missing.** Whatever a user needs to run, read or extend this version is here.
-- **Current terms.** Use the words this version uses, and the same word everywhere.
-- **Minimal structure.** Add a new page only when an existing page cannot hold the content.
+- **Complete.** Everything a user needs to run, read or extend this version is here.
+- **Current terms.** Use this version's terms, and the same term everywhere.
+- **Minimal structure.** Add a page only when no existing page can hold the content.

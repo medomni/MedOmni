@@ -1,42 +1,47 @@
 # Concepts
 
-The terms used across MedOmni, in the order a run meets them.
+The ideas behind MedOmni. Each entry links to the page with the details.
+
+## Projects
+
+**Project**
+:   A part of MedOmni with its own folder, package, command and docs section. Projects depend on Core and not on each other. v0.3.0 has two: Bench and Perception.
+
+**Core**
+:   What every project uses: the contracts, the `medomni` command, plug-in loading, the testing kit and the audit. Only the MedOmni team changes it. See [Architecture](architecture.md).
+
+**Bench**
+:   The project that evaluates AI agents on medical tasks. It builds tasks from your data, runs an agent on them in Harbor, with or without encoders, and scores the answers. See [Run your agent](../guides/run-your-agent.md).
+
+**Perception**
+:   The project that turns medical data into evidence an agent can use. It serves the encoders through the gateway. See [Use the encoders](../guides/use-the-encoders.md).
+
+## Data and encoders
 
 **Dataset**
-:   A source of patient data you obtain under its own license: MIMIC-IV, AI-READI or BDSP in v0.2.1. MedOmni ships none.
-
-**Task**
-:   A clinical question asked of each patient in a cohort, with a fixed way to score the answers. Each task type is defined by a task spec, a yaml file in `data_task/taskbuilder/specs/`.
-
-**Atom task**
-:   One task for one patient: the unit an agent runs. A task type's atom tasks are scored together, against answers the agent never sees.
-
-**Fingerprint**
-:   A hash of a task's content. The same spec on the same data gives the same fingerprint, so anyone with the data can rebuild a task and prove it matches.
-
-**Batch**
-:   A named, pinned list of tasks and their fingerprints.
+:   A source of patient data, used under its own license: MIMIC-IV, AI-READI, BDSP or VitalDB. MedOmni ships no data. See [Datasets](bench/datasets.md).
 
 **Family**
-:   Inputs that can share an encoder are one family, defined by a declared format such as 12-lead ECG at 500 Hz. Datasets supply families; encoders read them.
+:   A declared input format, such as 12-lead ECG at 500 Hz. Datasets supply families; encoders read them. See [Families](core/families.md).
 
 **Encoder**
-:   A containerised model or rule that reads one family and returns evidence an agent can use, such as labels, events or text.
-
-**Model card**
-:   An encoder's declared facts: what it reads and returns, where it comes from, its license and its known limits.
+:   A containerised model or rule that reads one family and returns evidence: labels, events, text or embeddings, with their provenance and reliability. See [Encoders](perception/encoders.md).
 
 **Gateway**
-:   The HTTP service through which an agent finds encoders, reads their model cards and calls them.
+:   The HTTP service in Perception that lists encoders, serves their model cards and runs them. Agents and your own code call encoders through it. See [Gateway](perception/gateway.md).
+
+## Evaluation
+
+**Task**
+:   A clinical question asked of each patient in a cohort, with one fixed way to score the answers. A task spec defines it; Bench builds one atom task per patient. See [Tasks](bench/tasks.md).
 
 **Agent**
-:   The system being evaluated: a scaffold (`terminus-2` in v0.2.1) driving a model.
+:   The system being evaluated: a scaffold driving a model, described in an agent config. See [Runs](bench/runs.md).
 
-**Condition**
-:   What encoder access an agent gets: with encoders (`enc`), without (`noenc`), or required to use at least one (`enc-forced`). Only the encoder access, and the instruction paragraph that describes it, differ. The config calls it `variant`.
+## Extending MedOmni
 
-**Experiment**
-:   One yaml file declaring which agents run which task types, under which conditions, how many times.
+**Contract**
+:   A versioned format with the validator that checks it, such as the task spec or the model card. Projects and plug-in packages depend only on contracts. See [Contracts](core/contracts.md).
 
-**Run**
-:   One agent on one atom task, once. Its outcome is recorded in the results file, and scoring turns the runs of one task type into a score.
+**Extension point**
+:   A place where contributors add to MedOmni: agent, dataset adapter or task in Bench, encoder in Perception. Each has a template and one check command, and is filled by pull request or from a plug-in package. See [Contribute](../guides/contribute.md).

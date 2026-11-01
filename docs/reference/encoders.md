@@ -1,10 +1,10 @@
 # Encoders
 
-An encoder is a containerised model or rule that reads one family and returns evidence. Each declares itself in a model card; this page gives the card's format and lists every encoder in v0.2.1.
+The model card fields and every encoder in v0.3.0. [Encoders](../learn/perception/encoders.md) explains the encoder folder, images and the check.
 
 ## Model card
 
-One per encoder, at `perception/encoders/<family>/<encoder>/card.yaml`, checked against `perception/spec/card.schema.json`.
+Contract: model card v1, `core/contracts/schemas/model-card.schema.json`. One per encoder, at `perception/encoders/<family>/<encoder>/card.yaml`, and published to Hugging Face.
 
 | Field | Required | Meaning |
 |---|---|---|
@@ -12,6 +12,7 @@ One per encoder, at `perception/encoders/<family>/<encoder>/card.yaml`, checked 
 | `family` | yes | The one family it reads. |
 | `modality` | yes | The modality, in plain words. |
 | `summary` | yes | One sentence on what it does. |
+| `authors` | yes | Who built the encoder: name and GitHub handle for each. |
 | `intended_use` | no | The population and acquisition it was built for. |
 | `limits` | no | Known conditions where it is out of distribution. |
 | `outputs` | yes | Each output block's `kind` (`labels`, `events`, `text`, `embedding`), with its `scale`, full `labels` vocabulary or `dim` where relevant. |
@@ -24,15 +25,11 @@ One per encoder, at `perception/encoders/<family>/<encoder>/card.yaml`, checked 
 | `runtime` | no | `image` and `digest` of the container. |
 | `acceptance` | yes | `pending` or `accepted`, set by review. |
 
-A model card has no extra keys, its family exists, and an encoder never returns a label outside its declared vocabulary. Check one card, or all with no id:
+A model card has no extra keys, its family exists, and an encoder never returns a label outside its declared vocabulary.
 
-```bash
-uv run perception/registry.py validate <encoder-id>
-```
+## Encoders in v0.3.0
 
-## Encoders in v0.2.1
-
-The 44 encoders that `uv run perception/registry.py plan` reports as runnable. Images are not published: build each one locally with `uv run perception/registry.py build <encoder>`, which tags it `ghcr.io/medomni/<encoder>:dev`.
+44 encoders, each published as an image at `ghcr.io/medomni/<encoder>`, tagged with the MedOmni version that built it. Pull them with `medomni perception pull`.
 
 Licenses differ. Some are non-commercial (CC BY-NC) or copyleft (GPL); read the model card before using an encoder outside research.
 
@@ -85,6 +82,6 @@ Licenses differ. Some are non-commercial (CC BY-NC) or copyleft (GPL); read the 
 
 ## Where next
 
-- [Use the encoders](../guides/use-the-encoders.md): build an image and call it.
+- [Use the encoders](../guides/use-the-encoders.md): pull an image and call it.
 - [Gateway API](gateway-api.md): how cards and evidence are served.
 - [Families](families.md): the input each family expects.

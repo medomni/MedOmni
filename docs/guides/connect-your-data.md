@@ -1,6 +1,6 @@
 # Connect your data
 
-This guide is for agent evaluators with access to a credentialed dataset: you end up with MedOmni tasks built from your own copy.
+For agent evaluators with access to a credentialed dataset. You build a published batch from your own copy and check it against the published fingerprints.
 
 ## Before you start
 
@@ -9,39 +9,32 @@ This guide is for agent evaluators with access to a credentialed dataset: you en
 
 ## Steps
 
-1. Tell the task builder where each dataset is, in `data_task/data_roots.yaml`:
-
-    ```yaml
-    mimic: /path/to/mimic-iv
-    aireadi: /path/to/aireadi
-    bdsp: /path/to/bdsp
-    ```
-
-2. Build atom tasks for the task types and conditions you want. `-n` is the number of patients per type; `--seed` fixes which ones.
+1. Tell MedOmni where your copy is. The path is recorded in your workspace configuration.
 
     ```bash
-    python data_task/taskbuilder/emit_atomic.py --all --variant enc --batch smoke -n 2
+    medomni bench data connect mimic-iv --path /path/to/mimic-iv
     ```
 
-3. To rebuild a pinned spec task instead, emit it from its spec and validate it.
+2. Build the batch. The dataset adapter surveys your copy, and each task spec builds its tasks and atom tasks in the workspace.
 
     ```bash
-    python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/mimic_icu-stay-radiology-mini.yaml
+    medomni bench task build --batch v1-mini
     ```
+
+3. Check the build against the batch's published fingerprints.
 
     ```bash
-    python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/mimic_icu-stay-radiology-mini.yaml
+    medomni bench task check --batch v1-mini
     ```
-
-4. Compare the fingerprint in `data_task/tasks/<task-id>/FINGERPRINT` with the task's entry in `data_task/tasks/batches/v1-mini.yaml`.
 
 ## Check
 
-`validate.py` prints a JSON report and exits 1 on any failure: a missing key, a metric outside the vocabulary, a leaking input, answers under `data/`, or a folder that no longer matches its `FINGERPRINT`. A fingerprint that differs from the batch's means your copy (version, missing module) or the build differs; do not compare scores across the two.
+`medomni bench task check` reports each task as matching or not matching its published fingerprint, and exits 1 on any mismatch. A mismatch means your copy or build differs, for example a different version or a missing module. Do not compare its scores with published ones.
 
 !!! warning "Keep data local"
-    Built tasks, answers, traces and the results file all contain patient data. Never commit, upload or share them, and only send a task to a model provider the dataset's license allows (see [Datasets](../reference/datasets.md)).
+    Built tasks, answers, traces and the results file contain patient data. Do not commit, upload or share them.
 
 ## Where next
 
-- [Tasks](../reference/tasks.md): what a built task contains, how its fingerprint is computed, and the pinned batches.
+- [Tasks](../reference/tasks.md): what a built task contains, how its fingerprint is computed, and the published batches.
+- [Run your agent](run-your-agent.md): run on the batch you built.

@@ -1,84 +1,72 @@
 # Run your agent
 
-This guide is for agent evaluators: you end up with your own model scored on MedOmni, with and without encoders.
+For agent evaluators. You score your own agent on a MedOmni batch, with and without encoders.
 
 ## Before you start
 
-- [Get started](../get-started.md) working end to end.
-- Atom tasks built for each condition you compare. Build the no-encoder ones with `--variant noenc`; they land in `data_task/atomtasks-noenc/`.
+- [Get started](../get-started.md) working end to end on `smoke-dummy`.
+- The batch built from your data. See [Connect your data](connect-your-data.md).
 
 ## Steps
 
-1. Add an agent config by copying an existing one and changing the model. Keys appear only as `${VARNAME}` references to your keys file.
+1. Describe your agent in an agent config, starting from the template:
 
     ```bash
-    cp harness/harbor/agents/terminus-2-gpt.yaml harness/harbor/agents/terminus-2-mymodel.yaml
+    cp bench/templates/agent/agent.yaml my-agent.yaml
     ```
 
     ```yaml
-    agents:
-      - name: terminus-2
-        model_name: openai/my-model
-        env:
-          OPENAI_API_KEY: ${OPENAI_API_KEY}
-        kwargs:
-          max_turns: 300
+    name: my-agent
+    scaffold: terminus-2
+    model: openai/my-model
+    route: cloud
+    model_served: my-model-2026-10-01
+    env:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    max_turns: 300
     ```
 
-2. Send the model one request and note the model name the provider reports back. A requested alias can be served by a different model, so record the served name in `harness/models.yaml` and in the experiment's `expect`.
-3. Declare the experiment. Each agent × condition × repetition becomes one Harbor job.
+    | Field | Meaning |
+    |---|---|
+    | `scaffold` | The Harbor agent that drives the model. |
+    | `model` | The model to request. |
+    | `route` | `local` for a model served on your machine, `cloud` for a provider's API. |
+    | `model_served` | The model name the provider reports back. A requested alias can be served by a different model; a run that reports another name is recorded as an error and never scored. |
+    | `env` | Keys, only as `${VARNAME}` references to `keys.env` in your workspace. Never write a key into the config. |
 
-    ```yaml
-    experiment: my-model-v1
-    tier: SMOKE
-    description: my model, with and without encoders
-    generation: fix-smoke
-    types: all
-    variants: {enc: data_task/atomtasks, noenc: data_task/atomtasks-noenc}
-    agents: [terminus-2-mymodel]
-    reps: [1, 2]
-    concurrency: 4
-    expect: {terminus-2-mymodel: {model_served: my-model-2026-10-01}}
-    ```
-
-4. Emit, run each job's `harbor run` command and import each job, as in [Get started](../get-started.md).
+2. Run the agent on a batch, under each condition you want to compare, as many times as you need:
 
     ```bash
-    python harness/build.py emit my-model-v1
+    medomni bench run --agent my-agent.yaml --batch v1-mini --condition enc --condition noenc --reps 2
     ```
 
-    ```bash
-    python harness/build.py status my-model-v1
-    ```
+    Conditions: `enc` (with encoders), `noenc` (without) and `enc-forced` (must call at least one). `medomni bench run` checks the route against each dataset policy first, and resumes if run again. [Runs](../learn/bench/runs.md) explains both.
 
-    `status` shows which patients of each task type have a run, so you know when the experiment is complete.
-
-5. Score and tabulate.
+3. Score:
 
     ```bash
-    python harness/score.py --experiment my-model-v1
-    ```
-
-    ```bash
-    python harness/analyze.py grid my-model-v1
+    medomni bench score --batch v1-mini --agent my-agent
     ```
 
 ## Check
 
-`runs/experiments/my-model-v1/analysis/grid.md` shows task × agent × condition, with patient counts, failure rate, cost and encoder use. A task type with missing patients, or with runs that disagree on fingerprint or served model, is refused rather than scored. An agent's failure scores as chance; an infrastructure failure refuses the score.
+`medomni bench score` prints the task × agent × condition table and writes it to the workspace. Each row has the score, patient count, failure rate, cost and encoder use. [Scoring](../learn/bench/scoring.md#refusals-and-failures) lists when a score is refused.
 
 ## Results file
 
-Every run and every score is one line in `runs/ledger/results.jsonl`, written only by `build.py import` and `score.py`. You need it only to analyse results beyond the grid. Lines are never edited; for a repeated `run_id`, the latest line wins.
+Every run and every score is one line in `results.jsonl` in your workspace. You need it only to analyse results beyond the table. [Scoring](../learn/bench/scoring.md#results-file) explains how it is written.
+
+Contract: results row v1, `core/contracts/schemas/results-row.schema.json`.
 
 | Record | One per | Key fields |
 |---|---|---|
-| Run (`kind: atom`) | agent run on one atom task | `run_id`, `task`, `agent`, `variant`, `fingerprint`, `model_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
-| Score (`kind: cell`) | task type × agent × condition × repetition | `run_id`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
+| Run (`kind: atom`) | agent run on one atom task | `run_id`, `task`, `agent`, `condition`, `fingerprint`, `model_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
+| Score (`kind: cell`) | task × agent × condition × repetition | `run_id`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
 
 !!! warning "The results file is patient data"
-    Run ids contain the dataset's subject ids, so the file falls under each dataset's data use agreement. Keep it under `runs/`, which git ignores.
+    Run ids name the patients they ran on, so the file falls under each dataset's data use agreement. Keep it in the workspace.
 
 ## Where next
 
 - [Use the encoders](use-the-encoders.md): what the encoder condition gives your agent.
+- [Datasets](../reference/datasets.md): which routes each dataset allows.

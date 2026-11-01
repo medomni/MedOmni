@@ -41,7 +41,8 @@ It runs the machine checks, reads the recorded verdicts and writes a report and 
 
 ## Where it lives
 
-`core/audit/`: one check module per asset, the matrix and the report writer.
+- `src/medomni/core/audit/`: the matrix, the runner and the report writer
+- each project's audit checks, registered with Core: data and tasks from Bench, encoders from Perception
 
 ## Where next
 

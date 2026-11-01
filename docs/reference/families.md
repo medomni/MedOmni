@@ -2,7 +2,7 @@
 
 The fields of a family file and of `aliases.yaml`. [Families](../learn/core/families.md) explains how the registry is used.
 
-Contract: family registry v1, one file per family in `core/contracts/families/<id>.yaml`, plus `core/contracts/families/aliases.yaml`.
+Contract: family registry v1, one file per family in `core/families/<id>.yaml`, plus `core/families/aliases.yaml`.
 
 ## Family file
 

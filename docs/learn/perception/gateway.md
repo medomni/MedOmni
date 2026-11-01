@@ -37,19 +37,20 @@ Each `encode` returns evidence:
 
 Evidence contains only the model card and the container's reply. Identical requests give identical fingerprints and are served from a cache.
 
-## Two ways it runs
+## Start it
 
-| Mode | Started by | Differences |
-|---|---|---|
-| Standalone | `medomni perception up` | Reads inputs from your data root, mounted read-only. |
-| Sidecar | Bench, inside each atom task under `enc` and `enc-forced` | Adds a call budget, lists only the families staged for that patient, and logs every call with the run. |
+```bash
+medomni perception up --data-root <dir>
+```
+
+It reads inputs from your data root, mounted read-only. Inside Bench's atom tasks, Bench starts the gateway behind its [sidecar](../bench/runs.md#inside-an-atom-task), which adds a call budget, a family filter and a call log. The gateway itself has none of these.
 
 ## Where it lives
 
-- `perception/gateway/`: the service, built into the gateway image
+- `src/medomni/perception/gateway/`: the service, built into the gateway image
 
 ## Where next
 
 - [Gateway API](../../reference/gateway-api.md): every endpoint, field and error code.
 - [Use the encoders](../../guides/use-the-encoders.md): start the gateway and call it.
-- [Runs](../bench/runs.md): the sidecar inside an atom task.
+- [Runs](../bench/runs.md): how Bench uses the gateway inside an atom task.

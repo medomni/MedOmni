@@ -19,10 +19,10 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni bench data check <dataset>` | Runs the dataset's adapter on its data sample and validates its policy. |
 | `medomni bench task new <task-id> --dataset <dataset>` | Creates a task spec from the template. |
 | `medomni bench task build --batch <batch>` or `<spec>` | Builds tasks and their atom tasks in the workspace, for every condition. Dummy data for `smoke-dummy` is generated on the fly. |
-| `medomni bench task check <spec>` | Checks a spec and the task it builds: fields, metric, leakage, families, fingerprint. |
+| `medomni bench task check <spec>` | Checks a spec and the task it builds: fields, metrics, leakage, families, fingerprint. |
 | `medomni bench task check --batch <batch>` | Checks every built task of a batch against its published fingerprint. |
 | `medomni bench run --agent <config> --batch <batch>` | Checks the route against each dataset policy, pulls the encoder images the tasks need, runs every atom task in Harbor and records each run. `--condition` (repeatable; default `enc`), `--reps <n>`, `--concurrency <n>`. Resumes where it stopped. |
-| `medomni bench score --batch <batch>` | Scores every complete task per agent, condition and repetition, and prints and saves the table. The only command that writes scores. `--agent` limits it to one agent. |
+| `medomni bench score --batch <batch>` | Scores every target of every complete task per agent, condition and repetition, and prints and saves the table. The only command that writes scores. `--agent` limits it to one agent. |
 
 ## Perception
 
@@ -30,7 +30,7 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni perception pull [<family-or-encoder> ...]` | Pulls encoder images from `ghcr.io/medomni`. |
 | `medomni perception up --data-root <dir>` | Starts the gateway on the pulled encoders, on `127.0.0.1:8000`. |
-| `medomni perception check <encoder-folder>` | Validates the model card, builds the image, runs it on its test data and compares with `expected.json`. `--freeze` records `expected.json` instead. |
+| `medomni perception check <encoder-folder>` | Validates the model card, builds the image, compares its responses on test data with `expected.json`, then runs it on real family samples. `--samples <dir>` gives the samples; `--freeze` records `expected.json` instead. |
 
 ## Where next
 

@@ -2,7 +2,7 @@
 
 Every endpoint, field and error code of the gateway. [Gateway](../learn/perception/gateway.md) explains how it works.
 
-Contract: Gateway API v1, `core/contracts/schemas/gateway-api.schema.json`, with the evidence in `evidence.schema.json`.
+Contract: Gateway API v1, `src/medomni/core/contracts/schemas/gateway-api.schema.json`, with the evidence in `evidence.schema.json`.
 
 The gateway also serves its own OpenAPI page at `/docs`.
 

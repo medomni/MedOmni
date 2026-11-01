@@ -5,10 +5,10 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 ## Projects
 
 **Project**
-:   A part of MedOmni with its own folder, package, command and docs section. Projects depend on Core and not on each other. v0.3.0 has two: Bench and Perception.
+:   A part of MedOmni with its own package, content folder, command and docs section. Projects depend on Core and not on each other. v0.3.0 has two: Bench and Perception.
 
 **Core**
-:   What every project uses: the contracts, the `medomni` command, plug-in loading, the testing kit and the audit. Only the MedOmni team changes it. See [Architecture](architecture.md).
+:   What every project uses: the contracts, the `medomni` command, plug-in loading, the testing kit and the audit. Projects register with it; it imports none of them. Only the MedOmni team changes it. See [Architecture](architecture.md).
 
 **Bench**
 :   The project that evaluates AI agents on medical tasks. It builds tasks from your data, runs an agent on them in Harbor, with or without encoders, and scores the answers. See [Run your agent](../guides/run-your-agent.md).
@@ -33,7 +33,7 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 ## Evaluation
 
 **Task**
-:   A clinical question asked of each patient in a cohort, with one fixed way to score the answers. A task spec defines it; Bench builds one atom task per patient. See [Tasks](bench/tasks.md).
+:   A clinical question asked of each patient in a cohort, with a fixed way to score the answers. A task spec defines it; Bench's task pipeline builds one atom task per patient. See [Tasks](bench/tasks.md).
 
 **Agent**
 :   The system being evaluated: a scaffold driving a model, described in an agent config. See [Runs](bench/runs.md).

@@ -10,42 +10,45 @@ MedOmni v0.3.0 in five views:
 
 ## Repository layout
 
-The repository holds one package, `medomni`: Core and two projects. Each folder below maps to a component in the C3 view.
+The repository holds one package, `medomni`: Core and two projects. Code is under `src/`; content that people write and review (families, specs, batches, agent configs, encoders, templates) is in one top-level folder per project.
 
 ```text
 MedOmni/
-├── core/                 medomni.core
-│   ├── cli/              the medomni command
-│   ├── contracts/
-│   │   ├── schemas/      task spec, model card, Gateway API, dataset policy, results row
-│   │   └── families/     family registry and aliases
-│   ├── plugins/          entry-point loading
-│   ├── testing/          the checks behind every check command
-│   └── audit/            the audit matrix
-├── bench/                medomni.bench
-│   ├── datasets/         <dataset>/: adapter and policy; the dummy-data generator
-│   ├── tasks/
-│   │   ├── builder/      spec to atom tasks, fingerprints
-│   │   ├── specs/        one spec per task
-│   │   └── batches/      pinned task lists
-│   ├── harness/          Harbor jobs, route check, run records
-│   ├── scoring/          scorer and metrics
-│   ├── agents/           contributed agent configs
-│   ├── templates/        agent, dataset
-│   └── tests/
-├── perception/           medomni.perception
-│   ├── registry/         catalogue, image pulls, encoder check
-│   ├── gateway/          the HTTP service and its sidecar rules
-│   ├── runtime/          serving code inside every encoder image
-│   ├── encoders/         <family>/<encoder>/: built into images, not installed
-│   ├── templates/        encoder
-│   └── tests/
-├── docs/                 this site
+├── src/medomni/
+│   ├── core/                 medomni.core
+│   │   ├── cli/              the medomni command
+│   │   ├── contracts/        typed models, validators, schemas/
+│   │   ├── plugins/          entry-point loading
+│   │   ├── testing/          runs the checks each project registers
+│   │   └── audit/            runs the audit checks each project registers
+│   ├── bench/                medomni.bench
+│   │   ├── datasets/         <dataset>/: adapter and policy; the dummy-data generator
+│   │   ├── tasks/            the task pipeline, batches, fingerprints
+│   │   ├── harness/          Harbor jobs, route check, run records
+│   │   ├── sidecar/          call budget, limits and call log in each atom task
+│   │   └── scoring/          scorer, metrics, behaviour metrics
+│   └── perception/           medomni.perception
+│       ├── registry/         catalogue, image pulls, encoder check
+│       ├── runtime/          serving code built into every encoder image
+│       └── gateway/          the HTTP service
+├── core/
+│   └── families/             one file per family, and aliases.yaml
+├── bench/
+│   ├── specs/                one spec per task
+│   ├── batches/              pinned task lists
+│   ├── agents/               contributed agent configs
+│   └── templates/            agent, dataset
+├── perception/
+│   ├── encoders/             <family>/<encoder>/: built into images, not installed
+│   └── templates/            encoder
+├── tests/                    core/, bench/, perception/
+├── docs/                     this site
 └── pyproject.toml
 ```
 
-- **One name per project.** Its folder, package, command and docs section use the same name: `perception/`, `medomni.perception`, `medomni perception …`, Perception.
-- **Projects depend only on Core.** Each project folder holds its own code, templates and tests. [Design principles](principles.md#structure) gives the rules.
+- **One name per project.** Its package, content folder, command and docs section use the same name: `medomni.perception`, `perception/`, `medomni perception …`, Perception.
+- **Code and content are apart.** A new task, family or encoder changes content only; the code that reads it is unchanged.
+- **Projects depend only on Core.** Bench and Perception never import each other. They register their commands, checks and audit checks with Core through entry points; see [Plug-ins](core/plugins.md). [Design principles](principles.md#structure) gives the rules.
 - **One page per component.** Core: [Contracts](core/contracts.md), [Families](core/families.md), [Plug-ins](core/plugins.md), [Audit](core/audit.md). Bench: [Datasets](bench/datasets.md), [Tasks](bench/tasks.md), [Runs](bench/runs.md), [Scoring](bench/scoring.md). Perception: [Encoders](perception/encoders.md), [Gateway](perception/gateway.md).
 
 ## Context (C1)
@@ -69,11 +72,12 @@ MedOmni/
 
 | Container | Project | Does |
 |---|---|---|
-| `medomni` command | Core | The entrance: loads the contracts and any plug-in packages, then hands each subcommand to its project. Also runs the audit. |
-| Workspace | Core | Configuration, built tasks, runs and the results file, on your machine. Never committed. |
+| `medomni` command | Core | The entrance: finds the projects and any plug-in packages through entry points, then hands each subcommand to its project. |
+| Workspace | Core | Configuration, caches, built tasks, runs and the results file, on your machine. Never committed. |
 | Bench library | Bench | Builds tasks from your data, turns a batch into Harbor jobs, records runs and scores them. |
+| Sidecar | Bench | Runs inside each atom task with encoders. Passes the agent's calls to the gateway and adds the call budget, the family filter and the call log. |
 | Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
-| Gateway | Perception | The HTTP service that lists encoders, serves model cards and runs encoders. Also runs inside each atom task as the perception sidecar. |
+| Gateway | Perception | The HTTP service that lists encoders, serves model cards and runs encoders. |
 | Encoders | Perception | One image per encoder, each reading one family. Published to the container registry; model cards to Hugging Face. |
 
 Gateway and encoder images are tagged with the MedOmni version that built them, so every image names the contract version it implements.
@@ -84,17 +88,20 @@ Gateway and encoder images are tagged with the MedOmni version that built them, 
 
 | Project | Component | Module | Does |
 |---|---|---|---|
-| Core | Command | `medomni.core.cli` | The `medomni` command: every subcommand in [Commands](../cli/index.md). |
-| Core | Contracts | `medomni.core.contracts` | The versioned formats and their validators: family registry, task spec, model card, Gateway API, dataset policy, results row, fingerprint. |
-| Core | Plug-ins | `medomni.core.plugins` | Finds installed plug-in packages through their entry points. |
-| Core | Testing kit | `medomni.core.testing` | The checks behind every check command, importable by plug-in packages. |
-| Core | Audit | `medomni.core.audit` | The [audit](../reference/audit.md) of data, families, encoders, tasks and runs. |
+| Core | Command | `medomni.core.cli` | The `medomni` command. Finds each project's subcommands through entry points; see [Commands](../cli/index.md). |
+| Core | Contracts | `medomni.core.contracts` | The versioned formats, each with a typed model and a validator. See [Contracts](core/contracts.md). |
+| Core | Plug-ins | `medomni.core.plugins` | Loads the projects and plug-in packages through their entry points. |
+| Core | Testing kit | `medomni.core.testing` | Runs the checks each project registers. Plug-in packages import it for their own CI. |
+| Core | Audit | `medomni.core.audit` | Runs the audit checks each project registers and writes the [audit](../reference/audit.md) report. |
 | Bench | Datasets | `medomni.bench.datasets` | One adapter and one policy per dataset, and the dummy-data generator. |
-| Bench | Tasks | `medomni.bench.tasks` | Task specs, the task builder, batches, and the check against published fingerprints. |
+| Bench | Tasks | `medomni.bench.tasks` | The task pipeline, batches and fingerprints. |
 | Bench | Harness | `medomni.bench.harness` | Turns a batch into Harbor jobs, checks the route against each dataset policy and records runs. |
-| Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks. The only thing that writes scores. |
-| Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |
+| Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks, one row per target. The only thing that writes scores. |
+| Bench | Sidecar | `medomni.bench.sidecar` | Wraps the gateway inside each atom task: call budget, family filter, call log. |
 | Perception | Gateway | `medomni.perception.gateway` | The gateway service, built into the gateway image. |
+| Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |
+
+The projects meet in two contracts: Bench's sidecar calls Perception's gateway through the Gateway API, and a batch's encoder set tells Perception which images to pull.
 
 The four extension points plug into the projects, by pull request or from a plug-in package:
 

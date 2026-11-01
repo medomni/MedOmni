@@ -38,7 +38,7 @@ Not in v0.3.0: MedOmni Agent (a later project) and a PyPI release.
 
 ## How it fits together
 
-Bench and Perception each have their own folder and depend only on Core. Bench calls the encoders through Perception's images and Gateway API. Tasks, traces and results stay on your machine. [Architecture](learn/architecture.md) shows the layout.
+Bench and Perception each have their own package and content folder, and depend only on Core. Inside a task, Bench's sidecar calls Perception's gateway through the Gateway API. Tasks, traces and results stay on your machine. [Architecture](learn/architecture.md) shows the layout.
 
 ## Where next
 

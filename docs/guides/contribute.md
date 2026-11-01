@@ -42,7 +42,7 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add tasks only
 1. Copy the template into the package:
 
     ```bash
-    cp -r bench/templates/dataset bench/datasets/my-dataset
+    cp -r bench/templates/dataset src/medomni/bench/datasets/my-dataset
     ```
 
 2. Implement the adapter: locate the dataset on disk, survey what each patient has, and extract the files a task needs.
@@ -70,19 +70,19 @@ For a task on a supported dataset, using families MedOmni already declares.
     medomni bench task new vitaldb_my-task --dataset vitaldb
     ```
 
-2. Fill in the spec: the question, the target and its metric, the cohort, the prediction time and the allowed evidence. Inputs that would leak the target are banned automatically; do not list them. The fields are in [Tasks](../reference/tasks.md).
+2. Fill in the spec: the question, the targets and each one's metric, the cohort, the prediction time and the allowed evidence. Inputs that would leak the target are banned automatically; do not list them. The fields are in [Tasks](../reference/tasks.md).
 3. Build the task on dummy data and on the real dataset, and open a pull request with the spec.
 
 ### Check
 
 ```bash
-medomni bench task check bench/tasks/specs/vitaldb_my-task.yaml
+medomni bench task check bench/specs/vitaldb_my-task.yaml
 ```
 
 It checks:
 
 - the spec's fields and metric
-- that the target derivation resolves
+- that each target's derivation resolves
 - that no answers or leaking inputs reach the agent
 - that staged files match their families
 - that the built task matches its fingerprint

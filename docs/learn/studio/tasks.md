@@ -1,32 +1,37 @@
 # Tasks
 
-A task is a clinical question asked of each patient in a cohort, with one fixed way to score the answers. A task spec defines it; the task builder turns the spec and your data into atom tasks.
+A task is a clinical question asked of each patient in a cohort, with a fixed way to score the answers. A task spec defines it; the task pipeline turns the spec and your data into atom tasks.
 
 ```text
-task spec + dataset ──build──▶ task ──▶ one atom task per patient, per condition
-                                  └──▶ answers (kept apart) + fingerprint
+task spec + dataset ──task pipeline──▶ task ──▶ one atom task per patient, per condition
+                                         └──▶ answers (kept apart) + fingerprint
 ```
 
 ## Task spec
 
 A YAML file that states:
 
-- **target**: what is predicted, how the label is derived, and the metric
+- **targets**: one or more, each with what is predicted, how its label is derived, and its metric
 - **cohort**: who is included, and how many per class
 - **prediction time**: the moment after which nothing is evidence
 - **input**: the families the agent may see
 - **instruction**: the template for the agent's instruction
 - **environment**: CPUs, memory, timeouts, no internet
 
-## Build
+## Task pipeline
 
-`medomni bench task build` turns a spec into a task:
+`medomni bench task build` runs the spec through one shared pipeline. Only the first step is dataset code.
 
-1. The adapter finds the cohort and extracts each patient's files up to the prediction time.
-2. Inputs that would reveal a target are removed.
-3. The builder scans the staged files and fails the build if a target appears.
-4. It writes one atom task per patient for each condition, and the answers to a separate folder.
-5. It computes the task's fingerprint.
+1. **Adapter:** the dataset's adapter reads your copy.
+2. **Index:** what each patient has, by family and time.
+3. **Derivations:** each target's label, from the spec's rule.
+4. **Cohort:** the patients who meet the spec, sampled with its seed.
+5. **Leakage guard:** inputs that would reveal a target are removed, and the staged files are scanned; a target found in them fails the build.
+6. **Render:** one atom task per patient for each condition, and the answers in a separate folder.
+7. **Check:** the task is validated and its fingerprint computed.
+
+!!! warning "Designed later in Stage 1"
+    The steps above are the outline. Each step's inputs and outputs are designed from probes of the v0.2 specs and of the four datasets.
 
 The same spec on the same data builds the same task, byte for byte.
 
@@ -36,7 +41,7 @@ The unit an agent runs: one patient, all of the task's targets, at the task's pr
 
 ## Fingerprint
 
-A hash of the task's files. Anyone with the data can rebuild the task and check it against the published fingerprint. A changed task is a new task with a new fingerprint. Scores are refused for runs whose fingerprints differ.
+A hash of the task's content: its files, instruction, environment and answers. It never includes build time or paths on your machine. Anyone with the data can rebuild the task and check it against the published fingerprint. A changed task is a new task with a new fingerprint. Scores are refused for runs whose fingerprints differ.
 
 ## Batch
 
@@ -44,10 +49,10 @@ A named list of task ids pinned to fingerprints, such as `v1-mini`. Batches only
 
 ## Where it lives
 
-- `bench/tasks/specs/`: one spec per task
-- `bench/tasks/batches/`: the batches
-- `bench/tasks/builder/`: the task builder
-- your workspace: built tasks and their atom tasks
+- `bench/specs/`: one spec per task
+- `bench/batches/`: the batches
+- `src/medomni/bench/tasks/`: the task pipeline
+- your workspace: built tasks, their atom tasks, and the pipeline's caches
 
 ## Where next
 

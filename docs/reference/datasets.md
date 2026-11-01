@@ -2,7 +2,7 @@
 
 Every dataset v0.3.0 builds tasks from, with how to get access and what its policy allows.
 
-Contract: dataset policy v1, `core/contracts/schemas/dataset-policy.schema.json`. Each dataset has one adapter and one policy, in `bench/datasets/<dataset>/`.
+Contract: dataset policy v1, `src/medomni/core/contracts/schemas/dataset-policy.schema.json`. Each dataset has one adapter and one policy, in `src/medomni/bench/datasets/<dataset>/`.
 
 !!! note "Not legal advice"
     Each policy summarises the data owner's license and data use agreement. `medomni bench run` enforces the route rules. You are responsible for the rest of your agreement.

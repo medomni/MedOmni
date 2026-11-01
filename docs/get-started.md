@@ -51,7 +51,7 @@ medomni bench run --agent my-agent.yaml --batch smoke-dummy
 medomni bench score --batch smoke-dummy
 ```
 
-It prints one row per task, agent and condition: the score, the number of patients and the failure rate. Scores on dummy data only show that the pipeline works.
+It prints one row per task, target, agent and condition: the score, the number of patients and the failure rate. Scores on dummy data only show that the pipeline works.
 
 ## 5. Run on real data
 

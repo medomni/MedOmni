@@ -22,7 +22,7 @@ Real files rarely match a protocol exactly. `aliases.yaml` lists what each famil
 
 ## How the registry is used
 
-- A dataset adapter writes each input as files in a family.
+- A dataset adapter writes each input as files in a family. Where a dataset's files are in another format, the family bridge in Bench converts them, once, into a cache in the workspace.
 - The task builder checks staged files against their family.
 - The dummy-data generator reads each family's protocol.
 - An encoder's model card names its one family; the gateway filters encoders by family.
@@ -32,7 +32,8 @@ A new family is a contract change, made by the MedOmni team.
 
 ## Where it lives
 
-`core/contracts/families/`: one `<id>.yaml` per family, plus `aliases.yaml`.
+- `core/families/`: one `<id>.yaml` per family, plus `aliases.yaml`
+- `src/medomni/core/contracts/schemas/`: the schema both follow
 
 ## Where next
 

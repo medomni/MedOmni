@@ -4,7 +4,7 @@ The model card fields and every encoder in v0.3.0. [Encoders](../learn/perceptio
 
 ## Model card
 
-Contract: model card v1, `core/contracts/schemas/model-card.schema.json`. One per encoder, at `perception/encoders/<family>/<encoder>/card.yaml`, and published to Hugging Face.
+Contract: model card v1, `src/medomni/core/contracts/schemas/model-card.schema.json`. One per encoder, at `perception/encoders/<family>/<encoder>/card.yaml`, and published to Hugging Face.
 
 | Field | Required | Meaning |
 |---|---|---|

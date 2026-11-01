@@ -20,7 +20,7 @@ perception/encoders/<family>/<encoder>/
     └── PROVENANCE.md
 ```
 
-The runtime in `perception/runtime/` wraps `adapter.py` in the same container API in every image, so an encoder author writes only `load` and `encode`.
+The runtime in `src/medomni/perception/runtime/` is built into every image. It declares the encoder interface, `load` and `encode`, and serves it through the container API. An encoder author writes only those two methods; the check fails an adapter that does not implement them.
 
 ## Model card
 
@@ -40,7 +40,14 @@ Agents read the card through the gateway before they rely on an encoder.
 medomni perception check perception/encoders/<family>/<encoder>
 ```
 
-It validates the card, builds the image, runs it on its test data and compares the responses with `expected.json`. `--freeze` records `expected.json` from the current build; a later change that alters the responses fails the check.
+It runs four stages in order and stops at the first failure:
+
+1. **Card:** validates the model card and the folder.
+2. **Build:** builds the image.
+3. **Test data:** runs the image on `testdata/` and compares the responses with `expected.json`.
+4. **Real samples:** runs the image offline on real samples of its family and checks each response against the model card. It needs at least three samples, from the family's published samples or `--samples <dir>`. With fewer, the stage reports "unverified" instead of passing.
+
+`--freeze` records `expected.json` from the current build; a later change that alters the responses fails stage 3.
 
 ## Images
 
@@ -51,8 +58,8 @@ It validates the card, builds the image, runs it on its test data and compares t
 ## Where it lives
 
 - `perception/encoders/<family>/<encoder>/`: each encoder
-- `perception/runtime/`: the serving code shared by every image
-- `perception/registry/`: the catalogue, image pulls and the check
+- `src/medomni/perception/runtime/`: the serving code shared by every image
+- `src/medomni/perception/registry/`: the catalogue, image pulls and the check
 
 ## Where next
 

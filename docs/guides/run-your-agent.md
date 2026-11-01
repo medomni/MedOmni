@@ -40,7 +40,7 @@ For agent evaluators. You score your own agent on a MedOmni batch, with and with
     medomni bench run --agent my-agent.yaml --batch v1-mini --condition enc --condition noenc --reps 2
     ```
 
-    Conditions: `enc` (with encoders), `noenc` (without) and `enc-forced` (must call at least one). `medomni bench run` checks the route against each dataset policy first, and resumes if run again. [Runs](../learn/bench/runs.md) explains both.
+    Conditions: `enc` (with encoders), `noenc` (without), `enc-forced` (must call at least one) and `ladder` (six rungs of input families). `medomni bench run` checks the route against each dataset policy first, and resumes if run again. [Runs](../learn/bench/runs.md) explains both.
 
 3. Score:
 
@@ -50,18 +50,18 @@ For agent evaluators. You score your own agent on a MedOmni batch, with and with
 
 ## Check
 
-`medomni bench score` prints the task × agent × condition table and writes it to the workspace. Each row has the score, patient count, failure rate, cost and encoder use. [Scoring](../learn/bench/scoring.md#refusals-and-failures) lists when a score is refused.
+`medomni bench score` prints the task × target × agent × condition table and writes it to the workspace. Each row has the score, patient count, failure rate, cost and encoder use. [Scoring](../learn/bench/scoring.md#refusals-and-failures) lists when a score is refused.
 
 ## Results file
 
 Every run and every score is one line in `results.jsonl` in your workspace. You need it only to analyse results beyond the table. [Scoring](../learn/bench/scoring.md#results-file) explains how it is written.
 
-Contract: results row v1, `core/contracts/schemas/results-row.schema.json`.
+Contract: results row v1, `src/medomni/core/contracts/schemas/results-row.schema.json`.
 
 | Record | One per | Key fields |
 |---|---|---|
 | Run (`kind: atom`) | agent run on one atom task | `run_id`, `task`, `agent`, `condition`, `fingerprint`, `model_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
-| Score (`kind: cell`) | task × agent × condition × repetition | `run_id`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
+| Score (`kind: cell`) | task × target × agent × condition × repetition | `run_id`, `target`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
 
 !!! warning "The results file is patient data"
     Run ids name the patients they ran on, so the file falls under each dataset's data use agreement. Keep it in the workspace.

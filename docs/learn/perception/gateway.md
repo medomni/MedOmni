@@ -2,12 +2,18 @@
 
 The gateway is one HTTP service in front of every encoder. Through it, an agent or your own code finds encoders, reads their model cards and runs them. It only finds, describes and runs encoders: the agent decides which to call and how to combine their evidence.
 
+It has three parts:
+
+- **Catalogue:** finds encoders and serves their model cards.
+- **Router:** sends each call to a running encoder container.
+- **Evidence:** builds the answer and its fingerprint.
+
 ```text
 caller ──GET /encoders, /cards──▶ catalogue (no containers needed)
-caller ──POST /encode──▶ pool ──▶ encoder container ──▶ evidence
+caller ──POST /encode──▶ router ──▶ encoder container ──▶ evidence
 ```
 
-## Find
+## Catalogue
 
 Model cards are files, so the gateway loads every card at start. Searching and reading cards start no containers.
 
@@ -15,14 +21,23 @@ Model cards are files, so the gateway loads every card at start. Searching and r
 - `GET /cards/{encoder_id}` returns one model card.
 - `GET /families` lists each family with its encoder count.
 
-## Run
+## Router
 
-`POST /encode` sends one input to one encoder. Only this call uses a container.
+`POST /encode` sends one input to one named encoder. Only this call uses a container. For each call the router:
 
-- The first call to an encoder starts its container; later calls reuse it.
-- A limit caps the number of live containers. When the limit is reached, the least recently used idle container stops.
-- A busy container is never stopped.
-- Idle containers stop after a timeout.
+1. **Looks up** the encoder in the catalogue. An unknown encoder, or one with a model card but no image, is refused.
+2. **Checks the cache.** An identical earlier request is answered without a container.
+3. **Picks a container:**
+    - a running one for that encoder, if it is under its concurrency limit
+    - otherwise a new one, if the pool is under its limit of live containers
+    - otherwise it stops the least recently used idle container and starts a new one
+    - otherwise it waits; one encoder is never started twice
+4. **Sends** the request to the container through the Container API.
+5. **Handles failure:** a container that fails or hangs is taken out, so the next call gets a fresh one.
+
+Calls to several encoders are separate requests and run side by side, within the limits. A busy container is never stopped, and idle containers stop after a timeout.
+
+The router routes by name only. Choosing encoders is the agent's job, and Bench's behaviour metrics measure that choice.
 
 The response reports the start time in `runtime.container_start_ms`.
 

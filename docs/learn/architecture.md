@@ -77,7 +77,7 @@ MedOmni/
 | Bench library | Bench | Builds tasks from your data, turns a task suite into Harbor jobs, records runs and scores them. |
 | Perception service | Bench | Runs inside each atom task with encoders: Perception's gateway, with Bench's call budget, family filter and call log. |
 | Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
-| Gateway | Perception | The HTTP service that lists encoders, serves model cards and runs encoders. |
+| Gateway | Perception | The HTTP service in front of every encoder: its catalogue finds encoders and serves model cards, its router sends each call to a running encoder container. |
 | Encoders | Perception | One image per encoder, each reading one family. Published to the container registry; model cards to Hugging Face. |
 
 Gateway and encoder images are tagged with the MedOmni release that built them. The gateway runs any encoder image built since the Container API last changed.

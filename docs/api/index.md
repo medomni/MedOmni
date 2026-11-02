@@ -16,7 +16,7 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.bench.scoring` | The scorer, the metrics and the behaviour metrics. |
 | `medomni.perception.registry` | The encoder catalogue: model cards, image pulls and the encoder check. |
 | `medomni.perception.runtime` | The encoder interface and the serving code built into every image. |
-| `medomni.perception.gateway` | The gateway service. |
+| `medomni.perception.gateway` | The gateway service: catalogue, router and evidence. |
 
 - `medomni.core` imports no project.
 - `medomni.bench` and `medomni.perception` import only `medomni.core`, never each other.

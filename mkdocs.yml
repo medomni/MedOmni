@@ -48,24 +48,30 @@ nav:
       - Core:
           - Contracts: learn/core/contracts.md
           - Families: learn/core/families.md
+          - Cache: learn/core/cache.md
           - Plug-ins: learn/core/plugins.md
           - Audit: learn/core/audit.md
       - Bench:
           - Datasets: learn/bench/datasets.md
           - Tasks: learn/bench/tasks.md
+          - Build: learn/bench/build.md
+          - Recipes: learn/bench/recipes.md
           - Runs: learn/bench/runs.md
           - Scoring: learn/bench/scoring.md
       - Perception:
           - Encoders: learn/perception/encoders.md
           - Gateway: learn/perception/gateway.md
+      - Toolkit: learn/toolkit.md
       - Extend MedOmni: learn/extend.md
   - Guides:
       - Run your agent: guides/run-your-agent.md
       - Connect your data: guides/connect-your-data.md
+      - Rebuild a task set: guides/rebuild-a-task-set.md
       - Use the encoders: guides/use-the-encoders.md
       - Contribute: guides/contribute.md
   - Reference:
       - Tasks: reference/tasks.md
+      - Recipes: reference/recipes.md
       - Encoders: reference/encoders.md
       - Families: reference/families.md
       - Datasets: reference/datasets.md

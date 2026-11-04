@@ -3,12 +3,13 @@
 ## Data governance
 
 - **Licenses.** Every use of a dataset follows its license and data use agreement. Source data never leaves the machine that holds the access.
-- **Derived data.** Tasks, answers, traces and results built from a dataset count as patient data. They stay in the workspace. The repository holds only code, contracts and task specs.
+- **Derived data.** Tasks, answers, traces and results built from a dataset count as patient data. They stay in the workspace. The repository holds only code, contracts, dataset packages, templates and recipes.
 - **Policies.** Each dataset has a policy read from its license. `medomni bench run` refuses a model route the policy does not allow.
 
 ## Task reproducibility
 
-- **Determinism.** The same spec on the same data builds the same task, byte for byte.
+- **Determinism.** The same template and cohort on the same data build the same atom tasks, byte for byte.
+- **Rules, not lists.** Cohorts are published as recipes, never as lists of patients.
 - **Verification.** Anyone with the data can rebuild a task and check it against its fingerprint. The fingerprint covers content only, never build time or local paths.
 
 ## Structure
@@ -18,13 +19,13 @@ The last column names the projects each principle comes from.
 | Principle | In MedOmni | Learned from |
 |---|---|---|
 | **One command** | Every user task is a `medomni` subcommand, grouped by project: `medomni bench …`, `medomni perception …`. | Terminal-Bench, SWE-bench |
-| **Projects in one repository** | Bench and Perception each have their own package under `src/medomni/` and their own content folder, and depend only on Core. A project moves to its own repository, with its history, when it has its own owner, users and release schedule. | HELM and MedHELM, PyHealth; MONAI and OpenMMLab, which merged repositories back |
+| **Projects in one repository** | Bench, Perception and the toolkit each have their own package under `src/medomni/`. Bench and Perception depend only on Core; the toolkit may also use Bench. A project moves to its own repository, with its history, when it has its own owner, users and release schedule. | HELM and MedHELM, PyHealth; MONAI and OpenMMLab, which merged repositories back |
 | **Versioned contracts** | Projects and plug-in packages depend only on contracts. Contracts change only in a minor release, and files from the previous minor release still load. | MONAI bundles, scverse AnnData, `langchain-core`, the Harbor task format |
-| **Locked core** | Only the MedOmni team changes Core. Core imports no project; projects register with it through entry points. Contributors add agents, dataset adapters, tasks and encoders, each from a template, with one check command. | pytest and MkDocs plug-ins, OpenMMLab registries |
-| **Plug-in packages** | An outside `medomni-*` package adds agents, dataset adapters, tasks or encoders through Python entry points, without a pull request. Tasks on data that cannot leave an institution join this way. | HELM, Inspect, lm-eval-harness, Harbor registries |
+| **Locked core** | Only the MedOmni team changes Core. Core imports no project; projects register with it through entry points. Contributors add agents, datasets, tasks and encoders, each from a starter, with one check command. | pytest and MkDocs plug-ins, OpenMMLab registries |
+| **Plug-in packages** | An outside `medomni-*` package adds agents, datasets, tasks or encoders through Python entry points, without a pull request. Tasks on data that cannot leave an institution join this way. | HELM, Inspect, lm-eval-harness, Harbor registries |
 | **Shared checks** | `medomni.core.testing` runs the same checks in MedOmni's CI and in a plug-in package's CI. | `langchain-tests`, `nf-core lint`, MONAI bundle CI |
 | **Harbor as the runner** | Bench runs agents on Harbor. | Terminal-Bench |
-| **Credit** | The full history is kept. Every model card and task spec lists its authors. | MONAI bundles, MTEB, Terminal-Bench |
+| **Credit** | The full history is kept. Every model card and task template lists its authors. | MONAI bundles, MTEB, Terminal-Bench |
 
 ## Docs composition
 

@@ -1,18 +1,18 @@
 # Run your agent
 
-For agent evaluators. You score your own agent on a MedOmni task suite, with and without encoders.
+For agent evaluators. You score your own agent on a MedOmni task set, with and without encoders.
 
 ## Before you start
 
 - [Get started](../get-started.md) working end to end on `smoke-dummy`.
-- The suite built from your data. See [Connect your data](connect-your-data.md).
+- The task set built from your data. See [Rebuild a task set](rebuild-a-task-set.md).
 
 ## Steps
 
 1. Describe your agent in an agent config, starting from the template:
 
     ```bash
-    cp bench/templates/agent/agent.yaml my-agent.yaml
+    cp bench/starters/agent/agent.yaml my-agent.yaml
     ```
 
     ```yaml
@@ -34,10 +34,10 @@ For agent evaluators. You score your own agent on a MedOmni task suite, with and
     | `model_served` | The model name the provider reports back. A requested alias can be served by a different model; a run that reports another name is recorded as an error and never scored. |
     | `env` | Keys, only as `${VARNAME}` references to `keys.env` in your workspace. Never write a key into the config. |
 
-2. Run the agent on a suite, under each condition you want to compare, as many times as you need:
+2. Run the agent on a task set, under each condition you want to compare, as many times as you need:
 
     ```bash
-    medomni bench run --agent my-agent.yaml --suite v1-mini --condition enc --condition noenc --reps 2
+    medomni bench run --agent my-agent.yaml --set v1 --condition enc --condition noenc --reps 2
     ```
 
     Conditions: `enc` (with encoders), `noenc` (without), `enc-forced` (must call at least one) and `ladder` (six rungs of input families). `medomni bench run` checks the route against each dataset policy first, and resumes if run again. [Runs](../learn/bench/runs.md) explains both.
@@ -45,7 +45,7 @@ For agent evaluators. You score your own agent on a MedOmni task suite, with and
 3. Score:
 
     ```bash
-    medomni bench score --suite v1-mini --agent my-agent
+    medomni bench score --set v1 --agent my-agent
     ```
 
 ## Check
@@ -60,7 +60,7 @@ Contract: result record, `src/medomni/core/contracts/schemas/result-record.schem
 
 | Record | One per | Key fields |
 |---|---|---|
-| Run (`kind: run`) | agent run on one atom task | `run_id`, `suite`, `task`, `agent`, `condition`, `fingerprint`, `model_served`, `encoders_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
+| Run (`kind: run`) | agent run on one atom task | `run_id`, `task_set`, `task` (`<template>@<cohort>`), `agent`, `condition`, `fingerprint`, `fingerprint_match`, `model_served`, `encoders_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
 | Score (`kind: score`) | task × target × agent × condition × repetition | `run_id`, `target`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
 
 !!! warning "The results file is patient data"

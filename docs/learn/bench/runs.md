@@ -1,9 +1,9 @@
 # Runs
 
-A run is one agent on one atom task, once. The harness turns a task suite into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file.
+A run is one agent on one atom task, once. The harness turns a task set into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file.
 
 ```text
-agent config + suite ──harness──▶ Harbor jobs ──▶ one run per atom task × condition × repetition
+agent config + task set ──harness──▶ Harbor jobs ──▶ one run per atom task × condition × repetition
                                                      └──▶ results file
 ```
 
@@ -11,7 +11,7 @@ agent config + suite ──harness──▶ Harbor jobs ──▶ one run per at
 
 An agent is a scaffold driving a model, described in an agent config. The config names the scaffold (a Harbor agent such as `terminus-2`), the model, the model name the provider must report back, and the route (`local` or `cloud`). [Run your agent](../../guides/run-your-agent.md) lists every field.
 
-The replay agent repeats recorded runs with no model calls. MedOmni's own tests use it to run a suite at no cost.
+The replay agent repeats recorded runs with no model calls. MedOmni's own tests use it to run a task set at no cost.
 
 ## Conditions
 
@@ -40,7 +40,7 @@ Each condition is its own built set of atom tasks.
 
 `medomni bench run`:
 
-1. checks the agent's route against every dataset policy in the suite
+1. checks the agent's route against every dataset policy in the task set
 2. pulls the encoder images for the families the tasks stage
 3. writes one Harbor job per condition and repetition, and runs them
 4. records each run: ids, fingerprint, served model, the encoders served (id and image digest), encoder calls, files opened, cost, errors

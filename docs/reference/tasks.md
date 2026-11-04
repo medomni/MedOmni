@@ -1,41 +1,39 @@
 # Tasks
 
-The task spec, the atom task layout, the fingerprint algorithm and the task suites. [Tasks](../learn/bench/tasks.md) explains how they fit together.
+The task template, the atom task layout, the fingerprint algorithm and the task sets. [Tasks](../learn/bench/tasks.md) explains how they fit together.
 
-Contract: task spec, `src/medomni/core/contracts/schemas/task-spec.schema.json`
+Contract: task template, `src/medomni/core/contracts/schemas/task-template.schema.json`. The cohort fields are in [Recipes](recipes.md#cohort-file).
 
 ## Tasks in v0.3.0
 
-One spec per task in `bench/specs/`.
+One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
 
-- 30 tasks on credentialed data: 15 on AI-READI, 9 on MIMIC-IV, 6 on BDSP
-- the VitalDB tasks on open data
-- a `-mini` spec for every task: a small cohort
-- a `-full` spec for most tasks: the whole record minus inputs that leak the answer
+- 30 templates on credentialed data: 15 on AI-READI, 9 on MIMIC-IV, 6 on BDSP
+- the VitalDB templates on open data
+- an `n20` cohort for every template, and a `ladder` cohort for the modality ladder
+- a `full` evidence variant for most templates: the whole record minus the targets' guards
 
-## Task spec
+## Task template
+
+`bench/datasets/<dataset>/tasks/<template>/template.yaml`
 
 | Field | Required | Meaning |
 |---|---|---|
-| `task_id` | yes | `<dataset>_<name>`, with `-full` or `-mini` for those versions. |
-| `dataset` | yes | The dataset the task binds to. |
-| `authors` | yes | Who wrote the task: name and GitHub handle for each. |
-| `seed` | yes | Seed for cohort sampling. |
-| `targets` | yes | One or more. Each states what is predicted, how its label is derived, and its `metric`: `auc`, `qwk` or `mae`. |
-| `cohort` | yes | Who is in the cohort, and how many per class. |
-| `input` | yes | The evidence the agent may see, by stream and family. |
+| `template_id` | yes | `<dataset>_<name>`; equals the folder name. |
+| `dataset` | yes | The dataset the template binds to. |
+| `authors` | yes | Who wrote the template: name and GitHub handle for each. |
+| `targets` | yes | One or more. Each has a `name`, a `label` from the dataset's library, and its `metric`: `auc`, `qwk` or `mae`. |
+| `input` | yes | The tables and families the default evidence variant stages. |
+| `variants` | no | `[default]` (default), or `[default, full]`. |
+| `exclude` | no | Codes or fields to remove beyond the targets' guards. |
 | `environment` | yes | CPUs, memory, internet access, agent and verifier timeouts. |
 | `submission_path` | yes | Where the agent writes its answer. |
 | `instruction` | yes | The template that renders the agent's instruction. |
-| `evidence_mode` | no | `selected` (default), `full` or `mini`. |
-| `prediction_time` | no | The time after which nothing is evidence. |
-| `excluded_from_inputs` | no | Extra inputs to ban, beyond those banned automatically from how the target is derived. |
-| `extends` | no | A base spec merged underneath this one. |
 
-Check a spec and the task it builds; the exit code is 1 on any failure:
+Check a template, its cohort and the build; the exit code is 1 on any failure:
 
 ```bash
-medomni bench task check bench/specs/<task-id>.yaml
+medomni bench task check <template>@<cohort>
 ```
 
 ## Atom task
@@ -44,31 +42,31 @@ What an agent runs, built in the workspace under `atomtasks/<condition>/<atom>/`
 
 | Path | Holds |
 |---|---|
-| `task.toml` | Task metadata, condition, resources, and the parent task and patient. |
+| `task.toml` | Task metadata, condition, resources, the `<template>@<cohort>` and the patient. |
 | `instruction.md` | The question, the patient's record and the targets to predict. |
 | `environment/` | The closed-network containers, with the perception service when encoders are available. |
 | `tests/` | A format check on the answer. It never scores. |
 | `data/` | The patient's staged files, minus anything that leaks a target. |
 
-The answers sit with the task, in `atomtasks/_parents/<task>/`, never in an atom task. The atom tasks of one task are scored together against them.
+The answers sit apart, in `atomtasks/_parents/<template>@<cohort>/`, never in an atom task. The atom tasks of one `<template>@<cohort>` are scored together against them.
 
 ## Fingerprint
 
-A task's fingerprint is the SHA-256 over every file in its folder, in path order. Each file adds its relative path, a separator, its length and its bytes. `FINGERPRINT` itself is excluded, and no file holds a build time or a local path. It is written to the folder's `FINGERPRINT` file as `fp1:<hex>`, where `fp1` names this algorithm. A later algorithm gets a new prefix, so published fingerprints stay checkable across releases. `medomni bench task check` recomputes it and fails if it differs.
+The fingerprint of a built `<template>@<cohort>` is the SHA-256 over every file in its folder, in path order. Each file adds its relative path, a separator, its length and its bytes. `FINGERPRINT` itself is excluded, and no file holds a build time or a local path. It is written to the folder's `FINGERPRINT` file as `fp1:<hex>`, where `fp1` names this algorithm. A later algorithm gets a new prefix, so published fingerprints stay checkable across releases. `medomni bench task check` recomputes it and fails if it differs.
 
-## Task suites
+## Task sets
 
-A task suite pins task ids to fingerprints, in `bench/suites/<name>.yaml`. Suites only grow.
+A task set pins `<template>@<cohort>` pairs to fingerprints, in `bench/sets/<name>.yaml`. For each pair it also lists the step counts and the cache keys and content hashes the build uses. Task sets only grow.
 
-| Suite | Data | Tasks |
+| Task set | Data | Holds |
 |---|---|---|
-| `smoke-dummy` | Dummy data | One per task, on generated data. |
-| `vitaldb` | VitalDB | The VitalDB tasks. |
-| `v1-mini` | AI-READI, MIMIC-IV, BDSP | The 30 `-mini` tasks. |
-| `v1-full` | AI-READI, MIMIC-IV, BDSP | Every task and its `-mini` and `-full` specs. |
+| `smoke-dummy` | Dummy data | One pair per template, on generated data. |
+| `vitaldb` | VitalDB | The VitalDB templates. |
+| `v1` | AI-READI, MIMIC-IV, BDSP | The 30 credentialed templates at `n20`. |
 
 ## Where next
 
-- [Families](families.md): the inputs a spec can name.
-- [Contribute](../guides/contribute.md): write a new spec.
+- [Families](families.md): the inputs a template can name.
+- [Recipes](recipes.md): the cohort, label and evidence fields.
+- [Contribute](../guides/contribute.md): write a new template and cohort.
 - [Datasets](datasets.md): what each dataset needs.

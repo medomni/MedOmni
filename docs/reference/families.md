@@ -45,4 +45,4 @@ It checks every family file, its samples and the aliases.
 ## Where next
 
 - [Encoders](encoders.md): which encoders read each family.
-- [Tasks](tasks.md): how a spec names its inputs by family.
+- [Tasks](tasks.md): how a template names its inputs by family.

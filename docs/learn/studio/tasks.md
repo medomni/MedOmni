@@ -1,64 +1,56 @@
 # Tasks
 
-A task is a clinical question asked of each patient in a cohort, with a fixed way to score the answers. A task spec defines it; the task pipeline turns the spec and your data into atom tasks.
+A task asks a clinical question of each patient in a cohort, with a fixed way to score the answers. It is written as a task template and one or more cohorts. Build turns a template and a cohort into atom tasks.
 
 ```text
-task spec + dataset ──task pipeline──▶ task ──▶ one atom task per patient, per condition
-                                         └──▶ answers (kept apart) + fingerprint
+task template + cohort ──Build──▶ <template>@<cohort> ──▶ one atom task per patient, per condition
+                                        └──▶ answers (kept apart) + fingerprint
 ```
 
-## Task spec
+## Task template
 
-A YAML file that states:
+A YAML file, `template.yaml`, that states:
 
-- **targets**: one or more, each with what is predicted, how its label is derived, and its metric
-- **cohort**: who is included, and how many per class
-- **prediction time**: the moment after which nothing is evidence
-- **input**: the families the agent may see
+- **targets**: one or more, each naming a label from the dataset's library and its metric
+- **input**: the tables and families the agent may see
+- **variants**: the evidence variants to build, `default` and optionally `full`
 - **instruction**: the template for the agent's instruction
 - **environment**: CPUs, memory, timeouts, no internet
 
-## Task pipeline
+A template is frozen once [Make](../toolkit.md) is done. A changed template is a new template.
 
-`medomni bench task build` runs the spec through one shared pipeline. Only the first step is dataset code.
+## Cohort
 
-1. **Adapter:** the dataset's adapter reads your copy.
-2. **Index:** what each patient has, by family and time.
-3. **Derivations:** each target's label, from the spec's rule.
-4. **Cohort:** the patients who meet the spec, sampled with its seed.
-5. **Leakage guard:** inputs that would reveal a target are removed, and the staged files are scanned; a target found in them fails the build.
-6. **Render:** one atom task per patient for each condition, and the answers in a separate folder.
-7. **Check:** the task is validated and its fingerprint computed.
+A cohort is a [recipe](recipes.md) in its own file next to the template: who is included, at which prediction time, and how many per class. One template can have several cohorts, such as `n20` and `n50`; the patients of `n20` are the first ones of `n50`.
 
-!!! warning "Designed later in Stage 1"
-    The steps above are the outline. Each step's inputs and outputs are designed from probes of the v0.2 specs and of the four datasets.
-
-The same spec on the same data builds the same task, byte for byte.
+The pair is written `<template>@<cohort>`, such as `mimic_ckd-staging@n20`, and `<template>:full@<cohort>` for the full evidence variant. Each built pair has its own fingerprint.
 
 ## Atom task
 
-The unit an agent runs: one patient, all of the task's targets, at the task's prediction time. It holds the instruction, the patient's files, the environment and a format check. It never holds the answers. The agent writes one prediction per target.
+The unit an agent runs: one patient, all of the targets, at the patient's prediction time. It holds the instruction, the patient's evidence, the environment and a format check. It never holds the answers. The agent writes one prediction per target.
 
 ## Fingerprint
 
-A hash of the task's content: its files, instruction, environment and answers. It never includes build time, paths on your machine or the encoders served; the run record holds those. Anyone with the data can rebuild the task and check it against the published fingerprint. A changed task is a new task with a new fingerprint. Scores are refused for runs whose fingerprints differ.
+A hash of a built `<template>@<cohort>`: its files, instructions, environment and answers. It never includes build time, paths on your machine or the encoders served; the run record holds those. Anyone with the data can rebuild it and check it against the published fingerprint. [Build](build.md#fingerprint-and-step-counts) explains what happens when it differs.
 
-## Task suite
+## Task set
 
-A named list of task ids pinned to fingerprints, such as `v1-mini`. Suites are what MedOmni publishes and what scores are compared on.
+A named list of `<template>@<cohort>` pairs pinned to fingerprints, such as `v1`. Task sets are what MedOmni publishes and what scores are compared on.
 
-- Suites only grow: tasks are added, never changed.
-- Credentialed suites publish fingerprints only; you build them from your own access.
-- To build tasks outside a suite, for example while writing a spec, name the spec directly: `medomni bench task build <spec>`.
+- A task set only grows: pairs are added, never changed.
+- For each pair it also lists the step counts and the hashes of the cache entries the build uses.
+- Credentialed task sets publish fingerprints and hashes only; you build them from your own access. See [Rebuild a task set](../../guides/rebuild-a-task-set.md).
+- To build outside a task set, for example while writing a cohort, name the pair: `medomni bench task build mimic_ckd-staging@n20`.
 
 ## Where it lives
 
-- `bench/specs/`: one spec per task
-- `bench/suites/`: the task suites
-- `src/medomni/bench/tasks/`: the task pipeline
-- your workspace: built tasks, their atom tasks, and the pipeline's caches
+- `bench/datasets/<dataset>/tasks/<template>/`: `template.yaml` and `cohorts/`
+- `bench/sets/`: the task sets
+- `src/medomni/bench/build/`: Build
+- your workspace: the built atom tasks and the cache
 
 ## Where next
 
-- [Tasks reference](../../reference/tasks.md): every spec field, the atom task layout and the fingerprint algorithm.
+- [Build](build.md): the steps from template to atom tasks.
+- [Tasks reference](../../reference/tasks.md): every template field, the atom task layout and the fingerprint algorithm.
 - [Runs](runs.md): how an agent runs atom tasks.

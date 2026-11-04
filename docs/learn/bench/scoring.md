@@ -25,7 +25,7 @@ Scoring a task as a whole, after all its runs finish, means no run sees the answ
 
 ## Metrics
 
-Each target in a spec names its metric:
+Each target in a template names its metric:
 
 - `auc`: binary targets
 - `qwk`: ordinal targets

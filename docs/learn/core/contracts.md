@@ -6,29 +6,29 @@ A contract is a fixed format plus the validator that checks it. Every file or me
 
 | Contract | Describes | Written by | Read by |
 |---|---|---|---|
-| Family registry | Each input format, and the aliases it accepts | MedOmni team | Bench, Perception |
+| Family registry | The schema of a family file and of its aliases | MedOmni team | Bench, Perception |
+| Dataset config | A dataset package: description, readers, rules, named conditions | Contributors | Bench |
+| Event table | The table every dataset becomes, with its `FILE` rows | Bench | Bench, the toolkit |
 | Dataset policy | What a dataset's license allows | Contributors | Bench |
-| Dataset adapter | The methods a dataset adapter provides | Contributors | Bench |
-| Task spec | One task | Contributors | Bench |
-| Task suite | Task ids pinned to fingerprints | MedOmni team | Bench, you |
-| Fingerprint | The hash of a built task's content | Bench | Bench, the audit |
+| Recipe | A cohort, a label library and evidence rules | Contributors | Bench, the toolkit |
+| Task template | One task: targets, input, variants, instruction, environment | Contributors | Bench |
+| Task set | `<template>@<cohort>` pairs pinned to fingerprints, step counts and cache hashes | MedOmni team | Bench, you |
+| Fingerprint | The hash of a built `<template>@<cohort>` | Bench | Bench, the audit |
+| Cache entry | One cache entry and its `CACHE.json` | Bench, Perception | Bench, Perception, you |
 | Agent config | One agent: scaffold, model, route | You, contributors | Bench |
 | Model card | One encoder | Contributors | Perception, agents |
 | Container API | Requests between the gateway and an encoder image | MedOmni team | Perception |
 | Gateway API | Requests to the gateway and the evidence it returns | MedOmni team | Bench, agents, your code |
 | Result record | One run, or one score for one target | Bench | You, the audit |
-| Workspace config | Where your data copies, caches, built tasks and results are kept | You | Bench, Perception |
+| Workspace config | Where your data copies, cache, built tasks and results are kept | You | Bench, Perception, the toolkit |
 
-The fields of each are on its Reference page.
-
-!!! warning "Designed later in Stage 1"
-    The dataset adapter contract is designed with the task pipeline, from probes of the datasets. Its methods are not fixed yet.
+The fields of each are on its Reference page. Family files themselves are content, written by the MedOmni team; only their schema is a contract.
 
 ## How a file is checked
 
 - Each contract is a Python class in `medomni.core.contracts` that lists its fields and their types.
 - A file is checked when it is read. If a field is missing or wrong, reading stops and names the field and the reason.
-- After that, code works with the checked object, never with the raw YAML or JSON. The object cannot be changed, so no step can alter a spec halfway through a build.
+- After that, code works with the checked object, never with the raw YAML or JSON. The object cannot be changed, so no step can alter a template halfway through a build.
 
 ## Versions
 
@@ -60,8 +60,9 @@ It validates every contract file in the repository and in the installed plug-in 
 - `src/medomni/core/contracts/`: the classes and validators
 - `src/medomni/core/contracts/schemas/`: one JSON Schema per contract, for tools outside Python
 - `core/families/`: the family files, which follow the family registry contract
+- `bench/datasets/<dataset>/`: the dataset packages, which follow the dataset config, recipe and dataset policy contracts
 
 ## Where next
 
-- [Families](families.md): the contract both projects share.
+- [Families](families.md): the registry both projects share.
 - [Extend MedOmni](../extend.md): what you can add, and the contract each piece follows.

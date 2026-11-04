@@ -1,15 +1,15 @@
 # Contribute
 
-For contributors who add an agent, dataset adapter or task to Bench, or an encoder to Perception.
+For contributors who add an agent, a dataset or a task to Bench, or an encoder to Perception.
 
 There are two routes. Both run the same check.
 
-- **Pull request.** Start from the template, fill it in, run its check command locally, and open a pull request; CI runs the same check.
+- **Pull request.** Start from the starter, fill it in, run its check command locally, and open a pull request; CI runs the same check.
 - **Plug-in package.** Publish your own `medomni-*` package that registers the same pieces through entry points. Use this when your work should stay in your own repository, for example a task on data that cannot leave your institution. See [Publish a plug-in package](#publish-a-plug-in-package).
 
 Contributions change only extension points. Only the MedOmni team changes Core and the contracts; if you need a contract change, such as a new family, open an issue first.
 
-Every model card and task spec lists its `authors`.
+Every model card and task template lists its `authors`.
 
 ## Add an agent (Bench)
 
@@ -17,38 +17,42 @@ For a new scaffold or model.
 
 ### Steps
 
-1. Copy `bench/templates/agent/agent.yaml` and fill it in, as in [Run your agent](run-your-agent.md).
+1. Copy `bench/starters/agent/agent.yaml` and fill it in, as in [Run your agent](run-your-agent.md).
 2. Open a pull request adding it as `bench/agents/<name>.yaml`.
 
 ### Check
 
 ```bash
-medomni bench run --agent my-agent.yaml --suite smoke-dummy
+medomni bench run --agent my-agent.yaml --set smoke-dummy
 ```
 
 Every atom task of `smoke-dummy` must finish with a run and no infrastructure error.
 
-## Add a dataset adapter (Bench)
+## Add a dataset (Bench)
 
-For a new openly licensed dataset, such as VitalDB. Pull requests add tasks only on openly licensed datasets; use a plug-in package for others.
+For a new openly licensed dataset, such as VitalDB. Pull requests add datasets only when openly licensed; use a plug-in package for others.
 
 ### Before you start
 
 - The dataset's license allows redistribution of samples (for example CC BY 4.0).
-- Its signals map to existing families. See [Families](../reference/families.md).
+- Its recordings map to existing families. See [Families](../reference/families.md).
 
 ### Steps
 
-1. Copy the template into the package:
+1. Copy the starter into the dataset folder:
 
     ```bash
-    cp -r bench/templates/dataset src/medomni/bench/datasets/my-dataset
+    cp -r bench/starters/dataset bench/datasets/my-dataset
     ```
 
-2. Implement the adapter: locate the dataset on disk, survey what each patient has, and extract the files a task needs.
-3. Write the dataset policy from the license: what may be published and which routes may see the data. See [Datasets](../reference/datasets.md).
-4. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
-5. Add at least one task on the dataset, as below, and open a pull request.
+2. Write `dataset.yaml`: the description (unit, kind of time, version), the readers and what each reads, and the dataset's rules. See [Datasets reference](../reference/datasets.md#dataset-package).
+3. List every code the dataset emits in `codes.csv`. Use the [shared codes](../reference/recipes.md#shared-codes) where the dataset has those concepts.
+4. Write `labels.yaml` and `evidence.yaml`. See [Recipes reference](../reference/recipes.md).
+5. Write the dataset policy from the license: what may be published and which routes may see the data.
+6. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
+7. Add at least one template and cohort, as below, and open a pull request.
+
+Python goes only in `hooks/`, for a label no rule can express. A file format no reader knows needs a new reader in Core: open an issue first.
 
 ### Check
 
@@ -56,36 +60,45 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add tasks only
 medomni bench data check my-dataset
 ```
 
-It runs the adapter on the data sample and validates the policy. Check the dataset's tasks with `medomni bench task check`, as below.
+It runs the dataset steps on the data sample and on dummy data, checks that every code is in `codes.csv`, and validates the policy.
 
-## Add a task (Bench)
+## Add a template and a cohort (Bench)
 
-For a task on a supported dataset, using families MedOmni already declares.
+For a task on a supported dataset, using labels and families MedOmni already has, or labels you add to the dataset's library.
 
 ### Steps
 
-1. Create the spec from the template:
+1. Create the template from the starter:
 
     ```bash
     medomni bench task new vitaldb_my-task --dataset vitaldb
     ```
 
-2. Fill in the spec: the question, the targets and each one's metric, the cohort, the prediction time and the allowed evidence. Inputs that would leak the target are banned automatically; do not list them. The fields are in [Tasks](../reference/tasks.md).
-3. Build the task on dummy data and on the real dataset, and open a pull request with the spec.
+2. Fill in `template.yaml`: the question, the targets with each one's label and metric, the input and the variants. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
+3. Write a cohort in `cohorts/`: universe, prediction time, requirements and draw. Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
+4. Preview the counts on your copy, adjust the cohort, then build.
+
+    ```bash
+    medomni toolkit preview vitaldb_my-task@n20
+    medomni bench task build vitaldb_my-task@n20
+    ```
+
+5. Open a pull request with the template folder.
 
 ### Check
 
 ```bash
-medomni bench task check bench/specs/vitaldb_my-task.yaml
+medomni bench task check vitaldb_my-task@n20
 ```
 
 It checks:
 
-- the spec's fields and metric
-- that each target's derivation resolves
-- that no answers or leaking inputs reach the agent
+- the template's fields and metrics
+- that each target's label is in the library and states its window
+- that the cohort's test patients give their expected results
+- that no answers or guarded evidence reach the agent
 - that staged files match their families
-- that the built task matches its fingerprint
+- that the build matches its fingerprint
 
 ## Add an encoder (Perception)
 
@@ -98,7 +111,7 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
 
 ### Steps
 
-1. Copy `perception/templates/encoder/` to a new folder:
+1. Copy `perception/starters/encoder/` to a new folder:
 
     ```text
     perception/encoders/<family>/<encoder>/
@@ -131,17 +144,17 @@ It validates the model card against its contract and the family registry, builds
 
 ## Publish a plug-in package
 
-For agents, dataset adapters, tasks or encoders that live in your own repository.
+For agents, datasets, tasks or encoders that live in your own repository.
 
 ### Steps
 
 1. Create a Python package named `medomni-<name>` that depends on `medomni`.
-2. Build each piece from its template, as in the sections above.
+2. Build each piece from its starter, as in the sections above.
 3. Register each piece under its entry-point group in `pyproject.toml`: `medomni.agents`, `medomni.datasets`, `medomni.tasks` or `medomni.encoders`.
 
     ```toml
-    [project.entry-points."medomni.tasks"]
-    my-task = "medomni_myname.tasks:SPEC"
+    [project.entry-points."medomni.datasets"]
+    my-dataset = "medomni_myname.datasets:MY_DATASET"
     ```
 
 4. In your package's tests, run the same checks with `medomni.core.testing`.
@@ -157,4 +170,5 @@ Your package and each piece it adds are listed, and the commands above (`medomni
 ## Where next
 
 - [Design principles](../learn/principles.md): what Core and the extension points are.
-- [Tasks](../reference/tasks.md): the task spec contract.
+- [Tasks](../reference/tasks.md): the task template contract.
+- [Recipes](../reference/recipes.md): the cohort, label and evidence fields.

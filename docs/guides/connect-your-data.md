@@ -1,40 +1,51 @@
 # Connect your data
 
-For agent evaluators with access to a credentialed dataset. You build a published task suite from your own copy and check it against the published fingerprints.
+For agent evaluators with access to a credentialed dataset. You tell MedOmni where your copy is, check that it is the version the dataset package describes, and build its cache.
 
 ## Before you start
 
 - Access granted by the data owner, under its license: PhysioNet credentialing for MIMIC-IV, the AI-READI data license, the BDSP data use agreement. MedOmni cannot grant or check access for you.
-- A local copy of the dataset. Read its row in [Datasets](../reference/datasets.md) for what its license permits.
+- A local copy of the dataset. Read its row in [Datasets](../reference/datasets.md) for what its license permits and which parts you need.
+- For BDSP, which you download in parts: the list of files to download.
+
+    ```bash
+    medomni toolkit download-list bdsp
+    ```
 
 ## Steps
 
-1. Tell MedOmni where your copy is. The path is recorded in your workspace configuration.
+1. Tell MedOmni where your copy is. The path is recorded in your workspace config.
 
     ```bash
     medomni bench data connect mimic-iv --path /path/to/mimic-iv
     ```
 
-2. Build the suite. The dataset adapter surveys your copy, and each task spec builds its tasks and atom tasks in the workspace.
+2. Check your copy. This runs the dataset steps up to the event table, without building any task: the version, the files the package lists, and the tables it reads.
 
     ```bash
-    medomni bench task build --suite v1-mini
+    medomni bench data check mimic-iv
     ```
 
-3. Check the build against the suite's published fingerprints.
+3. Build the dataset's cache: its event table and file conversions.
 
     ```bash
-    medomni bench task check --suite v1-mini
+    medomni cache build mimic-iv
     ```
 
 ## Check
 
-`medomni bench task check` reports each task as matching or not matching its published fingerprint, and exits 1 on any mismatch. A mismatch means your copy or build differs, for example a different version or a missing module. Do not compare its scores with published ones.
+`medomni bench data check` names each problem it finds and exits 1:
+
+- a version that differs from the one the package describes
+- a file the package lists that is missing
+- a table or column the readers need that is missing
+
+Fix your copy and run it again. When it passes, build a task set as in [Rebuild a task set](rebuild-a-task-set.md).
 
 !!! warning "Keep data local"
-    Built tasks, answers, traces and the results file contain patient data. Do not commit, upload or share them.
+    The cache, built atom tasks, answers, traces and the results file contain patient data. Do not commit, upload or share them.
 
 ## Where next
 
-- [Tasks](../reference/tasks.md): what a built task contains, how its fingerprint is computed, and the published task suites.
-- [Run your agent](run-your-agent.md): run on the suite you built.
+- [Rebuild a task set](rebuild-a-task-set.md): build a published task set and check its fingerprints.
+- [Datasets](../learn/bench/datasets.md): the dataset package and the event table.

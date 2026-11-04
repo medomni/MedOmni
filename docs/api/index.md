@@ -9,17 +9,22 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.testing` | The check runner, for use in a plug-in package's own tests. |
 | `medomni.core.audit` | The audit runner and report. |
 | `medomni.core.cli` | The `medomni` command. |
-| `medomni.bench.datasets` | One adapter and one policy per dataset, the family bridge and the dummy-data generator. |
-| `medomni.bench.tasks` | The task pipeline, task suites and fingerprints. |
+| `medomni.core.readers` | The shared readers that turn a dataset copy into its event table. |
+| `medomni.core.recipes` | The recipe format: cohorts, labels, evidence. |
+| `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
+| `medomni.core.cache` | Cache keys, entries and the cache commands. |
+| `medomni.bench.build` | Build: the task steps, the draw, the checks, task sets and fingerprints. |
 | `medomni.bench.harness` | Harbor jobs, the route check, run records and the replay agent. |
 | `medomni.bench.service` | The perception service inside each atom task: the gateway behind the call budget, family filter and call log. |
 | `medomni.bench.scoring` | The scorer, the metrics and the behaviour metrics. |
 | `medomni.perception.registry` | The encoder catalogue: model cards, image pulls and the encoder check. |
 | `medomni.perception.runtime` | The encoder interface and the serving code built into every image. |
 | `medomni.perception.gateway` | The gateway service: catalogue, router and evidence. |
+| `medomni.toolkit` | The recipe preview, the download list and the Make scripts. |
 
 - `medomni.core` imports no project.
 - `medomni.bench` and `medomni.perception` import only `medomni.core`, never each other.
+- `medomni.toolkit` may import `medomni.bench` and `medomni.core`. Nothing imports it.
 - Projects register their commands, checks and audit checks with Core; see [How Core finds the projects](../learn/architecture.md#how-core-finds-the-projects).
 
 ## Where next

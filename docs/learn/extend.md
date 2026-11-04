@@ -12,10 +12,10 @@ What you can add to MedOmni, how, and what checks it.
 
 | You add | Project | Follows contract | Start from | Check | Pull request | Plug-in group |
 |---|---|---|---|---|---|---|
-| An agent | Bench | Agent config | `bench/templates/agent/` | `medomni bench run --suite smoke-dummy` | `bench/agents/` | `medomni.agents` |
-| A dataset | Bench | Dataset adapter, dataset policy | `bench/templates/dataset/` | `medomni bench data check` | openly licensed only | `medomni.datasets` |
-| A task | Bench | Task spec | `medomni bench task new` | `medomni bench task check` | openly licensed data only | `medomni.tasks` |
-| An encoder | Perception | Model card, Container API | `perception/templates/encoder/` | `medomni perception check` | `perception/encoders/` | `medomni.encoders` |
+| An agent | Bench | Agent config | `bench/starters/agent/` | `medomni bench run --set smoke-dummy` | `bench/agents/` | `medomni.agents` |
+| A dataset | Bench | Dataset config, recipe, dataset policy | `bench/starters/dataset/` | `medomni bench data check` | openly licensed only | `medomni.datasets` |
+| A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | `medomni.tasks` |
+| An encoder | Perception | Model card, Container API | `perception/starters/encoder/` | `medomni perception check` | `perception/encoders/` | `medomni.encoders` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).
 - [Contribute](../guides/contribute.md) walks through each one.
@@ -34,6 +34,8 @@ What you can add to MedOmni, how, and what checks it.
 Open an issue for these. Only the MedOmni team changes them, because every project depends on them.
 
 - a new family, or a new alias for one
+- a new reader, for a file format no reader knows
+- a new shared code
 - a change to any [contract](core/contracts.md)
 
 ## Not open in v0.3.0

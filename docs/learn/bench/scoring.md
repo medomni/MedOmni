@@ -1,24 +1,25 @@
 # Scoring
 
-The scorer turns the runs of one task into scores: one per target, for each agent, condition and repetition. It is the only part of MedOmni that writes scores.
+The scorer turns the runs of one built `<template>@<cohort>` into scores: one per target, for each agent, condition and repetition. It is the only part of MedOmni that writes scores.
 
 ```text
-runs of one task ──collect predictions──▶ compare with the task's answers ──▶ one score record per target
+runs of one <template>@<cohort> ──collect predictions──▶ compare with its answers ──▶ one score record per target
 ```
 
 ## How a score is made
 
-1. Collect every atom task's prediction for the task, agent, condition and repetition.
+1. Collect every atom task's prediction for the `<template>@<cohort>`, agent, condition and repetition.
 2. Check the set is complete and consistent.
 3. For each target, compare the predictions with the answers, using that target's metric.
 4. Write one score record per target to the results file.
 
-Scoring a task as a whole, after all its runs finish, means no run sees the answers.
+Scoring all atom tasks together, after all their runs finish, means no run sees the answers.
 
 ## Refusals and failures
 
-- A task with missing patients is refused.
-- A task whose runs differ in fingerprint, served model or served encoders is refused.
+- A `<template>@<cohort>` with missing patients is refused.
+- Runs that differ among themselves in fingerprint, served model or served encoders are refused.
+- Runs on a build whose fingerprint differs from the published one are scored in a separate table, never with published scores.
 - An agent failure, such as no answer or a malformed answer, scores as chance.
 - An infrastructure failure refuses the score.
 - A target whose answers have one class only is unscorable. Its row says so and carries no value.
@@ -41,7 +42,7 @@ Next to the score, each run record holds how the agent worked:
     - **called**: the call is in the perception service's call log
     - **surfaced**: a value from the reply appears in the agent's terminal output
     - **cited**: the agent's reasoning names that value before it writes its answer
-- whether each called encoder is relevant to the task's targets
+- whether each called encoder is relevant to the targets
 - which staged files it opened
 
 ## Results file

@@ -3,7 +3,7 @@
 A dataset is a source of patient data used under its own license. Bench reads it through its dataset package and obeys its dataset policy. MedOmni ships no data.
 
 ```text
-your copy ──readers + dataset package──▶ event table ──Build──▶ atom tasks
+your copy ──loading: format readers + dataset package──▶ event table ──Build──▶ atom tasks
                          policy ──▶ which routes may see them
 ```
 
@@ -11,7 +11,7 @@ your copy ──readers + dataset package──▶ event table ──Build──
 
 One folder per dataset, `bench/datasets/<dataset>/`. It is configuration, not code:
 
-- `dataset.yaml`: a description, the readers to use, the dataset's rules and its named conditions
+- `dataset.yaml`: a description, the format readers to use, the dataset's rules and its named conditions
 - `labels.yaml`: the label library
 - `evidence.yaml`: what an atom task may hold, relative to the prediction time
 - `codes.csv`: every code the dataset emits, with a description and its source table
@@ -21,16 +21,21 @@ One folder per dataset, `bench/datasets/<dataset>/`. It is configuration, not co
 
 The description states the unit (a patient, a participant, a surgery case), the kind of time (date and time, visit dates only, seconds from case start) and the dataset version. Time is described, not converted: Build refuses a recipe the dataset's time cannot support.
 
-## Readers
+## Loading
 
-Readers are shared code in Core, one per file format. A dataset package names the readers it uses and what they read; it does not repeat their code. v0.3.0 has readers for:
+Loading turns your copy into the dataset's event table. It has two parts:
+
+- **Format readers**: shared code in Core, one per file format. A format reader knows a format and no dataset: it turns a CSV table, an OMOP table, a folder of files or a recording header into event rows.
+- **The dataset package**: configuration for one dataset. It names the format readers to use and what each reads: which files and columns, which column is the time, which code each row gets.
+
+The loader in Core runs the package through the format readers. v0.2 did both parts in one Python adapter per dataset. v0.3.0 has format readers for:
 
 - CSV tables
 - OMOP tables
 - folder trees, where a file's folder gives its family
 - recording headers: EDF, WFDB, HDF5 and DICOM
 
-A dataset reads only the tables its recipes and labels use. A dataset in a format no reader knows adds a reader to Core, which every later dataset can use.
+A dataset loads only the tables its recipes and labels use. A dataset in a format no format reader knows adds one to Core, which every later dataset can use.
 
 ## Event table
 
@@ -69,12 +74,12 @@ One policy per dataset, read from its license and data use agreement. It records
 | Open | VitalDB | Nothing. Task samples are on Hugging Face. |
 | Dummy | Generated | Nothing. Made from each family's declared format, never from a real record. |
 
-Dummy data lets every command run with no credentials. Its scores only show that the pipeline works. Every dataset package is also checked on dummy data, so its readers and rules run in CI.
+Dummy data lets every command run with no credentials. Its scores only show that the pipeline works. Every dataset package is also loaded from dummy data, so its configuration runs in CI.
 
 ## Where it lives
 
 - `bench/datasets/<dataset>/`: the dataset package
-- `src/medomni/core/readers/`: the readers
+- `src/medomni/core/loading/`: the format readers and the loader
 - `src/medomni/core/families/`: the family converters and the dummy-data generator
 - your workspace: the path to your copy, and the cache
 

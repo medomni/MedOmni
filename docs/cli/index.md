@@ -9,7 +9,7 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni --version` | Prints the MedOmni version. |
 | `medomni plugins` | Lists the installed plug-in packages and what each adds. |
 | `medomni contracts check [<contract> ...]` | Validates the contracts: family registry, dataset config, dataset policy, recipe, task template, task set, model card, Gateway API, result record, workspace config. |
-| `medomni cache build <dataset>` | Runs the dataset steps and file conversions into the [cache](../learn/core/cache.md). |
+| `medomni cache build <dataset>` | Loads the dataset and runs file conversions into the [cache](../learn/core/cache.md). |
 | `medomni cache status` | Lists cache entries per dataset and step, with size and use. |
 | `medomni cache verify [--set <set>]` | Recomputes every entry's content hash; with `--set`, compares with the task set's published hashes. |
 | `medomni cache gc [--dry-run]` | Removes entries no current step uses. |
@@ -20,7 +20,7 @@ Shared commands are at the top level; each project's commands are under its name
 | Command | Does |
 |---|---|
 | `medomni bench data connect <dataset> --path <dir>` | Records where your copy of a dataset is, in the workspace configuration. |
-| `medomni bench data check <dataset>` | Checks your copy against the dataset package (version, listed files, needed tables), runs the dataset steps on its data sample and on dummy data, and validates the policy. |
+| `medomni bench data check <dataset>` | Checks your copy against the dataset package (version, listed files, needed tables), loads its data sample and dummy data, and validates the policy. |
 | `medomni bench agent new <name>` | Writes an agent config to fill in. |
 | `medomni bench data new <dataset>` | Writes a dataset package to fill in, in `bench/datasets/<dataset>/`. |
 | `medomni bench task new <template> --dataset <dataset>` | Writes a task template and an `n20` cohort to fill in. |
@@ -44,7 +44,7 @@ Shared commands are at the top level; each project's commands are under its name
 | Command | Does |
 |---|---|
 | `medomni toolkit preview <template>@<cohort>` | Runs the cohort on your copy up to the draw and prints the patients left after each step and per class. Builds nothing. |
-| `medomni toolkit download-list <dataset>` | For a dataset downloaded in parts, lists the files its universe needs. |
+| `medomni toolkit download-list <dataset>` | For a dataset downloaded in parts, lists the files its source population needs. |
 
 ## Where next
 

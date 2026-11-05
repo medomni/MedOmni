@@ -7,7 +7,7 @@ A contract is a fixed format plus the validator that checks it. Every file or me
 | Contract | Describes | Written by | Read by |
 |---|---|---|---|
 | Family registry | The schema of a family file and of its aliases | MedOmni team | Bench, Perception |
-| Dataset config | A dataset package: description, readers, rules, named conditions | Contributors | Bench |
+| Dataset config | A dataset package: description, format readers, rules, named conditions | Contributors | Bench |
 | Event table | The table every dataset becomes, with its `FILE` rows | Bench | Bench, the toolkit |
 | Dataset policy | What a dataset's license allows | Contributors | Bench |
 | Recipe | A cohort, a label library and evidence rules | Contributors | Bench, the toolkit |

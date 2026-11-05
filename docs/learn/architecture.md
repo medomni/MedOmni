@@ -19,7 +19,7 @@ MedOmni/
 │   │   ├── cli/              the medomni command
 │   │   ├── contracts/        typed models, validators, schemas/
 │   │   ├── plugins/          entry-point loading
-│   │   ├── readers/          shared readers: CSV, OMOP, folder trees, recording headers
+│   │   ├── loading/          format readers (CSV, OMOP, folder trees, recording headers) and the loader
 │   │   ├── recipes/          the recipe format: cohorts, labels, evidence
 │   │   ├── families/         registry loader, family converters, dummy-data generator
 │   │   ├── cache/            cache keys, entries, cache commands
@@ -97,7 +97,7 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Core | Plug-ins | `medomni.core.plugins` | Loads the projects and plug-in packages through their entry points. |
 | Core | Testing kit | `medomni.core.testing` | Runs the checks each project registers. Plug-in packages import it for their own CI. |
 | Core | Audit | `medomni.core.audit` | Runs the audit checks each project registers and writes the [audit](../reference/audit.md) report. |
-| Core | Readers | `medomni.core.readers` | Turn a dataset copy into its event table, as the dataset package says. |
+| Core | Loading | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
 | Core | Recipes | `medomni.core.recipes` | The recipe format for cohorts, labels and evidence. |
 | Core | Families | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
 | Core | Cache | `medomni.core.cache` | Cache keys and entries, and the cache commands. See [Cache](core/cache.md). |

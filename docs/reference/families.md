@@ -9,7 +9,7 @@ Contract: family registry, one file per family in `core/families/<id>.yaml`, plu
 | Field | Required | Meaning |
 |---|---|---|
 | `id` | yes | Family id; equals the file name. |
-| `reader` | yes | How it is read: `deep-encoder`, `rule-extractor` or `direct`. |
+| `read_by` | yes | What reads it: `deep-encoder`, `rule-extractor` or `direct`. |
 | `protocol.format` | yes | Accepted file formats: `edf`, `wfdb`, `dicom`, `image`, `omh`, `table`, `json-manifest`. |
 | `protocol.channels` / `protocol.roles` | for EDF and WFDB | The exact montage or a channel count, or a role vocabulary that at least one channel must match. |
 | `protocol.rate_hz` | no | Sampling rate; null means unchecked. |

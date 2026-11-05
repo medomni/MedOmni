@@ -21,7 +21,7 @@ Windows are written relative to the prediction time or an event:
 
 | Field | Required | Meaning |
 |---|---|---|
-| `universe` | yes | `all`, or `{fraction: f}` for the hash rule with the dataset's salt. Omitting `fraction` uses the dataset's default. |
+| `source` | yes | The source population: `all`, or `{fraction: f}` for the hash rule with the dataset's salt. Omitting `fraction` uses the dataset's default. |
 | `anchor` | yes | The prediction time: `event` (a code), `pick` (`first` or `last`; default `first`), `plus` (an offset). |
 | `require` | no | A list of requirements, all of which must hold. |
 | `draw` | yes | `n` (patients in all), `by` (target names that define the classes), `seed`. |
@@ -130,7 +130,7 @@ coagulation-hemorrhagic:
 `cohorts/n20.yaml`:
 
 ```yaml
-universe: {fraction: 0.05}
+source: {fraction: 0.05}
 anchor: {event: ADMISSION, pick: first, plus: 24 hours}
 require:
   - any: [DISCHARGE, DEATH]           # the stay has ended in the data
@@ -161,7 +161,7 @@ cr-max-7d:
 `cohorts/opend.yaml`:
 
 ```yaml
-universe: all
+source: all
 anchor: {event: OP//END}
 require:
   - any: [LAB//cr]                    # a creatinine before the end of surgery

@@ -18,11 +18,11 @@ Contracts: dataset config, `dataset-config.schema.json`, and dataset policy, `da
 | **VitalDB** (PhysioNet copy) | Open (PhysioNet) | CC BY 4.0 | Everything, with attribution | `local`, `cloud` |
 | **Dummy data** | Generated | None | Everything | `local`, `cloud` |
 
-## Universes
+## Source populations
 
-Each cohort draws from its dataset's universe: the patients for whom `sha256(salt|patient id)`, read as a fraction, is below the default fraction. A cohort may set a smaller fraction.
+Each cohort draws from its dataset's source population: the patients for whom `sha256(salt|patient id)`, read as a fraction, is below the default fraction. A cohort may set a smaller fraction.
 
-| Dataset | Unit | Default universe |
+| Dataset | Unit | Default source population |
 |---|---|---|
 | MIMIC-IV | Patient | 5% of patients |
 | AI-READI | Participant | All |
@@ -47,9 +47,9 @@ Each cohort draws from its dataset's universe: the patients for whom `sha256(sal
 |---|---|---|
 | `description` | yes | `unit` (what one subject is), `time` (the kind of time: date and time, visit dates only, seconds from start) and `version` (the dataset release). |
 | `units` | yes | The table and column that list every subject. |
-| `universe` | yes | `salt` and the default `fraction`, or `all`. |
+| `source` | yes | The source population: `salt` and the default `fraction`, or `all`. |
 | `verify` | no | What to check before reading: files listed in manifests, one file per unit, the dataset's own checksums. |
-| `read` | yes | A list of readers, each with what it reads: tables and columns, the code to emit, folder patterns per family. |
+| `read` | yes | A list of format readers, each with what it reads: tables and columns, the code to emit, folder patterns per family. |
 | `rules` | no | Timing and visit rules, such as one visit per participant or times in seconds from case start. |
 | `conditions` | no | Named conditions that recipes use. See [Recipes](recipes.md#cohort-file). |
 

@@ -12,7 +12,7 @@ Three kinds of entry, each in one format:
 
 | Kind | Made by | Format |
 |---|---|---|
-| Event table | The dataset steps of [Build](../bench/build.md) | Parquet |
+| Event table | Loading, the first part of [Build](../bench/build.md) | Parquet |
 | Per-file results | File checks and [family converters](families.md#family-converters): header facts, converted recordings | The family's format, plus a JSON of facts |
 | Encoder outputs | The gateway's [router](../perception/gateway.md) | The encoder's response, as JSON |
 
@@ -50,7 +50,7 @@ For each task set, MedOmni publishes the key and content hash of every cache ent
 
 | Command | Does |
 |---|---|
-| `medomni cache build <dataset>` | Runs the dataset steps and file conversions ahead of a build. `medomni bench task build` does this too, when needed. |
+| `medomni cache build <dataset>` | Loads the dataset and runs file conversions ahead of a build. `medomni bench task build` does this too, when needed. |
 | `medomni cache status` | Lists the entries per dataset and step, with size and whether anything current uses them. |
 | `medomni cache verify` | Recomputes every content hash. With `--set <set>`, also compares with the published hashes. |
 | `medomni cache gc` | Removes entries no current step uses. `--dry-run` lists them first. |

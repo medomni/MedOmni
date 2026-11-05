@@ -25,7 +25,7 @@ Three projects and the core they share:
 | **Bench** | Runs AI agents on medical tasks and scores them. A task gives an agent one patient's evidence and a clinical question; a fixed verifier scores the answer. It scores the agent as a whole (scaffold and model), as Terminal-Bench and SWE-bench do. | `medomni.bench` | `medomni bench` |
 | **Perception** | Serves 44 medical encoders through an HTTP gateway. Each encoder reads one kind of input, such as a 12-lead ECG, and returns evidence for an agent or your own code. | `medomni.perception` | `medomni perception` |
 | **Toolkit** | Helps people make tasks: dataset survey, clinician input and review, and a preview of a cohort's counts on your copy. | `medomni.toolkit` | `medomni toolkit` |
-| **Core** | Shared by every project: the contracts, the `medomni` command, plug-in loading, the readers, the family converters, the cache, the testing kit and the audit. | `medomni.core` | `medomni` |
+| **Core** | Shared by every project: the contracts, the `medomni` command, plug-in loading, dataset loading, the family converters, the cache, the testing kit and the audit. | `medomni.core` | `medomni` |
 
 Not in v0.3.0: MedOmni Agent (a later project) and a PyPI release.
 

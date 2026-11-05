@@ -9,7 +9,7 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.testing` | The check runner, for use in a plug-in package's own tests. |
 | `medomni.core.audit` | The audit runner and report. |
 | `medomni.core.cli` | The `medomni` command. |
-| `medomni.core.readers` | The shared readers that turn a dataset copy into its event table. |
+| `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
 | `medomni.core.recipes` | The recipe format: cohorts, labels, evidence. |
 | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
 | `medomni.core.cache` | Cache keys, entries and the cache commands. |

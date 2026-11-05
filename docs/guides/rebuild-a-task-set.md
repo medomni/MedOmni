@@ -34,7 +34,7 @@ For agent evaluators who want to run on a published task set, such as `v1`, buil
 
 | Differs first at | Usual cause |
 |---|---|
-| Universe | A different dataset version or module |
+| Source population | A different dataset version or module |
 | Prediction time or requirements | Missing tables or files in your copy |
 | File check | A recording that does not convert |
 | Draw, with every earlier count equal | A changed build; open an issue |

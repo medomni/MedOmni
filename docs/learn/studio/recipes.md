@@ -22,18 +22,18 @@ A template's targets name labels from the library, such as `mimic:ckd-kdigo`. Te
 
 A cohort file has five parts, run in this order:
 
-1. **Universe:** the patients a cohort may draw from.
+1. **Source population:** the patients a cohort may draw from.
 2. **Prediction time:** an anchor event, such as an admission, plus an optional offset. Nothing after it is evidence.
 3. **Requirements:** events or files each patient must, or must not, have in a window.
 4. **Labels:** the targets' answers. A patient with no answer is left out.
 5. **Draw:** how many patients per class, and the seed.
 
-### Universe
+### Source population
 
-A patient is in the universe when `sha256(salt|patient id)`, read as a fraction, is below f. The salt and the default f are in the dataset package.
+A patient is in the source population when `sha256(salt|patient id)`, read as a fraction, is below f. The salt and the default f are in the dataset package.
 
 - The rule needs no list of ids, so it can be published.
-- Universes nest: the patients at 1% are all in the 5% universe.
+- Source populations nest: the patients at 1% are all in the 5% source population.
 - For datasets downloaded in parts, the rule runs on the dataset's own metadata first, and the [toolkit](../toolkit.md) lists the files to download.
 
 ### Draw

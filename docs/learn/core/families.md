@@ -12,7 +12,7 @@ dataset ──event table──▶ FILE//F rows ──▶ encoders that read F
 - **Format**: the file formats it accepts, such as EDF, WFDB, DICOM or a table.
 - **Channels or roles**: the exact montage, a channel count, or roles at least one channel must match.
 - **Rate and units**: the sampling rate and dominant unit, where they matter.
-- **Reader**: `deep-encoder`, `rule-extractor`, or `direct` (the agent reads the file itself).
+- **Read by**: `deep-encoder`, `rule-extractor`, or `direct` (the agent reads the file itself).
 - **Status**: `declared` (shape known), `supplied` (measured on real data) or `deprecated`.
 
 The id names these facts: modality, shape, rate and unit.

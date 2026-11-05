@@ -34,7 +34,7 @@ What you can add to MedOmni, how, and what checks it.
 Open an issue for these. Only the MedOmni team changes them, because every project depends on them.
 
 - a new family, or a new alias for one
-- a new reader, for a file format no reader knows
+- a new format reader, for a file format no format reader knows
 - a new shared code
 - a change to any [contract](core/contracts.md)
 

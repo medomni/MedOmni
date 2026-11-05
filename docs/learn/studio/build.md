@@ -21,12 +21,12 @@ A template only reaches Build once Make is done. Build never asks a question and
 
 ## Steps
 
-The dataset steps run once per dataset and are kept in the [cache](../core/cache.md). The task steps run for each `<template>@<cohort>`.
+Loading runs once per dataset and is kept in the [cache](../core/cache.md). The task steps run for each `<template>@<cohort>`.
 
-**Dataset steps** (from the [dataset package](datasets.md)):
+**Loading** (from the [dataset package](datasets.md#loading)):
 
 1. **Verify:** the copy is the dataset version the package describes, and every file it lists exists.
-2. **Read:** the shared readers read the tables and files the package names, and only those.
+2. **Read:** the format readers read the tables and files the package names, and only those.
 3. **Rules:** the package's timing and visit rules are applied.
 4. **Write:** the result is the dataset's event table.
 5. **Check:** one row per event, every code in the dataset's code list, every `FILE` path present.
@@ -35,7 +35,7 @@ The dataset steps run once per dataset and are kept in the [cache](../core/cache
 
 **Task steps** (from the [recipe](recipes.md)):
 
-1. **Universe:** the patients the cohort may draw from, chosen by a hash rule.
+1. **Source population:** the patients the cohort may draw from, chosen by a hash rule.
 2. **Prediction time:** each patient's anchor event and offset.
 3. **Requirements:** the events and files each patient must have, in their windows.
 4. **Labels:** each target's answer, from the dataset's label library.
@@ -54,7 +54,7 @@ Build stops, and names the step, when:
 ## Fingerprint and step counts
 
 - The **fingerprint** is a hash of the built content: files, instructions, environment and answers. It never includes build time, local paths or the encoders served. The algorithm is in [Tasks reference](../../reference/tasks.md#fingerprint).
-- The **step counts** are the number of patients left after each task step, from the universe to the draw. They are stored with the fingerprint. Both are counts and hashes only, so they can be published for every dataset.
+- The **step counts** are the number of patients left after each task step, from the source population to the draw. They are stored with the fingerprint. Both are counts and hashes only, so they can be published for every dataset.
 
 When your fingerprint differs from the published one, Build warns and does not stop. The step counts show the first step that differs. Runs on a build that differs are recorded apart and never compared with published scores.
 

@@ -20,7 +20,7 @@ For agent evaluators with access to a credentialed dataset. You tell MedOmni whe
     medomni bench data connect mimic-iv --path /path/to/mimic-iv
     ```
 
-2. Check your copy. This runs the dataset steps up to the event table, without building any task: the version, the files the package lists, and the tables it reads.
+2. Check your copy. This loads the dataset up to the event table, without building any task: the version, the files the package lists, and the tables it reads.
 
     ```bash
     medomni bench data check mimic-iv
@@ -38,7 +38,7 @@ For agent evaluators with access to a credentialed dataset. You tell MedOmni whe
 
 - a version that differs from the one the package describes
 - a file the package lists that is missing
-- a table or column the readers need that is missing
+- a table or column the format readers need that is missing
 
 Fix your copy and run it again. When it passes, build a task set as in [Rebuild a task set](rebuild-a-task-set.md).
 

@@ -50,14 +50,14 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add datasets o
     medomni bench data new my-dataset
     ```
 
-2. Write `dataset.yaml`: the description (unit, kind of time, version), the readers and what each reads, and the dataset's rules. See [Datasets reference](../reference/datasets.md#dataset-package).
+2. Write `dataset.yaml`: the description (unit, kind of time, version), the format readers and what each reads, and the dataset's rules. See [Datasets reference](../reference/datasets.md#dataset-package).
 3. List every code the dataset emits in `codes.csv`. Use the [shared codes](../reference/recipes.md#shared-codes) where the dataset has those concepts.
 4. Write `labels.yaml` and `evidence.yaml`. See [Recipes reference](../reference/recipes.md).
 5. Write the dataset policy from the license: what may be published and which routes may see the data.
 6. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
 7. Add at least one template and cohort, as below, and open a pull request.
 
-Python goes only in `hooks/`, for a label no rule can express. A file format no reader knows needs a new reader in Core: open an issue first.
+Python goes only in `hooks/`, for a label no rule can express. A file format no format reader knows needs a new format reader in Core: open an issue first.
 
 ### Check
 
@@ -65,7 +65,7 @@ Python goes only in `hooks/`, for a label no rule can express. A file format no 
 medomni bench data check my-dataset
 ```
 
-It runs the dataset steps on the data sample and on dummy data, checks that every code is in `codes.csv`, and validates the policy.
+It loads the data sample and dummy data, checks that every code is in `codes.csv`, and validates the policy.
 
 ## Add a template and a cohort (Bench)
 
@@ -80,7 +80,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
     ```
 
 2. Fill in `template.yaml`: the question, the targets with each one's label and metric, the input and the variants. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
-3. Write a cohort in `cohorts/`: universe, prediction time, requirements and draw. Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
+3. Write a cohort in `cohorts/`: source population, prediction time, requirements and draw. Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
 4. Preview the counts on your copy, adjust the cohort, then build.
 
     ```bash

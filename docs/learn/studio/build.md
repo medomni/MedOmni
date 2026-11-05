@@ -12,7 +12,7 @@ template + cohort + your copy ──Build──▶ atom tasks + answers + finger
 
 | | Make | Build |
 |---|---|---|
-| Project | [Toolkit](../toolkit.md) | Bench |
+| Project | [Studio](../studio/overview.md) | Bench |
 | Who | People: dataset survey, clinician input, review | No one: it runs alone |
 | Ends in | A frozen task template and its cohorts | Atom tasks with a fingerprint |
 | Same result every time | No | Yes |

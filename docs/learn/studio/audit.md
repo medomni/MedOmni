@@ -34,17 +34,18 @@ The [Audit reference](../../reference/audit.md) shows which auditor covers each 
 ## Run it
 
 ```bash
-medomni audit
+medomni studio audit
 ```
 
 It runs the machine checks, reads the recorded verdicts and writes a report and a findings list to the workspace.
 
 ## Where it lives
 
-- `src/medomni/core/audit/`: the matrix, the runner and the report writer
-- each project's audit checks, registered with Core: data and tasks from Bench, encoders from Perception
+- `src/medomni/studio/review/`: the matrix, the runner and the report writer
+- each project's audit checks, registered through Core's plug-in loading: data and tasks from Bench, encoders from Perception
 
 ## Where next
 
 - [Audit reference](../../reference/audit.md): the matrix and the command's options.
 - [Tasks](../bench/tasks.md): the fingerprints verdicts bind to.
+- [Studio](overview.md): the other review tools.

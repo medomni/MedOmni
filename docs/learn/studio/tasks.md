@@ -17,7 +17,7 @@ A YAML file, `template.yaml`, that states:
 - **instruction**: the template for the agent's instruction
 - **environment**: CPUs, memory, timeouts, no internet
 
-A template is frozen once [Make](../toolkit.md) is done. A changed template is a new template.
+A template is frozen once its proposal is signed off in [Studio](../studio/overview.md). A changed template is a new template.
 
 ## Cohort
 

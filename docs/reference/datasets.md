@@ -26,7 +26,7 @@ Each cohort draws from its dataset's source population: the patients for whom `s
 |---|---|---|
 | MIMIC-IV | Patient | 5% of patients |
 | AI-READI | Participant | All |
-| BDSP | Patient at site I0006 | 10% of patients; download only their latest sleep study, listed by `medomni toolkit download-list bdsp` |
+| BDSP | Patient at site I0006 | 10% of patients; download only their latest sleep study, listed by `medomni studio download-list bdsp` |
 | VitalDB | Surgery case | All |
 
 ## Dataset package

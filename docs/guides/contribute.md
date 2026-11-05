@@ -84,7 +84,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
 4. Preview the counts on your copy, adjust the cohort, then build.
 
     ```bash
-    medomni toolkit preview vitaldb_my-task@n20
+    medomni studio preview vitaldb_my-task@n20
     medomni bench task build vitaldb_my-task@n20
     ```
 

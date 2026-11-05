@@ -1,6 +1,6 @@
 # Plug-ins
 
-A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, datasets, tasks or encoders without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
+A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, datasets, tasks, encoders or Studio tools without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
 
 ## Register pieces
 
@@ -12,6 +12,7 @@ A package registers each piece in the entry-point group for its kind. It does no
 | `medomni.datasets` | A dataset package, with its policy | Bench | `bench/datasets/<dataset>/` |
 | `medomni.tasks` | A task template and its cohorts | Bench | `bench/datasets/<dataset>/tasks/<template>/` |
 | `medomni.encoders` | A model card and its image | Perception | `perception/encoders/<family>/<encoder>/` |
+| `medomni.tools` | A Studio tool of one kind | Studio | `src/medomni/studio/<kind>/` |
 
 One package can add several kinds. A package with a task and an encoder lists both in its own `pyproject.toml`:
 

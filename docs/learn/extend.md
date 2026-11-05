@@ -16,6 +16,7 @@ What you can add to MedOmni, how, and what checks it.
 | A dataset | Bench | Dataset config, recipe, dataset policy | `medomni bench data new` | `medomni bench data check` | openly licensed only | `medomni.datasets` |
 | A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | `medomni.tasks` |
 | An encoder | Perception | Model card, Container API | `medomni perception new` | `medomni perception check` | `perception/encoders/` | `medomni.encoders` |
+| A Studio tool | Studio | Its kind's interface | `src/medomni/studio/<kind>/` | `medomni studio check` | `src/medomni/studio/<kind>/` | `medomni.tools` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).
 - [Contribute](../guides/contribute.md) walks through each one.

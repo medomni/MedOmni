@@ -9,7 +9,7 @@ For agent evaluators with access to a credentialed dataset. You tell MedOmni whe
 - For BDSP, which you download in parts: the list of files to download.
 
     ```bash
-    medomni toolkit download-list bdsp
+    medomni studio download-list bdsp
     ```
 
 ## Steps

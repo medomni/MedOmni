@@ -34,7 +34,7 @@ A patient is in the source population when `sha256(salt|patient id)`, read as a 
 
 - The rule needs no list of ids, so it can be published.
 - Source populations nest: the patients at 1% are all in the 5% source population.
-- For datasets downloaded in parts, the rule runs on the dataset's own metadata first, and the [toolkit](../toolkit.md) lists the files to download.
+- For datasets downloaded in parts, the rule runs on the dataset's own metadata first, and [Studio](../studio/overview.md) lists the files to download.
 
 ### Draw
 
@@ -83,4 +83,4 @@ Files are kept when their time is before the prediction time. The template choos
 
 - [Recipes reference](../../reference/recipes.md): every field, the shared codes, and two worked examples.
 - [Build](build.md): how a recipe runs.
-- [Toolkit](../toolkit.md): preview a recipe's counts on your copy before you build.
+- [Studio](../studio/overview.md): preview a recipe's counts on your copy before you build.

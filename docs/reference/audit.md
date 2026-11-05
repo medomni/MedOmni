@@ -1,6 +1,6 @@
 # Audit
 
-The audit matrix and the options of `medomni audit`. [Audit](../learn/core/audit.md) explains the criteria, auditors and rules.
+The audit matrix and the options of `medomni studio audit`. [Audit](../learn/studio/audit.md) explains the criteria, auditors and rules.
 
 ## The matrix
 
@@ -19,7 +19,7 @@ Each cell is one asset type × one criterion, checked by one or more auditors.
 ## Check
 
 ```bash
-medomni audit
+medomni studio audit
 ```
 
 `--only data,families,encoders,tasks,runs` limits it to some assets.

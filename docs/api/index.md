@@ -7,7 +7,6 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.contracts` | The versioned contracts: a typed model and a validator for each. See [Contracts](../learn/core/contracts.md). |
 | `medomni.core.plugins` | Loads the projects and plug-in packages through entry points. |
 | `medomni.core.testing` | The check runner, for use in a plug-in package's own tests. |
-| `medomni.core.audit` | The audit runner and report. |
 | `medomni.core.cli` | The `medomni` command. |
 | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
 | `medomni.core.recipes` | The recipe format: cohorts, labels, evidence. |
@@ -20,11 +19,11 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.perception.registry` | The encoder catalogue: model cards, image pulls and the encoder check. |
 | `medomni.perception.runtime` | The encoder interface and the serving code built into every image. |
 | `medomni.perception.gateway` | The gateway service: catalogue, router and evidence. |
-| `medomni.toolkit` | The recipe preview, the download list and the Make scripts. |
+| `medomni.studio` | The tools around Bench and Perception, one subpackage per kind: survey, propose, review (with the audit), preview, report. |
 
 - `medomni.core` imports no project.
 - `medomni.bench` and `medomni.perception` import only `medomni.core`, never each other.
-- `medomni.toolkit` may import `medomni.bench` and `medomni.core`. Nothing imports it.
+- `medomni.studio` may import `medomni.core`, `medomni.bench` and `medomni.perception`. Nothing imports it.
 - Projects register their commands, checks and audit checks with Core; see [How Core finds the projects](../learn/architecture.md#how-core-finds-the-projects).
 
 ## Where next

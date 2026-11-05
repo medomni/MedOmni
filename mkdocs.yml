@@ -50,7 +50,6 @@ nav:
           - Families: learn/core/families.md
           - Cache: learn/core/cache.md
           - Plug-ins: learn/core/plugins.md
-          - Audit: learn/core/audit.md
       - Bench:
           - Datasets: learn/bench/datasets.md
           - Tasks: learn/bench/tasks.md
@@ -61,7 +60,9 @@ nav:
       - Perception:
           - Encoders: learn/perception/encoders.md
           - Gateway: learn/perception/gateway.md
-      - Toolkit: learn/toolkit.md
+      - Studio:
+          - Overview: learn/studio/overview.md
+          - Audit: learn/studio/audit.md
       - Extend MedOmni: learn/extend.md
   - Guides:
       - Run your agent: guides/run-your-agent.md

@@ -10,7 +10,7 @@ MedOmni v0.3.0 in five views:
 
 ## Repository layout
 
-The repository holds one package, `medomni`: Core and three projects. Code is under `src/`; content that people write and review (families, dataset packages, task templates, cohorts, task sets, agent configs, encoders) is in one top-level folder per project. The starting files that each `new` command writes are inside the package. The toolkit has code only.
+The repository holds one package, `medomni`: Core and three projects. Code is under `src/`; content that people write and review (families, dataset packages, task templates, cohorts, task sets, agent configs, encoders) is in one top-level folder per project. The starting files that each `new` command writes are inside the package.
 
 ```text
 MedOmni/
@@ -23,8 +23,7 @@ MedOmni/
 │   │   ├── recipes/          the recipe format: cohorts, labels, evidence
 │   │   ├── families/         registry loader, family converters, dummy-data generator
 │   │   ├── cache/            cache keys, entries, cache commands
-│   │   ├── testing/          runs the checks each project registers
-│   │   └── audit/            runs the audit checks each project registers
+│   │   └── testing/          runs the checks each project registers
 │   ├── bench/                medomni.bench
 │   │   ├── build/            Build: task steps, draw, checks, task sets, fingerprints
 │   │   ├── harness/          Harbor jobs, route check, run records
@@ -34,7 +33,7 @@ MedOmni/
 │   │   ├── registry/         catalogue, image pulls, encoder check
 │   │   ├── runtime/          serving code built into every encoder image
 │   │   └── gateway/          the HTTP service
-│   └── toolkit/              medomni.toolkit: recipe preview, download list, Make scripts
+│   └── studio/               medomni.studio: survey/, propose/, review/ (with the audit), preview/, report/
 ├── core/
 │   └── families/             one file per family, and aliases.yaml
 ├── bench/
@@ -44,15 +43,18 @@ MedOmni/
 │   └── agents/               contributed agent configs
 ├── perception/
 │   └── encoders/             <family>/<encoder>/: built into images, not installed
-├── tests/                    core/, bench/, perception/, toolkit/
+├── studio/
+│   ├── proposals/            task proposals and their review state
+│   └── forms/                intake and review forms
+├── tests/                    core/, bench/, perception/, studio/
 ├── docs/                     this site
 └── pyproject.toml
 ```
 
 - **One name per project.** Its package, content folder, command and docs section use the same name: `medomni.perception`, `perception/`, `medomni perception …`, Perception.
 - **Code and content are apart.** A new dataset, task, family or encoder changes content only; the code that reads it is unchanged.
-- **Projects depend only on Core.** Bench and Perception never import each other. The toolkit may also import Bench; nothing imports the toolkit. They register their commands, checks and audit checks with Core; see [How Core finds the projects](#how-core-finds-the-projects). [Design principles](principles.md#structure) gives the rules.
-- **One page per component.** Core: [Contracts](core/contracts.md), [Families](core/families.md), [Cache](core/cache.md), [Plug-ins](core/plugins.md), [Audit](core/audit.md). Bench: [Datasets](bench/datasets.md), [Tasks](bench/tasks.md), [Build](bench/build.md), [Recipes](bench/recipes.md), [Runs](bench/runs.md), [Scoring](bench/scoring.md). Toolkit: [Toolkit](toolkit.md). Perception: [Encoders](perception/encoders.md), [Gateway](perception/gateway.md).
+- **Projects depend only on Core.** Bench and Perception never import each other. Studio may also import Bench and Perception; nothing imports Studio. They register their commands, checks and audit checks with Core; see [How Core finds the projects](#how-core-finds-the-projects). [Design principles](principles.md#structure) gives the rules.
+- **One page per component.** Core: [Contracts](core/contracts.md), [Families](core/families.md), [Cache](core/cache.md), [Plug-ins](core/plugins.md). Bench: [Datasets](bench/datasets.md), [Tasks](bench/tasks.md), [Build](bench/build.md), [Recipes](bench/recipes.md), [Runs](bench/runs.md), [Scoring](bench/scoring.md). Studio: [Overview](studio/overview.md), [Audit](studio/audit.md). Perception: [Encoders](perception/encoders.md), [Gateway](perception/gateway.md).
 
 ## Context (C1)
 
@@ -60,8 +62,8 @@ MedOmni/
 
 - **Agent evaluator**: describes an agent, builds a task set from their own data, runs the agent on it with Bench, reads the scores.
 - **Encoder user**: calls the encoders through Perception's gateway.
-- **Contributor**: adds an agent, a dataset, a task or an encoder through its extension point, and makes tasks with the toolkit.
-- **MedOmni**: one package with one command, holding Core, Bench, Perception and the toolkit.
+- **Contributor**: adds an agent, a dataset, a task or an encoder through its extension point, and proposes and reviews tasks in Studio.
+- **MedOmni**: one package with one command, holding Core, Bench, Perception and Studio.
 - **Plug-in packages**: outside `medomni-*` packages that add agents, datasets, tasks or encoders without a pull request.
 - **Datasets**: MIMIC-IV, AI-READI and BDSP under your own license, and VitalDB, read from local disk.
 - **Harbor**: the agent-evaluation framework that runs each atom task in Docker.
@@ -82,7 +84,7 @@ MedOmni/
 | Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
 | Gateway | Perception | The HTTP service in front of every encoder: its catalogue finds encoders and serves model cards, its router sends each call to a running encoder container. |
 | Encoders | Perception | One image per encoder, each reading one family. Published to the container registry; model cards to Hugging Face. |
-| Toolkit | Toolkit | Previews recipes on your copy, lists files to download, and holds the scripts for making tasks. |
+| Studio tools | Studio | Survey datasets, collect and review task proposals, preview cohorts, run the audit and report results. |
 
 Gateway and encoder images are tagged with the MedOmni release that built them. The gateway runs any encoder image built since the Container API last changed.
 
@@ -96,7 +98,6 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Core | Contracts | `medomni.core.contracts` | The versioned formats, each with a typed model and a validator. See [Contracts](core/contracts.md). |
 | Core | Plug-ins | `medomni.core.plugins` | Loads the projects and plug-in packages through their entry points. |
 | Core | Testing kit | `medomni.core.testing` | Runs the checks each project registers. Plug-in packages import it for their own CI. |
-| Core | Audit | `medomni.core.audit` | Runs the audit checks each project registers and writes the [audit](../reference/audit.md) report. |
 | Core | Loading | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
 | Core | Recipes | `medomni.core.recipes` | The recipe format for cohorts, labels and evidence. |
 | Core | Families | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
@@ -107,7 +108,7 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Bench | Perception service | `medomni.bench.service` | Runs the gateway inside each atom task, with the call budget, family filter and call log. |
 | Perception | Gateway | `medomni.perception.gateway` | The gateway service, built into the gateway image. |
 | Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |
-| Toolkit | Toolkit | `medomni.toolkit` | The recipe preview, the download list and the Make scripts. |
+| Studio | Tools | `medomni.studio` | One subpackage per tool kind: survey, propose, review (with the audit), preview, report. |
 
 The projects meet in one contract: the perception service calls Perception's gateway through the Gateway API. Bench imports no Perception code.
 

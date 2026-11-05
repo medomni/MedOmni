@@ -13,7 +13,6 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni cache status` | Lists cache entries per dataset and step, with size and use. |
 | `medomni cache verify [--set <set>]` | Recomputes every entry's content hash; with `--set`, compares with the task set's published hashes. |
 | `medomni cache gc [--dry-run]` | Removes entries no current step uses. |
-| `medomni audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. |
 
 ## Bench
 
@@ -39,12 +38,14 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni perception new <family>/<encoder>` | Writes an encoder folder to fill in, in `perception/encoders/`. |
 | `medomni perception check <encoder-folder>` | Validates the model card, builds the image, compares its responses on test data with `expected.json`, then runs it on real family samples. `--samples <dir>` gives the samples; `--freeze` records `expected.json` instead. |
 
-## Toolkit
+## Studio
 
 | Command | Does |
 |---|---|
-| `medomni toolkit preview <template>@<cohort>` | Runs the cohort on your copy up to the draw and prints the patients left after each step and per class. Builds nothing. |
-| `medomni toolkit download-list <dataset>` | For a dataset downloaded in parts, lists the files its source population needs. |
+| `medomni studio preview <template>@<cohort>` | Runs the cohort on your copy up to the draw and prints the patients left after each step and per class. Builds nothing. |
+| `medomni studio download-list <dataset>` | For a dataset downloaded in parts, lists the files its source population needs. |
+| `medomni studio audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. `--only` limits it to some assets. |
+| `medomni studio check <tool>` | Checks a tool against its kind's interface. |
 
 ## Where next
 

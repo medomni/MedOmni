@@ -24,7 +24,7 @@ sys.exit(rc)
 
 def run(*args, probe=False):
     cmd = [sys.executable, "-c", PROBE, *args] if probe else [str(MEDOMNI), *args]
-    return subprocess.run(cmd, capture_output=True, text=True)
+    return subprocess.run(cmd, capture_output=True, text=True, cwd=Path(__file__).resolve().parents[2])
 
 
 def test_script_is_installed():
@@ -70,10 +70,15 @@ def test_project_command_runs(project):
     assert f"usage: medomni {project}" in r.stdout and "No commands yet." in r.stdout
 
 
-@pytest.mark.parametrize("name", ["contracts", "cache"])
-def test_core_command_not_built_yet(name):
-    r = run(name)
+def test_core_command_not_built_yet():
+    r = run("cache")
     assert r.returncode == 1 and "not built yet" in r.stderr
+
+
+def test_contracts_check_runs():
+    r = run("contracts", "check")
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "files pass" in r.stdout
 
 
 def test_unknown_command():

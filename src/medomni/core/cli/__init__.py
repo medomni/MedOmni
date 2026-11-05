@@ -50,6 +50,19 @@ def _report(commands: plugins.Resolved) -> None:
         print(f"error: {msg}", file=sys.stderr)
 
 
+def _check_piece(group: str, piece: plugins.Piece, obj) -> None:
+    """Check a plug-in piece against its contract, for kinds whose piece is one contract file."""
+    if piece.builtin or group not in (plugins.AGENTS, plugins.ENCODERS):
+        return
+    from pathlib import Path
+
+    from medomni.core.contracts import load, load_data
+    from medomni.core.contracts.check import PLUGIN_KINDS
+
+    model = PLUGIN_KINDS[group]
+    load(Path(obj), model) if isinstance(obj, (str, Path)) else load_data(obj, model, piece.full_name)
+
+
 def cmd_plugins(argv: list[str]) -> int:
     """Import every installed piece and list it, with any errors."""
     if argv and argv[0] in ("-h", "--help"):
@@ -63,9 +76,10 @@ def cmd_plugins(argv: list[str]) -> int:
         rows = []
         for name, piece in sorted(r.pieces.items()):
             try:
-                piece.load()
+                obj = piece.load()
+                _check_piece(group, piece, obj)
                 rows.append(f"  {piece.full_name:<40} ok")
-            except plugins.PluginError as e:
+            except Exception as e:  # import errors and contract errors are listed, never raised
                 failed += 1
                 rows.append(f"  {piece.full_name:<40} error: {e}")
         for piece, msg in r.errors:
@@ -77,6 +91,12 @@ def cmd_plugins(argv: list[str]) -> int:
     return 1 if failed else 0
 
 
+def cmd_contracts(argv: list[str]) -> int:
+    from medomni.core.contracts.check import main as check_main  # pydantic is imported only here
+
+    return check_main(argv)
+
+
 def _not_built(name: str) -> int:
     print(f"medomni {name}: not built yet", file=sys.stderr)
     return 1
@@ -84,7 +104,7 @@ def _not_built(name: str) -> int:
 
 CORE = {
     "plugins": cmd_plugins,
-    "contracts": lambda argv: _not_built("contracts"),
+    "contracts": cmd_contracts,
     "cache": lambda argv: _not_built("cache"),
 }
 

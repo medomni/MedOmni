@@ -1,0 +1,7 @@
+name: terminus-2-dsv4flash
+scaffold: terminus-2
+model: deepseek/deepseek-v4-flash
+route: cloud
+model_served: deepseek-flash
+env: {DEEPSEEK_API_KEY: '${DEEPSEEK_API_KEY}'}
+max_turns: 300

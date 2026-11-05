@@ -1,0 +1,351 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "recipe.schema.json",
+  "x-contract": "recipe",
+  "$defs": {
+    "Anchor": {
+      "additionalProperties": false,
+      "properties": {
+        "event": {
+          "minLength": 1,
+          "title": "Event",
+          "type": "string"
+        },
+        "pick": {
+          "default": "first",
+          "enum": [
+            "first",
+            "last"
+          ],
+          "title": "Pick",
+          "type": "string"
+        },
+        "plus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plus"
+        }
+      },
+      "required": [
+        "event"
+      ],
+      "title": "Anchor",
+      "type": "object"
+    },
+    "Any_": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "any": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Any",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "any"
+      ],
+      "title": "Any_",
+      "type": "object"
+    },
+    "Condition": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "minLength": 1,
+          "title": "Condition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "condition"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
+    "Draw": {
+      "additionalProperties": false,
+      "properties": {
+        "n": {
+          "minimum": 1,
+          "title": "N",
+          "type": "integer"
+        },
+        "by": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "By",
+          "type": "array"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "n",
+        "by",
+        "seed"
+      ],
+      "title": "Draw",
+      "type": "object"
+    },
+    "Files": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "files": {
+          "items": {
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Files",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "files"
+      ],
+      "title": "Files",
+      "type": "object"
+    },
+    "HasLabel": {
+      "additionalProperties": false,
+      "properties": {
+        "has_label": {
+          "minLength": 1,
+          "title": "Has Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "has_label"
+      ],
+      "title": "HasLabel",
+      "type": "object"
+    },
+    "None_": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "none": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "None",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "none"
+      ],
+      "title": "None_",
+      "type": "object"
+    },
+    "SourceFraction": {
+      "additionalProperties": false,
+      "properties": {
+        "fraction": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fraction"
+        }
+      },
+      "title": "SourceFraction",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`tasks/<template>/cohorts/<cohort>.yaml`.",
+  "properties": {
+    "source": {
+      "anyOf": [
+        {
+          "const": "all",
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/SourceFraction"
+        }
+      ],
+      "title": "Source"
+    },
+    "anchor": {
+      "$ref": "#/$defs/Anchor"
+    },
+    "require": {
+      "default": [],
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Any_"
+          },
+          {
+            "$ref": "#/$defs/None_"
+          },
+          {
+            "$ref": "#/$defs/Files"
+          },
+          {
+            "$ref": "#/$defs/HasLabel"
+          },
+          {
+            "$ref": "#/$defs/Condition"
+          }
+        ]
+      },
+      "title": "Require",
+      "type": "array"
+    },
+    "draw": {
+      "$ref": "#/$defs/Draw"
+    }
+  },
+  "required": [
+    "source",
+    "anchor",
+    "draw"
+  ],
+  "title": "Cohort",
+  "type": "object"
+}

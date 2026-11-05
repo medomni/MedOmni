@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-set.schema.json",
+  "x-contract": "task set",
+  "$defs": {
+    "CacheUse": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Key",
+          "type": "string"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "content_hash"
+      ],
+      "title": "CacheUse",
+      "type": "object"
+    },
+    "SetEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "task": {
+          "title": "Task",
+          "type": "string"
+        },
+        "fingerprint": {
+          "pattern": "^fp1:[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "steps": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Step"
+          },
+          "title": "Steps",
+          "type": "array"
+        },
+        "cache": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CacheUse"
+          },
+          "title": "Cache",
+          "type": "array"
+        }
+      },
+      "required": [
+        "task",
+        "fingerprint"
+      ],
+      "title": "SetEntry",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "count"
+      ],
+      "title": "Step",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`bench/sets/<name>.yaml`: grow-only pins of `<template>@<cohort>` to fingerprints.",
+  "properties": {
+    "name": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/SetEntry"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "tasks"
+  ],
+  "title": "TaskSet",
+  "type": "object"
+}

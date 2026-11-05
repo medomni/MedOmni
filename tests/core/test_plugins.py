@@ -101,3 +101,15 @@ def test_clash_between_plugin_commands_loads_neither(site):
     r = plugins.resolve(plugins.COMMANDS)
     assert "foo" not in r.pieces and len(r.errors) == 2
     assert main(["foo"]) == 2
+
+
+def test_plugin_agent_is_checked_against_its_contract(site, capsys):
+    (site / "bad_agent.yaml").write_text("name: bad\nscaffold: terminus-2\nmodel: m\nroute: cloud\n"
+                                         "model_served: m\nenv: {KEY: sk-literal}\n")
+    (site / "good_agent.yaml").write_text("name: good\nscaffold: terminus-2\nmodel: m\nroute: local\nmodel_served: m\n")
+    pkg = site / "fake_agents"
+    make_dist(site, "medomni-agents", "fake_agents", {plugins.AGENTS: {"bad": "fake_agents:BAD", "good": "fake_agents:GOOD"}})
+    (pkg / "__init__.py").write_text(f"BAD = {str(site / 'bad_agent.yaml')!r}\nGOOD = {str(site / 'good_agent.yaml')!r}\n")
+    assert main(["plugins"]) == 1
+    out = capsys.readouterr().out
+    assert "medomni-agents:good" in out and "medomni-agents:bad" in out and "only as" in out

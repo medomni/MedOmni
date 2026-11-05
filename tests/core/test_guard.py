@@ -51,6 +51,6 @@ def test_docker_is_refused():
 
 
 def test_workspace_and_hf_are_temporary(t1_guard):
-    assert os.environ["MEDOMNI_WORKSPACE"].startswith(str(t1_guard))
+    assert os.environ["MEDOMNI_HOME"].startswith(str(t1_guard))
     assert os.environ["HF_HUB_OFFLINE"] == "1"
     assert os.environ["HF_HOME"].startswith(str(t1_guard))

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "container-request.schema.json",
+  "x-contract": "container API",
+  "additionalProperties": false,
+  "properties": {
+    "family": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Family",
+      "type": "string"
+    },
+    "path": {
+      "minLength": 1,
+      "title": "Path",
+      "type": "string"
+    },
+    "options": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Options",
+      "type": "object"
+    }
+  },
+  "required": [
+    "family",
+    "path"
+  ],
+  "title": "ContainerRequest",
+  "type": "object"
+}

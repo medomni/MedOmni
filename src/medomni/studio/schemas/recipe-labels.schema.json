@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "recipe-labels.schema.json",
+  "x-contract": "recipe",
+  "$defs": {
+    "Case": {
+      "additionalProperties": false,
+      "properties": {
+        "when": {
+          "additionalProperties": true,
+          "title": "When",
+          "type": "object"
+        },
+        "then": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Then"
+        }
+      },
+      "required": [
+        "when",
+        "then"
+      ],
+      "title": "Case",
+      "type": "object"
+    },
+    "Guard": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Codes",
+          "type": "array"
+        },
+        "fields": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        }
+      },
+      "title": "Guard",
+      "type": "object"
+    },
+    "Label": {
+      "additionalProperties": false,
+      "description": "One entry of `labels.yaml`. `from` and `to` are required; `any` marks a label read from any time.",
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "exists": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exists"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "pick": {
+          "default": "last",
+          "enum": [
+            "first",
+            "last",
+            "min",
+            "max"
+          ],
+          "title": "Pick",
+          "type": "string"
+        },
+        "op": {
+          "anyOf": [
+            {
+              "enum": [
+                "<",
+                "<=",
+                "==",
+                ">=",
+                ">"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Op"
+        },
+        "x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "X"
+        },
+        "bins": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bins"
+        },
+        "cases": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Case"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cases"
+        },
+        "else": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Else"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        },
+        "hook": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hook"
+        },
+        "guard": {
+          "$ref": "#/$defs/Guard",
+          "default": {
+            "codes": [],
+            "fields": []
+          }
+        }
+      },
+      "title": "Label",
+      "type": "object"
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/$defs/Label"
+  },
+  "description": "`bench/datasets/<dataset>/labels.yaml`: label name -> rule. Templates name `<dataset>:<label>`.",
+  "propertyNames": {
+    "minLength": 1
+  },
+  "title": "LabelLibrary",
+  "type": "object"
+}

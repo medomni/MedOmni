@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workspace-config.schema.json",
+  "x-contract": "workspace config",
+  "$defs": {
+    "DatasetPath": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "DatasetPath",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`<workspace>/workspace.yaml`: where your copies, cache, built tasks, runs and results are (U2.7, R-60).",
+  "properties": {
+    "datasets": {
+      "default": {},
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "$ref": "#/$defs/DatasetPath"
+        }
+      },
+      "title": "Datasets",
+      "type": "object"
+    },
+    "cache": {
+      "title": "Cache",
+      "type": "string"
+    },
+    "tasks": {
+      "title": "Tasks",
+      "type": "string"
+    },
+    "runs": {
+      "title": "Runs",
+      "type": "string"
+    },
+    "results": {
+      "title": "Results",
+      "type": "string"
+    },
+    "deployment": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Deployment",
+      "type": "object"
+    },
+    "keys_file": {
+      "title": "Keys File",
+      "type": "string"
+    },
+    "hf_cache": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Hf Cache"
+    },
+    "scratch": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scratch"
+    }
+  },
+  "required": [
+    "cache",
+    "tasks",
+    "runs",
+    "results",
+    "keys_file"
+  ],
+  "title": "WorkspaceConfig",
+  "type": "object"
+}

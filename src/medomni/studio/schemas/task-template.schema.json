@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-template.schema.json",
+  "x-contract": "task template",
+  "$defs": {
+    "Author": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "github": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Github"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Author",
+      "type": "object"
+    },
+    "Environment": {
+      "additionalProperties": false,
+      "properties": {
+        "cpus": {
+          "minimum": 1,
+          "title": "Cpus",
+          "type": "integer"
+        },
+        "memory_mb": {
+          "minimum": 256,
+          "title": "Memory Mb",
+          "type": "integer"
+        },
+        "allow_internet": {
+          "title": "Allow Internet",
+          "type": "boolean"
+        },
+        "agent_timeout_sec": {
+          "minimum": 1,
+          "title": "Agent Timeout Sec",
+          "type": "integer"
+        },
+        "verifier_timeout_sec": {
+          "minimum": 1,
+          "title": "Verifier Timeout Sec",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cpus",
+        "memory_mb",
+        "allow_internet",
+        "agent_timeout_sec",
+        "verifier_timeout_sec"
+      ],
+      "title": "Environment",
+      "type": "object"
+    },
+    "Target": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "pattern": "^[a-z0-9_]+$",
+              "type": "string"
+            }
+          ],
+          "title": "Name"
+        },
+        "label": {
+          "pattern": "^[a-z0-9-]+:.+$",
+          "title": "Label",
+          "type": "string"
+        },
+        "metric": {
+          "enum": [
+            "auc",
+            "qwk",
+            "mae"
+          ],
+          "title": "Metric",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "label",
+        "metric"
+      ],
+      "title": "Target",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`bench/datasets/<dataset>/tasks/<template>/template.yaml`.",
+  "properties": {
+    "template_id": {
+      "pattern": "^[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*$",
+      "title": "Template Id",
+      "type": "string"
+    },
+    "dataset": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Dataset",
+      "type": "string"
+    },
+    "authors": {
+      "items": {
+        "$ref": "#/$defs/Author"
+      },
+      "minItems": 1,
+      "title": "Authors",
+      "type": "array"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/Target"
+      },
+      "minItems": 1,
+      "title": "Targets",
+      "type": "array"
+    },
+    "input": {
+      "additionalProperties": true,
+      "minProperties": 1,
+      "title": "Input",
+      "type": "object"
+    },
+    "variants": {
+      "default": [
+        "default"
+      ],
+      "items": {
+        "enum": [
+          "default",
+          "full"
+        ],
+        "type": "string"
+      },
+      "title": "Variants",
+      "type": "array"
+    },
+    "exclude": {
+      "additionalProperties": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "default": {},
+      "title": "Exclude",
+      "type": "object"
+    },
+    "environment": {
+      "$ref": "#/$defs/Environment"
+    },
+    "submission_path": {
+      "minLength": 1,
+      "title": "Submission Path",
+      "type": "string"
+    },
+    "instruction": {
+      "minLength": 1,
+      "title": "Instruction",
+      "type": "string"
+    }
+  },
+  "required": [
+    "template_id",
+    "dataset",
+    "authors",
+    "targets",
+    "input",
+    "environment",
+    "submission_path",
+    "instruction"
+  ],
+  "title": "TaskTemplate",
+  "type": "object"
+}

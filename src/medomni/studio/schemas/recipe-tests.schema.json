@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "recipe-tests.schema.json",
+  "x-contract": "recipe",
+  "$defs": {
+    "CohortTestPatient": {
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "expect": {
+          "additionalProperties": true,
+          "title": "Expect",
+          "type": "object"
+        }
+      },
+      "required": [
+        "events",
+        "expect"
+      ],
+      "title": "CohortTestPatient",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`cohorts/<cohort>.tests.yaml`: test patients.",
+  "properties": {
+    "patients": {
+      "items": {
+        "$ref": "#/$defs/CohortTestPatient"
+      },
+      "minItems": 1,
+      "title": "Patients",
+      "type": "array"
+    }
+  },
+  "required": [
+    "patients"
+  ],
+  "title": "CohortTests",
+  "type": "object"
+}

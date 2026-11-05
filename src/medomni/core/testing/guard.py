@@ -82,6 +82,6 @@ def install(monkeypatch, repo: Path, tmp: Path, blocked: tuple[str, ...] = ("/da
 
     workspace = tmp / "workspace"
     workspace.mkdir(exist_ok=True)
-    monkeypatch.setenv("MEDOMNI_WORKSPACE", str(workspace))
+    monkeypatch.setenv("MEDOMNI_HOME", str(workspace))
     monkeypatch.setenv("HF_HUB_OFFLINE", "1")
     monkeypatch.setenv("HF_HOME", str(tmp / "hf"))

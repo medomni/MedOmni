@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "recipe-evidence.schema.json",
+  "x-contract": "recipe",
+  "$defs": {
+    "Drop": {
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Columns",
+          "type": "array"
+        },
+        "split": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Split"
+        },
+        "strip": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strip"
+        }
+      },
+      "required": [
+        "columns"
+      ],
+      "title": "Drop",
+      "type": "object"
+    },
+    "KeepIfKept": {
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "minLength": 1,
+          "title": "Table",
+          "type": "string"
+        },
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "table",
+        "key"
+      ],
+      "title": "KeepIfKept",
+      "type": "object"
+    },
+    "Static": {
+      "additionalProperties": false,
+      "properties": {
+        "blank": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Blank",
+          "type": "array"
+        },
+        "aliases": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Aliases",
+          "type": "object"
+        }
+      },
+      "title": "Static",
+      "type": "object"
+    },
+    "TableRule": {
+      "additionalProperties": false,
+      "properties": {
+        "time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time"
+        },
+        "time_from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeFrom"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "missing_time": {
+          "default": "keep",
+          "enum": [
+            "drop",
+            "keep"
+          ],
+          "title": "Missing Time",
+          "type": "string"
+        },
+        "visit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visit"
+        },
+        "skip_index_visit": {
+          "default": false,
+          "title": "Skip Index Visit",
+          "type": "boolean"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "blank_after_end": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Blank After End",
+          "type": "array"
+        },
+        "missing_end": {
+          "default": "after",
+          "enum": [
+            "after",
+            "before"
+          ],
+          "title": "Missing End",
+          "type": "string"
+        },
+        "blank_in_index_visit": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Blank In Index Visit",
+          "type": "array"
+        },
+        "drop": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Drop"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "keep_if_kept": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KeepIfKept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "write_empty": {
+          "default": false,
+          "title": "Write Empty",
+          "type": "boolean"
+        }
+      },
+      "title": "TableRule",
+      "type": "object"
+    },
+    "TimeFrom": {
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "minLength": 1,
+          "title": "Table",
+          "type": "string"
+        },
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        },
+        "column": {
+          "minLength": 1,
+          "title": "Column",
+          "type": "string"
+        }
+      },
+      "required": [
+        "table",
+        "key",
+        "column"
+      ],
+      "title": "TimeFrom",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`bench/datasets/<dataset>/evidence.yaml`.",
+  "properties": {
+    "tables": {
+      "additionalProperties": {
+        "$ref": "#/$defs/TableRule"
+      },
+      "default": {},
+      "propertyNames": {
+        "minLength": 1
+      },
+      "title": "Tables",
+      "type": "object"
+    },
+    "static": {
+      "$ref": "#/$defs/Static",
+      "default": {
+        "blank": [],
+        "aliases": {}
+      }
+    },
+    "files": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Files",
+      "type": "object"
+    }
+  },
+  "title": "EvidenceRules",
+  "type": "object"
+}

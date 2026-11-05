@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-config.schema.json",
+  "x-contract": "agent config",
+  "additionalProperties": false,
+  "description": "`bench/agents/<name>.yaml` (Run your agent guide).",
+  "properties": {
+    "name": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Name",
+      "type": "string"
+    },
+    "scaffold": {
+      "minLength": 1,
+      "title": "Scaffold",
+      "type": "string"
+    },
+    "model": {
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "route": {
+      "enum": [
+        "local",
+        "cloud"
+      ],
+      "title": "Route",
+      "type": "string"
+    },
+    "model_served": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        }
+      ],
+      "title": "Model Served"
+    },
+    "env": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Env",
+      "type": "object"
+    },
+    "max_turns": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max Turns"
+    },
+    "api_base": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Api Base"
+    }
+  },
+  "required": [
+    "name",
+    "scaffold",
+    "model",
+    "route",
+    "model_served"
+  ],
+  "title": "AgentConfig",
+  "type": "object"
+}

@@ -1,0 +1,493 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family.schema.json",
+  "x-contract": "family registry",
+  "$defs": {
+    "OmhRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "title": "Shape",
+          "type": "string"
+        },
+        "glucose_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Glucose Path"
+        },
+        "time_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time Path"
+        },
+        "grid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grid"
+        }
+      },
+      "required": [
+        "shape"
+      ],
+      "title": "OmhRecord",
+      "type": "object"
+    },
+    "Pending": {
+      "additionalProperties": false,
+      "properties": {
+        "since": {
+          "minLength": 1,
+          "title": "Since",
+          "type": "string"
+        },
+        "by": {
+          "minLength": 1,
+          "title": "By",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ref"
+        }
+      },
+      "required": [
+        "since",
+        "by",
+        "question"
+      ],
+      "title": "Pending",
+      "type": "object"
+    },
+    "Protocol": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "items": {
+            "enum": [
+              "edf",
+              "wfdb",
+              "dicom",
+              "image",
+              "omh",
+              "table",
+              "json-manifest"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Format",
+          "type": "array"
+        },
+        "ndim": {
+          "minimum": 0,
+          "title": "Ndim",
+          "type": "integer"
+        },
+        "dtype": {
+          "enum": [
+            "int16",
+            "uint8",
+            "uint16",
+            "float32",
+            "float64",
+            "text",
+            "mixed"
+          ],
+          "title": "Dtype",
+          "type": "string"
+        },
+        "channels": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Channels"
+        },
+        "roles": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Roles"
+        },
+        "rate_hz": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rate Hz"
+        },
+        "units": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Units"
+        },
+        "range": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Range"
+        },
+        "axis3": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Axis3"
+        },
+        "bands": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bands"
+        },
+        "categorical": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Categorical"
+        },
+        "duration": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration"
+        },
+        "planes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Planes"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schema"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        },
+        "stage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stage"
+        },
+        "timing": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timing"
+        }
+      },
+      "required": [
+        "format",
+        "ndim",
+        "dtype"
+      ],
+      "title": "Protocol",
+      "type": "object"
+    },
+    "Retired": {
+      "additionalProperties": false,
+      "properties": {
+        "since": {
+          "minLength": 1,
+          "title": "Since",
+          "type": "string"
+        },
+        "by": {
+          "minLength": 1,
+          "title": "By",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ref"
+        }
+      },
+      "required": [
+        "since",
+        "by",
+        "reason"
+      ],
+      "title": "Retired",
+      "type": "object"
+    },
+    "Samples": {
+      "additionalProperties": false,
+      "properties": {
+        "hf_repo": {
+          "minLength": 1,
+          "title": "Hf Repo",
+          "type": "string"
+        },
+        "revision": {
+          "minLength": 1,
+          "title": "Revision",
+          "type": "string"
+        },
+        "dir": {
+          "minLength": 1,
+          "title": "Dir",
+          "type": "string"
+        }
+      },
+      "required": [
+        "hf_repo",
+        "revision",
+        "dir"
+      ],
+      "title": "Samples",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "read_by": {
+      "enum": [
+        "deep-encoder",
+        "rule-extractor",
+        "direct"
+      ],
+      "title": "Read By",
+      "type": "string"
+    },
+    "protocol": {
+      "$ref": "#/$defs/Protocol"
+    },
+    "status": {
+      "enum": [
+        "declared",
+        "supplied",
+        "deprecated"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "samples": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Samples"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "retired": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Retired"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "pending": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Pending"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "omh_record": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OmhRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "id",
+    "read_by",
+    "protocol",
+    "status"
+  ],
+  "title": "FamilyFile",
+  "type": "object"
+}

@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "result-record.schema.json",
+  "x-contract": "result record",
+  "$defs": {
+    "EncoderServed": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "image_digest": {
+          "minLength": 1,
+          "title": "Image Digest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "image_digest"
+      ],
+      "title": "EncoderServed",
+      "type": "object"
+    },
+    "RunRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "run",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "minLength": 1,
+          "title": "Run Id",
+          "type": "string"
+        },
+        "release": {
+          "minLength": 1,
+          "title": "Release",
+          "type": "string"
+        },
+        "task_set": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Task Set",
+          "type": "string"
+        },
+        "task": {
+          "title": "Task",
+          "type": "string"
+        },
+        "agent": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Agent",
+          "type": "string"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "enum": [
+                "enc",
+                "noenc",
+                "enc-forced"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Condition"
+        },
+        "fingerprint": {
+          "pattern": "^fp1:[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "fingerprint_match": {
+          "title": "Fingerprint Match",
+          "type": "boolean"
+        },
+        "model_served": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model Served"
+        },
+        "encoders_served": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/EncoderServed"
+          },
+          "title": "Encoders Served",
+          "type": "array"
+        },
+        "encoder_calls": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "default": {},
+          "title": "Encoder Calls",
+          "type": "object"
+        },
+        "files_opened": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Files Opened",
+          "type": "array"
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Kind"
+        },
+        "api_cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Cost"
+        }
+      },
+      "required": [
+        "kind",
+        "run_id",
+        "release",
+        "task_set",
+        "task",
+        "agent",
+        "condition",
+        "fingerprint",
+        "fingerprint_match",
+        "model_served"
+      ],
+      "title": "RunRecord",
+      "type": "object"
+    },
+    "ScoreRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "score",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "minLength": 1,
+          "title": "Run Id",
+          "type": "string"
+        },
+        "release": {
+          "minLength": 1,
+          "title": "Release",
+          "type": "string"
+        },
+        "task_set": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Task Set",
+          "type": "string"
+        },
+        "task_set_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Task Set Hash",
+          "type": "string"
+        },
+        "target": {
+          "minLength": 1,
+          "title": "Target",
+          "type": "string"
+        },
+        "fingerprint": {
+          "pattern": "^fp1:[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "n_atoms": {
+          "minimum": 0,
+          "title": "N Atoms",
+          "type": "integer"
+        },
+        "n_failed": {
+          "minimum": 0,
+          "title": "N Failed",
+          "type": "integer"
+        },
+        "metric": {
+          "enum": [
+            "auc",
+            "qwk",
+            "mae"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "flags": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "encoder_use": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Encoder Use",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "run_id",
+        "release",
+        "task_set",
+        "task_set_hash",
+        "target",
+        "fingerprint",
+        "n_atoms",
+        "n_failed",
+        "metric",
+        "value"
+      ],
+      "title": "ScoreRecord",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "run": "#/$defs/RunRecord",
+      "score": "#/$defs/ScoreRecord"
+    },
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RunRecord"
+    },
+    {
+      "$ref": "#/$defs/ScoreRecord"
+    }
+  ]
+}

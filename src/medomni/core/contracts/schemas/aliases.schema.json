@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aliases.schema.json",
+  "x-contract": "family registry",
+  "$defs": {
+    "AliasBlock": {
+      "additionalProperties": false,
+      "description": "One set of accommodations: channel and role relabels, extra rates, label prefixes, DICOM colour modes.",
+      "properties": {
+        "channels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Channels",
+          "type": "object"
+        },
+        "roles": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Roles",
+          "type": "object"
+        },
+        "rates": {
+          "default": [],
+          "items": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "title": "Rates",
+          "type": "array"
+        },
+        "prefixes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Prefixes",
+          "type": "array"
+        },
+        "colors": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Colors",
+          "type": "array"
+        }
+      },
+      "title": "AliasBlock",
+      "type": "object"
+    },
+    "FamilyAliases": {
+      "additionalProperties": false,
+      "properties": {
+        "accepts": {
+          "default": [],
+          "items": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/AliasBlock"
+              }
+            ]
+          },
+          "title": "Accepts",
+          "type": "array"
+        }
+      },
+      "title": "FamilyAliases",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`core/families/aliases.yaml`. The order and spelling of `accepts` are part of the bridge cache key (U2.2).",
+  "properties": {
+    "vocab": {
+      "additionalProperties": {
+        "$ref": "#/$defs/AliasBlock"
+      },
+      "default": {},
+      "title": "Vocab",
+      "type": "object"
+    },
+    "families": {
+      "additionalProperties": {
+        "$ref": "#/$defs/FamilyAliases"
+      },
+      "default": {},
+      "title": "Families",
+      "type": "object"
+    }
+  },
+  "title": "AliasFile",
+  "type": "object"
+}

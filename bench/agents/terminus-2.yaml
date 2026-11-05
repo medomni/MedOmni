@@ -1,0 +1,7 @@
+name: terminus-2
+scaffold: terminus-2
+model: deepseek/deepseek-chat
+route: cloud
+model_served: deepseek-flash
+env: {DEEPSEEK_API_KEY: '${DEEPSEEK_API_KEY}'}
+max_turns: 300

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gateway-api.schema.json",
+  "x-contract": "gateway API",
+  "additionalProperties": false,
+  "properties": {
+    "encoder_id": {
+      "pattern": "^[a-z0-9-]+__[a-z0-9-]+$",
+      "title": "Encoder Id",
+      "type": "string"
+    },
+    "path": {
+      "minLength": 1,
+      "title": "Path",
+      "type": "string"
+    },
+    "options": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Options",
+      "type": "object"
+    }
+  },
+  "required": [
+    "encoder_id",
+    "path"
+  ],
+  "title": "EncodeRequest",
+  "type": "object"
+}

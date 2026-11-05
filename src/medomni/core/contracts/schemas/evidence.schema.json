@@ -1,0 +1,763 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence.schema.json",
+  "x-contract": "gateway API",
+  "$defs": {
+    "Author": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "github": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Github"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Author",
+      "type": "object"
+    },
+    "EmbeddingBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "embedding",
+          "title": "Kind",
+          "type": "string"
+        },
+        "dim": {
+          "minimum": 1,
+          "title": "Dim",
+          "type": "integer"
+        },
+        "vector": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Vector",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "dim",
+        "vector"
+      ],
+      "title": "EmbeddingBlock",
+      "type": "object"
+    },
+    "EventItem": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "t_start": {
+          "title": "T Start",
+          "type": "number"
+        },
+        "t_end": {
+          "title": "T End",
+          "type": "number"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        }
+      },
+      "required": [
+        "label",
+        "t_start",
+        "t_end"
+      ],
+      "title": "EventItem",
+      "type": "object"
+    },
+    "EventsBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "events",
+          "title": "Kind",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/EventItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "items"
+      ],
+      "title": "EventsBlock",
+      "type": "object"
+    },
+    "EvidenceRuntime": {
+      "additionalProperties": false,
+      "properties": {
+        "container_start_ms": {
+          "minimum": 0,
+          "title": "Container Start Ms",
+          "type": "number"
+        },
+        "cached": {
+          "title": "Cached",
+          "type": "boolean"
+        },
+        "duration_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Ms"
+        }
+      },
+      "required": [
+        "container_start_ms",
+        "cached"
+      ],
+      "title": "EvidenceRuntime",
+      "type": "object"
+    },
+    "LabelItem": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "title": "LabelItem",
+      "type": "object"
+    },
+    "LabelsBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "labels",
+          "title": "Kind",
+          "type": "string"
+        },
+        "scale": {
+          "enum": [
+            "probability",
+            "logit",
+            "score",
+            "physical"
+          ],
+          "title": "Scale",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/LabelItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "scale",
+        "items"
+      ],
+      "title": "LabelsBlock",
+      "type": "object"
+    },
+    "ModelCard": {
+      "additionalProperties": false,
+      "description": "`perception/encoders/<family>/<encoder>/card.yaml`.",
+      "properties": {
+        "id": {
+          "pattern": "^[a-z0-9-]+__[a-z0-9-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "family": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Family",
+          "type": "string"
+        },
+        "modality": {
+          "minLength": 1,
+          "title": "Modality",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 240,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "authors": {
+          "items": {
+            "$ref": "#/$defs/Author"
+          },
+          "minItems": 1,
+          "title": "Authors",
+          "type": "array"
+        },
+        "intended_use": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Intended Use"
+        },
+        "limits": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Limits",
+          "type": "array"
+        },
+        "outputs": {
+          "items": {
+            "$ref": "#/$defs/OutputDecl"
+          },
+          "minItems": 1,
+          "title": "Outputs",
+          "type": "array"
+        },
+        "options": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Options",
+          "type": "object"
+        },
+        "reliability": {
+          "$ref": "#/$defs/Reliability"
+        },
+        "non_training": {
+          "title": "Non Training",
+          "type": "boolean"
+        },
+        "license": {
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceRef"
+        },
+        "weights": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Weights"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Runtime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "acceptance": {
+          "enum": [
+            "pending",
+            "accepted"
+          ],
+          "title": "Acceptance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "family",
+        "modality",
+        "summary",
+        "authors",
+        "outputs",
+        "reliability",
+        "non_training",
+        "license",
+        "source",
+        "acceptance"
+      ],
+      "title": "ModelCard",
+      "type": "object"
+    },
+    "OutputDecl": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "labels",
+            "events",
+            "text",
+            "embedding"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "scale": {
+          "anyOf": [
+            {
+              "enum": [
+                "probability",
+                "logit",
+                "score",
+                "physical"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale"
+        },
+        "labels": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Labels"
+        },
+        "dim": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dim"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "OutputDecl",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "input_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Input Sha256",
+          "type": "string"
+        },
+        "input_complete": {
+          "title": "Input Complete",
+          "type": "boolean"
+        },
+        "image_id": {
+          "minLength": 1,
+          "title": "Image Id",
+          "type": "string"
+        },
+        "weights_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weights Sha256"
+        },
+        "source_rev": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Rev"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image"
+        },
+        "image_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Digest"
+        }
+      },
+      "required": [
+        "input_sha256",
+        "input_complete",
+        "image_id"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Reliability": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "unmeasured",
+            "measured"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "Reliability",
+      "type": "object"
+    },
+    "Runtime": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        }
+      },
+      "title": "Runtime",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "rev": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rev"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "SourceRef",
+      "type": "object"
+    },
+    "TextBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "text",
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "title": "TextBlock",
+      "type": "object"
+    },
+    "Weights": {
+      "additionalProperties": false,
+      "properties": {
+        "uri": {
+          "minLength": 1,
+          "title": "Uri",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        }
+      },
+      "required": [
+        "uri"
+      ],
+      "title": "Weights",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The gateway's answer to `POST /encode`.",
+  "properties": {
+    "encoder_id": {
+      "pattern": "^[a-z0-9-]+__[a-z0-9-]+$",
+      "title": "Encoder Id",
+      "type": "string"
+    },
+    "family": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Family",
+      "type": "string"
+    },
+    "healthy": {
+      "title": "Healthy",
+      "type": "boolean"
+    },
+    "outputs": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "embedding": "#/$defs/EmbeddingBlock",
+            "events": "#/$defs/EventsBlock",
+            "labels": "#/$defs/LabelsBlock",
+            "text": "#/$defs/TextBlock"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/LabelsBlock"
+          },
+          {
+            "$ref": "#/$defs/EventsBlock"
+          },
+          {
+            "$ref": "#/$defs/TextBlock"
+          },
+          {
+            "$ref": "#/$defs/EmbeddingBlock"
+          }
+        ]
+      },
+      "title": "Outputs",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "reliability": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Reliability"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "card": {
+      "$ref": "#/$defs/ModelCard"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "fingerprint": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "runtime": {
+      "$ref": "#/$defs/EvidenceRuntime"
+    }
+  },
+  "required": [
+    "encoder_id",
+    "family",
+    "healthy",
+    "outputs",
+    "notes",
+    "reliability",
+    "card",
+    "provenance",
+    "fingerprint",
+    "runtime"
+  ],
+  "title": "Evidence",
+  "type": "object"
+}

@@ -1,0 +1,8 @@
+name: terminus-2-replay
+scaffold: terminus-2
+model: openai/replay
+route: local
+model_served: [replay-t2-check, replay]
+env: {OPENAI_API_KEY: replay-local-no-key}
+max_turns: 300
+api_base: http://127.0.0.1:8765/v1

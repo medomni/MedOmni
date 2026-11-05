@@ -1,0 +1,349 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model-card.schema.json",
+  "x-contract": "model card",
+  "$defs": {
+    "Author": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "github": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Github"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Author",
+      "type": "object"
+    },
+    "OutputDecl": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "labels",
+            "events",
+            "text",
+            "embedding"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "scale": {
+          "anyOf": [
+            {
+              "enum": [
+                "probability",
+                "logit",
+                "score",
+                "physical"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale"
+        },
+        "labels": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Labels"
+        },
+        "dim": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dim"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "OutputDecl",
+      "type": "object"
+    },
+    "Reliability": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "unmeasured",
+            "measured"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "Reliability",
+      "type": "object"
+    },
+    "Runtime": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        }
+      },
+      "title": "Runtime",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "rev": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rev"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "SourceRef",
+      "type": "object"
+    },
+    "Weights": {
+      "additionalProperties": false,
+      "properties": {
+        "uri": {
+          "minLength": 1,
+          "title": "Uri",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        }
+      },
+      "required": [
+        "uri"
+      ],
+      "title": "Weights",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`perception/encoders/<family>/<encoder>/card.yaml`.",
+  "properties": {
+    "id": {
+      "pattern": "^[a-z0-9-]+__[a-z0-9-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "family": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Family",
+      "type": "string"
+    },
+    "modality": {
+      "minLength": 1,
+      "title": "Modality",
+      "type": "string"
+    },
+    "summary": {
+      "maxLength": 240,
+      "minLength": 1,
+      "title": "Summary",
+      "type": "string"
+    },
+    "authors": {
+      "items": {
+        "$ref": "#/$defs/Author"
+      },
+      "minItems": 1,
+      "title": "Authors",
+      "type": "array"
+    },
+    "intended_use": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Intended Use"
+    },
+    "limits": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Limits",
+      "type": "array"
+    },
+    "outputs": {
+      "items": {
+        "$ref": "#/$defs/OutputDecl"
+      },
+      "minItems": 1,
+      "title": "Outputs",
+      "type": "array"
+    },
+    "options": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Options",
+      "type": "object"
+    },
+    "reliability": {
+      "$ref": "#/$defs/Reliability"
+    },
+    "non_training": {
+      "title": "Non Training",
+      "type": "boolean"
+    },
+    "license": {
+      "minLength": 1,
+      "title": "License",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceRef"
+    },
+    "weights": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Weights"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "runtime": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Runtime"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "acceptance": {
+      "enum": [
+        "pending",
+        "accepted"
+      ],
+      "title": "Acceptance",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "family",
+    "modality",
+    "summary",
+    "authors",
+    "outputs",
+    "reliability",
+    "non_training",
+    "license",
+    "source",
+    "acceptance"
+  ],
+  "title": "ModelCard",
+  "type": "object"
+}

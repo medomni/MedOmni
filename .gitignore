@@ -36,3 +36,6 @@ data_task/taskbuilder/prerun/*-review/
 # manuscript working copy: the PDF is large and the drafts live with the paper,
 # not the benchmark. Nothing under it has ever been tracked.
 paper_writing/
+
+# uv environment (rebuild with `uv sync`)
+.venv/

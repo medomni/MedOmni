@@ -1237,7 +1237,7 @@ wheels = [
 [[package]]
 name = "medomni"
 version = "0.3.0.dev0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "edfio" },
     { name = "fastapi" },

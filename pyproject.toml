@@ -35,6 +35,28 @@ dependencies = [
 [dependency-groups]
 dev = ["pytest>=8", "neurokit2>=0.2"]  # neurokit2: encoder adapters tested in-process
 
+[project.scripts]
+medomni = "medomni.core.cli:main"
+
+# Bench, Perception and Studio register their commands the same way a plug-in package does (R-2).
+[project.entry-points."medomni.commands"]
+bench = "medomni.bench.cli:group"
+perception = "medomni.perception.cli:group"
+studio = "medomni.studio.cli:group"
+
+[build-system]
+requires = ["uv_build>=0.8,<0.12"]
+build-backend = "uv_build"
+
 [tool.uv]
-# Stage 1: the environment only. Stage 2 adds src/medomni/ and turns this into the installable package.
-package = false
+package = true
+
+[tool.pytest.ini_options]
+# Plain `pytest` runs T1 only: no data, no Docker, no network. T2-T4 are selected by marker.
+testpaths = ["tests"]
+markers = [
+    "containers: T2, needs Docker",
+    "data: T3, needs a licensed data copy",
+    "baseline: T4, needs the v0.2.1 baseline",
+]
+addopts = "-m 'not containers and not data and not baseline'"

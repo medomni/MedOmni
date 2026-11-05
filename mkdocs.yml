@@ -25,6 +25,9 @@ extra:
   version:
     provider: mike
 
+exclude_docs: |
+  assets/diagrams.yaml
+
 plugins:
   - search
 

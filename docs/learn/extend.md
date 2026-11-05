@@ -10,12 +10,12 @@ What you can add to MedOmni, how, and what checks it.
 
 ## What you can add
 
-| You add | Project | Follows contract | Start from | Check | Pull request | Plug-in group |
+| You add | Project | Follows contract | Create with | Check | Pull request | Plug-in group |
 |---|---|---|---|---|---|---|
-| An agent | Bench | Agent config | `bench/starters/agent/` | `medomni bench run --set smoke-dummy` | `bench/agents/` | `medomni.agents` |
-| A dataset | Bench | Dataset config, recipe, dataset policy | `bench/starters/dataset/` | `medomni bench data check` | openly licensed only | `medomni.datasets` |
+| An agent | Bench | Agent config | `medomni bench agent new` | `medomni bench run --set smoke-dummy` | `bench/agents/` | `medomni.agents` |
+| A dataset | Bench | Dataset config, recipe, dataset policy | `medomni bench data new` | `medomni bench data check` | openly licensed only | `medomni.datasets` |
 | A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | `medomni.tasks` |
-| An encoder | Perception | Model card, Container API | `perception/starters/encoder/` | `medomni perception check` | `perception/encoders/` | `medomni.encoders` |
+| An encoder | Perception | Model card, Container API | `medomni perception new` | `medomni perception check` | `perception/encoders/` | `medomni.encoders` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).
 - [Contribute](../guides/contribute.md) walks through each one.

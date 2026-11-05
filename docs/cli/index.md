@@ -21,7 +21,9 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni bench data connect <dataset> --path <dir>` | Records where your copy of a dataset is, in the workspace configuration. |
 | `medomni bench data check <dataset>` | Checks your copy against the dataset package (version, listed files, needed tables), runs the dataset steps on its data sample and on dummy data, and validates the policy. |
-| `medomni bench task new <template> --dataset <dataset>` | Creates a task template and an `n20` cohort from the starter. |
+| `medomni bench agent new <name>` | Writes an agent config to fill in. |
+| `medomni bench data new <dataset>` | Writes a dataset package to fill in, in `bench/datasets/<dataset>/`. |
+| `medomni bench task new <template> --dataset <dataset>` | Writes a task template and an `n20` cohort to fill in. |
 | `medomni bench task build --set <set>` or `<template>@<cohort>` | Runs [Build](../learn/bench/build.md): atom tasks in the workspace, for every condition and evidence variant. Dummy data for `smoke-dummy` is generated on the fly. |
 | `medomni bench task check <template>@<cohort>` | Checks a template, its cohort and the build: fields, metrics, labels, test patients, leakage, families, fingerprint. |
 | `medomni bench task check --set <set>` | Checks every build in a task set against its published fingerprint, and prints the step counts of any that differ. |
@@ -34,6 +36,7 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni perception pull [<family-or-encoder> ...]` | Pulls encoder images from `ghcr.io/medomni`. |
 | `medomni perception up --data-root <dir>` | Starts the gateway on the pulled encoders, on `127.0.0.1:8000`. |
+| `medomni perception new <family>/<encoder>` | Writes an encoder folder to fill in, in `perception/encoders/`. |
 | `medomni perception check <encoder-folder>` | Validates the model card, builds the image, compares its responses on test data with `expected.json`, then runs it on real family samples. `--samples <dir>` gives the samples; `--freeze` records `expected.json` instead. |
 
 ## Toolkit

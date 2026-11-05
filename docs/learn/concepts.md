@@ -68,4 +68,4 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 :   A versioned format with the validator that checks it, such as the task template or the model card. Projects and plug-in packages depend only on contracts. See [Contracts](core/contracts.md).
 
 **Extension point**
-:   A place where contributors add to MedOmni: agent, dataset or task in Bench, encoder in Perception. Each has a starter and one check command, and is filled by pull request or from a plug-in package. See [Contribute](../guides/contribute.md).
+:   A place where contributors add to MedOmni: agent, dataset or task in Bench, encoder in Perception. Each has a `new` command that writes its starting files and one check command, and is filled by pull request or from a plug-in package. See [Contribute](../guides/contribute.md).

@@ -4,7 +4,7 @@ For contributors who add an agent, a dataset or a task to Bench, or an encoder t
 
 There are two routes. Both run the same check.
 
-- **Pull request.** Start from the starter, fill it in, run its check command locally, and open a pull request; CI runs the same check.
+- **Pull request.** Create the starting files with the piece's `new` command, fill them in, run its check command locally, and open a pull request; CI runs the same check.
 - **Plug-in package.** Publish your own `medomni-*` package that registers the same pieces through entry points. Use this when your work should stay in your own repository, for example a task on data that cannot leave your institution. See [Publish a plug-in package](#publish-a-plug-in-package).
 
 Contributions change only extension points. Only the MedOmni team changes Core and the contracts; if you need a contract change, such as a new family, open an issue first.
@@ -17,7 +17,12 @@ For a new scaffold or model.
 
 ### Steps
 
-1. Copy `bench/starters/agent/agent.yaml` and fill it in, as in [Run your agent](run-your-agent.md).
+1. Create the agent config and fill it in, as in [Run your agent](run-your-agent.md).
+
+    ```bash
+    medomni bench agent new my-agent
+    ```
+
 2. Open a pull request adding it as `bench/agents/<name>.yaml`.
 
 ### Check
@@ -39,10 +44,10 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add datasets o
 
 ### Steps
 
-1. Copy the starter into the dataset folder:
+1. Create the dataset package:
 
     ```bash
-    cp -r bench/starters/dataset bench/datasets/my-dataset
+    medomni bench data new my-dataset
     ```
 
 2. Write `dataset.yaml`: the description (unit, kind of time, version), the readers and what each reads, and the dataset's rules. See [Datasets reference](../reference/datasets.md#dataset-package).
@@ -68,7 +73,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
 
 ### Steps
 
-1. Create the template from the starter:
+1. Create the template and a first cohort:
 
     ```bash
     medomni bench task new vitaldb_my-task --dataset vitaldb
@@ -111,7 +116,13 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
 
 ### Steps
 
-1. Copy `perception/starters/encoder/` to a new folder:
+1. Create the encoder folder:
+
+    ```bash
+    medomni perception new <family>/<encoder>
+    ```
+
+    It writes:
 
     ```text
     perception/encoders/<family>/<encoder>/
@@ -149,7 +160,7 @@ For agents, datasets, tasks or encoders that live in your own repository.
 ### Steps
 
 1. Create a Python package named `medomni-<name>` that depends on `medomni`.
-2. Build each piece from its starter, as in the sections above.
+2. Create each piece with its `new` command, as in the sections above.
 3. Register each piece under its entry-point group in `pyproject.toml`: `medomni.agents`, `medomni.datasets`, `medomni.tasks` or `medomni.encoders`.
 
     ```toml

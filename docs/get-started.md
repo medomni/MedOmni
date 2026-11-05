@@ -28,7 +28,7 @@ MedOmni writes your configuration, built tasks, runs and results to the workspac
 Copy the agent template and set your model. See [Run your agent](guides/run-your-agent.md) for every field.
 
 ```bash
-cp bench/starters/agent/agent.yaml my-agent.yaml
+medomni bench agent new my-agent
 ```
 
 ## 3. Run on dummy data

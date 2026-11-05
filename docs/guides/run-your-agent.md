@@ -12,7 +12,7 @@ For agent evaluators. You score your own agent on a MedOmni task set, with and w
 1. Describe your agent in an agent config, starting from the template:
 
     ```bash
-    cp bench/starters/agent/agent.yaml my-agent.yaml
+    medomni bench agent new my-agent
     ```
 
     ```yaml

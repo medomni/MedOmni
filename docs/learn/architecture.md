@@ -10,7 +10,7 @@ MedOmni v0.3.0 in five views:
 
 ## Repository layout
 
-The repository holds one package, `medomni`: Core and three projects. Code is under `src/`; content that people write and review (families, dataset packages, task templates, cohorts, task sets, agent configs, encoders, starters) is in one top-level folder per project. The toolkit has code only.
+The repository holds one package, `medomni`: Core and three projects. Code is under `src/`; content that people write and review (families, dataset packages, task templates, cohorts, task sets, agent configs, encoders) is in one top-level folder per project. The starting files that each `new` command writes are inside the package. The toolkit has code only.
 
 ```text
 MedOmni/
@@ -41,11 +41,9 @@ MedOmni/
 │   ├── datasets/<dataset>/   dataset package: dataset.yaml, labels.yaml, evidence.yaml,
 │   │                         codes.csv, policy.yaml, hooks/, tasks/<template>/
 │   ├── sets/                 task sets: pinned <template>@<cohort> lists
-│   ├── agents/               contributed agent configs
-│   └── starters/             agent, dataset
+│   └── agents/               contributed agent configs
 ├── perception/
-│   ├── encoders/             <family>/<encoder>/: built into images, not installed
-│   └── starters/             encoder
+│   └── encoders/             <family>/<encoder>/: built into images, not installed
 ├── tests/                    core/, bench/, perception/, toolkit/
 ├── docs/                     this site
 └── pyproject.toml

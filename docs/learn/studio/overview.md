@@ -26,7 +26,7 @@ Every Studio tool is one of five kinds. Each kind has one interface, so a new to
 | **propose** | Collects task proposals from clinicians: intake form, task-collection site. | The v0.2 intake and catalogue, moved as they are |
 | **review** | Review forms and sign-off, the target census, and the [audit](audit.md). | The audit; the v0.2 review sheets, moved as they are |
 | **preview** | Runs a cohort on your copy or on dummy data up to the draw, without building. Lists the files a source population needs. | `preview`, `download-list` |
-| **report** | Tables and figures from result records. | Not yet |
+| **report** | Tables and figures: from result records, and the architecture diagrams in these docs. | The diagram generator |
 
 ## From proposal to Bench
 
@@ -45,6 +45,12 @@ A frozen template is never changed; a change is a new proposal.
 medomni studio preview mimic_ckd-staging@n20     # patients left after each step and per class
 medomni studio download-list bdsp                 # files the source population needs
 medomni studio audit                              # the audit report, in your workspace
+```
+
+The architecture diagrams are drawn from one description, `docs/assets/diagrams.yaml`. After a change, regenerate them; each SVG also opens in draw.io:
+
+```bash
+uv run python src/medomni/studio/report/diagrams.py docs/assets/diagrams.yaml docs/assets/
 ```
 
 The other v0.2 tools run as scripts and become commands of their kind later.

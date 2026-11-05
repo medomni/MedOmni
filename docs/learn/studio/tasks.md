@@ -38,6 +38,7 @@ A hash of a built `<template>@<cohort>`: its files, instructions, environment an
 A named list of `<template>@<cohort>` pairs pinned to fingerprints, such as `v1`. Task sets are what MedOmni publishes and what scores are compared on.
 
 - A task set only grows: pairs are added, never changed.
+- Its content hash covers every pair and fingerprint in it. Each score record carries the hash, and scores with different hashes are never put in one table.
 - For each pair it also lists the step counts and the hashes of the cache entries the build uses.
 - Credentialed task sets publish fingerprints and hashes only; you build them from your own access. See [Rebuild a task set](../../guides/rebuild-a-task-set.md).
 - To build outside a task set, for example while writing a cohort, name the pair: `medomni bench task build mimic_ckd-staging@n20`.

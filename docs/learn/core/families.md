@@ -12,6 +12,7 @@ dataset ──event table──▶ FILE//F rows ──▶ encoders that read F
 - **Format**: the file formats it accepts, such as EDF, WFDB, DICOM or a table.
 - **Channels or roles**: the exact montage, a channel count, or roles at least one channel must match.
 - **Rate and units**: the sampling rate and dominant unit, where they matter.
+- **Type and range**: the data type of the values and their plausible range, such as 50–100 for SpO2 in %. A file outside the range is rejected, which catches unit and scaling errors that would otherwise pass silently.
 - **Read by**: `deep-encoder`, `rule-extractor`, or `direct` (the agent reads the file itself).
 - **Status**: `declared` (shape known), `supplied` (measured on real data) or `deprecated`.
 

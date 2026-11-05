@@ -103,6 +103,7 @@ It checks:
 - that the cohort's test patients give their expected results
 - that no answers or guarded evidence reach the agent
 - that staged files match their families
+- that an agent submitting the true answers scores perfectly, and one giving the same answer every time scores at chance
 - that the build matches its fingerprint
 
 ## Add an encoder (Perception)

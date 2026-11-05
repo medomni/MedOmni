@@ -20,9 +20,19 @@ Scoring all atom tasks together, after all their runs finish, means no run sees 
 - A `<template>@<cohort>` with missing patients is refused.
 - Runs that differ among themselves in fingerprint, served model or served encoders are refused.
 - Runs on a build whose fingerprint differs from the published one are scored in a separate table, never with published scores.
+- Each score record carries the task set's content hash. The table only puts scores with the same hash side by side.
 - An agent failure, such as no answer or a malformed answer, scores as chance.
 - An infrastructure failure refuses the score.
 - A target whose answers have one class only is unscorable. Its row says so and carries no value.
+
+## Checks before any run
+
+`medomni bench task check` scores two stand-in agents on every `<template>@<cohort>`, with no model calls:
+
+- **True answers:** an agent that submits the answers must score perfectly. If not, the answers, the patient order or the metric are wrong.
+- **Same answer:** an agent that always gives the same answer must score at chance, skill about 0. If not, the score itself carries information.
+
+Either failure stops the check.
 
 ## Metrics
 

@@ -24,7 +24,7 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni bench data new <dataset>` | Writes a dataset package to fill in, in `bench/datasets/<dataset>/`. |
 | `medomni bench task new <template> --dataset <dataset>` | Writes a task template and an `n20` cohort to fill in. |
 | `medomni bench task build --set <set>` or `<template>@<cohort>` | Runs [Build](../learn/bench/build.md): atom tasks in the workspace, for every condition and evidence variant. Dummy data for `smoke-dummy` is generated on the fly. |
-| `medomni bench task check <template>@<cohort>` | Checks a template, its cohort and the build: fields, metrics, labels, test patients, leakage, families, fingerprint. |
+| `medomni bench task check <template>@<cohort>` | Checks a template, its cohort and the build: fields, metrics, labels, test patients, leakage, families, fingerprint, and the two [stand-in agents](../learn/bench/scoring.md#checks-before-any-run). |
 | `medomni bench task check --set <set>` | Checks every build in a task set against its published fingerprint, and prints the step counts of any that differ. |
 | `medomni bench run --agent <config> --set <set>` | Checks the route against each dataset policy, pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run. `--condition` (repeatable; default `enc`), `--reps <n>`, `--concurrency <n>`. Resumes where it stopped. |
 | `medomni bench score --set <set>` | Scores every target of every complete `<template>@<cohort>` per agent, condition and repetition, and prints and saves the table. Runs on builds that differ from the published fingerprint are scored in a separate table. The only command that writes scores. `--agent` limits it to one agent. |

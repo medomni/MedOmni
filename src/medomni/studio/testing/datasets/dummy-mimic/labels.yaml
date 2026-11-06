@@ -1,0 +1,13 @@
+aki:
+  exists: "^DIAGNOSIS//ICD//N17"
+  from: anchor
+  to: anchor + 7 days
+  guard: {codes: ["^DIAGNOSIS//ICD//N17"]}
+creat_high:
+  value: LAB//90001
+  pick: max
+  op: ">="
+  x: 1.5
+  from: anchor
+  to: anchor + 2 days
+  guard: {codes: ["^LAB//90001$"]}

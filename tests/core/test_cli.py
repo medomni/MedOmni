@@ -67,7 +67,8 @@ def test_version():
 def test_project_command_runs(project):
     r = run(project)
     assert r.returncode == 0, r.stderr
-    assert f"usage: medomni {project}" in r.stdout and "No commands yet." in r.stdout
+    assert f"usage: medomni {project}" in r.stdout
+    assert ("dummy" in r.stdout) if project == "studio" else ("No commands yet." in r.stdout)
 
 
 def test_core_command_not_built_yet():

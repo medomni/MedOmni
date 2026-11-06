@@ -1,0 +1,53 @@
+description: {unit: participant, time: visit-dates, version: "1"}
+units: {table: person, column: person_id}
+source: all
+read:
+- reader: csv
+  options:
+    tables:
+      person:
+        file: clinical_data/person.csv
+        subject: person_id
+        subject_type: int
+        events:
+        - code: "GENDER//{gender_source_value}"
+        - {code: YEAR_OF_BIRTH, value: year_of_birth}
+      visit_occurrence:
+        file: clinical_data/visit_occurrence.csv
+        subject: person_id
+        subject_type: int
+        time: visit_start_date
+        visit: visit_occurrence_id
+        events:
+        - code: VISIT
+      measurement:
+        file: clinical_data/measurement.csv
+        subject: person_id
+        subject_type: int
+        time: measurement_date
+        visit: visit_occurrence_id
+        events:
+        - {code: "MEASUREMENT//{measurement_source_value}", value: value_as_number}
+      condition_occurrence:
+        file: clinical_data/condition_occurrence.csv
+        subject: person_id
+        subject_type: int
+        time: condition_start_date
+        visit: visit_occurrence_id
+        events:
+        - code: "CONDITION//{condition_source_value}"
+      observation:
+        file: clinical_data/observation.csv
+        subject: person_id
+        subject_type: int
+        time: observation_date
+        visit: visit_occurrence_id
+        events:
+        - {code: "OBSERVATION//{observation_source_value}", text: value_as_string}
+- reader: tree
+  options:
+    files:
+      oct-volume-raster-mono8-3d: {pattern: "retinal_oct/{subject}/{record}.dcm"}
+      fundus-photography-2d: {pattern: "retinal_photography/{subject}/{record}.dcm"}
+      octa-enface-slab-mono8-2d: {pattern: "retinal_octa/{subject}/{record}.dcm"}
+      cgm-5min-mgdl: {pattern: "wearable_blood_glucose/{subject}/{record}.json"}

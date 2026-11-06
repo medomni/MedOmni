@@ -5,6 +5,11 @@ that takes no arguments and raises on failure.
 """
 from __future__ import annotations
 
+from pathlib import Path as _Path
+
+# Dummy dataset packages, one per dataset shape (part 5): dummy-mimic, dummy-omop, dummy-bdsp
+DATASETS = _Path(__file__).resolve().parent / "datasets"
+
 from dataclasses import dataclass
 
 from medomni.core import plugins

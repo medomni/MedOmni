@@ -1,0 +1,207 @@
+"""Dummy data (part 5): a conforming file for every family; dummy datasets from their dataset.yaml; planted labels."""
+import csv
+import importlib.util
+import json
+import re
+import shutil
+from pathlib import Path
+
+import pytest
+import yaml
+
+from medomni.core import families, hashing
+from medomni.core.families.check import conforms
+from medomni.core.families.dummy import make_dummy, signal
+from medomni.core.families.dummy.datasets import INT_BASE, DummyError, make_dataset
+from medomni.core.testing import DATASETS
+
+REPO = Path(__file__).resolve().parents[2]
+FAMILIES = sorted(families.load_registry(REPO))
+SHAPES = ("dummy-mimic", "dummy-omop", "dummy-bdsp")
+BRIDGED = ["body-position-code-10hz", "ecg-1lead-200hz-uv", "eeg-sleep-6ch-200hz-uv", "emg-chin-200hz-uv",
+           "emg-limb-200hz-uv", "eog-2ch-200hz-uv", "psg-cardiorespiratory-4ch-200hz-mixed", "pulse-rate-10hz-bpm",
+           "resp-effort-rip-2ch-50hz", "spo2-series-10hz-pct"]
+
+
+def _files(path: Path) -> list[Path]:
+    return sorted(path.parent.glob(path.stem + ".*"))
+
+
+@pytest.mark.parametrize("fid", FAMILIES)
+def test_every_family_conforms(fid, tmp_path):
+    fam = families.get(fid, REPO)
+    p = make_dummy(fam, seed=1, out_dir=tmp_path)
+    assert conforms(fam, p) == []
+    for f in _files(p):
+        assert f.stat().st_size < 1 << 20, f"{f.name} is over 1 MiB"
+
+
+@pytest.mark.parametrize("fid", FAMILIES)
+def test_seed_decides_the_bytes(fid, tmp_path):
+    fam = families.get(fid, REPO)
+    a, b, c = (make_dummy(fam, seed=s, out_dir=tmp_path / d) for s, d in ((1, "a"), (1, "b"), (2, "c")))
+    assert [f.read_bytes() for f in _files(a)] == [f.read_bytes() for f in _files(b)]
+    assert [f.read_bytes() for f in _files(a)] != [f.read_bytes() for f in _files(c)]
+
+
+@pytest.mark.parametrize("made, checked, problem", [
+    ("ecg-1lead-200hz-uv", "spo2-series-10hz-pct", "channels"),
+    ("ecg-1lead-200hz-uv", "eeg-sleep-6ch-200hz-uv", "channels"),
+    ("eog-2ch-200hz-uv", "resp-effort-rip-2ch-50hz", "rates"),
+    ("fundus-faf-mono8-2d", "oct-volume-raster-mono8-3d", "frame"),
+    ("oct-volume-raster-mono8-3d", "flio-tcspc-256x256x1024bin-u16", "bits"),
+    ("wearable-hr-1min-bpm", "cgm-5min-mgdl", "body.cgm"),
+    ("clinical-free-text", "clinical-measurement-irregular", "columns"),
+])
+def test_the_check_catches_a_wrong_file(made, checked, problem, tmp_path):
+    p = make_dummy(families.get(made, REPO), seed=1, out_dir=tmp_path)
+    problems = conforms(families.get(checked, REPO), p)
+    assert any(problem in x for x in problems), problems
+
+
+def test_the_check_catches_values_outside_the_range(tmp_path):
+    import pyedflib
+
+    fam = families.get("spo2-series-10hz-pct", REPO)
+    p = tmp_path / "bad.edf"
+    w = pyedflib.EdfWriter(str(p), 1, file_type=pyedflib.FILETYPE_EDF)
+    w.setSignalHeaders([{"label": "spo2", "dimension": "%", "sample_frequency": 10, "physical_min": 0,
+                         "physical_max": 150, "digital_min": -32768, "digital_max": 32767}])
+    import numpy as np
+
+    w.writeSamples([np.full(300, 30000, dtype=np.int32)], digital=True)
+    w.close()
+    assert any("outside the family's range" in x for x in conforms(fam, p))
+
+
+def test_bridge_round_trip(tmp_path):
+    """The dummy h5 night goes through v0.2's bridge, and each family EDF it makes conforms (bridge.py read-only)."""
+    spec = importlib.util.spec_from_file_location("v02_bridge", REPO / "data_task/familybridge/bridge.py")
+    bridge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bridge)
+    alias = yaml.safe_load((REPO / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
+    fams = [families.get(f, REPO) for f in BRIDGED]
+    h5 = tmp_path / "night.h5"
+    signal.write_h5(fams, 1, h5, subject="DUMMY-1", start=__import__("datetime").datetime(2150, 1, 1))
+    for fam in fams:
+        proto = yaml.safe_load((REPO / f"data_task/families/{fam.id}.yaml").read_text(encoding="utf-8"))["protocol"]
+        out = tmp_path / f"{fam.id}.edf"
+        bridge.h5_to_family_edf(h5, out, fam.id, proto, alias)
+        assert conforms(fam, out) == [], fam.id
+
+
+@pytest.fixture(scope="module")
+def made(tmp_path_factory):
+    out = tmp_path_factory.mktemp("datasets")
+    return {s: make_dataset(DATASETS / s, out / s) for s in SHAPES}
+
+
+def _codes(package: Path) -> set[str]:
+    with open(package / "codes.csv", newline="", encoding="utf-8") as f:
+        return {r["code"] for r in csv.DictReader(f)}
+
+
+def _rows(path: Path) -> list[dict]:
+    with open(path, newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+@pytest.mark.parametrize("shape", SHAPES)
+def test_dataset_has_what_its_config_names(made, shape):
+    from medomni.core.contracts import DatasetConfig, load
+    from medomni.core.loading.options import options
+
+    d = made[shape]
+    cfg = load(DATASETS / shape / "dataset.yaml", DatasetConfig)
+    known = _codes(DATASETS / shape)
+    for r in cfg.read:
+        o = options(r)
+        if r.reader == "csv":
+            for name, spec in o.tables.items():
+                rows = _rows(d.root / spec.file)
+                assert rows, name
+                for row in rows:
+                    s = row[spec.subject]
+                    assert s.startswith("DUMMY-") or int(s) > INT_BASE, s
+                    for e in spec.events:
+                        code = e.code.format(**row)
+                        assert code in known, f"{name} emits {code}, which codes.csv doesn't list"
+        else:
+            for entry, spec in o.files.items():
+                found = sorted(d.root.glob(re.sub(r"\{[a-z]+\}", "*", spec.pattern)))
+                assert len(found) == len(d.subjects) * spec.per_subject, entry
+                if spec.format == "family":
+                    fam = families.get(entry, REPO)
+                    assert all(conforms(fam, p) == [] for p in found), entry
+
+
+@pytest.mark.parametrize("shape", SHAPES)
+def test_dataset_is_reproducible(made, shape, tmp_path):
+    again = make_dataset(DATASETS / shape, tmp_path / shape)
+    assert hashing.dir_hash(again.root) == hashing.dir_hash(made[shape].root)
+    other = make_dataset(DATASETS / shape, tmp_path / "other", seed=1)
+    assert hashing.dir_hash(other.root) != hashing.dir_hash(made[shape].root)
+
+
+@pytest.mark.parametrize("shape", SHAPES)
+def test_planted_labels_and_canaries(made, shape):
+    from medomni.core.contracts import LabelLibrary, load
+    from medomni.core.loading.options import options
+    from medomni.core.contracts import DatasetConfig
+
+    d = made[shape]
+    assert json.loads((d.root.parent / "planted.json").read_text()) == d.planted
+    labels = load(DATASETS / shape / "labels.yaml", LabelLibrary).root
+    cfg = load(DATASETS / shape / "dataset.yaml", DatasetConfig)
+    tables = {n: s for r in cfg.read if r.reader == "csv" for n, s in options(r).tables.items()}
+    assert set(d.planted["labels"]) == set(labels)
+    for name, lab in labels.items():
+        p = d.planted["labels"][name]
+        assert 0 < len(p["positive"]) < len(d.subjects)
+        for ev in p["events"]:
+            spec = tables[ev["table"]]
+            rows = [r for r in _rows(d.root / spec.file) if r[spec.subject] == ev["subject"]]
+            emitted = {e.code.format(**r) for r in rows for e in spec.events}
+            assert ev["code"] in emitted
+            if lab.value:
+                col = next(e.value for e in spec.events if e.pattern().match(ev["code"]))
+                assert any(float(r[col]) == ev["value"] for r in rows)
+                hit = {">=": ev["value"] >= lab.x, "<": ev["value"] < lab.x}[lab.op]
+                assert hit == (ev["subject"] in p["positive"])
+            if lab.from_ != "any":  # a canary: after the anchor
+                assert ev["time"] > d.planted["subjects"][ev["subject"]]["anchor"]
+        if lab.exists:
+            assert sorted(ev["subject"] for ev in p["events"]) == sorted(p["positive"])
+
+
+def test_reserved_ids_are_64_bit(made):
+    """R-74: reserved ids exceed int32 (and uint32); pandas reads them back unchanged."""
+    import pandas as pd
+
+    d = made["dummy-mimic"]
+    df = pd.read_csv(d.root / "hosp/patients.csv")
+    assert str(df["subject_id"].dtype) == "int64"
+    assert sorted(df["subject_id"]) == sorted(d.subjects) and min(d.subjects) > 2 ** 32
+
+
+def test_a_new_table_needs_no_generator_change(tmp_path):
+    pkg = tmp_path / "dummy-new"
+    shutil.copytree(DATASETS / "dummy-mimic", pkg)
+    cfg = yaml.safe_load((pkg / "dataset.yaml").read_text())
+    cfg["read"][0]["options"]["tables"]["microbiologyevents"] = {
+        "file": "hosp/microbiologyevents.csv", "subject": "subject_id", "subject_type": "int", "time": "charttime",
+        "events": [{"code": "MICRO//{org_name}"}]}
+    (pkg / "dataset.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False))
+    with open(pkg / "codes.csv", "a", encoding="utf-8") as f:
+        f.write("MICRO//ecoli,Escherichia coli,microbiologyevents\n")
+    d = make_dataset(pkg, tmp_path / "out")
+    rows = _rows(d.root / "hosp/microbiologyevents.csv")
+    assert rows and {r["org_name"] for r in rows} == {"ecoli"}
+
+
+def test_a_label_that_cannot_be_planted_is_refused(tmp_path):
+    pkg = tmp_path / "dummy-bad"
+    shutil.copytree(DATASETS / "dummy-mimic", pkg)
+    (pkg / "labels.yaml").write_text('sepsis: {exists: "^DIAGNOSIS//ICD//A41", from: anchor, to: anchor + 2 days}\n')
+    with pytest.raises(DummyError, match="sepsis"):
+        make_dataset(pkg, tmp_path / "out")

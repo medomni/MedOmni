@@ -1,0 +1,4 @@
+code,description,source_table
+SLEEP_STUDY,Overnight polysomnography,psg_metadata
+AGE,Age at the study,psg_metadata
+AHI,Apnea-hypopnea index from the scored study,psg_metadata

@@ -1,0 +1,11 @@
+hba1c_high:
+  value: MEASUREMENT//hba1c
+  pick: last
+  op: ">="
+  x: 6.5
+  from: anchor
+  to: anchor + 2 days
+retinopathy:
+  exists: "^CONDITION//H35"
+  from: anchor
+  to: anchor + 30 days

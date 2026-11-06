@@ -26,7 +26,7 @@ The description states the unit (a patient, a participant, a surgery case), the 
 Loading turns your copy into the dataset's event table. It has two parts:
 
 - **Format readers**: shared code in Core, one per file format. A format reader knows a format and no dataset: it turns a CSV table, an OMOP table, a folder of files or a recording header into event rows.
-- **The dataset package**: configuration for one dataset. It names the format readers to use and what each reads: which files and columns, which column is the time, which code each row gets.
+- **The dataset package**: configuration for one dataset. It names the format readers to use and what each reads: which files and columns, which column is the time, which code each row gets. Its visit rules say how events group into visits, such as one visit per participant.
 
 The loader in Core runs the package through the format readers. v0.2 did both parts in one Python adapter per dataset. v0.3.0 has format readers for:
 

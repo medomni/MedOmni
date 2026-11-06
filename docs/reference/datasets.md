@@ -49,9 +49,71 @@ Each cohort draws from its dataset's source population: the patients for whom `s
 | `units` | yes | The table and column that list every subject. |
 | `source` | yes | The source population: `salt` and the default `fraction`, or `all`. |
 | `verify` | no | What to check before reading: files listed in manifests, one file per unit, the dataset's own checksums. |
-| `read` | yes | A list of format readers, each with what it reads: tables and columns, the code to emit, folder patterns per family. |
-| `rules` | no | Timing and visit rules, such as one visit per participant or times in seconds from case start. |
+| `read` | yes | A list of format readers, each with what it reads. See [Format readers](#format-readers). |
+| `rules` | no | Visit and timing rules. See [Visit rules](#visit-rules). |
 | `conditions` | no | Named conditions that recipes use. See [Recipes](recipes.md#cohort-file). |
+
+## Format readers
+
+Each entry in `read` names a reader and its `options`:
+
+```yaml
+read:
+- reader: csv
+  options:
+    tables:
+      admissions:
+        file: hosp/admissions.csv
+        subject: subject_id
+        subject_type: int
+        time: admittime
+        visit: hadm_id
+        events:
+        - code: ADMISSION
+        - {code: DISCHARGE, time: dischtime}
+      labevents:
+        file: hosp/labevents.csv
+        subject: subject_id
+        time: charttime
+        events:
+        - {code: "LAB//{itemid}", value: valuenum}
+- reader: tree
+  options:
+    files:
+      cxr-radiograph-2d: {pattern: "cxr/{subject}/{record}.png"}
+      psg-night: {pattern: "psg/{subject}/{record}.h5", format: h5, families: [eeg-sleep-6ch-200hz-uv]}
+```
+
+`csv` reads tables. Per table:
+
+| Field | Required | Meaning |
+|---|---|---|
+| `file` | yes | The file, relative to your copy. |
+| `subject` | yes | The subject column. |
+| `subject_type` | no | `str` (default) or `int`. |
+| `time` | no | The time column. |
+| `time_from` | no | For rows with no time of their own: `{table, key, column}`, the time of the other table's row with the same key. Not with `time`. |
+| `visit` | no | The visit column. |
+| `events` | yes | The codes each row emits, each with `code`, and optionally `value` (a numeric column), `text` (a text column) and `time` (another time column). `{column}` in a code is filled from that column, as in `LAB//{itemid}`. |
+
+A table with neither `time` nor `time_from` holds static facts.
+
+`tree` finds files by folder pattern. Per entry:
+
+| Field | Required | Meaning |
+|---|---|---|
+| `pattern` | yes | The path, relative to your copy, with `{subject}` and `{record}`. |
+| `format` | no | `family` (default): the files are in the family the entry is named by. `h5`: one raw night per file, which a family converter turns into several families. |
+| `families` | for `h5` | The families an `h5` file carries. |
+| `per_subject` | no | Files per subject (default 1). |
+
+## Visit rules
+
+| Rule | Meaning |
+|---|---|
+| `visit: unit` | The subject is the visit: one case, one visit. |
+| `one_visit: <code>` | Each subject has exactly one `<code>` event, and every event belongs to its visit. |
+| `untimed: true` | An event with no time takes the time of the subject's `one_visit` event, for cross-sectional data. Needs `one_visit`. |
 
 ## Policy file
 

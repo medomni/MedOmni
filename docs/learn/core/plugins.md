@@ -75,6 +75,8 @@ It reads every installed piece, checks it, and lists each package with what it a
 
 `medomni.core.testing` runs the same checks as MedOmni's CI. A plug-in package runs them in its own CI, so it passes the same checks as a pull request.
 
+A plug-in's CI checks out MedOmni and installs it in editable mode (`uv pip install -e .`). MedOmni reads its built-in content (families, Bench and Perception content) only from a clone; outside one, it reads only plug-in folders.
+
 ## Where it lives
 
 - `src/medomni/core/plugins/`: finding content folders and entry points

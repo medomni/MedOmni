@@ -24,7 +24,7 @@ A cohort file has five parts, run in this order:
 
 1. **Source population:** the patients a cohort may draw from.
 2. **Prediction time:** an anchor event, such as an admission, plus an optional offset. Nothing after it is evidence.
-3. **Requirements:** events or files each patient must, or must not, have in a window.
+3. **Requirements:** events or files each patient must, or must not, have in a window, or a number of files that must convert.
 4. **Labels:** the targets' answers. A patient with no answer is left out.
 5. **Draw:** how many patients per class, and the seed.
 
@@ -38,7 +38,7 @@ A patient is in the source population when `sha256(salt|patient id)`, read as a 
 
 ### Draw
 
-- n is split evenly across the classes of the `by` label. Any remainder goes to the first classes.
+- n is split evenly across the classes of the `by` label. Any remainder goes to the first classes. With no `by`, as for a continuous target, the first n by rank are taken.
 - Within each class, patients are ranked by `sha256(seed|patient id|prediction time)` and the first k are taken.
 - A class with too few patients stops the build. Other classes do not make up the shortfall.
 
@@ -50,9 +50,9 @@ Because the draw ranks by hash:
 
 ## Labels
 
-Each entry in `labels.yaml` is one rule: a code, a window relative to the prediction time, and how the value is read (present or not, last value, highest value, a threshold, bins). A label that cannot be written as a rule calls a hook in the dataset package, such as CKD staging by KDIGO.
+Each entry in `labels.yaml` is one rule: a code, a window relative to the prediction time, and how the value is read (present, absent, last value, highest value, a threshold, bins). A label can count only events in the anchor's visit, or only events in other visits, such as for a readmission. A label that cannot be written as a rule calls a hook in the dataset package, such as CKD staging by KDIGO.
 
-Each label also states its **guard**: the codes and fields that would reveal its answer. Build removes them from the evidence.
+Each label also states its **guard**: the codes and fields that would reveal its answer. Build removes them from the evidence, matching rows by the event code they emit.
 
 Every label states its window. A label read from any time, before or after the prediction time, is allowed and is flagged by Build's check.
 

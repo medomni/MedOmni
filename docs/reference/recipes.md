@@ -24,7 +24,7 @@ Windows are written relative to the prediction time or an event:
 | `source` | yes | The source population: `all`, or `{fraction: f}` for the hash rule with the dataset's salt. Omitting `fraction` uses the dataset's default. |
 | `anchor` | yes | The prediction time: `event` (a code), `pick` (`first` or `last`; default `first`), `plus` (an offset). |
 | `require` | no | A list of requirements, all of which must hold. |
-| `draw` | yes | `n` (patients in all), `by` (target names that define the classes), `seed`. |
+| `draw` | yes | `n` (patients in all), `by` (target names that define the classes; empty for a continuous target), `seed` (a number or text). |
 
 A requirement is one of:
 
@@ -35,6 +35,7 @@ A requirement is one of:
 | `files: [families]` | the patient has a file in each family in the window |
 | `has_label: <target>` | the target's label has a value |
 | `condition: <name>` | the dataset's named condition holds |
+| `converts: {min_families: n}` | at least n of the patient's files convert and match their family; checked before the draw, so the pool does not depend on the seed |
 
 `any`, `none` and `files` take `from`, `to` and `same_visit: true` (only events in the anchor's visit count). Codes may be patterns: `^DIAGNOSIS//ICD//(N17|584)`.
 
@@ -47,6 +48,7 @@ Test patients: `cohorts/<cohort>.tests.yaml`, a list of patients, each with `eve
 | Field | Meaning |
 |---|---|
 | `exists` | 1 when a matching code occurs in the window, else 0. |
+| `none` | 1 when no matching code occurs in the window, else 0. |
 | `value` | The code whose value is read. |
 | `pick` | Which value: `first`, `last` (default), `min`, `max`. |
 | `op`, `x` | Compare the value with `x` (`<`, `<=`, `==`, `>=`, `>`), giving 1 or 0. |
@@ -54,8 +56,11 @@ Test patients: `cohorts/<cohort>.tests.yaml`, a list of patients, each with `eve
 | `cases`, `else` | Ordered `when` (a rule) and `then` (the result); the first that holds wins. |
 | `default` | The result when no event is found. Without it, the patient has no label. |
 | `from`, `to` | The window, as above. Required; `any` marks a label read from any time, which Build flags. |
+| `same_visit`, `other_visit` | Count only events in the anchor's visit, or only events in other visits, such as for a readmission. They exclude each other. |
 | `hook` | A Python function in the package's `hooks/`, for a label no rule can express. |
 | `guard` | What would reveal the answer: `codes` (patterns) and `fields` (table columns). Removed from the evidence. |
+
+Each label has exactly one rule: `exists`, `none`, `value`, `cases` or `hook`.
 
 Named conditions are in the package's `dataset.yaml`, under `conditions`, each a requirement as above.
 
@@ -71,12 +76,12 @@ Per table:
 | `time_from` | Time the row by a linked row instead: `{table, key, column}`. `missing_time: drop` drops rows with no linked time. |
 | `visit` | The visit column. `skip_index_visit: true` drops rows of the anchor's visit. |
 | `end`, `blank_after_end` | When the row's `end` is after the prediction time, blank these fields. `missing_end` says whether an empty end counts as `after` or `before`. |
-| `blank_in_index_visit` | Fields blanked on the anchor's visit, at any time. |
-| `drop` | Drop rows whose codes match the guard: `columns` (names, or `*suffix`), and optional `split` and `strip` to clean the value first. |
+| `blank_in_index_visit` | Fields blanked on the anchor's visit, at any time. `guard.fields` names the guard fields of the template's labels. |
+| `drop` | `guard`: drop rows whose emitted code matches a guard code of the template's labels. |
 | `keep_if_kept` | Keep a row only when its key is in another table's kept rows: `{table, key}`. |
 | `write_empty` | Write the table, header only, when the patient has no rows. |
 
-`static`: the patient's static facts, with `blank` naming guard fields and `aliases` their column names. `files`: files are kept when their time is at or before the prediction time; an untimed file is kept.
+`static`: the patient's static facts. `blank` names the fields to blank, or `guard.fields`; `aliases` maps a static field to the column, or columns, that hold it. `files`: files are kept when their time is at or before the prediction time; an untimed file is kept.
 
 ## Template fields that use the recipe
 

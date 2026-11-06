@@ -38,6 +38,7 @@ Some datasets store recordings in a format no family accepts, such as BDSP's HDF
 
 - Each recording is converted once and kept in the [cache](cache.md), under a key that covers the source file, the family, its declaration and aliases, and the converter's version. A change to any of them converts again.
 - Converters are shared code in Core, so any dataset with the same raw format uses the same one.
+- A converter is deterministic: the same input gives the same bytes. It writes no wall-clock time into a file header, so one cache key never has two content hashes.
 
 ## Where it lives
 

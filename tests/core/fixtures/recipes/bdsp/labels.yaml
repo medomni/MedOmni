@@ -1,0 +1,67 @@
+# Ported from S1's p17_labels.yaml by internal_docs/roadmaps/v0.3.0/roadmaps/s2/probes/p11_port_recipes.py. Do not edit.
+bdspdemo:age-ge65:
+  default: 0
+  from: any
+  op: '>='
+  to: any
+  value: DEMO//AGE
+  x: 65
+bdspdemo:deceased-6mo:
+  exists: DEATH
+  from: visit:RECORDING//START
+  include_to: false
+  to: visit:RECORDING//START + 184 days
+bdspdemo:race-black:
+  exists: DEMO//RACE//black
+  from: any
+  to: any
+bdspdemo:sex-female:
+  exists: ^DEMO//SEX//f
+  from: any
+  to: any
+derived:depression:
+  exists: ^DIAGNOSIS//ICD//(F32|F33|2962|2963|3004|311)
+  from: any
+  to: any
+derived:heart-failure:
+  exists: ^DIAGNOSIS//ICD//(I50|428)
+  from: any
+  to: any
+psgclass:ahi-severity:
+  bins:
+  - 5
+  - 15
+  - 30
+  from: any
+  to: any
+  value: SLEEP//AHI
+psgmetric:arousal-high:
+  from: any
+  op: '>='
+  to: any
+  value: SLEEP//AROUSAL_INDEX
+  x: 15
+psgmetric:eff-low:
+  from: any
+  op: <
+  to: any
+  value: SLEEP//EFFICIENCY
+  x: 0.8
+psgmetric:limb-high:
+  from: any
+  op: '>='
+  to: any
+  value: SLEEP//LIMB_INDEX
+  x: 15
+psgmetric:n3-low:
+  from: any
+  op: <
+  to: any
+  value: SLEEP//N3_FRACTION
+  x: 0.1
+psgmetric:rem-low:
+  from: any
+  op: <
+  to: any
+  value: SLEEP//REM_FRACTION
+  x: 0.15

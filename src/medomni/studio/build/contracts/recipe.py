@@ -53,11 +53,23 @@ class HasLabel(Contract):
     has_label: NonEmpty
 
 
+class ConvertsRule(Contract):
+    min_families: int = Field(ge=1)
+
+
+class Converts(Contract):
+    """At least `min_families` of the patient's files convert and match their family (S1's BDSP recipes). Checked
+    before the draw, so the pool does not depend on the seed (Build page, file check)."""
+
+    converts: ConvertsRule
+    when: Literal["draw"] = "draw"
+
+
 class Condition(Contract):
     condition: NonEmpty
 
 
-Requirement = Any_ | None_ | Files | HasLabel | Condition
+Requirement = Any_ | None_ | Files | HasLabel | Condition | Converts
 
 
 class SourceFraction(Contract):
@@ -72,8 +84,8 @@ class Anchor(Contract):
 
 class Draw(Contract):
     n: int = Field(ge=1)
-    by: tuple[NonEmpty, ...] = Field(min_length=1)
-    seed: int
+    by: tuple[NonEmpty, ...] = ()  # target names that define the classes; empty for a continuous target
+    seed: int | NonEmpty  # hashed into the rank (R-36), so text works as well as a number
 
 
 class Cohort(Contract):
@@ -116,6 +128,7 @@ class Label(Window):
     """One entry of `labels.yaml`. `from` and `to` are required; `any` marks a label read from any time."""
 
     exists: NonEmpty | None = None
+    none: NonEmpty | None = None  # 1 when no matching code occurs in the window, else 0
     value: NonEmpty | None = None
     pick: Literal["first", "last", "min", "max"] = "last"
     op: Literal["<", "<=", "==", ">=", ">"] | None = None
@@ -125,15 +138,19 @@ class Label(Window):
     else_: int | float | str | None = Field(default=None, alias="else")
     default: int | float | str | None = None
     hook: NonEmpty | None = None
+    same_visit: bool = False  # only events in the anchor's visit count
+    other_visit: bool = False  # only events in another visit count (readmission)
     guard: Guard = Guard()
 
     @model_validator(mode="after")
     def _one_rule(self):
         if self.from_ is None or self.to is None:
             raise ValueError("a label needs both from and to ('any' for a label read from any time)")
-        kinds = [k for k in ("exists", "value", "cases", "hook") if getattr(self, k) is not None]
+        kinds = [k for k in ("exists", "none", "value", "cases", "hook") if getattr(self, k) is not None]
         if len(kinds) != 1:
-            raise ValueError(f"a label has exactly one of exists, value, cases, hook (found {kinds or 'none'})")
+            raise ValueError(f"a label has exactly one of exists, none, value, cases, hook (found {kinds or 'no rule'})")
+        if self.same_visit and self.other_visit:
+            raise ValueError("same_visit and other_visit exclude each other")
         if (self.op is None) != (self.x is None):
             raise ValueError("op and x go together")
         if self.value is None and (self.op or self.bins):
@@ -159,10 +176,8 @@ class TimeFrom(Contract):
     column: NonEmpty
 
 
-class Drop(Contract):
-    columns: tuple[NonEmpty, ...] = Field(min_length=1)
-    split: str | None = None
-    strip: str | None = None
+# A guard reference: the fields of the guards of the template's labels (R-47)
+GuardFields = Literal["guard.fields"]
 
 
 class KeepIfKept(Contract):
@@ -179,15 +194,15 @@ class TableRule(Contract):
     end: str | None = None
     blank_after_end: tuple[NonEmpty, ...] = ()
     missing_end: Literal["after", "before"] = "after"
-    blank_in_index_visit: tuple[NonEmpty, ...] = ()
-    drop: Drop | None = None
+    blank_in_index_visit: tuple[NonEmpty, ...] | GuardFields = ()
+    drop: Literal["guard"] | None = None  # drop rows whose emitted code matches a guard code of the template's labels
     keep_if_kept: KeepIfKept | None = None
     write_empty: bool = False
 
 
 class Static(Contract):
-    blank: tuple[NonEmpty, ...] = ()
-    aliases: dict[str, str] = {}
+    blank: tuple[NonEmpty, ...] | GuardFields = ()
+    aliases: dict[str, NonEmpty | tuple[NonEmpty, ...]] = {}  # a static field and the column (or columns) holding it
 
 
 class EvidenceRules(Contract):

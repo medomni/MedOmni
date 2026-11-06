@@ -109,6 +109,19 @@
           "default": null,
           "title": "Exists"
         },
+        "none": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "None"
+        },
         "value": {
           "anyOf": [
             {
@@ -242,6 +255,16 @@
           ],
           "default": null,
           "title": "Hook"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        },
+        "other_visit": {
+          "default": false,
+          "title": "Other Visit",
+          "type": "boolean"
         },
         "guard": {
           "$ref": "#/$defs/Guard",

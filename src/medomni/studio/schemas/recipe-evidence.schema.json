@@ -3,49 +3,6 @@
   "$id": "recipe-evidence.schema.json",
   "x-contract": "recipe",
   "$defs": {
-    "Drop": {
-      "additionalProperties": false,
-      "properties": {
-        "columns": {
-          "items": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "minItems": 1,
-          "title": "Columns",
-          "type": "array"
-        },
-        "split": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Split"
-        },
-        "strip": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Strip"
-        }
-      },
-      "required": [
-        "columns"
-      ],
-      "title": "Drop",
-      "type": "object"
-    },
     "KeepIfKept": {
       "additionalProperties": false,
       "properties": {
@@ -71,17 +28,37 @@
       "additionalProperties": false,
       "properties": {
         "blank": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "const": "guard.fields",
+              "type": "string"
+            }
+          ],
           "default": [],
-          "items": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "title": "Blank",
-          "type": "array"
+          "title": "Blank"
         },
         "aliases": {
           "additionalProperties": {
-            "type": "string"
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
           },
           "default": {},
           "title": "Aliases",
@@ -174,24 +151,34 @@
           "type": "string"
         },
         "blank_in_index_visit": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "const": "guard.fields",
+              "type": "string"
+            }
+          ],
           "default": [],
-          "items": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "title": "Blank In Index Visit",
-          "type": "array"
+          "title": "Blank In Index Visit"
         },
         "drop": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Drop"
+              "const": "guard",
+              "type": "string"
             },
             {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Drop"
         },
         "keep_if_kept": {
           "anyOf": [

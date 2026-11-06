@@ -76,6 +76,41 @@
       "title": "Condition",
       "type": "object"
     },
+    "Converts": {
+      "additionalProperties": false,
+      "description": "At least `min_families` of the patient's files convert and match their family (S1's BDSP recipes). Checked\nbefore the draw, so the pool does not depend on the seed (Build page, file check).",
+      "properties": {
+        "converts": {
+          "$ref": "#/$defs/ConvertsRule"
+        },
+        "when": {
+          "const": "draw",
+          "default": "draw",
+          "title": "When",
+          "type": "string"
+        }
+      },
+      "required": [
+        "converts"
+      ],
+      "title": "Converts",
+      "type": "object"
+    },
+    "ConvertsRule": {
+      "additionalProperties": false,
+      "properties": {
+        "min_families": {
+          "minimum": 1,
+          "title": "Min Families",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "min_families"
+      ],
+      "title": "ConvertsRule",
+      "type": "object"
+    },
     "Description": {
       "additionalProperties": false,
       "properties": {
@@ -362,6 +397,9 @@
           },
           {
             "$ref": "#/$defs/Condition"
+          },
+          {
+            "$ref": "#/$defs/Converts"
           }
         ]
       },

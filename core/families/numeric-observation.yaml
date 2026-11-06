@@ -1,0 +1,11 @@
+id: numeric-observation
+read_by: direct
+protocol:
+  format: [table, omh]
+  units: per-member
+  ndim: 2
+  dtype: float64
+  range: null
+  timing: timeseries
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 91e8e7a64163c1cb488b28c479a2d1ec88296b74, dir: families/numeric-observation/}

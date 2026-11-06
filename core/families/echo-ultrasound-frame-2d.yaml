@@ -1,0 +1,13 @@
+id: echo-ultrasound-frame-2d
+read_by: deep-encoder
+protocol:
+  format: [dicom, image]
+  ndim: 2
+  dtype: uint8
+  range: null
+  planes: 3
+status: deprecated
+samples: null
+retired: {since: '2026-09-24', by: Bosong Huang, reason: 'no dataset we hold carries this family — out of scope for this benchmark
+    (not a gap, not UNVERIFIED); returns if a dataset that carries it is added. Existing sample pins are kept.', ref: 'docs/roadmaps/fix/task-contract.md
+    (supply.yaml `retired:`), docs/roadmaps/pending/family-conformance-l3.md §6'}

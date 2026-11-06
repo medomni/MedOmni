@@ -1,0 +1,15 @@
+id: eeg-scalp-1020-19ch-200hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2, F7, F8, T3, T4, T5, T6, Fz, Cz, Pz]
+  rate_hz: 200
+  units: uV
+  ndim: 2
+  dtype: int16
+  range: null
+status: deprecated
+samples: {hf_repo: MedOmni/family-samples, revision: 7457fad04a5826e0ce7641562b36d257ae33b105, dir: families/eeg-scalp-1020-19ch-200hz-uv/}
+retired: {since: '2026-09-24', by: Bosong Huang, reason: 'no dataset we hold carries this family — out of scope for this benchmark
+    (not a gap, not UNVERIFIED); returns if a dataset that carries it is added. Existing sample pins are kept.', ref: 'docs/roadmaps/fix/task-contract.md
+    (supply.yaml `retired:`), docs/roadmaps/pending/family-conformance-l3.md §6'}

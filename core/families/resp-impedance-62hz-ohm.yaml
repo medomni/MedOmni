@@ -1,0 +1,12 @@
+id: resp-impedance-62hz-ohm
+read_by: deep-encoder
+protocol:
+  format: [wfdb]
+  channels: [Resp]
+  rate_hz: 62.4725
+  units: Ohm
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: d983230ca3cf337772229f374c591e1db7995e0c, dir: families/resp-impedance-62hz-ohm/}

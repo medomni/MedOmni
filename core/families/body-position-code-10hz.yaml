@@ -1,0 +1,13 @@
+id: body-position-code-10hz
+read_by: rule-extractor
+protocol:
+  format: [edf]
+  channels: [position]
+  rate_hz: 10
+  units: null
+  ndim: 1
+  dtype: int16
+  range: null
+  categorical: true
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 6a384311c8e3958d7563f3df8a12ad6fae7e7aa7, dir: families/body-position-code-10hz/}

@@ -1,0 +1,14 @@
+id: echo-study-dicom-video
+read_by: deep-encoder
+protocol:
+  format: [json-manifest, dicom]
+  units: pixel-intensity
+  ndim: 4
+  dtype: uint8
+  range: null
+  scope: study
+status: deprecated
+samples: null
+retired: {since: '2026-09-24', by: Bosong Huang, reason: 'no dataset we hold carries this family — out of scope for this benchmark
+    (not a gap, not UNVERIFIED); returns if a dataset that carries it is added. Existing sample pins are kept.', ref: 'docs/roadmaps/fix/task-contract.md
+    (supply.yaml `retired:`), docs/roadmaps/pending/family-conformance-l3.md §6'}

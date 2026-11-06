@@ -1,0 +1,10 @@
+id: cxr-radiograph-2d
+read_by: deep-encoder
+protocol:
+  format: [image]
+  ndim: 2
+  dtype: uint8
+  range: null
+  planes: 1
+status: supplied
+samples: null

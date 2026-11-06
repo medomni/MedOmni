@@ -1,0 +1,12 @@
+id: capnography-mmhg
+read_by: deep-encoder
+protocol:
+  format: [edf, wfdb]
+  roles: [etco2-waveform, etco2-scalar, transcutaneous]
+  rate_hz: null
+  units: mmHg
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: null

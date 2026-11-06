@@ -1,0 +1,12 @@
+id: spo2-series-10hz-pct
+read_by: rule-extractor
+protocol:
+  format: [edf]
+  channels: [spo2]
+  rate_hz: 10
+  units: '%'
+  ndim: 1
+  dtype: int16
+  range: [0.0, 100.0]
+status: supplied
+samples: {hf_repo: MedOmni/family-samples, revision: 6eceada3ce7a1265ea81f2d426f7acafed5efb80, dir: families/spo2-series-10hz-pct/}

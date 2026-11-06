@@ -1,0 +1,11 @@
+id: oct-bscanset-radial24-circle3-mono8
+read_by: deep-encoder
+protocol:
+  format: [dicom]
+  ndim: 3
+  dtype: uint8
+  range: null
+  planes: 1
+  axis3: 24 辐射线 + 3 同心圆，不可堆叠
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 5b08a56bd2ef1f4839ae75f87ed7d3d8fe15b71d, dir: families/oct-bscanset-radial24-circle3-mono8/}

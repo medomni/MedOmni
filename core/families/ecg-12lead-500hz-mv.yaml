@@ -1,0 +1,12 @@
+id: ecg-12lead-500hz-mv
+read_by: deep-encoder
+protocol:
+  format: [wfdb]
+  channels: [I, II, III, aVR, aVF, aVL, V1, V2, V3, V4, V5, V6]
+  rate_hz: 500
+  units: mV
+  ndim: 2
+  dtype: int16
+  range: null
+status: supplied
+samples: null

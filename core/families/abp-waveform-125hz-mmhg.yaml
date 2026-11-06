@@ -1,0 +1,12 @@
+id: abp-waveform-125hz-mmhg
+read_by: deep-encoder
+protocol:
+  format: [wfdb]
+  roles: [ABP, ART, Ao, FAP, UAP]
+  rate_hz: 124.945
+  units: mmHg
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 0c8e1c64ff5a8ea286d4155622134e19103cae3c, dir: families/abp-waveform-125hz-mmhg/}

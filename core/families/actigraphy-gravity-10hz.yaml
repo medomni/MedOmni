@@ -1,0 +1,15 @@
+id: actigraphy-gravity-10hz
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  roles: [gravity-x, gravity-y, activity, elevation]
+  rate_hz: 10
+  units: mixed
+  ndim: 2
+  dtype: int16
+  range: null
+status: deprecated
+samples: null
+retired: {since: '2026-09-24', by: Bosong Huang, reason: 'no dataset we hold carries this family — out of scope for this benchmark
+    (not a gap, not UNVERIFIED); returns if a dataset that carries it is added. Existing sample pins are kept.', ref: 'docs/roadmaps/fix/task-contract.md
+    (supply.yaml `retired:`), docs/roadmaps/pending/family-conformance-l3.md §6'}

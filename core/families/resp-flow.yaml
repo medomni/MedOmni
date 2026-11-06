@@ -1,0 +1,12 @@
+id: resp-flow
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  roles: [nasal-pressure, derived-flow, thermistor]
+  rate_hz: null
+  units: per-transducer
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 16ffcea165fa30f6796d9b9f1dabfeb8407e6127, dir: families/resp-flow/}

@@ -1,0 +1,12 @@
+id: wearable-spo2-1min-pct
+read_by: rule-extractor
+protocol:
+  format: [omh]
+  channels: [spo2]
+  rate_hz: 0.0167
+  units: '%'
+  ndim: 1
+  dtype: float64
+  range: [0.0, 100.0]
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 71ef7539a66a20025f77de935940dbdfa49bb73d, dir: families/wearable-spo2-1min-pct/}

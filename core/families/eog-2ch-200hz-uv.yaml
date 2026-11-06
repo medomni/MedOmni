@@ -1,0 +1,12 @@
+id: eog-2ch-200hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [e1-m2, e2-m1]
+  rate_hz: 200
+  units: uV
+  ndim: 2
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: a785cdd83696cbc88b1365596eca44e0c2dcc5cb, dir: families/eog-2ch-200hz-uv/}

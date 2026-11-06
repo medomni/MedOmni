@@ -1,0 +1,12 @@
+id: emg-limb-200hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  roles: [leg-left, leg-right, arm-left, arm-right]
+  rate_hz: 200
+  units: uV
+  ndim: 2
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 44576464d4647cc2cc1347103ca0b09746c26d9f, dir: families/emg-limb-200hz-uv/}

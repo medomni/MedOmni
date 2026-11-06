@@ -1,0 +1,15 @@
+id: pressure-nonarterial-125hz-mmhg
+read_by: deep-encoder
+protocol:
+  format: [wfdb]
+  roles: [CVP, PAP, ICP]
+  rate_hz: 124.945
+  units: mmHg
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 123d9ca78103450717a58402d3ab4aadf2428a2e, dir: families/pressure-nonarterial-125hz-mmhg/}
+pending: {since: '2026-09-23', by: Bosong Huang, question: sample re-cut parked — published samples 01 (CVP ~398 mmHg) and
+    04 (CVP ~246 mmHg) are transducer artifacts and no ICP sample exists; re-cut with a plausibility screen only at test time
+    (encoder rule-summary already flags both as implausible), ref: perception/encoders/pressure-nonarterial-125hz-mmhg/rule-summary/testdata/VALIDATION.md}

@@ -1,0 +1,60 @@
+# Supply-label equivalences: how wild supply maps onto each family's protocol. Source -> canonical only: a map may
+# never target a label the family's protocol does not declare, and a label no accepted map resolves fails.
+# `vocab` holds named blocks; `families.<id>.accepts` lists vocab names and inline blocks, in order.
+# Prefixes are literal supply-label prefixes, trailing space included ("eeg " matches "EEG F3-M2", not "EEGC3"),
+# stripped from the lowercased label before it is normalised.
+# The order and spelling of each `accepts` list are part of the bridge's cache key: do not reorder or respell them.
+# Schema: medomni.core.contracts.AliasFile. Resolver: medomni.core.families.aliases.
+
+vocab:
+  aasm-mastoid-migration:      # pre-AASM EDFs label mastoid references A1/A2 (modern M1/M2)
+    channels: {a1: m1, a2: m2}  # targets canonical montage components
+  ecg-label-variants:
+    channels: {ekg: ecg, ecg i: ecg}
+  ppg-label-variants:
+    channels: {plethysmogram: pleth, ppg: pleth, pwave: pleth}  # pwave = BDSP h5 key, cardiac rhythm 0.9-1.25 Hz @100 Hz (task-contract.md §12)
+
+families:
+  eeg-sleep-6ch-200hz-uv:
+    accepts:
+    - aasm-mastoid-migration
+    - prefixes: ["eeg "]        # EDFs prefix montage labels: "EEG F3-M2"
+  ecg-1lead-200hz-uv:
+    accepts: [ecg-label-variants]
+  psg-cardiorespiratory-4ch-200hz-mixed:
+    accepts:
+    - ecg-label-variants
+    - ppg-label-variants
+    - channels: {abdomen: abd, abdominal: abd, thorax: thx, chest: thx}
+    - rates: [50, 100]      # native BDSP belt (50 Hz) and pleth (100 Hz) rates; 200 stays canonical
+  eog-2ch-200hz-uv:
+    accepts:
+    - channels: {e1: e1-m2, e2: e2-m1}
+  ppg-waveform-uncal:
+    accepts: [ppg-label-variants]
+  pulse-rate-10hz-bpm:
+    accepts:
+    - channels: {pulserate-cntxt: pulse, hr: pulse}  # hr = BDSP h5 key, 10 Hz bpm; ASSUMED oximeter-derived (no BDSP channel docs locally)
+  emg-limb-200hz-uv:
+    accepts:
+    - roles: {right-leg: leg-right, left-leg: leg-left, right-arm: arm-right, left-arm: arm-left,
+              leg-1: leg-left, leg-2: leg-right,  # numbered legs map positionally (recorded assumption)
+              lat: leg-left, rat: leg-right, "arm left": arm-left, "arm right": arm-right}  # BDSP h5 keys, all EMG 200 Hz µV (§12, 12 nights each)
+  resp-effort-rip-2ch-50hz:
+    accepts:
+    - channels: {effort-tho: thorax, effort-abd: abdomen, chest: thorax, abd: abdomen}  # BDSP h5 keys; NO 100 Hz rate — the 5 nights with 100 Hz belts skip this family (ruled 2026-09-24)
+  resp-flow:
+    accepts:
+    - roles: {cflow: derived-flow, flow-patient: derived-flow, airflow: thermistor, ptaf: nasal-pressure}  # BDSP h5 keys (ruled 2026-09-24): airflow → thermistor is a PSG naming-convention ASSUMPTION like hr (no BDSP docs locally); measured on 12 served nights: airflow breathes 12/12, ptaf breathes when a cannula was worn, cflow = CPAP flow, near-flat on diagnostic nights
+  abp-waveform-125hz-mmhg:
+    accepts:
+    - rates: [62.4725]        # MIMIC wdb quarter-rate frame variant
+  ecg-monitor-3to5lead-250hz-continuous:
+    accepts:
+    - rates: [62.4725]
+  fundus-photography-2d:
+    accepts:
+    - colors: [YBR_FULL, YBR_FULL_422, YBR]
+  fundus-faf-mono8-2d:
+    accepts:
+    - colors: [YBR_FULL_422]  # FAF supply arrives as color DICOM; reader converts to mono8

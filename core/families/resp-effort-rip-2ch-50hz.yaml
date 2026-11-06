@@ -1,0 +1,12 @@
+id: resp-effort-rip-2ch-50hz
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [thorax, abdomen]
+  rate_hz: 50
+  units: null
+  ndim: 2
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 621c4fc981dd2d2fc094099cc8fe0f3979d71c93, dir: families/resp-effort-rip-2ch-50hz/}

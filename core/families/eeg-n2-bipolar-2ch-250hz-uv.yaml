@@ -1,0 +1,16 @@
+id: eeg-n2-bipolar-2ch-250hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [f4-c4, c4-o2]
+  rate_hz: 250
+  units: uV
+  ndim: 2
+  dtype: int16
+  range: null
+  stage: N2
+status: deprecated
+samples: {hf_repo: MedOmni/family-samples, revision: 1c55118a99758b016dbc5708d1e52b10bdc6ab69, dir: families/eeg-n2-bipolar-2ch-250hz-uv/}
+retired: {since: '2026-09-24', by: Bosong Huang, reason: 'no dataset we hold carries this family — out of scope for this benchmark
+    (not a gap, not UNVERIFIED); returns if a dataset that carries it is added. Existing sample pins are kept.', ref: 'docs/roadmaps/fix/task-contract.md
+    (supply.yaml `retired:`), docs/roadmaps/pending/family-conformance-l3.md §6'}

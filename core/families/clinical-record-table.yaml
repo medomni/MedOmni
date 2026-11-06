@@ -1,0 +1,11 @@
+id: clinical-record-table
+read_by: direct
+protocol:
+  format: [table]
+  units: per-member
+  ndim: 2
+  dtype: mixed
+  range: null
+  timing: static-or-event
+status: declared
+samples: null

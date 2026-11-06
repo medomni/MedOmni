@@ -1,0 +1,16 @@
+id: ecg-monitor-3to5lead-250hz-continuous
+read_by: deep-encoder
+protocol:
+  format: [wfdb]
+  roles: [i, ii, iii, v, avr, avl, avf, mcl]
+  rate_hz: 249.89
+  units: mV
+  ndim: 2
+  dtype: int16
+  range: null
+  duration: hours-with-gaps
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: a60f3292fe04c034a8ac1b93ee3003f2ffe87ca0, dir: families/ecg-monitor-3to5lead-250hz-continuous/}
+pending: {since: '2026-09-20', by: Bosong Huang, question: 'lead-count — ~9% of cataloged wdb records fall outside the declared
+    3-5 leads (109 one-lead, 82 two-lead, 31 seven-lead); options = adapter-level enforcement / widen declaration / M2 query
+    filter', ref: docs/roadmaps/data_task-manifests.md (family incorporation ladder)}

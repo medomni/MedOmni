@@ -69,3 +69,24 @@ def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
         outputs[f"{DEST}/{data['id']}.yaml"] = data
         notes[data["id"]] = note
     return outputs, notes
+
+
+ALIAS_SOURCE = "data_task/family_alias.yaml"
+ALIAS_DEST = f"{DEST}/aliases.yaml"
+ALIAS_HEADER = """\
+# Supply-label equivalences: how wild supply maps onto each family's protocol. Source -> canonical only: a map may
+# never target a label the family's protocol does not declare, and a label no accepted map resolves fails.
+# `vocab` holds named blocks; `families.<id>.accepts` lists vocab names and inline blocks, in order.
+# Prefixes are literal supply-label prefixes, trailing space included ("eeg " matches "EEG F3-M2", not "EEGC3"),
+# stripped from the lowercased label before it is normalised.
+# The order and spelling of each `accepts` list are part of the bridge's cache key: do not reorder or respell them.
+# Schema: medomni.core.contracts.AliasFile. Resolver: medomni.core.families.aliases.
+
+"""
+
+
+def aliases(repo: Path) -> str:
+    """v0.2's alias file with a new header: the body (from `vocab:` on) is kept byte for byte (U2.2)."""
+    text = (Path(repo) / ALIAS_SOURCE).read_text(encoding="utf-8")
+    body = text[text.index("\nvocab:") + 1:]
+    return ALIAS_HEADER + body

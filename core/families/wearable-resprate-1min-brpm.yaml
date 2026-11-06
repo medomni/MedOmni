@@ -1,0 +1,12 @@
+id: wearable-resprate-1min-brpm
+read_by: rule-extractor
+protocol:
+  format: [omh]
+  channels: [resp-rate]
+  rate_hz: 0.0167
+  units: breaths/min
+  ndim: 1
+  dtype: float64
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 44576464d4647cc2cc1347103ca0b09746c26d9f, dir: families/wearable-resprate-1min-brpm/}

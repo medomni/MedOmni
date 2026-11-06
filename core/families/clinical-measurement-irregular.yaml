@@ -1,0 +1,12 @@
+id: clinical-measurement-irregular
+read_by: rule-extractor
+protocol:
+  format: [table]
+  ndim: 2
+  dtype: mixed
+  range: null
+  timing: irregular
+  schema: (time, name, value, unit) long table - wide tables (ed/vitalsign) and column-embedded units (wfdb numerics) are
+    normalised into this
+status: declared
+samples: null

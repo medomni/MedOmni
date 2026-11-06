@@ -1,0 +1,17 @@
+id: cgm-5min-mgdl
+read_by: rule-extractor
+protocol:
+  format: [omh]
+  channels: [cgm]
+  rate_hz: 0.00333
+  units: mg/dL
+  ndim: 1
+  dtype: float64
+  range: null
+status: supplied
+samples: {hf_repo: MedOmni/family-samples, revision: f3e9c7eacfc7563bc067bb93813d2f89625df6a1, dir: families/cgm-5min-mgdl/}
+omh_record: {shape: 'top-level object with header + body; body.cgm = LIST of records (encoders must unwrap the list, not expect
+    one record)', glucose_path: blood_glucose.value + blood_glucose.unit (unit literal mg/dL), time_path: effective_time_frame.date_time
+    (ISO-8601); records carrying only effective_time_frame.time_interval MUST be converted to date_time = interval start,
+  grid: 'timestamps lie on a 300 s grid; raw device jitter is legal in files, consumers snap to the nearest grid point (max
+    drift observed < 30 s)'}

@@ -50,21 +50,48 @@ def _report(commands: plugins.Resolved) -> None:
         print(f"error: {msg}", file=sys.stderr)
 
 
-def _check_piece(group: str, piece: plugins.Piece, obj) -> None:
-    """Check a plug-in piece against its contract, for kinds whose piece is one contract file."""
-    if piece.builtin or group not in (plugins.AGENTS, plugins.ENCODERS):
-        return
-    from pathlib import Path
+def _list_content(failed: int) -> int:
+    """List each plug-in folder's pieces by kind, checked against their contracts. Returns the updated failure count."""
+    from medomni.core.contracts.check import results  # pydantic is imported only here
 
-    from medomni.core.contracts import load, load_data
-    from medomni.core.contracts.check import PLUGIN_KINDS
-
-    model = PLUGIN_KINDS[group]
-    load(Path(obj), model) if isinstance(obj, (str, Path)) else load_data(obj, model, piece.full_name)
+    roots, bad = plugins.roots(plugins.find_repo())
+    kinds = plugins.content(roots)
+    errors: dict[plugins.Content, list[str]] = {}
+    for piece, msg in (e for r in kinds.values() for e in r.errors):
+        errors.setdefault(piece, []).append(msg)
+    pieces = sorted({*(p for r in kinds.values() for p in r.pieces.values()), *errors},
+                    key=lambda p: (p.package, p.kind, p.name))
+    by_path = {p.path: p for p in pieces}
+    for r in results([(pkg, root) for pkg, root in roots if pkg != plugins.BUILTIN]):  # the repository: contracts check
+        if r.error is None:
+            continue
+        piece = next((by_path[d] for d in (r.path, *r.path.parents) if d in by_path), None)
+        if piece is not None:  # the most specific piece holding the file
+            errors.setdefault(piece, []).append(r.error)
+        else:  # a file in a plug-in folder that belongs to no piece
+            failed += 1
+            print(f"  error: {r.error}")
+    folders = {(f.package, f.path) for f in plugins.folders() if f.path is not None}
+    if folders or bad:
+        print(plugins.PLUGINS)
+    for package, path in sorted(folders):
+        print(f"  {package}  {path}")
+        for p in (p for p in pieces if p.package == package):
+            msgs = errors.get(p, [])
+            failed += bool(msgs)
+            print(f"    {p.kind[:-1]:<9} {p.full_name:<40} " + ("ok" if not msgs else "error: " + "; ".join(msgs)))
+    for f in bad:
+        failed += 1
+        print(f"  {f.package}  error: {f.error}")
+    # a built-in piece that clashes with a plug-in piece is not loaded either
+    for p in (p for p in errors if p.builtin):
+        failed += 1
+        print(f"  {p.full_name:<40} error: " + "; ".join(errors[p]))
+    return failed
 
 
 def cmd_plugins(argv: list[str]) -> int:
-    """Import every installed piece and list it, with any errors."""
+    """List every installed piece, with any errors: Python pieces are imported, content is checked."""
     if argv and argv[0] in ("-h", "--help"):
         print("usage: medomni plugins\n\n" + HELP["plugins"])
         return 0
@@ -76,10 +103,9 @@ def cmd_plugins(argv: list[str]) -> int:
         rows = []
         for name, piece in sorted(r.pieces.items()):
             try:
-                obj = piece.load()
-                _check_piece(group, piece, obj)
+                piece.load()
                 rows.append(f"  {piece.full_name:<40} ok")
-            except Exception as e:  # import errors and contract errors are listed, never raised
+            except plugins.PluginError as e:  # import errors are listed, never raised
                 failed += 1
                 rows.append(f"  {piece.full_name:<40} error: {e}")
         for piece, msg in r.errors:
@@ -88,6 +114,7 @@ def cmd_plugins(argv: list[str]) -> int:
         if rows:
             print(group)
             print("\n".join(rows))
+    failed = _list_content(failed)
     return 1 if failed else 0
 
 

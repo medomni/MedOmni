@@ -71,9 +71,9 @@ def test_project_command_runs(project):
     assert ("dummy" in r.stdout) if project == "studio" else ("No commands yet." in r.stdout)
 
 
-def test_core_command_not_built_yet():
-    r = run("cache", "build", "dummy")
-    assert r.returncode == 1 and "not built yet" in r.stderr
+def test_cache_build_needs_a_workspace():
+    r = run("cache", "build", "dummy-mimic")
+    assert r.returncode == 2 and "no workspace config" in r.stderr
 
 
 def test_contracts_check_runs():

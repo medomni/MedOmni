@@ -134,3 +134,58 @@ def load(package: str | Path, raw_root: str | Path, out: str | Path, *, tables: 
                       "rows": len(rows), "subjects": subjects}, EventTable, str(out / DESCRIPTION))
     (out / DESCRIPTION).write_text(json.dumps(desc.model_dump(mode="json"), indent=1) + "\n", encoding="utf-8")
     return LoadResult(out / EVENTS, len(rows), subjects, stats)
+
+
+STEP = "events"  # the loading step's name in the cache; its version is cache.CORE_STEPS["events"]
+
+
+def find_package(name: str | Path) -> Path:
+    """A dataset package: a folder holding dataset.yaml, or a name looked up in the repository's `bench/datasets/`,
+    the plug-in folders, then Core's dummy packages."""
+    from medomni.core import plugins
+    from medomni.core.testing import DATASETS
+
+    p = Path(name)
+    if (p / "dataset.yaml").is_file():
+        return p
+    roots, _ = plugins.roots(plugins.find_repo())
+    for d in [root / "bench" / "datasets" / str(name) for _, root in roots] + [DATASETS / str(name)]:
+        if (d / "dataset.yaml").is_file():
+            return d
+    raise FileNotFoundError(f"no dataset package '{name}' (give a folder holding dataset.yaml, or a dataset name)")
+
+
+def inputs(package: Path, raw_root: Path) -> list[tuple[str, str]]:
+    """(name, sha256) of everything the load reads: the package's config and codes, every table file and every
+    family file the readers find. These are the cache key's inputs."""
+    from medomni.core import hashing
+    from medomni.core.contracts import DatasetConfig, load as load_contract
+
+    from .readers import tree
+    from .readers.headers import file_hash
+
+    package, raw_root = Path(package), Path(raw_root)
+    config = load_contract(package / "dataset.yaml", DatasetConfig)
+    out = [(f"package/{f}", hashing.sha256_file(package / f)) for f in ("dataset.yaml", "codes.csv")]
+    for r in config.read:
+        o = options(r)
+        if r.reader == "csv":
+            out += [(s.file, hashing.sha256_file(raw_root / s.file)) for s in o.tables.values()
+                    if (raw_root / s.file).is_file()]
+        elif r.reader == "tree":
+            for spec in o.files.values():
+                rx = tree._regex(spec.pattern)
+                for f in sorted(raw_root.glob(re.sub(r"\{(subject|record)\}", "*", spec.pattern))):
+                    rel = f.relative_to(raw_root).as_posix()
+                    if f.is_file() and rx.match(rel):
+                        out.append((rel, file_hash(f)))
+    return sorted(set(out))
+
+
+def build(package: str | Path, raw_root: str | Path, cache, dataset: str | None = None):
+    """Load a dataset into the cache as the `events` entry. Returns (entry, created)."""
+    from medomni.core.cache import CORE_STEPS
+
+    package = Path(package)
+    return cache.create(dataset or package.name, STEP, CORE_STEPS[STEP], {}, inputs(package, Path(raw_root)),
+                        lambda d: {"events": load(package, raw_root, d).rows})

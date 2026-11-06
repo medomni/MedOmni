@@ -8,22 +8,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from medomni.core.testing import DATASETS as TESTING
-
-
 def find_package(name: str) -> Path:
-    """A path to a package folder, or a dataset name: `bench/datasets/<name>` in the repository, then Core's dummy
-    packages."""
-    p = Path(name)
-    if (p / "dataset.yaml").is_file():
-        return p
-    from medomni.core import plugins
+    from medomni.core.loading import find_package as core_find
 
-    repo = plugins.find_repo()
-    for d in ([repo / "bench" / "datasets" / name] if repo else []) + [TESTING / name]:
-        if (d / "dataset.yaml").is_file():
-            return d
-    raise FileNotFoundError(f"no dataset package '{name}' (give a folder holding dataset.yaml, or a dataset name)")
+    return core_find(name)
 
 
 def add_parser(sub) -> None:

@@ -2,6 +2,8 @@
 
 A converter is a Python piece in the `medomni.converters` entry-point group; its entry-point name is its `name`.
 `version` goes into cache keys (part 7), so a changed converter never reuses an old conversion.
+A converter must be deterministic: the same input gives the same bytes (no wall-clock header times, no random ids),
+so two users' cache entries have the same content hash (R-39). Check 7 found the first one that wasn't.
 Two converters with one name are both refused (R-65).
 """
 from __future__ import annotations

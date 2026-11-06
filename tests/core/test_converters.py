@@ -12,6 +12,7 @@ from .test_plugins import make_dist
 
 DUMMY = '''
 import hashlib
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -32,6 +33,7 @@ class NpyToEdf:
         x = np.load(src)
         p = family.protocol
         w = pyedflib.EdfWriter(str(out), len(p.channels), file_type=pyedflib.FILETYPE_EDFPLUS)
+        w.setStartdatetime(datetime(2150, 1, 1))  # a fixed header time: the same input gives the same bytes (R-39)
         w.setSignalHeaders([{"label": ch, "dimension": p.units or "", "sample_frequency": p.rate_hz,
                              "physical_min": -32768, "physical_max": 32767,
                              "digital_min": -32768, "digital_max": 32767} for ch in p.channels])
@@ -91,6 +93,17 @@ def test_name_must_match_the_entry_point(site):
     _install(site, "medomni-one", "fake_one", name="other-name")
     found = converters.load()
     assert not found.found and "names itself 'npy-to-edf'" in found.errors[0]
+
+
+def test_a_converter_is_deterministic(site, tmp_path, repo):
+    """The same input must give the same bytes, or two users' cache content hashes differ (R-39)."""
+    _install(site, "medomni-one", "fake_one")
+    conv = converters.for_family("spo2-series-10hz-pct", "npy")
+    src = tmp_path / "x.npy"
+    np.save(src, np.array([[95, 96, 97] * 100], dtype=np.int16))
+    fam = families.get("spo2-series-10hz-pct", repo)
+    a, b = (conv.convert(src, fam, tmp_path / f"{n}.edf") for n in "ab")
+    assert a.sha256 == b.sha256
 
 
 def test_not_a_converter(site):

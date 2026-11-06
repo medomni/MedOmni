@@ -165,8 +165,8 @@ def size(d: Path) -> int:
     return sum(p.stat().st_size for p in d.rglob("*") if p.is_file())
 
 
-# Core's own cache steps and their versions; loading (part 6) adds `events`.
-CORE_STEPS: dict[str, str] = {}
+# Core's own cache steps and their versions. Raising a version gives new keys; `gc` removes the old entries.
+CORE_STEPS: dict[str, str] = {"events": "1"}  # loading a dataset into its event table (part 6)
 
 
 def current_steps() -> dict[str, str]:

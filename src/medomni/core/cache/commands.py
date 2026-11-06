@@ -21,8 +21,15 @@ def _mib(n: int) -> str:
 
 
 def cmd_build(a) -> int:
-    print(f"medomni cache build {a.dataset}: not built yet (loading arrives in Stage 2 part 6)", file=sys.stderr)
-    return 1
+    from medomni.core import loading, workspace
+
+    cfg = workspace.load()
+    package = loading.find_package(a.dataset)
+    raw = workspace.dataset_path(cfg, package.name)
+    entry, created = loading.build(package, raw, Cache(Path(cfg.cache)))
+    state = "built" if created else "already in the cache"
+    print(f"{entry.name}: {state}; {entry.meta.rows.get('events', 0)} events, content hash {entry.meta.content_hash}")
+    return 0
 
 
 def cmd_status(a) -> int:
@@ -110,7 +117,7 @@ def cmd_gc(a) -> int:
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(prog="medomni cache", description="Build, list, verify and clean the cache.")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    b = sub.add_parser("build", help="load a dataset and run file conversions ahead of a build")
+    b = sub.add_parser("build", help="load a dataset into the cache (file conversions come with Bench's Build, Stage 3)")
     b.add_argument("dataset")
     sub.add_parser("status", help="entries per dataset and step, with size and whether a current step uses them")
     v = sub.add_parser("verify", help="recompute every content hash")
@@ -122,10 +129,12 @@ def main(argv: list[str]) -> int:
     except SystemExit as e:
         return int(e.code or 0)
     from medomni.core.contracts import ContractError
+    from medomni.core.loading import LoadError
     from medomni.core.workspace import WorkspaceError
 
+    except_types = (WorkspaceError, ContractError, FileNotFoundError, LoadError)
     try:
         return {"build": cmd_build, "status": cmd_status, "verify": cmd_verify, "gc": cmd_gc}[a.cmd](a)
-    except (WorkspaceError, ContractError, FileNotFoundError) as e:
+    except except_types as e:
         print(f"medomni cache {a.cmd}: {e}", file=sys.stderr)
         return 2

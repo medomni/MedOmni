@@ -1,48 +1,71 @@
 # Plug-ins
 
-A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, datasets, tasks, encoders or Studio tools without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
+A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, datasets, tasks, encoders, Studio tools or family converters without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
 
-## Register pieces
+## Content folder
 
-A package registers each piece in the entry-point group for its kind. It does not register with Bench or Perception: MedOmni sends each kind to the project that uses it.
+Agents, datasets, tasks and encoders are files. A plug-in package ships them in one folder, laid out like MedOmni's repository:
 
-| Group | Registers | Used by | Same as in-repo |
-|---|---|---|---|
-| `medomni.agents` | An agent config | Bench | `bench/agents/` |
-| `medomni.datasets` | A dataset package, with its policy | Bench | `bench/datasets/<dataset>/` |
-| `medomni.tasks` | A task template and its cohorts | Bench | `bench/datasets/<dataset>/tasks/<template>/` |
-| `medomni.encoders` | A model card and its image | Perception | `perception/encoders/<family>/<encoder>/` |
-| `medomni.tools` | A Studio tool of one kind | Studio | `src/medomni/studio/<kind>/` |
+```text
+medomni_myname/content/
+├── bench/
+│   ├── agents/<agent>.yaml
+│   └── datasets/<dataset>/        dataset package, with hooks/ and tasks/<template>/
+└── perception/
+    └── encoders/<family>/<encoder>/
+```
 
-One package can add several kinds. A package with a task and an encoder lists both in its own `pyproject.toml`:
+- The package registers the folder with one entry point, in the `medomni.plugins` group.
+- MedOmni reads the repository first, then each plug-in folder, with the same loader. A piece in a plug-in folder works as it would in the repository.
+- Finding the folder runs none of the package's code. Python in a dataset's `hooks/` is imported only when a build uses it.
+- Moving a piece between a plug-in and the repository is a folder copy.
+
+## Python pieces
+
+Pieces that are Python code register one entry point each, in the group for their kind:
+
+| Group | Registers | Used by |
+|---|---|---|
+| `medomni.commands` | A top-level command | The `medomni` command |
+| `medomni.checks` | Checks for the testing kit | [The testing kit](#the-testing-kit) |
+| `medomni.converters` | A [family converter](families.md#family-converters) | Bench |
+| `medomni.tools` | A Studio tool of one kind | Studio |
+
+Bench, Perception and Studio register their own commands and checks in the same groups.
+
+## Example
+
+A package with a dataset, a task and a converter lists two entry points in its own `pyproject.toml`:
 
 ```toml
 [project]
 name = "medomni-myname"
 dependencies = ["medomni>=0.3,<0.4"]
 
-[project.entry-points."medomni.tasks"]
-my-task = "medomni_myname.tasks:MY_TASK"
+[project.entry-points."medomni.plugins"]
+myname = "medomni_myname:content"
 
-[project.entry-points."medomni.encoders"]
-my-encoder = "medomni_myname.encoders:CARD"
+[project.entry-points."medomni.converters"]
+my-format = "medomni_myname.converters:MyFormat"
 ```
 
-After `pip install medomni-myname`, `my-task` appears in Bench's commands and `my-encoder` in Perception's.
+After `pip install medomni-myname`, its dataset and task appear in Bench's commands.
+
+Install the package as a wheel or in editable mode. Zip installs are not supported: they give no real folder, so hooks cannot load.
 
 ## How MedOmni loads them
 
 - **Names.** Each piece is named `<package>:<name>`, such as `medomni-myname:my-task`. Built-in pieces use the package `medomni`.
-- **Collisions.** Two pieces with the same name: both are listed with an error, and neither is loaded.
-- **Lazy loading.** At start, a command reads the entry-point names only. A piece is imported when a command first uses it.
-- **Validation.** On import, each piece is checked against its [contract](contracts.md). A piece that fails is listed with its error and not used.
+- **Collisions.** A plug-in command that reuses a built-in command name is skipped with a warning, and the built-in runs. Two other pieces of one kind with the same name are both listed with an error, and neither is loaded.
+- **Lazy loading.** At start, a command reads entry-point names and folder paths only. A piece is read or imported when a command first uses it.
+- **Validation.** Each piece is checked against its [contract](contracts.md) when it is read. A piece that fails is listed with its error and not used.
 - **Same as built-in.** A loaded piece works in every command as a built-in piece does.
 
 ```bash
 medomni plugins
 ```
 
-It imports every installed piece, checks it, and lists each package with what it adds and any errors.
+It reads every installed piece, checks it, and lists each package with what it adds and any errors.
 
 ## The testing kit
 
@@ -50,7 +73,7 @@ It imports every installed piece, checks it, and lists each package with what it
 
 ## Where it lives
 
-- `src/medomni/core/plugins/`: entry-point loading
+- `src/medomni/core/plugins/`: finding content folders and entry points
 - `src/medomni/core/testing/`: the check runner
 
 ## Where next

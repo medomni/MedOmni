@@ -77,7 +77,7 @@ MedOmni/
 
 | Container | Project | Does |
 |---|---|---|
-| `medomni` command | Core | The entrance: finds the projects and any plug-in packages through entry points, then hands each subcommand to its project. |
+| `medomni` command | Core | The entrance: finds the projects through entry points and the plug-in packages' content folders and entry points, then hands each subcommand to its project. |
 | Workspace | Core | Configuration, the cache, built atom tasks, runs and the results file, on your machine. Never committed. |
 | Bench library | Bench | Builds atom tasks from your data, turns a task set into Harbor jobs, records runs and scores them. |
 | Perception service | Bench | Runs inside each atom task with encoders: Perception's gateway, with Bench's call budget, family filter and call log. |
@@ -96,7 +96,7 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 |---|---|---|---|
 | Core | Command | `medomni.core.cli` | The `medomni` command. Finds each project's subcommands through entry points; see [Commands](../cli/index.md). |
 | Core | Contracts | `medomni.core.contracts` | The versioned formats, each with a typed model and a validator. See [Contracts](core/contracts.md). |
-| Core | Plug-ins | `medomni.core.plugins` | Loads the projects and plug-in packages through their entry points. |
+| Core | Plug-ins | `medomni.core.plugins` | Finds the projects' entry points, and the plug-in packages' content folders and entry points. |
 | Core | Testing kit | `medomni.core.testing` | Runs the checks each project registers. Plug-in packages import it for their own CI. |
 | Core | Loading | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
 | Core | Recipes | `medomni.core.recipes` | The recipe format for cohorts, labels and evidence. |
@@ -116,11 +116,10 @@ Contributors and plug-in packages add agents, datasets, tasks and encoders to th
 
 ## How Core finds the projects
 
-Core is the `medomni` command and the shared machinery. It imports no project; each project tells Core what it adds, through the `medomni.projects` entry-point group in MedOmni's own `pyproject.toml`:
+Core is the `medomni` command and the shared machinery. It imports no project; each project tells Core what it adds, through entry points in MedOmni's own `pyproject.toml`:
 
-- its subcommands, such as `medomni bench …`
-- the checks behind its check commands
-- its audit checks
+- its subcommands, such as `medomni bench …`, in `medomni.commands`
+- the checks behind its check commands, and its audit checks, in `medomni.checks`
 
 This is internal wiring, done once per project. Users never do it; a later project joins the same way. Outside packages that add pieces use [plug-ins](core/plugins.md) instead.
 

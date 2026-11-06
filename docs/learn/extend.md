@@ -10,13 +10,13 @@ What you can add to MedOmni, how, and what checks it.
 
 ## What you can add
 
-| You add | Project | Follows contract | Create with | Check | Pull request | Plug-in group |
+| You add | Project | Follows contract | Create with | Check | Pull request | Plug-in package |
 |---|---|---|---|---|---|---|
-| An agent | Bench | Agent config | `medomni bench agent new` | `medomni bench run --set smoke-dummy` | `bench/agents/` | `medomni.agents` |
-| A dataset | Bench | Dataset config, recipe, dataset policy | `medomni bench data new` | `medomni bench data check` | openly licensed only | `medomni.datasets` |
-| A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | `medomni.tasks` |
-| An encoder | Perception | Model card, Container API | `medomni perception new` | `medomni perception check` | `perception/encoders/` | `medomni.encoders` |
-| A Studio tool | Studio | Its kind's interface | `src/medomni/studio/<kind>/` | `medomni studio check` | `src/medomni/studio/<kind>/` | `medomni.tools` |
+| An agent | Bench | Agent config | `medomni bench agent new` | `medomni bench run --set smoke-dummy` | `bench/agents/` | content folder: `bench/agents/` |
+| A dataset | Bench | Dataset config, recipe, dataset policy | `medomni bench data new` | `medomni bench data check` | openly licensed only | content folder: `bench/datasets/<dataset>/` |
+| A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | content folder: `bench/datasets/<dataset>/tasks/<template>/` |
+| An encoder | Perception | Model card, Container API | `medomni perception new` | `medomni perception check` | `perception/encoders/` | content folder: `perception/encoders/<family>/<encoder>/` |
+| A Studio tool | Studio | Its kind's interface | `src/medomni/studio/<kind>/` | `medomni studio check` | `src/medomni/studio/<kind>/` | entry point: `medomni.tools` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).
 - [Contribute](../guides/contribute.md) walks through each one.

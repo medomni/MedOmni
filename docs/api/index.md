@@ -5,7 +5,7 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | Module | Holds |
 |---|---|
 | `medomni.core.contracts` | The versioned contracts: a typed model and a validator for each. See [Contracts](../learn/core/contracts.md). |
-| `medomni.core.plugins` | Loads the projects and plug-in packages through entry points. |
+| `medomni.core.plugins` | Finds the projects' entry points, and the plug-in packages' content folders and entry points. |
 | `medomni.core.testing` | The check runner, for use in a plug-in package's own tests. |
 | `medomni.core.cli` | The `medomni` command. |
 | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |

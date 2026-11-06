@@ -5,7 +5,7 @@ For contributors who add an agent, a dataset or a task to Bench, or an encoder t
 There are two routes. Both run the same check.
 
 - **Pull request.** Create the starting files with the piece's `new` command, fill them in, run its check command locally, and open a pull request; CI runs the same check.
-- **Plug-in package.** Publish your own `medomni-*` package that registers the same pieces through entry points. Use this when your work should stay in your own repository, for example a task on data that cannot leave your institution. See [Publish a plug-in package](#publish-a-plug-in-package).
+- **Plug-in package.** Publish your own `medomni-*` package that ships the same pieces in a content folder. Use this when your work should stay in your own repository, for example a task on data that cannot leave your institution. See [Publish a plug-in package](#publish-a-plug-in-package).
 
 Contributions change only extension points. Only the MedOmni team changes Core and the contracts; if you need a contract change, such as a new family, open an issue first.
 
@@ -161,15 +161,18 @@ For agents, datasets, tasks or encoders that live in your own repository.
 ### Steps
 
 1. Create a Python package named `medomni-<name>` that depends on `medomni`.
-2. Create each piece with its `new` command, as in the sections above.
-3. Register each piece under its entry-point group in `pyproject.toml`: `medomni.agents`, `medomni.datasets`, `medomni.tasks` or `medomni.encoders`.
+2. Add a content folder to the package, laid out like MedOmni's repository: `bench/agents/`, `bench/datasets/<dataset>/`, `perception/encoders/<family>/<encoder>/`. Create each piece in it as in the sections above.
+3. Register the folder with one entry point in `pyproject.toml`:
 
     ```toml
-    [project.entry-points."medomni.datasets"]
-    my-dataset = "medomni_myname.datasets:MY_DATASET"
+    [project.entry-points."medomni.plugins"]
+    myname = "medomni_myname:content"
     ```
 
+    A family converter or a Studio tool is Python code: register it in `medomni.converters` or `medomni.tools`. See [Plug-ins](../learn/core/plugins.md#python-pieces).
+
 4. In your package's tests, run the same checks with `medomni.core.testing`.
+5. Install it as a wheel or in editable mode. Zip installs are not supported.
 
 ### Check
 

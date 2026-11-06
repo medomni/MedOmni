@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, StringConstraints, model_validator
 
-from .base import Contract, Fingerprint, NonEmpty, Sha256, Slug
+from .base import Contract, Fingerprint, IntelligenceKind, MetricName, NonEmpty, Sha256, Slug
 
 TemplateId = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*$")]
 _PAIR = re.compile(r"^(?P<template>[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*)(:(?P<variant>[a-z0-9-]+))?@(?P<cohort>[a-z0-9][a-z0-9-]*)$")
@@ -29,7 +29,7 @@ class Author(Contract):
 class Target(Contract):
     name: Slug | Annotated[str, StringConstraints(pattern=r"^[a-z0-9_]+$")]
     label: Annotated[str, StringConstraints(pattern=r"^[a-z0-9-]+:.+$")]  # <dataset>:<label>
-    metric: Literal["auc", "qwk", "mae"]
+    metric: MetricName  # registered in medomni.metrics (R-77)
 
 
 class Environment(Contract):
@@ -38,6 +38,14 @@ class Environment(Contract):
     allow_internet: bool
     agent_timeout_sec: int = Field(ge=1)
     verifier_timeout_sec: int = Field(ge=1)
+
+
+class AgentTask(Contract):
+    """The part of a template only the agent kind uses: its instruction, environment and answer path."""
+
+    instruction: NonEmpty
+    environment: Environment
+    submission_path: NonEmpty
 
 
 class TaskTemplate(Contract):
@@ -50,9 +58,7 @@ class TaskTemplate(Contract):
     input: dict[str, Any] = Field(min_length=1)  # tables and families the default variant stages; shape set in Stage 3
     variants: tuple[Literal["default", "full"], ...] = ("default",)
     exclude: dict[str, tuple[NonEmpty, ...]] = {}
-    environment: Environment
-    submission_path: NonEmpty
-    instruction: NonEmpty
+    agent: AgentTask  # what the agent kind needs; later kinds add `llm:` or `model:` beside it (R-77)
 
     @model_validator(mode="after")
     def _consistent(self):
@@ -83,11 +89,22 @@ class SetEntry(Contract):
     cache: tuple[CacheUse, ...] = ()
 
 
+class TaskSetCard(Contract):
+    """Who publishes a task set and what it accepts, so a benchmark such as "MedOmni Bench 1.0" is a task set with a
+    card, and others publish theirs the same way (R-77)."""
+
+    version: NonEmpty
+    owner: NonEmpty
+    license: NonEmpty
+    accepts: tuple[IntelligenceKind, ...] = Field(min_length=1)  # the intelligence kinds it may be run with
+
+
 class TaskSet(Contract):
     """`bench/sets/<name>.yaml`: grow-only pins of `<template>@<cohort>` to fingerprints."""
 
     name: Slug
     description: str | None = None
+    card: TaskSetCard | None = None
     tasks: tuple[SetEntry, ...] = Field(min_length=1)
 
     @model_validator(mode="after")

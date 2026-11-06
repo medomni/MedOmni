@@ -4,9 +4,9 @@ from __future__ import annotations
 import json
 from datetime import date, datetime
 from pathlib import Path
-from typing import Annotated, Any, TypeVar
+from typing import Annotated, Any, Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, StringConstraints, ValidationError
+from pydantic import AfterValidator, BaseModel, ConfigDict, StringConstraints, ValidationError
 
 
 class Contract(BaseModel):
@@ -73,9 +73,47 @@ def load(path: Path, model: type[M] | Any) -> M:
     return load_data(data, model, str(path))
 
 
+def load_lines(path: Path, model: type[M]) -> list[M]:
+    """Read a JSON lines file (such as a run's predictions.jsonl) and check every line against its model."""
+    path = Path(path)
+    out = []
+    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            data = json.loads(line)
+        except ValueError as e:
+            raise ContractError(f"{path}:{n}", [("", f"cannot parse: {e}")]) from None
+        out.append(load_data(data, model, f"{path}:{n}"))
+    return out
+
+
 # Shared field types
 Slug = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*$")]
 Sha256 = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
 Fingerprint = Annotated[str, StringConstraints(pattern=r"^fp1:[0-9a-f]{64}$")]
 EnvRef = Annotated[str, StringConstraints(pattern=r"^\$\{[A-Z][A-Z0-9_]*\}$")]
 NonEmpty = Annotated[str, StringConstraints(min_length=1)]
+
+
+def _metric(v: str) -> str:
+    from medomni.core.plugins import metric_names
+
+    known = metric_names()
+    if v not in known:
+        raise ValueError(f"unknown metric '{v}' (registered in medomni.metrics: {', '.join(sorted(known)) or 'none'})")
+    return v
+
+
+# A metric name, checked against the `medomni.metrics` entry points (R-77)
+MetricName = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9_-]*$"), AfterValidator(_metric)]
+
+# The kinds of intelligence MedOmni evaluates (R-76): `agent` in v0.3; `llm` and `model` are added later
+IntelligenceKind = Literal["agent"]
+
+
+class IntelligenceRef(Contract):
+    """The intelligence a run, score or prediction belongs to: its kind and the name of its config."""
+
+    kind: IntelligenceKind
+    name: Slug

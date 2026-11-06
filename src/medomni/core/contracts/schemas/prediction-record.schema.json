@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "prediction-record.schema.json",
+  "x-contract": "prediction record",
+  "$defs": {
+    "IntelligenceRef": {
+      "additionalProperties": false,
+      "description": "The intelligence a run, score or prediction belongs to: its kind and the name of its config.",
+      "properties": {
+        "kind": {
+          "const": "agent",
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "name"
+      ],
+      "title": "IntelligenceRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One line of a run's `predictions.jsonl`: one answer for one target of one atom task. It is the only handoff\nfrom a run to the scorer (R-77); the agent runner writes these from the agent's submission file.",
+  "properties": {
+    "run_id": {
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "atom": {
+      "minLength": 1,
+      "title": "Atom",
+      "type": "string"
+    },
+    "target": {
+      "minLength": 1,
+      "title": "Target",
+      "type": "string"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ],
+      "title": "Value"
+    },
+    "intelligence": {
+      "$ref": "#/$defs/IntelligenceRef"
+    }
+  },
+  "required": [
+    "run_id",
+    "atom",
+    "target",
+    "value",
+    "intelligence"
+  ],
+  "title": "PredictionRecord",
+  "type": "object"
+}

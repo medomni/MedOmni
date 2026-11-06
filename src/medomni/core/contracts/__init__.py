@@ -11,13 +11,13 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, TypeAdapter
 
-from .base import Contract, ContractError, load, load_data, read
+from .base import Contract, ContractError, IntelligenceRef, load, load_data, load_lines, read
 from .dataset import DatasetConfig, DatasetPolicy, Event, EventTable
 from .family import AliasFile, FamilyFile
 from .perception import ContainerRequest, ContainerResponse, EncodeRequest, Evidence, ModelCard
 from .recipe import Cohort, CohortTests, EvidenceRules, LabelLibrary
-from .run import AgentConfig, CacheEntry, ResultRecord, RunRecord, ScoreRecord, WorkspaceConfig
-from .task import FingerprintFile, TaskProposal, TaskSet, TaskTemplate
+from .run import AgentConfig, CacheEntry, PredictionRecord, ResultRecord, RunRecord, ScoreRecord, WorkspaceConfig
+from .task import FingerprintFile, TaskProposal, TaskSet, TaskSetCard, TaskTemplate
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class Schema:
     model: object  # a model class, or a type for TypeAdapter (ResultRecord)
 
 
-# The 16 contracts, and the schema file of each model in them
+# The 17 contracts, and the schema file of each model in them
 SCHEMAS = (
     Schema("family registry", "family", FamilyFile),
     Schema("family registry", "aliases", AliasFile),
@@ -51,6 +51,7 @@ SCHEMAS = (
     Schema("gateway API", "gateway-api", EncodeRequest),
     Schema("gateway API", "evidence", Evidence),
     Schema("result record", "result-record", ResultRecord),
+    Schema("prediction record", "prediction-record", PredictionRecord),
     Schema("workspace config", "workspace-config", WorkspaceConfig),
 )
 
@@ -66,7 +67,8 @@ def json_schema(model) -> dict:
 __all__ = [
     "AgentConfig", "AliasFile", "CacheEntry", "Cohort", "CohortTests", "ContainerRequest", "ContainerResponse",
     "Contract", "ContractError", "CONTRACTS", "DatasetConfig", "DatasetPolicy", "EncodeRequest", "Event",
-    "EventTable", "Evidence", "EvidenceRules", "FamilyFile", "FingerprintFile", "LabelLibrary", "ModelCard",
-    "ResultRecord", "RunRecord", "SCHEMAS", "ScoreRecord", "TaskProposal", "TaskSet", "TaskTemplate",
-    "WorkspaceConfig", "json_schema", "load", "load_data", "read",
+    "EventTable", "Evidence", "EvidenceRules", "FamilyFile", "FingerprintFile", "IntelligenceRef", "LabelLibrary",
+    "ModelCard", "PredictionRecord", "ResultRecord", "RunRecord", "SCHEMAS", "ScoreRecord", "TaskProposal",
+    "TaskSet", "TaskSetCard", "TaskTemplate", "WorkspaceConfig", "json_schema", "load", "load_data", "load_lines",
+    "read",
 ]

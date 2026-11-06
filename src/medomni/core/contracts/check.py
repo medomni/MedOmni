@@ -1,7 +1,7 @@
 """`medomni contracts check [<contract> ...]`: validate every contract file in the repository and installed plug-ins.
 
 Content files are found by the repository layout (R-1, R-44). Plug-in folders use the same layout and are read the same
-way (R-69); family files and task sets come from the repository only. The repository's model cards join in Stage 3,
+way (R-69); family files come from the repository only, and task sets from both (R-77). The repository's model cards join in Stage 3,
 when the converted cards are committed (R-66); dataset packages, templates and cohorts join with them (R-68).
 """
 from __future__ import annotations
@@ -31,7 +31,7 @@ CONTENT = (
     Content("family registry", "core/families/*.yaml", FamilyFile, exclude=("aliases.yaml",), where=REPO),
     Content("family registry", "core/families/aliases.yaml", AliasFile, where=REPO),
     Content("agent config", "bench/agents/*.yaml", AgentConfig),
-    Content("task set", "bench/sets/*.yaml", TaskSet, where=REPO),
+    Content("task set", "bench/sets/*.yaml", TaskSet),
     Content("dataset config", "bench/datasets/*/dataset.yaml", DatasetConfig),
     Content("dataset policy", "bench/datasets/*/policy.yaml", DatasetPolicy),
     Content("recipe", "bench/datasets/*/labels.yaml", LabelLibrary),
@@ -75,8 +75,9 @@ def results(roots: list[tuple[str, Path]], only: set[str] | None = None):
                     yield Result(package, c.contract, p, label, str(e))
 
 
-def check(repo: Path | None, only: set[str] | None = None, out=sys.stdout) -> tuple[dict[str, list[int]], int]:
+def check(repo: Path | None, only: set[str] | None = None, out=None) -> tuple[dict[str, list[int]], int]:
     """Returns ({contract: [ok, failed]}, failures)."""
+    out = out or sys.stdout
     roots, bad = plugins.roots(repo)
     counts: dict[str, list[int]] = {}
     failed = 0

@@ -80,6 +80,44 @@
       ],
       "title": "Step",
       "type": "object"
+    },
+    "TaskSetCard": {
+      "additionalProperties": false,
+      "description": "Who publishes a task set and what it accepts, so a benchmark such as \"MedOmni Bench 1.0\" is a task set with a\ncard, and others publish theirs the same way (R-77).",
+      "properties": {
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        },
+        "owner": {
+          "minLength": 1,
+          "title": "Owner",
+          "type": "string"
+        },
+        "license": {
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "accepts": {
+          "items": {
+            "const": "agent",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Accepts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "version",
+        "owner",
+        "license",
+        "accepts"
+      ],
+      "title": "TaskSetCard",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -101,6 +139,17 @@
       ],
       "default": null,
       "title": "Description"
+    },
+    "card": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TaskSetCard"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "tasks": {
       "items": {

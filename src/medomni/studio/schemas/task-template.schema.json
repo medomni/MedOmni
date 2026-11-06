@@ -3,6 +3,32 @@
   "$id": "task-template.schema.json",
   "x-contract": "task template",
   "$defs": {
+    "AgentTask": {
+      "additionalProperties": false,
+      "description": "The part of a template only the agent kind uses: its instruction, environment and answer path.",
+      "properties": {
+        "instruction": {
+          "minLength": 1,
+          "title": "Instruction",
+          "type": "string"
+        },
+        "environment": {
+          "$ref": "#/$defs/Environment"
+        },
+        "submission_path": {
+          "minLength": 1,
+          "title": "Submission Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "instruction",
+        "environment",
+        "submission_path"
+      ],
+      "title": "AgentTask",
+      "type": "object"
+    },
     "Author": {
       "additionalProperties": false,
       "properties": {
@@ -91,11 +117,7 @@
           "type": "string"
         },
         "metric": {
-          "enum": [
-            "auc",
-            "qwk",
-            "mae"
-          ],
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
           "title": "Metric",
           "type": "string"
         }
@@ -170,18 +192,8 @@
       "title": "Exclude",
       "type": "object"
     },
-    "environment": {
-      "$ref": "#/$defs/Environment"
-    },
-    "submission_path": {
-      "minLength": 1,
-      "title": "Submission Path",
-      "type": "string"
-    },
-    "instruction": {
-      "minLength": 1,
-      "title": "Instruction",
-      "type": "string"
+    "agent": {
+      "$ref": "#/$defs/AgentTask"
     }
   },
   "required": [
@@ -190,9 +202,7 @@
     "authors",
     "targets",
     "input",
-    "environment",
-    "submission_path",
-    "instruction"
+    "agent"
   ],
   "title": "TaskTemplate",
   "type": "object"

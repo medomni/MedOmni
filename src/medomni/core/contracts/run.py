@@ -1,4 +1,4 @@
-"""Agent config, cache entry, result record and workspace config."""
+"""Agent config, cache entry, result record, prediction record and workspace config."""
 from __future__ import annotations
 
 from pathlib import PurePosixPath
@@ -6,12 +6,12 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, model_validator
 
-from .base import Contract, EnvRef, Fingerprint, NonEmpty, Sha256, Slug
+from .base import Contract, EnvRef, Fingerprint, IntelligenceRef, MetricName, NonEmpty, Sha256, Slug
 from .task import Pair
 
 
 class AgentConfig(Contract):
-    """`bench/agents/<name>.yaml` (Run your agent guide)."""
+    """`bench/agents/<name>.yaml` (Run your agent guide): the config of an intelligence of kind `agent` (R-76)."""
 
     name: Slug
     scaffold: NonEmpty  # a Harbor agent, such as terminus-2
@@ -57,28 +57,40 @@ class EncoderServed(Contract):
     image_digest: NonEmpty
 
 
+def _ladder(v: str) -> str:
+    if not v.startswith("ladder"):
+        raise ValueError(f"unknown condition {v}")
+    return v
+
+
+class AgentRun(Contract):
+    """What only the agent runner records: the condition and how the agent used encoders and files (R-76)."""
+
+    condition: Literal["enc", "noenc", "enc-forced"] | Annotated[str, AfterValidator(_ladder)]
+    encoders_served: tuple[EncoderServed, ...] = ()
+    encoder_calls: dict[str, int] = {}
+    files_opened: tuple[str, ...] = ()
+
+
 class RunRecord(Contract):
     kind: Literal["run"]
     run_id: NonEmpty
     release: NonEmpty
     task_set: Slug
     task: Pair
-    agent: Slug
-    condition: Literal["enc", "noenc", "enc-forced"] | Annotated[str, AfterValidator(lambda v: _ladder(v))]
+    intelligence: IntelligenceRef
     fingerprint: Fingerprint
     fingerprint_match: bool
     model_served: str | None
-    encoders_served: tuple[EncoderServed, ...] = ()
-    encoder_calls: dict[str, int] = {}
-    files_opened: tuple[str, ...] = ()
     error_kind: str | None = None
     api_cost: float | None = Field(default=None, ge=0)
+    agent: AgentRun | None = None  # the agent runner's block; present exactly when the kind is agent
 
-
-def _ladder(v: str) -> str:
-    if not v.startswith("ladder"):
-        raise ValueError(f"unknown condition {v}")
-    return v
+    @model_validator(mode="after")
+    def _runner_block(self):
+        if (self.intelligence.kind == "agent") != (self.agent is not None):
+            raise ValueError("a run of an agent has an `agent` block, and only such a run")
+        return self
 
 
 class ScoreRecord(Contract):
@@ -91,13 +103,28 @@ class ScoreRecord(Contract):
     fingerprint: Fingerprint
     n_atoms: int = Field(ge=0)
     n_failed: int = Field(ge=0)
-    metric: Literal["auc", "qwk", "mae"]
+    intelligence: IntelligenceRef
+    metric: MetricName
     value: float | None
     flags: tuple[str, ...] = ()
     encoder_use: dict[str, Any] = {}
 
 
 ResultRecord = Annotated[RunRecord | ScoreRecord, Field(discriminator="kind")]
+
+
+Value = Annotated[float, Field(allow_inf_nan=False)] | int | NonEmpty
+
+
+class PredictionRecord(Contract):
+    """One line of a run's `predictions.jsonl`: one answer for one target of one atom task. It is the only handoff
+    from a run to the scorer (R-77); the agent runner writes these from the agent's submission file."""
+
+    run_id: NonEmpty
+    atom: NonEmpty  # the atom task's id
+    target: NonEmpty
+    value: Value  # a number, or a class label as text; never true or false
+    intelligence: IntelligenceRef
 
 
 def _absolute(v: str) -> str:

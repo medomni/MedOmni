@@ -14,8 +14,8 @@ from .contract_examples import EXAMPLES, SCORE_RECORD
 BY_FILE = {s.file: s for s in c.SCHEMAS}
 
 
-def test_sixteen_contracts():
-    assert len(c.CONTRACTS) == 16
+def test_seventeen_contracts():
+    assert len(c.CONTRACTS) == 17
     assert set(BY_FILE) == set(EXAMPLES)
 
 

@@ -3,7 +3,7 @@
   "$id": "agent-config.schema.json",
   "x-contract": "agent config",
   "additionalProperties": false,
-  "description": "`bench/agents/<name>.yaml` (Run your agent guide).",
+  "description": "`bench/agents/<name>.yaml` (Run your agent guide): the config of an intelligence of kind `agent` (R-76).",
   "properties": {
     "name": {
       "pattern": "^[a-z0-9][a-z0-9-]*$",

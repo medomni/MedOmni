@@ -39,6 +39,12 @@ dev = ["pytest>=8", "neurokit2>=0.2"]  # neurokit2: encoder adapters tested in-p
 medomni = "medomni.core.cli:main"
 
 # Bench, Perception and Studio register their commands the same way a plug-in package does (R-2).
+# Metric names a target may use (R-77). Bench's scorer implements them in Stage 3; until then they are names only.
+[project.entry-points."medomni.metrics"]
+auc = "medomni.bench.metrics:auc"
+qwk = "medomni.bench.metrics:qwk"
+mae = "medomni.bench.metrics:mae"
+
 [project.entry-points."medomni.commands"]
 bench = "medomni.bench.cli:group"
 perception = "medomni.perception.cli:group"

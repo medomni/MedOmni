@@ -75,3 +75,9 @@ def test_a_bad_file_is_an_error(tmp_path):
 def test_unknown_family(repo):
     with pytest.raises(families.FamilyError, match="unknown family"):
         families.get("no-such-family", repo)
+
+
+def test_outside_a_repository_the_error_says_what_to_do(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(families.FamilyError, match="clone installed with `uv pip install -e .`"):
+        families.load_registry()

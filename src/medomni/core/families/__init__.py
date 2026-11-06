@@ -26,7 +26,9 @@ def folder(root: Path | None = None) -> Path:
     if root is None:
         root = plugins.find_repo()
         if root is None:
-            raise FamilyError("no MedOmni repository found, so no family registry (core/families/)")
+            raise FamilyError("no MedOmni repository found, so no family registry (core/families/). Built-in content "
+                              "is read from the repository: run inside a clone installed with `uv pip install -e .` "
+                              "(Get started). A plug-in's CI checks out MedOmni the same way.")
     d = Path(root) / FOLDER
     if not d.is_dir():
         raise FamilyError(f"family registry folder missing: {d}")

@@ -207,7 +207,12 @@ class Content:
 
 
 def roots(repo: Path | None) -> tuple[list[tuple[str, Path]], list[Folder]]:
-    """Content roots, repository first: [(package, folder)], and the plug-in folders that could not be found."""
+    """Content roots, repository first: [(package, folder)], and the plug-in folders that could not be found.
+
+    Built-in content is the repository's: v0.3 installs from a clone in editable mode (Get started) and has no
+    PyPI release, so outside a repository only plug-in folders are read. Shipping built-in content inside a wheel
+    waits for a PyPI release.
+    """
     found = [(BUILTIN, repo)] if repo is not None else []
     bad = []
     for f in folders():

@@ -26,7 +26,7 @@ Real files rarely match a protocol exactly. `aliases.yaml` lists what each famil
 
 - A dataset's event table names each raw file as a `FILE//<family>` row.
 - Build checks staged files against their family.
-- The dummy-data generator makes files from each family's protocol.
+- The dummy-data generator, `medomni.core.families.dummy`, makes files from each family's protocol. [Datasets](../bench/datasets.md#open-credentialed-and-dummy-data) says how a dataset's dummy data is made.
 - An encoder's model card names its one family; the gateway filters encoders by family.
 - Every family count in MedOmni comes from the registry.
 

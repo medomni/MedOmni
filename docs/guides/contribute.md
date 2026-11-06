@@ -54,8 +54,14 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add datasets o
 3. List every code the dataset emits in `codes.csv`. Use the [shared codes](../reference/recipes.md#shared-codes) where the dataset has those concepts.
 4. Write `labels.yaml` and `evidence.yaml`. See [Recipes reference](../reference/recipes.md).
 5. Write the dataset policy from the license: what may be published and which routes may see the data.
-6. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
-7. Add at least one template and cohort, as below, and open a pull request.
+6. Generate dummy data from your package and check that it has the tables and codes you expect. It comes from `dataset.yaml` and `codes.csv`, with no extra file.
+
+    ```bash
+    medomni studio dummy my-dataset --subjects 20 --out ~/dummy/my-dataset
+    ```
+
+7. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
+8. Add at least one template and cohort, as below, and open a pull request.
 
 Python goes only in `hooks/`, for a label no rule can express. A file format no format reader knows needs a new format reader in Core: open an issue first.
 

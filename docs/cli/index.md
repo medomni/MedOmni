@@ -44,6 +44,7 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni studio preview <template>@<cohort>` | Runs the cohort on your copy up to the draw and prints the patients left after each step and per class. Builds nothing. |
 | `medomni studio download-list <dataset>` | For a dataset downloaded in parts, lists the files its source population needs. |
+| `medomni studio dummy <dataset> [--subjects N] [--seed S] [--out DIR]` | Writes dummy data shaped like the dataset, from its `dataset.yaml` and `codes.csv`, with the [dummy-data generator](../learn/core/families.md#how-the-registry-is-used). |
 | `medomni studio audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. `--only` limits it to some assets. |
 | `medomni studio check <tool>` | Checks a tool against its kind's interface. |
 

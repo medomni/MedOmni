@@ -33,7 +33,7 @@ medomni bench agent new my-agent
 
 ## 3. Run on dummy data
 
-Dummy data is generated from each family's declared format. It needs no credentials and contains no patient values.
+Dummy data is generated from the dataset packages and each family's declared format. It needs no credentials and contains no patient values. To look at it, `medomni studio dummy <dataset> --out <dir>` writes one dataset's dummy data to a folder.
 
 ```bash
 medomni bench task build --set smoke-dummy

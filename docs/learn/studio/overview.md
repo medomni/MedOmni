@@ -25,7 +25,7 @@ Every Studio tool is one of five kinds. Each kind has one interface, so a new to
 | **survey** | Reports what a dataset has: codes, families, time spans, counts. Reads the event table. | The v0.2 dataset survey, moved as it is |
 | **propose** | Collects task proposals from clinicians: intake form, task-collection site. | The v0.2 intake and catalogue, moved as they are |
 | **review** | Review forms and sign-off, the target census, and the [audit](audit.md). | The audit; the v0.2 review sheets, moved as they are |
-| **preview** | Runs a cohort on your copy or on dummy data up to the draw, without building. Lists the files a source population needs. | `preview`, `download-list` |
+| **preview** | Runs a cohort on your copy or on dummy data up to the draw, without building. Lists the files a source population needs. Writes a dataset's dummy data to a folder. | `preview`, `download-list`, `dummy` |
 | **report** | Tables and figures: from result records, and the architecture diagrams in these docs. | The diagram generator |
 
 ## From proposal to Bench
@@ -44,6 +44,7 @@ A frozen template is never changed; a change is a new proposal.
 ```bash
 medomni studio preview mimic_ckd-staging@n20     # patients left after each step and per class
 medomni studio download-list bdsp                 # files the source population needs
+medomni studio dummy vitaldb --out ~/dummy        # VitalDB-shaped dummy data, in a folder
 medomni studio audit                              # the audit report, in your workspace
 ```
 

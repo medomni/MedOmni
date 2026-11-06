@@ -10,7 +10,7 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.cli` | The `medomni` command. |
 | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
 | `medomni.core.recipes` | The recipe format: cohorts, labels, evidence. |
-| `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
+| `medomni.core.families` | The family registry, the family converters and the dummy-data generator (`medomni.core.families.dummy`). |
 | `medomni.core.cache` | Cache keys, entries and the cache commands. |
 | `medomni.bench.build` | Build: the task steps, the draw, the checks, task sets and fingerprints. |
 | `medomni.bench.harness` | Harbor jobs, the route check, run records and the replay agent. |

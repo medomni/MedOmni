@@ -124,15 +124,16 @@ def cmd_contracts(argv: list[str]) -> int:
     return check_main(argv)
 
 
-def _not_built(name: str) -> int:
-    print(f"medomni {name}: not built yet", file=sys.stderr)
-    return 1
+def cmd_cache(argv: list[str]) -> int:
+    from medomni.core.cache.commands import main as cache_main
+
+    return cache_main(argv)
 
 
 CORE = {
     "plugins": cmd_plugins,
     "contracts": cmd_contracts,
-    "cache": lambda argv: _not_built("cache"),
+    "cache": cmd_cache,
 }
 
 

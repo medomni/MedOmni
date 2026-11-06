@@ -89,7 +89,7 @@ def test_clash_with_core_command_is_skipped(site, capsys):
     make_dist(site, "medomni-one", "fake_one", {plugins.COMMANDS: {"cache": "fake_one:group"}})
     r = plugins.resolve(plugins.COMMANDS)
     assert "cache" not in r.pieces and r.warnings
-    assert main(["cache"]) == 1  # Core's own command, still a placeholder
+    assert main(["cache", "build", "x"]) == 1  # Core's own command; build is a placeholder until part 6
     assert "ran fake_one" not in capsys.readouterr().out
 
 

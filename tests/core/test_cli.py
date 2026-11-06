@@ -71,7 +71,7 @@ def test_project_command_runs(project):
 
 
 def test_core_command_not_built_yet():
-    r = run("cache")
+    r = run("cache", "build", "dummy")
     assert r.returncode == 1 and "not built yet" in r.stderr
 
 

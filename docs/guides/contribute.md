@@ -85,7 +85,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
     medomni bench task new vitaldb_my-task --dataset vitaldb
     ```
 
-2. Fill in `template.yaml`: the question, the targets with each one's label and metric, the input and the variants. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
+2. Fill in `template.yaml`: the targets with each one's label and metric, the input, the variants, and the `agent` block with the instruction, environment and submission path. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
 3. Write a cohort in `cohorts/`: source population, prediction time, requirements and draw. Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
 4. Preview the counts on your copy, adjust the cohort, then build.
 

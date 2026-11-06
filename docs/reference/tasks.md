@@ -26,9 +26,10 @@ One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
 | `input` | yes | The tables and families the default evidence variant stages. |
 | `variants` | no | `[default]` (default), or `[default, full]`. |
 | `exclude` | no | Codes or fields to remove beyond the targets' guards. |
-| `environment` | yes | CPUs, memory, internet access, agent and verifier timeouts. |
-| `submission_path` | yes | Where the agent writes its answer. |
-| `instruction` | yes | The template that renders the agent's instruction. |
+| `agent` | yes | What an agent needs to run the task: the three fields below. |
+| `agent.instruction` | yes | The template that renders the agent's instruction. |
+| `agent.environment` | yes | CPUs, memory, internet access, agent and verifier timeouts. |
+| `agent.submission_path` | yes | Where the agent writes its answer. |
 
 Check a template, its cohort and the build; the exit code is 1 on any failure:
 
@@ -57,6 +58,24 @@ The fingerprint of a built `<template>@<cohort>` is the SHA-256 over every file 
 ## Task sets
 
 A task set pins `<template>@<cohort>` pairs to fingerprints, in `bench/sets/<name>.yaml`. For each pair it also lists the step counts and the cache keys and content hashes the build uses. Task sets only grow.
+
+Contract: task set, `src/medomni/core/contracts/schemas/task-set.schema.json`.
+
+| Field | Required | Meaning |
+|---|---|---|
+| `name` | yes | The task set's name, such as `v1`. |
+| `description` | no | One line on what it holds. |
+| `card` | no | The task set's card, below. |
+| `tasks` | yes | One or more entries, each a `<template>@<cohort>` with its fingerprint, step counts and cache hashes. |
+
+The card:
+
+| Field | Required | Meaning |
+|---|---|---|
+| `version` | yes | The task set's own version. |
+| `owner` | yes | Who maintains it. |
+| `license` | yes | The license of the task set file. |
+| `accepts` | yes | The intelligence kinds it may be run with: `agent`. |
 
 | Task set | Data | Holds |
 |---|---|---|

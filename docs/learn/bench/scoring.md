@@ -3,12 +3,12 @@
 The scorer turns the runs of one built `<template>@<cohort>` into scores: one per target, for each agent, condition and repetition. It is the only part of MedOmni that writes scores.
 
 ```text
-runs of one <template>@<cohort> ──collect predictions──▶ compare with its answers ──▶ one score record per target
+prediction records of one <template>@<cohort> ──▶ compare with its answers ──▶ one score record per target
 ```
 
 ## How a score is made
 
-1. Collect every atom task's prediction for the `<template>@<cohort>`, agent, condition and repetition.
+1. Read the [prediction records](runs.md#prediction-records) of every atom task for the `<template>@<cohort>`, agent, condition and repetition. The scorer reads nothing else from a run.
 2. Check the set is complete and consistent.
 3. For each target, compare the predictions with the answers, using that target's metric.
 4. Write one score record per target to the results file.
@@ -36,7 +36,7 @@ Either failure stops the check.
 
 ## Metrics
 
-Each target in a template names its metric:
+Each target in a template names its metric, a name registered in `medomni.metrics`:
 
 - `auc`: binary targets
 - `qwk`: ordinal targets

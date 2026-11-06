@@ -39,7 +39,7 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 ## Evaluation
 
 **Task template**
-:   A clinical question with its targets, input, instruction and environment. A frozen template is the end of Make. See [Tasks](bench/tasks.md).
+:   A clinical question with its targets, input and evidence variants, and an `agent` block with the agent's instruction and environment. A frozen template is the end of Make. See [Tasks](bench/tasks.md).
 
 **Cohort**
 :   A recipe next to a template: who is included, at which prediction time, and how many per class. A template and a cohort are written `<template>@<cohort>`. See [Recipes](bench/recipes.md).
@@ -59,8 +59,8 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 **Cache**
 :   The results of slow steps, built the same way by every user and checked against published hashes. See [Cache](core/cache.md).
 
-**Agent**
-:   The system being evaluated: a scaffold driving a model, described in an agent config. See [Runs](bench/runs.md).
+**Intelligence**
+:   The system being evaluated, with a kind. v0.3.0 has one kind, `agent`: a scaffold driving a model, described in an agent config. Records name it as `intelligence: {kind, name}`. See [Runs](bench/runs.md).
 
 ## Extending MedOmni
 

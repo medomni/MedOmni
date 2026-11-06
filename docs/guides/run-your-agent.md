@@ -60,8 +60,8 @@ Contract: result record, `src/medomni/core/contracts/schemas/result-record.schem
 
 | Record | One per | Key fields |
 |---|---|---|
-| Run (`kind: run`) | agent run on one atom task | `run_id`, `task_set`, `task` (`<template>@<cohort>`), `agent`, `condition`, `fingerprint`, `fingerprint_match`, `model_served`, `encoders_served`, `encoder_calls`, `files_opened`, `error_kind`, `api_cost` |
-| Score (`kind: score`) | task × target × agent × condition × repetition | `run_id`, `task_set`, `task_set_hash`, `target`, `fingerprint`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
+| Run (`kind: run`) | agent run on one atom task | `run_id`, `task_set`, `task` (`<template>@<cohort>`), `intelligence` (`kind: agent` and its name), `fingerprint`, `fingerprint_match`, `model_served`, `error_kind`, `api_cost`; in its `agent` block: `condition`, `encoders_served`, `encoder_calls`, `files_opened` |
+| Score (`kind: score`) | task × target × agent × condition × repetition | `run_id`, `task_set`, `task_set_hash`, `target`, `fingerprint`, `intelligence`, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
 
 !!! warning "The results file is patient data"
     Run ids name the patients they ran on, so the file falls under each dataset's data use agreement. Keep it in the workspace.

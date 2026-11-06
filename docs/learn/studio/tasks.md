@@ -14,8 +14,10 @@ A YAML file, `template.yaml`, that states:
 - **targets**: one or more, each naming a label from the dataset's library and its metric
 - **input**: the tables and families the agent may see
 - **variants**: the evidence variants to build, `default` and optionally `full`
-- **instruction**: the template for the agent's instruction
-- **environment**: CPUs, memory, timeouts, no internet
+- **agent**: what an agent needs to run the task:
+    - **instruction**: the template for the agent's instruction
+    - **environment**: CPUs, memory, timeouts, no internet
+    - **submission path**: where the agent writes its answer
 
 A template is frozen once its proposal is signed off in [Studio](../studio/overview.md). A changed template is a new template.
 
@@ -41,6 +43,7 @@ A named list of `<template>@<cohort>` pairs pinned to fingerprints, such as `v1`
 - Its content hash covers every pair and fingerprint in it. Each score record carries the hash, and scores with different hashes are never put in one table.
 - For each pair it also lists the step counts and the hashes of the cache entries the build uses.
 - Credentialed task sets publish fingerprints and hashes only; you build them from your own access. See [Rebuild a task set](../../guides/rebuild-a-task-set.md).
+- A task set may carry a card: its version, owner, license and the intelligence kinds it accepts. A plug-in package can publish a task set with its card.
 - To build outside a task set, for example while writing a cohort, name the pair: `medomni bench task build mimic_ckd-staging@n20`.
 
 ## Where it lives

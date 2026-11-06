@@ -1,16 +1,17 @@
 # Plug-ins
 
-A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, datasets, tasks, encoders, Studio tools or family converters without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
+A plug-in package is an outside Python package, named `medomni-<name>`, that adds agents, datasets, tasks, task sets, encoders, Studio tools or family converters without a pull request. Use one when the work should stay in your repository, for example tasks on data that cannot leave your institution. [Extend MedOmni](../extend.md) compares it with the other ways to add things.
 
 ## Content folder
 
-Agents, datasets, tasks and encoders are files. A plug-in package ships them in one folder, laid out like MedOmni's repository:
+Agents, datasets, tasks, task sets and encoders are files. A plug-in package ships them in one folder, laid out like MedOmni's repository:
 
 ```text
 medomni_myname/content/
 ├── bench/
 │   ├── agents/<agent>.yaml
-│   └── datasets/<dataset>/        dataset package, with hooks/ and tasks/<template>/
+│   ├── datasets/<dataset>/        dataset package, with hooks/ and tasks/<template>/
+│   └── sets/<set>.yaml            task sets, with an optional card
 └── perception/
     └── encoders/<family>/<encoder>/
 ```
@@ -30,8 +31,11 @@ Pieces that are Python code register one entry point each, in the group for thei
 | `medomni.checks` | Checks for the testing kit | [The testing kit](#the-testing-kit) |
 | `medomni.converters` | A [family converter](families.md#family-converters) | Bench |
 | `medomni.tools` | A Studio tool of one kind | Studio |
+| `medomni.runners` | The runner for one kind of intelligence | Bench |
+| `medomni.metrics` | A metric a target may name | Bench's scorer |
 
-Bench, Perception and Studio register their own commands and checks in the same groups.
+- Bench, Perception and Studio register their own commands and checks in the same groups.
+- In v0.3.0, `medomni.runners` and `medomni.metrics` hold only MedOmni's own pieces: the agent runner, and `auc`, `qwk` and `mae`.
 
 ## Example
 

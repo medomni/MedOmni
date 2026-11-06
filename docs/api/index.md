@@ -13,7 +13,7 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.families` | The family registry, the family converters and the dummy-data generator (`medomni.core.families.dummy`). |
 | `medomni.core.cache` | Cache keys, entries and the cache commands. |
 | `medomni.bench.build` | Build: the task steps, the draw, the checks, task sets and fingerprints. |
-| `medomni.bench.harness` | Harbor jobs, the route check, run records and the replay agent. |
+| `medomni.bench.harness` | The agent runner: Harbor jobs, the route check, run and prediction records, the replay agent. |
 | `medomni.bench.service` | The perception service inside each atom task: the gateway behind the call budget, family filter and call log. |
 | `medomni.bench.scoring` | The scorer, the metrics and the behaviour metrics. |
 | `medomni.perception.registry` | The encoder catalogue: model cards, image pulls and the encoder check. |

@@ -11,16 +11,17 @@ A contract is a fixed format plus the validator that checks it. Every file or me
 | Event table | The table every dataset becomes, with its `FILE` rows | Bench | Bench, Studio |
 | Dataset policy | What a dataset's license allows | Contributors | Bench |
 | Recipe | A cohort, a label library and evidence rules | Contributors | Bench, Studio |
-| Task template | One task: targets, input, variants, instruction, environment | Contributors | Bench |
-| Task set | `<template>@<cohort>` pairs pinned to fingerprints, step counts and cache hashes | MedOmni team | Bench, you |
+| Task template | One task: targets, input, variants, and an `agent` block (instruction, environment, submission path) | Contributors | Bench |
+| Task set | `<template>@<cohort>` pairs pinned to fingerprints, step counts and cache hashes, with an optional card | MedOmni team, plug-in packages | Bench, you |
 | Fingerprint | The hash of a built `<template>@<cohort>` | Bench | Bench, Studio's audit |
 | Cache entry | One cache entry and its `CACHE.json` | Bench, Perception | Bench, Perception, you |
-| Agent config | One agent: scaffold, model, route | You, contributors | Bench |
+| Agent config | One intelligence of kind `agent`: scaffold, model, route | You, contributors | Bench |
 | Task proposal | One proposed task and its review state | Clinicians, reviewers | Studio |
 | Model card | One encoder | Contributors | Perception, agents |
 | Container API | Requests between the gateway and an encoder image | MedOmni team | Perception |
 | Gateway API | Requests to the gateway and the evidence it returns | MedOmni team | Bench, agents, your code |
-| Result record | One run, or one score for one target | Bench | You, Studio |
+| Prediction record | One answer for one target of one atom task: the only handoff from a run to the scorer | Bench's agent runner | Bench's scorer |
+| Result record | One run, or one score for one target, naming its intelligence | Bench | You, Studio |
 | Workspace config | Where your data copies, cache, built tasks and results are kept | You | Bench, Perception, Studio |
 
 The fields of each are on its Reference page. Family files themselves are content, written by the MedOmni team; only their schema is a contract.

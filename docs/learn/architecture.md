@@ -103,8 +103,8 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Core | Families | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
 | Core | Cache | `medomni.core.cache` | Cache keys and entries, and the cache commands. See [Cache](core/cache.md). |
 | Bench | Build | `medomni.bench.build` | Runs recipes into atom tasks; task sets and fingerprints. See [Build](bench/build.md). |
-| Bench | Harness | `medomni.bench.harness` | Turns a task set into Harbor jobs, checks the route against each dataset policy and records runs. |
-| Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks, one score record per target. The only thing that writes scores. |
+| Bench | Harness | `medomni.bench.harness` | The agent runner: turns a task set into Harbor jobs, checks the route against each dataset policy, and records runs and prediction records. |
+| Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks from their prediction records, one score record per target. The only thing that writes scores. |
 | Bench | Perception service | `medomni.bench.service` | Runs the gateway inside each atom task, with the call budget, family filter and call log. |
 | Perception | Gateway | `medomni.perception.gateway` | The gateway service, built into the gateway image. |
 | Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |

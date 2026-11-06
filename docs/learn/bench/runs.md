@@ -1,15 +1,16 @@
 # Runs
 
-A run is one agent on one atom task, once. The harness turns a task set into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file.
+A run is one agent on one atom task, once. The harness turns a task set into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file and its answers as prediction records.
 
 ```text
 agent config + task set ──harness──▶ Harbor jobs ──▶ one run per atom task × condition × repetition
-                                                     └──▶ results file
+                                                     ├──▶ results file
+                                                     └──▶ prediction records ──▶ scorer
 ```
 
 ## Agent
 
-An agent is a scaffold driving a model, described in an agent config. The config names the scaffold (a Harbor agent such as `terminus-2`), the model, the model name the provider must report back, and the route (`local` or `cloud`). [Run your agent](../../guides/run-your-agent.md) lists every field.
+The system being evaluated is an intelligence. Its kind in v0.3.0 is `agent`: a scaffold driving a model, described in an agent config. The config names the scaffold (a Harbor agent such as `terminus-2`), the model, the model name the provider must report back, and the route (`local` or `cloud`). [Run your agent](../../guides/run-your-agent.md) lists every field.
 
 The replay agent repeats recorded runs with no model calls. MedOmni's own tests use it to run a task set at no cost.
 
@@ -43,16 +44,23 @@ Each condition is its own built set of atom tasks.
 1. checks the agent's route against every dataset policy in the task set
 2. pulls the encoder images for the families the tasks stage
 3. writes one Harbor job per condition and repetition, and runs them
-4. records each run: ids, fingerprint, served model, the encoders served (id and image digest), encoder calls, files opened, cost, errors
+4. records each run: ids, the intelligence, fingerprint, served model, cost and errors; and, in the run's `agent` block, the condition, the encoders served (id and image digest), encoder calls and files opened
+5. reads the agent's answer from the submission path and writes one prediction record per target to the run's `predictions.jsonl`
 
 Running it again resumes: atom tasks that already have a run are skipped.
 
+The harness is Bench's runner for agents, registered in `medomni.runners`.
+
+## Prediction records
+
+A prediction record is one answer for one target of one atom task: `run_id`, `atom`, `target`, `value` and `intelligence`. It is the only thing the scorer reads from a run. A value is a number, or a class label as text.
+
 ## Where it lives
 
-- `src/medomni/bench/harness/`: Harbor jobs, the route check, run records, the replay agent
+- `src/medomni/bench/harness/`: the agent runner: Harbor jobs, the route check, run and prediction records, the replay agent
 - `src/medomni/bench/service/`: the perception service and its call budget, family filter and call log
 - `bench/agents/`: contributed agent configs
-- your workspace: runs and the results file
+- your workspace: runs with their `predictions.jsonl`, and the results file
 
 ## Where next
 

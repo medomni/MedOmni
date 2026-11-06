@@ -15,11 +15,13 @@ What you can add to MedOmni, how, and what checks it.
 | An agent | Bench | Agent config | `medomni bench agent new` | `medomni bench run --set smoke-dummy` | `bench/agents/` | content folder: `bench/agents/` |
 | A dataset | Bench | Dataset config, recipe, dataset policy | `medomni bench data new` | `medomni bench data check` | openly licensed only | content folder: `bench/datasets/<dataset>/` |
 | A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | content folder: `bench/datasets/<dataset>/tasks/<template>/` |
+| A task set | Bench | Task set, with its card | `bench/sets/<set>.yaml` | `medomni bench task check --set <set>` | MedOmni team only | content folder: `bench/sets/<set>.yaml` |
 | An encoder | Perception | Model card, Container API | `medomni perception new` | `medomni perception check` | `perception/encoders/` | content folder: `perception/encoders/<family>/<encoder>/` |
 | A Studio tool | Studio | Its kind's interface | `src/medomni/studio/<kind>/` | `medomni studio check` | `src/medomni/studio/<kind>/` | entry point: `medomni.tools` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).
 - [Contribute](../guides/contribute.md) walks through each one.
+- A task set with a card publishes a benchmark: its version, owner, license and the intelligence kinds it accepts. MedOmni's own task sets carry one, and a plug-in package publishes its own the same way.
 
 ## What you can use without adding anything
 
@@ -42,5 +44,6 @@ Open an issue for these. Only the MedOmni team changes them, because every proje
 ## Not open in v0.3.0
 
 - **Metrics.** Targets use `auc`, `qwk` or `mae`.
+- **Runners.** The agent is the only kind of intelligence, and Bench's harness is its runner.
 - **Conditions.** `enc`, `noenc`, `enc-forced` and `ladder`.
 - **Other tool access.** Inside an atom task the agent reaches only the perception service. Other tool access, such as MCP servers or skills, would be added beside it later, not inside it.

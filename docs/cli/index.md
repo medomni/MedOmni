@@ -8,7 +8,7 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni --version` | Prints the MedOmni version. |
 | `medomni plugins` | Lists the installed plug-in packages and what each adds. |
-| `medomni contracts check [<contract> ...]` | Validates the contracts: family registry, dataset config, dataset policy, recipe, task template, task set, model card, Gateway API, result record, workspace config. |
+| `medomni contracts check [<contract> ...]` | Validates the contracts: family registry, dataset config, dataset policy, recipe, task template, task set, model card, Gateway API, result record, prediction record, workspace config. |
 | `medomni cache build <dataset>` | Loads the dataset and runs file conversions into the [cache](../learn/core/cache.md). |
 | `medomni cache status` | Lists cache entries per dataset and step, with size and use. |
 | `medomni cache verify [--set <set>]` | Recomputes every entry's content hash; with `--set`, compares with the task set's published hashes. |

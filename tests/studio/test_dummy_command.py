@@ -6,9 +6,9 @@ from medomni.core.testing import DATASETS
 
 
 def test_command_writes_what_make_dataset_writes(tmp_path, capsys):
-    assert main(["studio", "dummy", str(DATASETS / "dummy-bdsp"), "--out", str(tmp_path / "cmd")]) == 0
+    assert main(["studio", "dummy", str(DATASETS / "dummy-bdsp"), "--out", str(tmp_path / "cmd"), "--subjects", "3"]) == 0
     assert "planted labels" in capsys.readouterr().out
-    direct = make_dataset(DATASETS / "dummy-bdsp", tmp_path / "direct")
+    direct = make_dataset(DATASETS / "dummy-bdsp", tmp_path / "direct", subjects=3)
     assert hashing.dir_hash(tmp_path / "cmd/raw") == hashing.dir_hash(direct.root)
     assert (tmp_path / "cmd/planted.json").read_bytes() == (tmp_path / "direct/planted.json").read_bytes()
 

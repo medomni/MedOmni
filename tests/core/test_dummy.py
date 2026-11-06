@@ -130,6 +130,7 @@ def test_dataset_has_what_its_config_names(made, shape):
             for entry, spec in o.files.items():
                 found = sorted(d.root.glob(re.sub(r"\{[a-z]+\}", "*", spec.pattern)))
                 assert len(found) == len(d.subjects) * spec.per_subject, entry
+                assert all(p.stat().st_size < 1 << 20 for p in found), entry
                 if spec.format == "family":
                     fam = families.get(entry, REPO)
                     assert all(conforms(fam, p) == [] for p in found), entry
@@ -137,10 +138,10 @@ def test_dataset_has_what_its_config_names(made, shape):
 
 @pytest.mark.parametrize("shape", SHAPES)
 def test_dataset_is_reproducible(made, shape, tmp_path):
-    again = make_dataset(DATASETS / shape, tmp_path / shape)
-    assert hashing.dir_hash(again.root) == hashing.dir_hash(made[shape].root)
-    other = make_dataset(DATASETS / shape, tmp_path / "other", seed=1)
-    assert hashing.dir_hash(other.root) != hashing.dir_hash(made[shape].root)
+    a, b = (make_dataset(DATASETS / shape, tmp_path / d, subjects=3) for d in ("a", "b"))
+    assert hashing.dir_hash(a.root) == hashing.dir_hash(b.root)
+    other = make_dataset(DATASETS / shape, tmp_path / "other", subjects=3, seed=1)
+    assert hashing.dir_hash(other.root) != hashing.dir_hash(a.root)
 
 
 @pytest.mark.parametrize("shape", SHAPES)

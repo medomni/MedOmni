@@ -60,3 +60,4 @@ markers = [
     "baseline: T4, needs the v0.2.1 baseline",
 ]
 addopts = "-m 'not containers and not data and not baseline'"
+filterwarnings = ["ignore:scipy.misc is deprecated:DeprecationWarning"]  # neurokit2 imports scipy.misc

@@ -11,6 +11,9 @@ What it reads: `dataset.yaml` (the reader options name every table, column, code
   code the rule matches, inside the label's window; for a value label, negatives get a value on the other side.
   These planted rows sit after the anchor: they are the **canaries** a leakage check must keep out of an atom.
   `planted.json`, written beside the raw folder, lists every planted row.
+- **Values** (part 5b): at the physiology level, a value whose code's description names a known quantity
+  (creatinine, HbA1c, heart rate, age, ...) falls in its published reference range (`ranges.py`); a value label's
+  negatives get a normal value. Files follow one model per subject, so a subject's signals agree.
 """
 from __future__ import annotations
 
@@ -21,7 +24,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from . import START, make_dummy, rng
+from . import DEFAULT_LEVEL, LEVELS, START, make_dummy, ranges, rng
 from .. import get as get_family
 from ..check import data_format
 
@@ -85,8 +88,11 @@ def _templated(spec) -> bool:
     return any(e.columns for e in spec.events)
 
 
-def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed: int = 0) -> DummyDataset:
+def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed: int = 0,
+                 level: str = DEFAULT_LEVEL) -> DummyDataset:
     """Write `<out>/raw/` (the data root) and `<out>/planted.json` from a dataset package."""
+    if level not in LEVELS:
+        raise ValueError(f"level must be one of {LEVELS}, not '{level}'")
     package, out = Path(package), Path(out)
     config, codes, labels, readers = _read_package(package)
     tables = {n: s for kind, o in readers if kind == "csv" for n, s in o.tables.items()}
@@ -102,6 +108,7 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
     t0s = {s: START + i * SPACING + timedelta(hours=int(g.integers(0, 12))) for i, s in enumerate(ids)}
     visits = {s: (VISIT_BASE + i + 1 if unit_spec.subject_type == "int" else f"DUMMY-V{i + 1}")
               for i, s in enumerate(ids)}
+    described = {c["code"]: c["description"] for c in codes}
     by_table = {}
     for c in codes:
         by_table.setdefault(c["source_table"], []).append(c["code"])
@@ -128,6 +135,10 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
             row[spec.time_from.key] = visits[subject]
         return row
 
+    def normal(code: str):
+        r = ranges.lookup(described.get(code, "")) if level == "physiology" else None
+        return ranges.value(r, g) if r else round(float(g.uniform(1, 100)), 2)
+
     def event_cols(name, spec, event, row, subject, code=None, value=None):
         if event.columns:
             code = code or noise_code(name, spec, event)
@@ -135,7 +146,7 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
                 return False
             row.update(fill(spec, event, code))
         if event.value:
-            row[event.value] = round(float(g.uniform(1, 100)), 2) if value is None else value
+            row[event.value] = normal(code or event.code) if value is None else value
         if event.text:
             row[event.text] = f"dummy text {int(g.integers(0, 1000))}"
         if event.time:
@@ -192,6 +203,11 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
                 hit = {">": x * 1.5 + 1, ">=": x * 1.5 + 1, "<": x * 0.5 - 1, "<=": x * 0.5 - 1, "==": x}
                 miss = {">": x * 0.5 - 1, ">=": x * 0.5 - 1, "<": x * 1.5 + 1, "<=": x * 1.5 + 1, "==": x + 1}
                 value = round((hit if pos else miss)[lab.op or ">="], 3)
+                r = ranges.lookup(described.get(code, "")) if level == "physiology" else None
+                if not pos and r is not None:
+                    v = ranges.value(r, g)  # a negative gets a normal value, when the normal range fails the rule
+                    fails = {">": v <= x, ">=": v < x, "<": v >= x, "<=": v > x, "==": v != x}[lab.op or ">="]
+                    value = v if fails else value
             if name in one_row:
                 row = next(r for r in rows[name] if r[spec.subject] == subject)
                 event_cols(name, spec, event, row, subject, code=code, value=value)
@@ -231,10 +247,11 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
 
                     (root / rel.parent).mkdir(parents=True, exist_ok=True)
                     write_h5([get_family(f) for f in spec.families], seed + i, root / rel, subject=str(subject),
-                             start=start)
+                             start=start, level=level)
                     continue
                 family = get_family(entry)
-                written = make_dummy(family, seed + i, root / rel.parent, rel.stem, subject=str(subject), start=start)
+                written = make_dummy(family, seed + i, root / rel.parent, rel.stem, subject=str(subject), start=start,
+                                     level=level)
                 if written.name != rel.name:
                     raise DummyError(f"files.{entry}: pattern ends in '{rel.suffix}', a {data_format(family)} "
                                      f"file is '{written.suffix}'")

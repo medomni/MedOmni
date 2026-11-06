@@ -22,7 +22,7 @@ GRID = {
     "oct-bscanset-radial24-circle3-mono8": (OPT, "OPT", 64, 64, 27, 1),  # 24 radial lines + 3 circles
     "octa-flowcube-mono8-3d": (OPT, "OPT", 64, 64, 16, 1),
     "flio-tcspc-256x256x1024bin-u16": (OP16, "OP", 8, 8, 2 * 1024, 1),  # 2 bands x 1024 time bins, on 8x8 pixels
-    "retinal-heightmap-surfaces-f32": (PMAP, "OPT", 64, 64, 4, 1),  # 4 surfaces
+    "retinal-heightmap-surfaces-f32": (PMAP, "OPT", 64, 64, 9, 1),  # 9 surfaces (devices give 2, 9, 10 or 11)
     "echo-ultrasound-frame-2d": (US, "US", 64, 64, 1, 3),
     "echo-study-dicom-video": (US_MULTI, "US", 48, 48, 16, 3),
 }
@@ -44,7 +44,7 @@ def _pixels(family, seed: int, shape: tuple[int, ...], dtype: str):
     return (x * top).astype(np.uint8 if dtype == "uint8" else np.uint16)
 
 
-def write_dicom(family, seed: int, path: Path, *, subject: str, start) -> None:
+def write_dicom(family, seed: int, path: Path, *, subject: str, start, level: str = "format") -> None:
     from pydicom.dataset import Dataset, FileMetaDataset
     from pydicom.uid import ExplicitVRLittleEndian, generate_uid
 
@@ -82,7 +82,7 @@ def write_dicom(family, seed: int, path: Path, *, subject: str, start) -> None:
     ds.save_as(str(path), enforce_file_format=True)
 
 
-def write_png(family, seed: int, path: Path, *, subject: str, start) -> None:
+def write_png(family, seed: int, path: Path, *, subject: str, start, level: str = "format") -> None:
     from PIL import Image
 
     rows, cols = PNG_GRID[family.id]

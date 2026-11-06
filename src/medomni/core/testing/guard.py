@@ -21,8 +21,13 @@ class GuardError(RuntimeError):
 FAKE_DOCKER = "#!/bin/sh\necho 'T1 test used Docker' >&2\nexit 97\n"
 
 
+# Font folders in the home folder: matplotlib (which neurokit2 imports) lists them on first import. They hold fonts only.
+FONT_DIRS = (".local/share/fonts", ".fonts")
+
+
 def _allowed_roots(repo: Path, tmp: Path) -> tuple[str, ...]:
     roots = {repo, tmp, Path(tempfile.gettempdir()), Path(sys.prefix), Path(sys.base_prefix), Path(sys.exec_prefix)}
+    roots |= {Path.home() / d for d in FONT_DIRS}
     return tuple(str(r.resolve()) for r in roots)
 
 
@@ -85,3 +90,5 @@ def install(monkeypatch, repo: Path, tmp: Path, blocked: tuple[str, ...] = ("/da
     monkeypatch.setenv("MEDOMNI_HOME", str(workspace))
     monkeypatch.setenv("HF_HUB_OFFLINE", "1")
     monkeypatch.setenv("HF_HOME", str(tmp / "hf"))
+    monkeypatch.setenv("MPLCONFIGDIR", str(tmp / "matplotlib"))  # matplotlib's cache and config, not ~/.config
+    monkeypatch.setenv("MPLBACKEND", "Agg")

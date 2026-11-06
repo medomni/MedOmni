@@ -1,8 +1,11 @@
 """Dummy data at the format level (part 5; R-70 to R-75).
 
 `make_dummy(family, seed, out_dir)` writes one file that passes `families.check.conforms` for that family: the right
-format, channels, rate, units, dtype, range, dimensions and planes. Values are seeded, not physiological (that is
-part 5b). It reads the family file and the seed only: no dataset, no network.
+format, channels, rate, units, dtype, range, dimensions and planes. It reads the family file and the seed only: no
+dataset, no network.
+
+Two levels: `format` (seeded values that only pass the family's checks) and `physiology` (part 5b, the default:
+signals that look like the signal, from one model per subject; images stay at the format level, R-73).
 
     from medomni.core import families
     from medomni.core.families.dummy import make_dummy
@@ -10,6 +13,7 @@ part 5b). It reads the family file and the seed only: no dataset, no network.
 """
 from __future__ import annotations
 
+import json
 import zlib
 from datetime import datetime
 from pathlib import Path
@@ -19,7 +23,9 @@ from ..check import data_format
 # U2.12: four families declare no rate. Dummies use this rate, for tests only; it is not a protocol value.
 TEST_RATES = {"capnography-mmhg": 100.0, "ppg-waveform-uncal": 100.0, "resp-flow": 100.0, "snore-acoustic": 100.0}
 START = datetime(2150, 1, 1, 0, 0, 0)  # an invented date, far from any real recording
-SECONDS = 30  # signal length
+SECONDS = 30  # signal length at the format level
+LEVELS = ("format", "physiology")
+DEFAULT_LEVEL = "physiology"
 
 
 def rng(seed: int, *keys: str):
@@ -51,15 +57,29 @@ EXTENSIONS = {"edf": ".edf", "wfdb": ".hea", "dicom": ".dcm", "image": ".png", "
 
 
 def make_dummy(family, seed: int, out_dir: str | Path, name: str | None = None, *, subject: str = "DUMMY-1",
-               start: datetime = START) -> Path:
+               start: datetime = START, level: str = DEFAULT_LEVEL) -> Path:
     """Write a dummy file for `family` into `out_dir` and return its path (a WFDB record returns its `.hea`)."""
     from . import dicom, omh, signal, table, wfdb_
+
+    if level not in LEVELS:
+        raise ValueError(f"level must be one of {LEVELS}, not '{level}'")
+    from ..check import JSON_TABLES
 
     fmt = data_format(family)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{name or family.id}{EXTENSIONS[fmt]}"
+    stem = name or family.id
+    ext = ".json" if family.id in JSON_TABLES else EXTENSIONS[fmt]
+    manifest = family.protocol.format[0] == "json-manifest"
+    path = out_dir / (f"{stem}.data{ext}" if manifest else f"{stem}{ext}")
     writer = {"edf": signal.write_edf, "wfdb": wfdb_.write, "dicom": dicom.write_dicom, "image": dicom.write_png,
               "omh": omh.write, "table": table.write}[fmt]
-    writer(family, seed, path, subject=subject, start=start)
+    writer(family, seed, path, subject=subject, start=start, level=level)
+    if manifest:  # the family's file is a JSON manifest naming its data file, as v0.2's runtime reader expects
+        m = {"files": [path.name]}
+        if fmt == "edf":
+            m = {"file": path.name, "channel": channel_names(family)[0], "start_sec": 1.0, "end_sec": 1.5}
+        mpath = out_dir / f"{stem}.json"
+        mpath.write_text(json.dumps(m, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        return mpath
     return path

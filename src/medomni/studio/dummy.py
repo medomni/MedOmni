@@ -34,6 +34,9 @@ def add_parser(sub) -> None:
     p.add_argument("--out", required=True, type=Path, help="the folder to write")
     p.add_argument("--subjects", type=int, default=10)
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--level", choices=("physiology", "format"), default="physiology",
+                   help="physiology: signals that look like the signal (default); format: values that only pass the "
+                        "family checks")
 
 
 def run(a) -> int:
@@ -41,7 +44,7 @@ def run(a) -> int:
     from medomni.core.families.dummy.datasets import DummyError, make_dataset
 
     try:
-        d = make_dataset(find_package(a.dataset), a.out, subjects=a.subjects, seed=a.seed)
+        d = make_dataset(find_package(a.dataset), a.out, subjects=a.subjects, seed=a.seed, level=a.level)
     except (FileNotFoundError, ContractError, DummyError, ValueError) as e:
         print(f"medomni studio dummy: {e}", file=sys.stderr)
         return 2

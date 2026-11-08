@@ -42,25 +42,31 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 :   A clinical question with its targets, input and evidence variants, and an `agent` block with the agent's instruction and environment. A frozen template is the end of Make. See [Tasks](bench/tasks.md).
 
 **Cohort**
-:   A recipe next to a template: who is included, at which prediction time, and how many per class. A template and a cohort are written `<template>@<cohort>`. See [Recipes](bench/recipes.md).
+:   A recipe next to a template: who is included, at which prediction time, and how many per class. A template and a cohort are written `<template>@<cohort>`, and are one task with a version `N.X`. See [Recipes](bench/recipes.md).
 
 **Recipe**
 :   The one format for what Build takes from a dataset: the cohort, the labels and the evidence. It holds rules, never patient ids. See [Recipes](bench/recipes.md).
 
 **Build**
-:   The step in Bench that turns a template, a cohort and your copy into atom tasks with a fixed fingerprint. See [Build](bench/build.md).
+:   The step in Bench that turns a template, a cohort and your copy into atom tasks. See [Build](bench/build.md).
 
 **Atom task**
 :   One patient's evidence and the question, at the patient's prediction time: the unit an agent runs. See [Tasks](bench/tasks.md#atom-task).
 
 **Task set**
-:   A published list of `<template>@<cohort>` pairs pinned to fingerprints, such as `v1`. Scores are compared on task sets. See [Tasks](bench/tasks.md#task-set).
+:   A published list of `<template>@<cohort>` pairs, each pinned at its version, and the arms to build them under. It is named `<benchmark>/<set>`, such as `medomni-bench/v1`. Scores are compared on task sets. See [Tasks](bench/tasks.md#task-set).
+
+**Benchmark**
+:   Several task sets under one card: version, owner, license and the intelligence kinds it accepts. MedOmni's own is `medomni-bench`; a plug-in package can publish another. See [Tasks](bench/tasks.md#benchmark).
 
 **Cache**
-:   The results of slow steps, built the same way by every user and checked against published hashes. See [Cache](core/cache.md).
+:   The results of slow steps, built the same way by every user from their own copy. See [Cache](core/cache.md).
 
 **Intelligence**
 :   The system being evaluated, with a kind. v0.3.0 has one kind, `agent`: a scaffold driving a model, described in an agent config. Records name it as `intelligence: {kind, name}`. See [Runs](bench/runs.md).
+
+**Arm**
+:   One way of giving the same tasks to the intelligence, compared side by side, as in a clinical trial: with encoders, without them, or adding input families rung by rung. See [Runs](bench/runs.md#arms).
 
 ## Extending MedOmni
 

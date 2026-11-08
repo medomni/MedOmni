@@ -18,15 +18,16 @@ With Studio removed, anyone can still rebuild a task set, run an agent, score it
 
 ## Tool kinds
 
-Every Studio tool is one of five kinds. Each kind has one interface, so a new tool of that kind works with the same commands.
+Every Studio tool is one of six kinds. Each kind has one interface, so a new tool of that kind works with the same commands.
 
 | Kind | Does | In v0.3.0 |
 |---|---|---|
-| **survey** | Reports what a dataset has: codes, families, time spans, counts. Reads the event table. | The v0.2 dataset survey, moved as it is |
-| **propose** | Collects task proposals from clinicians: intake form, task-collection site. | The v0.2 intake and catalogue, moved as they are |
-| **review** | Review forms and sign-off, the target census, and the [audit](audit.md). | The audit; the v0.2 review sheets, moved as they are |
-| **preview** | Runs a cohort on your copy or on dummy data up to the draw, without building. Lists the files a source population needs. Writes a dataset's dummy data to a folder. | `preview`, `download-list`, `dummy` |
-| **report** | Tables and figures: from result records, and the architecture diagrams in these docs. | The diagram generator |
+| **survey** | Reports what a dataset has: codes, families, time spans, counts. Reads the event table. | The dataset survey, the target census |
+| **propose** | Makes content for a pull request: task proposals from clinicians, and the files people write by hand. | Intake form and task catalogue, the relevance table scoring reads |
+| **review** | Review forms and sign-off, status views, and the [audit](audit.md). | Review forms, the audit, encoder status (which are built and which are planned) |
+| **preview** | Shows what something does without building it. | Cohort preview up to the draw, the files a source population needs, dummy data |
+| **assets** | Works with the files encoders and families are checked on. | An encoder demo on one sample, encoder test data, family samples |
+| **report** | Tables, figures and views of builds and runs. | Result tables, build sheets, a run's live progress, encoder health from a finished run, the architecture diagrams |
 
 ## From proposal to Bench
 
@@ -37,15 +38,23 @@ A task proposal moves through four states, recorded in its file:
 3. **signed off:** a named clinician and a MedOmni maintainer sign, with the date
 4. **frozen:** turned into a task template and cohorts, and opened as a pull request to Bench
 
-A frozen template is never changed; a change is a new proposal.
+A change to a frozen template is a new proposal, and raises the [version](../bench/tasks.md#version) of each of its cohorts.
 
 ## Commands in v0.3.0
 
 ```bash
-medomni studio preview mimic_ckd-staging@n20     # patients left after each step and per class
-medomni studio download-list bdsp                 # files the source population needs
-medomni studio dummy vitaldb --out ~/dummy        # VitalDB-shaped dummy data, in a folder
-medomni studio audit                              # the audit report, in your workspace
+medomni studio preview mimic-iv_ckd-staging@n20   # patients left after each step and per class
+medomni studio download-list bdsp                  # files the source population needs
+medomni studio dummy vitaldb --out ~/dummy         # VitalDB-shaped dummy data, in a folder
+medomni studio audit                               # the audit report, in your workspace
+medomni studio progress <run>                      # a live view of a run, beside medomni bench run
+medomni studio build-sheet medomni-bench/v1        # what a set's build made, per task
+medomni studio bench-health <run>                  # encoder health from a finished run
+medomni studio relevance <template>                # write the relevance table for a template
+medomni studio encoder-status                      # which encoders are built and which are planned
+medomni studio encoder-demo <encoder>              # run an encoder on one sample
+medomni studio testdata <encoder>                  # write an encoder's test inputs and PROVENANCE.md
+medomni studio family-samples <family>             # write samples of a family
 ```
 
 The architecture diagrams are drawn from one description, `docs/assets/diagrams.yaml`. After a change, regenerate them; each SVG also opens in draw.io:
@@ -54,15 +63,13 @@ The architecture diagrams are drawn from one description, `docs/assets/diagrams.
 uv run python src/medomni/studio/report/diagrams.py docs/assets/diagrams.yaml docs/assets/
 ```
 
-The other v0.2 tools run as scripts and become commands of their kind later.
-
 ## Add a tool
 
 A tool is a Python class of one kind, registered in the `medomni.tools` entry-point group, from MedOmni's repository or a plug-in package. `medomni studio check <tool>` checks that it follows its kind's interface and writes only to the workspace.
 
 ## Where it lives
 
-- `src/medomni/studio/`: one subpackage per kind: `survey/`, `propose/`, `review/` (with the audit), `preview/`, `report/`
+- `src/medomni/studio/`: one subpackage per kind: `survey/`, `propose/`, `review/` (with the audit), `preview/`, `assets/`, `report/`
 - `studio/`: content people write and review: `proposals/` and `forms/`
 - your workspace: everything the tools write
 

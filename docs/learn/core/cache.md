@@ -37,14 +37,11 @@ One root, in your workspace:
 
 ## Rules
 
+<!-- pending: whether cache gc and cache verify stay in v0.3 depends on the cache redesign -->
 - An entry is never changed. A changed input, parameter or step version gives a new key, and the old entry stays until `cache gc` removes it.
 - `cache verify` recomputes each content hash, so a changed file is found. The cache does not rely on file permissions or links, and works on any file system, exFAT included.
 - Build copies files from the cache into atom tasks. Atom tasks never link to the cache.
 - Cache contents are derived from patient data. They stay in your workspace and are never committed, uploaded or shared.
-
-## What is published
-
-For each task set, MedOmni publishes the key and content hash of every cache entry its build uses. Hashes reveal nothing about a patient. `medomni cache verify --set <set>` compares your cache with them, entry by entry, and names any entry that differs.
 
 ## Commands
 
@@ -52,7 +49,7 @@ For each task set, MedOmni publishes the key and content hash of every cache ent
 |---|---|
 | `medomni cache build <dataset>` | Loads the dataset and runs file conversions ahead of a build. `medomni bench task build` does this too, when needed. |
 | `medomni cache status` | Lists the entries per dataset and step, with size and whether anything current uses them. |
-| `medomni cache verify` | Recomputes every content hash. With `--set <set>`, also compares with the published hashes. |
+| `medomni cache verify` | Recomputes every content hash and names any entry that changed. |
 | `medomni cache gc` | Removes entries no current step uses. `--dry-run` lists them first. |
 
 ## Where it lives
@@ -63,4 +60,4 @@ For each task set, MedOmni publishes the key and content hash of every cache ent
 ## Where next
 
 - [Build](../bench/build.md): the steps that fill the cache.
-- [Rebuild a task set](../../guides/rebuild-a-task-set.md): check your cache and build against the published hashes.
+- [Rebuild a task set](../../guides/rebuild-a-task-set.md): build a published task set from your own copy.

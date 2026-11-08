@@ -10,7 +10,7 @@
 
 - **Determinism.** The same template and cohort on the same data build the same atom tasks, byte for byte.
 - **Rules, not lists.** Cohorts are published as recipes, never as lists of patients.
-- **Verification.** Anyone with the data can rebuild a task and check it against its fingerprint. The fingerprint covers content only, never build time or local paths.
+- **Verification.** Anyone with the data can rebuild a task from its config. The config hash shows whether two results used the same config; it doesn't show they used the same data. A local copy that differs under the same release name isn't detected.
 
 ## Structure
 

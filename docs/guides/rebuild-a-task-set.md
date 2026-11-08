@@ -1,6 +1,6 @@
 # Rebuild a task set
 
-For agent evaluators who want to run on a published task set, such as `v1`, built from their own copy of the data. You build every `<template>@<cohort>` in the set and check each one against its published fingerprint.
+For agent evaluators who want to run on a published task set, such as `medomni-bench/v1`, built from their own copy of the data. You build every `<template>@<cohort>` in the set from its config and check each build.
 
 ## Before you start
 
@@ -9,39 +9,29 @@ For agent evaluators who want to run on a published task set, such as `v1`, buil
 
 ## Steps
 
-1. Build the cache for each dataset in the set, and compare it with the published hashes.
+1. Build the cache for each dataset in the set.
 
     ```bash
     medomni cache build mimic-iv
-    medomni cache verify --set v1
     ```
 
-2. Build the set. Every `<template>@<cohort>` in it is built under every condition.
+2. Build the set. Every `<template>@<cohort>` in it is built under every arm the set lists.
 
     ```bash
-    medomni bench task build --set v1
+    medomni bench task build --set medomni-bench/v1
     ```
 
-3. Check every build against the set's published fingerprints.
+3. Check every build.
 
     ```bash
-    medomni bench task check --set v1
+    medomni bench task check --set medomni-bench/v1
     ```
 
 ## Check
 
-`medomni bench task check --set v1` lists each `<template>@<cohort>` as matching or not. For one that does not match, it prints the step counts beside the published ones, and marks the first step that differs:
+`medomni bench task check --set medomni-bench/v1` runs the checks of `medomni bench task check <template>@<cohort>` on every pair in the set, and lists each pair as passing or failing.
 
-| Differs first at | Usual cause |
-|---|---|
-| Source population | A different dataset version or module |
-| Prediction time or requirements | Missing tables or files in your copy |
-| File check | A recording that does not convert |
-| Draw, with every earlier count equal | A changed build; open an issue |
-
-`medomni cache verify --set v1` names the cache entries that differ, which usually point at the same cause.
-
-You can still run on a build that differs. Its runs are recorded apart, and `medomni bench score` never puts them in the same table as published scores.
+Your results carry each task's [config hash](../learn/bench/tasks.md#config-hash). Results with the same config hash used the same task config; the hash doesn't show that your copy of the data matches. To compare a build with someone else's, compare the per-step patient counts in your build manifests by hand.
 
 !!! warning "Keep data local"
     The cache, built atom tasks, answers, traces and the results file contain patient data. Do not commit, upload or share them.
@@ -50,4 +40,4 @@ You can still run on a build that differs. Its runs are recorded apart, and `med
 
 - [Run your agent](run-your-agent.md): run on the set you built.
 - [Build](../learn/bench/build.md): the steps the counts come from.
-- [Cache](../learn/core/cache.md): what `cache verify` compares.
+- [Cache](../learn/core/cache.md): what the cache holds.

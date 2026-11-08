@@ -39,6 +39,7 @@ For agent evaluators with access to a credentialed dataset. You tell MedOmni whe
 - a version that differs from the one the package describes
 - a file the package lists that is missing
 - a table or column the format readers need that is missing
+- a raw value a label reads that the label library does not classify
 
 Fix your copy and run it again. When it passes, build a task set as in [Rebuild a task set](rebuild-a-task-set.md).
 
@@ -47,5 +48,5 @@ Fix your copy and run it again. When it passes, build a task set as in [Rebuild 
 
 ## Where next
 
-- [Rebuild a task set](rebuild-a-task-set.md): build a published task set and check its fingerprints.
+- [Rebuild a task set](rebuild-a-task-set.md): build a published task set and check it.
 - [Datasets](../learn/bench/datasets.md): the dataset package and the event table.

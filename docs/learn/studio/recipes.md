@@ -16,7 +16,7 @@ Each part is a set of queries over the dataset's [event table](datasets.md#event
 | Labels | `labels.yaml`, in the dataset package | The dataset's maintainers |
 | Evidence | `evidence.yaml`, in the dataset package; the template names its tables and families | The dataset's maintainers |
 
-A template's targets name labels from the library, such as `mimic:ckd-kdigo`. Templates on one dataset share its labels and its evidence rules.
+A template's targets name labels from the library, such as `mimic-iv:ckd-kdigo`. Templates on one dataset share its labels and its evidence rules.
 
 ## Cohort
 
@@ -71,7 +71,7 @@ Files are kept when their time is before the prediction time. The template choos
 
 - **Test patients.** Each cohort comes with a few hand-written patients as event rows, and the expected result: in or out, prediction time, label values. They run in CI with no licensed data, so any copy of Build can be checked before it touches real data.
 - **Step counts.** Build records how many patients are left after each step. A rebuild that differs shows where.
-- **Named conditions.** A condition used by several recipes, such as "acute kidney injury", is defined once in the dataset package and named in each recipe.
+- **Named definitions.** A definition used by several recipes, such as "acute kidney injury", is defined once in the dataset package and named in each recipe.
 
 ## Where it lives
 

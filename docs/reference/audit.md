@@ -26,5 +26,5 @@ medomni studio audit
 
 ## Where next
 
-- [Tasks](tasks.md): the fingerprints verdicts bind to.
+- [Tasks](tasks.md): the config hash verdicts bind to.
 - [Encoders](encoders.md): the model card claims the audit checks.

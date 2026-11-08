@@ -28,10 +28,10 @@ For a new scaffold or model.
 ### Check
 
 ```bash
-medomni bench run --agent my-agent.yaml --set smoke-dummy
+medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 ```
 
-Every atom task of `smoke-dummy` must finish with a run and no infrastructure error.
+Every atom task of `medomni-bench/smoke-dummy` must finish with a run and no infrastructure error.
 
 ## Add a dataset (Bench)
 
@@ -85,7 +85,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
     medomni bench task new vitaldb_my-task --dataset vitaldb
     ```
 
-2. Fill in `template.yaml`: the targets with each one's label and metric, the input, the variants, and the `agent` block with the instruction, environment and submission path. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
+2. Fill in `template.yaml`: the targets with each one's label and metric, the input, the evidence variants, and the `agent` block with the instruction, environment and submission path. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
 3. Write a cohort in `cohorts/`: source population, prediction time, requirements and draw. Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
 4. Preview the counts on your copy, adjust the cohort, then build.
 
@@ -107,10 +107,9 @@ It checks:
 - the template's fields and metrics
 - that each target's label is in the library and states its window
 - that the cohort's test patients give their expected results
-- that no answers or guarded evidence reach the agent
+- the [correctness checks](../learn/bench/build.md#correctness-checks): no answer in the evidence, events still ahead and images before the prediction time, enough patients, answers that vary, complete recordings, a closed network
 - that staged files match their families
 - that an agent submitting the true answers scores perfectly, and one giving the same answer every time scores at chance
-- that the build matches its fingerprint
 
 ## Add an encoder (Perception)
 
@@ -136,17 +135,20 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
     ├── adapter.py
     ├── card.yaml
     ├── Dockerfile
-    └── testdata/
-        ├── input.*
-        ├── expected.json
-        └── PROVENANCE.md
+    └── testdata/       empty, filled in step 4
     ```
 
 2. Implement the adapter and pin the image:
     - `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`
     - base image, dependencies, source revision and weight hashes pinned in the Dockerfile
 3. Write the model card: the family, outputs, options, license and source. See [Encoders](../reference/encoders.md).
-4. Record the expected responses on the test data, and open a pull request.
+4. Write the test data, its inputs and `PROVENANCE.md`:
+
+    ```bash
+    medomni studio testdata <family>__<encoder>
+    ```
+
+5. Record the expected responses on the test data, and open a pull request.
 
     ```bash
     medomni perception check perception/encoders/<family>/<encoder> --freeze
@@ -158,7 +160,7 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
 medomni perception check perception/encoders/<family>/<encoder>
 ```
 
-It validates the model card against its contract and the family registry, builds the image, runs it on the test data and compares the responses with `expected.json`. GPU encoders may run on a self-hosted runner.
+It validates the model card with `medomni contracts check`, builds the image, and runs the encoder's tests: it runs the image on the test data and compares the responses with `expected.json`. GPU encoders may run on a self-hosted runner.
 
 ## Publish a plug-in package
 
@@ -167,7 +169,7 @@ For agents, datasets, tasks or encoders that live in your own repository.
 ### Steps
 
 1. Create a Python package named `medomni-<name>` that depends on `medomni`.
-2. Add a content folder to the package, laid out like MedOmni's repository: `bench/agents/`, `bench/datasets/<dataset>/`, `perception/encoders/<family>/<encoder>/`. Create each piece in it as in the sections above.
+2. Add a content folder to the package, laid out like MedOmni's repository: `bench/agents/`, `bench/datasets/<dataset>/`, `bench/benchmarks/<benchmark>/`, `perception/encoders/<family>/<encoder>/`. Create each piece in it as in the sections above.
 3. Register the folder with one entry point in `pyproject.toml`:
 
     ```toml

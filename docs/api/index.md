@@ -12,14 +12,17 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.recipes` | The recipe format: cohorts, labels, evidence. |
 | `medomni.core.families` | The family registry, the family converters and the dummy-data generator (`medomni.core.families.dummy`). |
 | `medomni.core.cache` | Cache keys, entries and the cache commands. |
-| `medomni.bench.build` | Build: the task steps, the draw, the checks, task sets and fingerprints. |
-| `medomni.bench.harness` | The agent runner: Harbor jobs, the route check, run and prediction records, the replay agent. |
+| `medomni.bench.build` | Build: the task steps, the draw, the checks, task sets and config hashes. |
+| `medomni.bench.harness` | The agent runner: Harbor jobs, the route check, run and prediction records. |
+| `medomni.bench.arms` | The arm interface and the four built-in arms. |
+| `medomni.bench.replay` | The replay agent, which repeats recorded runs with no model calls. |
 | `medomni.bench.service` | The perception service inside each atom task: the gateway behind the call budget, family filter and call log. |
-| `medomni.bench.scoring` | The scorer, the metrics and the behaviour metrics. |
-| `medomni.perception.registry` | The encoder catalogue: model cards, image pulls and the encoder check. |
-| `medomni.perception.runtime` | The encoder interface and the serving code built into every image. |
+| `medomni.bench.scoring` | The scorer and the behaviour metrics. |
+| `medomni.bench.metrics` | The metrics `auc`, `qwk` and `mae`. |
+| `medomni.perception.registry` | The encoder catalogue: model cards, image builds and pulls. |
+| `medomni.perception.runtime` | The encoder interface, one decoder per family, and the serving code built into every image. |
 | `medomni.perception.gateway` | The gateway service: catalogue, router and evidence. |
-| `medomni.studio` | The tools around Bench and Perception, one subpackage per kind: survey, propose, review (with the audit), preview, report. |
+| `medomni.studio` | The tools around Bench and Perception, one subpackage per kind: survey, propose, review (with the audit), preview, assets, report. |
 
 - `medomni.core` imports no project.
 - `medomni.bench` and `medomni.perception` import only `medomni.core`, never each other.

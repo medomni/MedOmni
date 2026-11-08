@@ -21,6 +21,7 @@ Windows are written relative to the prediction time or an event:
 
 | Field | Required | Meaning |
 |---|---|---|
+| `version` | yes | The [version](../learn/bench/tasks.md#version) `N.X` of the tasks built from this cohort, as a quoted string such as `"1.0"`. Unquoted, YAML reads it as a number and `1.10` becomes `1.1`, so the contract refuses it. |
 | `source` | yes | The source population: `all`, or `{fraction: f}` for the hash rule with the dataset's salt. Omitting `fraction` uses the dataset's default. |
 | `anchor` | yes | The prediction time: `event` (a code), `pick` (`first` or `last`; default `first`), `plus` (an offset). |
 | `require` | no | A list of requirements, all of which must hold. |
@@ -34,7 +35,7 @@ A requirement is one of:
 | `none: [codes]` | none of the codes occurs in the window |
 | `files: [families]` | the patient has a file in each family in the window |
 | `has_label: <target>` | the target's label has a value |
-| `condition: <name>` | the dataset's named condition holds |
+| `definition: <name>` | the dataset's named definition holds |
 | `converts: {min_families: n}` | at least n of the patient's files convert and match their family; checked before the draw, so the pool does not depend on the seed |
 
 `any`, `none` and `files` take `from`, `to` and `same_visit: true` (only events in the anchor's visit count). Codes may be patterns: `^DIAGNOSIS//ICD//(N17|584)`.
@@ -62,7 +63,7 @@ Test patients: `cohorts/<cohort>.tests.yaml`, a list of patients, each with `eve
 
 Each label has exactly one rule: `exists`, `none`, `value`, `cases` or `hook`.
 
-Named conditions are in the package's `dataset.yaml`, under `conditions`, each a requirement as above.
+Named definitions are in the package's `dataset.yaml`, under `definitions`, each a requirement as above.
 
 ## Evidence file
 
@@ -91,7 +92,7 @@ In `template.yaml`:
 |---|---|
 | `targets` | Each with `name`, `label` (a library entry) and `metric` (`auc`, `qwk` or `mae`). |
 | `input` | The tables and families the default evidence variant stages. |
-| `variants` | The evidence variants built: `default`, and `full` for every table and family. |
+| `evidence` | The evidence variants built: `default`, and `full` for every table and family. |
 | `exclude` | Codes or fields to remove beyond the targets' guards. |
 
 The other template fields are in [Tasks reference](tasks.md#task-template).
@@ -115,11 +116,11 @@ Every dataset that has these concepts uses these codes. All other codes are the 
 
 ```yaml
 targets:
-  - {name: coagulation_hemorrhagic, label: mimic:coagulation-hemorrhagic, metric: auc}
+  - {name: coagulation_hemorrhagic, label: mimic-iv:coagulation-hemorrhagic, metric: auc}
 input:
   tables: [admissions, labevents, ed_vitalsign]
   families: [cxr-radiograph-2d, ecg-12lead-500hz-mv]
-variants: [default, full]
+evidence: [default, full]
 ```
 
 `labels.yaml` (entry):
@@ -135,6 +136,7 @@ coagulation-hemorrhagic:
 `cohorts/n20.yaml`:
 
 ```yaml
+version: "1.0"
 source: {fraction: 0.05}
 anchor: {event: ADMISSION, pick: first, plus: 24 hours}
 require:
@@ -147,7 +149,7 @@ require:
 draw: {n: 20, by: [coagulation_hemorrhagic], seed: 7}
 ```
 
-Built as `mimic_coag-hemorrhagic@n20`, and `mimic_coag-hemorrhagic:full@n20` for the full variant.
+Built as `mimic-iv_coag-hemorrhagic@n20`, and `mimic-iv_coag-hemorrhagic:full@n20` for the full variant.
 
 ## Example: VitalDB, creatinine after surgery
 
@@ -166,6 +168,7 @@ cr-max-7d:
 `cohorts/opend.yaml`:
 
 ```yaml
+version: "1.0"
 source: all
 anchor: {event: OP//END}
 require:
@@ -181,4 +184,4 @@ The guard removes every creatinine row from the evidence, including those before
 
 - [Recipes](../learn/bench/recipes.md): the ideas behind the format.
 - [Datasets reference](datasets.md): the dataset package and its files.
-- [Tasks reference](tasks.md): the template, the atom task and the fingerprint.
+- [Tasks reference](tasks.md): the template, the atom task and the config hash.

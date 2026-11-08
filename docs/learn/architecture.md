@@ -10,7 +10,7 @@ MedOmni v0.3.0 in five views:
 
 ## Repository layout
 
-The repository holds one package, `medomni`: Core and three projects. Code is under `src/`; content that people write and review (families, dataset packages, task templates, cohorts, task sets, agent configs, encoders) is in one top-level folder per project. The starting files that each `new` command writes are inside the package.
+The repository holds one package, `medomni`: Core and three projects. Code is under `src/`; content that people write and review (families, dataset packages, task templates, cohorts, benchmarks, agent configs, encoders) is in one top-level folder per project. The starting files that each `new` command writes are inside the package.
 
 ```text
 MedOmni/
@@ -25,21 +25,24 @@ MedOmni/
 │   │   ├── cache/            cache keys, entries, cache commands
 │   │   └── testing/          runs the checks each project registers
 │   ├── bench/                medomni.bench
-│   │   ├── build/            Build: task steps, draw, checks, task sets, fingerprints
-│   │   ├── harness/          Harbor jobs, route check, run records
+│   │   ├── build/            Build: task steps, draw, checks, task sets, config hashes
+│   │   ├── harness/          Harbor jobs, route check, run and prediction records
+│   │   ├── arms/             the arm interface and the four built-in arms
+│   │   ├── replay/           the replay agent
 │   │   ├── service/          the perception service in each atom task
-│   │   └── scoring/          scorer, metrics, behaviour metrics
+│   │   ├── scoring/          scorer, behaviour metrics
+│   │   └── metrics/          auc, qwk, mae
 │   ├── perception/           medomni.perception
-│   │   ├── registry/         catalogue, image pulls, encoder check
+│   │   ├── registry/         catalogue, image builds and pulls
 │   │   ├── runtime/          serving code built into every encoder image
 │   │   └── gateway/          the HTTP service
-│   └── studio/               medomni.studio: survey/, propose/, review/ (with the audit), preview/, report/
+│   └── studio/               medomni.studio: survey/, propose/, review/ (with the audit), preview/, assets/, report/
 ├── core/
 │   └── families/             one file per family, and aliases.yaml
 ├── bench/
 │   ├── datasets/<dataset>/   dataset package: dataset.yaml, labels.yaml, evidence.yaml,
 │   │                         codes.csv, policy.yaml, hooks/, tasks/<template>/
-│   ├── sets/                 task sets: pinned <template>@<cohort> lists
+│   ├── benchmarks/<benchmark>/  benchmark.yaml (the card), sets/ (task sets: pinned <template>@<cohort> lists)
 │   └── agents/               contributed agent configs
 ├── perception/
 │   └── encoders/             <family>/<encoder>/: built into images, not installed
@@ -102,13 +105,14 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Core | Recipes | `medomni.core.recipes` | The recipe format for cohorts, labels and evidence. |
 | Core | Families | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
 | Core | Cache | `medomni.core.cache` | Cache keys and entries, and the cache commands. See [Cache](core/cache.md). |
-| Bench | Build | `medomni.bench.build` | Runs recipes into atom tasks; task sets and fingerprints. See [Build](bench/build.md). |
+| Bench | Build | `medomni.bench.build` | Runs recipes into atom tasks; task sets and config hashes. See [Build](bench/build.md). |
 | Bench | Harness | `medomni.bench.harness` | The agent runner: turns a task set into Harbor jobs, checks the route against each dataset policy, and records runs and prediction records. |
+| Bench | Arms | `medomni.bench.arms` | The four built-in arms. Build and the harness look up any arm by its registered name. |
 | Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks from their prediction records, one score record per target. The only thing that writes scores. |
 | Bench | Perception service | `medomni.bench.service` | Runs the gateway inside each atom task, with the call budget, family filter and call log. |
 | Perception | Gateway | `medomni.perception.gateway` | The gateway service, built into the gateway image. |
 | Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |
-| Studio | Tools | `medomni.studio` | One subpackage per tool kind: survey, propose, review (with the audit), preview, report. |
+| Studio | Tools | `medomni.studio` | One subpackage per tool kind: survey, propose, review (with the audit), preview, assets, report. |
 
 The projects meet in one contract: the perception service calls Perception's gateway through the Gateway API. Bench imports no Perception code.
 

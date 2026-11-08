@@ -36,11 +36,11 @@ medomni bench agent new my-agent
 Dummy data is generated from the dataset packages and each family's declared format. It needs no credentials and contains no patient values. To look at it, `medomni studio dummy <dataset> --out <dir>` writes one dataset's dummy data to a folder.
 
 ```bash
-medomni bench task build --set smoke-dummy
+medomni bench task build --set medomni-bench/smoke-dummy
 ```
 
 ```bash
-medomni bench run --agent my-agent.yaml --set smoke-dummy
+medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 ```
 
 `medomni bench run` pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run in the results file.
@@ -48,15 +48,15 @@ medomni bench run --agent my-agent.yaml --set smoke-dummy
 ## 4. Score
 
 ```bash
-medomni bench score --set smoke-dummy
+medomni bench score --set medomni-bench/smoke-dummy
 ```
 
-It prints one row per task, target, agent and condition: the score, the number of patients and the failure rate. Scores on dummy data only show that the pipeline works.
+It prints one row per task, target, agent and arm: the score, the number of patients and the failure rate. Scores on dummy data only show that the pipeline works.
 
 ## 5. Run on real data
 
-- **VitalDB** is openly licensed. Build and run the `vitaldb` task set as above.
-- **MIMIC-IV, AI-READI and BDSP** need your own access. Connect your copy as in [Connect your data](guides/connect-your-data.md), then build the `v1` task set as in [Rebuild a task set](guides/rebuild-a-task-set.md).
+- **VitalDB** is openly licensed. Build and run the `medomni-bench/vitaldb` task set as above.
+- **MIMIC-IV, AI-READI and BDSP** need your own access. Connect your copy as in [Connect your data](guides/connect-your-data.md), then build the `medomni-bench/v1` task set as in [Rebuild a task set](guides/rebuild-a-task-set.md).
 
 ## Where next
 

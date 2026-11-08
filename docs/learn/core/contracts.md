@@ -7,13 +7,14 @@ A contract is a fixed format plus the validator that checks it. Every file or me
 | Contract | Describes | Written by | Read by |
 |---|---|---|---|
 | Family registry | The schema of a family file and of its aliases | MedOmni team | Bench, Perception |
-| Dataset config | A dataset package: description, format readers, rules, named conditions | Contributors | Bench |
+| Dataset config | A dataset package: description, format readers, rules, named definitions | Contributors | Bench |
 | Event table | The table every dataset becomes, with its `FILE` rows | Bench | Bench, Studio |
 | Dataset policy | What a dataset's license allows | Contributors | Bench |
-| Recipe | A cohort, a label library and evidence rules | Contributors | Bench, Studio |
-| Task template | One task: targets, input, variants, and an `agent` block (instruction, environment, submission path) | Contributors | Bench |
-| Task set | `<template>@<cohort>` pairs pinned to fingerprints, step counts and cache hashes, with an optional card | MedOmni team, plug-in packages | Bench, you |
-| Fingerprint | The hash of a built `<template>@<cohort>` | Bench | Bench, Studio's audit |
+| Recipe | A cohort with its task version, a label library and evidence rules | Contributors | Bench, Studio |
+| Task template | One task: targets, input, evidence variants, and an `agent` block (instruction, environment, submission path) | Contributors | Bench |
+| Benchmark card | One benchmark: name, version, owner, license, the intelligence kinds it accepts | MedOmni team, plug-in packages | Bench, you |
+| Task set | `<template>@<cohort>` pairs pinned at version N, and the arms to build them under | MedOmni team, plug-in packages | Bench, you |
+| Config hash | The hash of a task's config files under one arm | Bench | Bench, you |
 | Cache entry | One cache entry and its `CACHE.json` | Bench, Perception | Bench, Perception, you |
 | Agent config | One intelligence of kind `agent`: scaffold, model, route | You, contributors | Bench |
 | Task proposal | One proposed task and its review state | Clinicians, reviewers | Studio |
@@ -42,9 +43,10 @@ Contracts follow the MedOmni release, such as v0.3.0. They have no version numbe
 - Files that MedOmni writes, such as built tasks and result records, record the release that wrote them.
 - A plug-in package states the releases it works with in its dependencies, such as `medomni>=0.3,<0.4`.
 
-Two things outlive a release, so each carries its own marker:
+Three things outlive a release, so each carries its own marker:
 
-- **Fingerprints** start with the algorithm that made them, such as `fp1:`, so published fingerprints stay checkable after an upgrade.
+- **Config hashes** start with the algorithm that made them, such as `cfg1:`, so published config hashes stay checkable after an upgrade.
+- **Tasks** carry their own [version](../bench/tasks.md#version), `N.X`, so a task set stays comparable across releases.
 - **Encoder images** record the release that built them. The gateway runs any image built since the Container API last changed, so a release that leaves the Container API alone needs no rebuild.
 
 Only the MedOmni team changes contracts. To propose a change, such as a new family, open an issue.

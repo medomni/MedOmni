@@ -11,10 +11,10 @@ Contracts: dataset config, `dataset-config.schema.json`, and dataset policy, `da
 
 | Dataset | Access | License | What may be published | Routes |
 |---|---|---|---|---|
-| **MIMIC-IV 3.1** (core, ED, CXR-JPG, Note 2.2) | Credentialed (PhysioNet) | PhysioNet Credentialed Health Data License 1.5.0 + DUA | Schema, templates, recipes, fingerprints, aggregate results. Never labels or per-record outputs | `local`. `cloud` only with verified zero retention, no training and no human review |
+| **MIMIC-IV 3.1** (core, ED, CXR-JPG, Note 2.2) | Credentialed (PhysioNet) | PhysioNet Credentialed Health Data License 1.5.0 + DUA | Schema, templates, recipes, config hashes, aggregate results. Never labels or per-record outputs | `local`. `cloud` only with verified zero retention, no training and no human review |
 | **MIMIC-IV-ECG 1.0, MIMIC-IV Waveform 0.1.0** | Open (PhysioNet) | ODbL 1.0 | Schema, templates, recipes, IDs, samples, with attribution and share-alike | `local`, `cloud` |
-| **AI-READI** | Credentialed (FAIRhub) | AI-READI Data License Agreement v2.0; type 2 diabetes research only | Schema, templates, recipes, fingerprints, a small representative sample in papers. Never labels, ID lists or derived data | `local`. `cloud` only with a HIPAA BAA between the vendor and your institution; never for model training |
-| **BDSP Human Sleep Project** | Credentialed (bdsp.io) | BDSP Credentialed Health Data License 1.5.0 + DUA | Schema, templates, recipes (a selection rule plus a hash), fingerprints. Never record-level derivatives | `local` only, unless BDSP approves otherwise in writing |
+| **AI-READI** | Credentialed (FAIRhub) | AI-READI Data License Agreement v2.0; type 2 diabetes research only | Schema, templates, recipes, config hashes, a small representative sample in papers. Never labels, ID lists or derived data | `local`. `cloud` only with a HIPAA BAA between the vendor and your institution; never for model training |
+| **BDSP Human Sleep Project** | Credentialed (bdsp.io) | BDSP Credentialed Health Data License 1.5.0 + DUA | Schema, templates, recipes (a selection rule plus a hash), config hashes. Never record-level derivatives | `local` only, unless BDSP approves otherwise in writing |
 | **VitalDB** (PhysioNet copy) | Open (PhysioNet) | CC BY 4.0 | Everything, with attribution | `local`, `cloud` |
 | **Dummy data** | Generated | None | Everything | `local`, `cloud` |
 
@@ -51,7 +51,7 @@ Each cohort draws from its dataset's source population: the patients for whom `s
 | `verify` | no | What to check before reading: files listed in manifests, one file per unit, the dataset's own checksums. |
 | `read` | yes | A list of format readers, each with what it reads. See [Format readers](#format-readers). |
 | `rules` | no | Visit and timing rules. See [Visit rules](#visit-rules). |
-| `conditions` | no | Named conditions that recipes use. See [Recipes](recipes.md#cohort-file). |
+| `definitions` | no | Named definitions, such as a disease, that recipes use. See [Recipes](recipes.md#cohort-file). |
 
 ## Format readers
 
@@ -134,7 +134,7 @@ A table with neither `time` nor `time_from` holds static facts.
 ## Rules
 
 - `medomni bench run` refuses a route the policy marks `deny`, and asks you to confirm each condition of a `conditional` route.
-- Nothing marked `deny` under `publish` is ever uploaded or published. For credentialed datasets, templates, recipes, fingerprints and hashes ship instead of data.
+- Nothing marked `deny` under `publish` is ever uploaded or published. For credentialed datasets, templates, recipes and config hashes ship instead of data.
 - A task sample on Hugging Face is allowed only where `publish.samples` is `allow`.
 
 ## Where next

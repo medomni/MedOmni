@@ -28,16 +28,18 @@ Real files rarely match a protocol exactly. `aliases.yaml` lists what each famil
 - Build checks staged files against their family.
 - The dummy-data generator, `medomni.core.families.dummy`, makes files from each family's protocol. [Datasets](../bench/datasets.md#open-credentialed-and-dummy-data) says how a dataset's dummy data is made.
 - An encoder's model card names its one family; the gateway filters encoders by family.
+- The runtime in every encoder image uses this module for aliases, labels and format checks.
 - Every family count in MedOmni comes from the registry.
 
 A new family is added by the MedOmni team. Family files are content; only their schema is a contract.
 
 ## Family converters
 
-Some datasets store recordings in a format no family accepts, such as BDSP's HDF5 files. A family converter turns one raw format into exactly one family; a family can have several converters.
+Some datasets store recordings in a format no family accepts, such as BDSP's HDF5 files or VitalDB's `.vital` files. A family converter turns one raw format into exactly one family; a family can have several converters.
 
-- Each recording is converted once and kept in the [cache](cache.md), under a key that covers the source file, the family, its declaration and aliases, and the converter's version. A change to any of them converts again.
+- Each recording is converted once and kept in the [cache](cache.md), under a key that covers the source file, the family, the converter's version, and the parts of the family's declaration and aliases the conversion reads: channels, roles and channel prefixes. A change to any of them converts again. A change to a family's rate, units, type or range does not.
 - Converters are shared code in Core, so any dataset with the same raw format uses the same one.
+- The `.vital` converter reads with the `vitaldb` package and resamples VitalDB's 500 Hz arterial and ECG tracks to their families' rates.
 - A converter is deterministic: the same input gives the same bytes. It writes no wall-clock time into a file header, so one cache key never has two content hashes.
 
 ## Where it lives

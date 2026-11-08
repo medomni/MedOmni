@@ -11,7 +11,7 @@ your copy ──loading: format readers + dataset package──▶ event table �
 
 One folder per dataset, `bench/datasets/<dataset>/`. It is configuration, not code:
 
-- `dataset.yaml`: a description, the format readers to use, the dataset's rules and its named conditions
+- `dataset.yaml`: a description, the format readers to use, the dataset's rules and its named definitions
 - `labels.yaml`: the label library
 - `evidence.yaml`: what an atom task may hold, relative to the prediction time
 - `codes.csv`: every code the dataset emits, with a description and its source table
@@ -64,13 +64,13 @@ One policy per dataset, read from its license and data use agreement. It records
 - which model routes may see the data: `local`, `cloud`, or `cloud` under conditions
 - any limits on use, such as research only
 
-`medomni bench run` refuses a route the policy does not allow. Nothing the policy denies is published. Recipes and fingerprints contain no patient data, so every policy allows them.
+`medomni bench run` refuses a route the policy does not allow. Nothing the policy denies is published. Recipes and config hashes contain no patient data, so every policy allows them.
 
 ## Open, credentialed and dummy data
 
 | Kind | Examples | What you need |
 |---|---|---|
-| Credentialed | MIMIC-IV, AI-READI, BDSP | Your own access. MedOmni publishes recipes, fingerprints and hashes, never data. |
+| Credentialed | MIMIC-IV, AI-READI, BDSP | Your own access. MedOmni publishes recipes and config hashes, never data. |
 | Open | VitalDB | Nothing. Task samples are on Hugging Face. |
 | Dummy | Generated | Nothing. Made from the dataset package and each family's declared format, never from a real record. |
 

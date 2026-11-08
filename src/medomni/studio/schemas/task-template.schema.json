@@ -166,7 +166,7 @@
       "title": "Input",
       "type": "object"
     },
-    "variants": {
+    "evidence": {
       "default": [
         "default"
       ],
@@ -177,7 +177,7 @@
         ],
         "type": "string"
       },
-      "title": "Variants",
+      "title": "Evidence",
       "type": "array"
     },
     "exclude": {

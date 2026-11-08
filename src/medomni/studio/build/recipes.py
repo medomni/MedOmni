@@ -4,7 +4,7 @@ Each file's own fields are checked by its contract (`Cohort`, `LabelLibrary`, `E
 
 - a cohort's `has_label` and `draw.by` name targets of its template; each target's label (`<dataset>:<label>`)
   names its own dataset and a label in that dataset's `labels.yaml`;
-- a `condition` requirement names a condition in `dataset.yaml`; a `files` requirement names known families;
+- a `definition` requirement names a definition in `dataset.yaml`; a `files` requirement names known families;
 - every code a cohort, label or guard names, as a code or a pattern, matches a code in `codes.csv` or a shared code;
 - evidence rules name tables `dataset.yaml` reads.
 
@@ -52,9 +52,9 @@ def check_labels(labels, codes: set[str] | None) -> list[str]:
     return out
 
 
-def check_cohort(name: str, cohort, *, dataset: str, targets: dict[str, str], labels, conditions: set[str] | None,
+def check_cohort(name: str, cohort, *, dataset: str, targets: dict[str, str], labels, definitions: set[str] | None,
                  codes: set[str] | None, families: set[str]) -> list[str]:
-    from medomni.core.contracts.recipe import Any_, Condition, Files, HasLabel, None_
+    from medomni.core.contracts.recipe import Any_, Definition, Files, HasLabel, None_
 
     out = []
     for t, ref in targets.items():
@@ -71,8 +71,8 @@ def check_cohort(name: str, cohort, *, dataset: str, targets: dict[str, str], la
         where = f"{name} require {i}"
         if isinstance(q, HasLabel) and q.has_label not in targets:
             out.append(f"{where}: has_label names {q.has_label!r}, which is not a target of the template")
-        elif isinstance(q, Condition) and conditions is not None and q.condition not in conditions:
-            out.append(f"{where}: condition {q.condition!r} is not in dataset.yaml's conditions")
+        elif isinstance(q, Definition) and definitions is not None and q.definition not in definitions:
+            out.append(f"{where}: definition {q.definition!r} is not in dataset.yaml's definitions")
         elif isinstance(q, Files):
             out += [f"{where}: unknown family {f!r}" for f in q.files if f not in families]
         elif isinstance(q, (Any_, None_)):
@@ -109,6 +109,6 @@ def check_package(package: str | Path) -> list[str]:
             if cp.name.endswith(".tests.yaml"):
                 continue
             out += check_cohort(f"{tpl.template_id}@{cp.stem}", load(cp, Cohort), dataset=package.name,
-                                targets=targets, labels=labels, conditions=set(config.conditions), codes=codes,
+                                targets=targets, labels=labels, definitions=set(config.definitions), codes=codes,
                                 families=fams)
     return out

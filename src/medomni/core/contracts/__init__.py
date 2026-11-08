@@ -17,7 +17,7 @@ from .family import AliasFile, FamilyFile
 from .perception import ContainerRequest, ContainerResponse, EncodeRequest, Evidence, ModelCard
 from .recipe import Cohort, CohortTests, EvidenceRules, LabelLibrary
 from .run import AgentConfig, CacheEntry, PredictionRecord, ResultRecord, RunRecord, ScoreRecord, WorkspaceConfig
-from .task import FingerprintFile, TaskProposal, TaskSet, TaskSetCard, TaskTemplate
+from .task import BenchmarkCard, TaskProposal, TaskSet, TaskTemplate
 
 
 @dataclass(frozen=True)
@@ -40,8 +40,8 @@ SCHEMAS = (
     Schema("recipe", "recipe-labels", LabelLibrary),
     Schema("recipe", "recipe-evidence", EvidenceRules),
     Schema("task template", "task-template", TaskTemplate),
+    Schema("benchmark", "benchmark", BenchmarkCard),
     Schema("task set", "task-set", TaskSet),
-    Schema("fingerprint", "fingerprint", FingerprintFile),
     Schema("cache entry", "cache-entry", CacheEntry),
     Schema("agent config", "agent-config", AgentConfig),
     Schema("task proposal", "task-proposal", TaskProposal),
@@ -65,10 +65,10 @@ def json_schema(model) -> dict:
 
 
 __all__ = [
-    "AgentConfig", "AliasFile", "CacheEntry", "Cohort", "CohortTests", "ContainerRequest", "ContainerResponse",
+    "AgentConfig", "AliasFile", "BenchmarkCard", "CacheEntry", "Cohort", "CohortTests", "ContainerRequest", "ContainerResponse",
     "Contract", "ContractError", "CONTRACTS", "DatasetConfig", "DatasetPolicy", "EncodeRequest", "Event",
-    "EventTable", "Evidence", "EvidenceRules", "FamilyFile", "FingerprintFile", "IntelligenceRef", "LabelLibrary",
+    "EventTable", "Evidence", "EvidenceRules", "FamilyFile", "IntelligenceRef", "LabelLibrary",
     "ModelCard", "PredictionRecord", "ResultRecord", "RunRecord", "SCHEMAS", "ScoreRecord", "TaskProposal",
-    "TaskSet", "TaskSetCard", "TaskTemplate", "WorkspaceConfig", "json_schema", "load", "load_data", "load_lines",
+    "TaskSet", "TaskTemplate", "WorkspaceConfig", "json_schema", "load", "load_data", "load_lines",
     "read",
 ]

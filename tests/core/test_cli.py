@@ -68,7 +68,17 @@ def test_project_command_runs(project):
     r = run(project)
     assert r.returncode == 0, r.stderr
     assert f"usage: medomni {project}" in r.stdout
-    assert ("dummy" in r.stdout) if project == "studio" else ("No commands yet." in r.stdout)
+    expected = {"bench": "<command>", "perception": "No commands yet.", "studio": "dummy"}[project]
+    assert expected in r.stdout
+
+
+@pytest.mark.parametrize("args,part", [(["data", "check", "mimic-iv"], 2), (["task", "build", "--set", "medomni-bench/v1"], 3),
+                                       (["task", "check", "--set", "medomni-bench/v1"], 4),
+                                       (["task", "check", "--release"], 4), (["run", "--agent", "a", "--set", "x/y"], 5),
+                                       (["score", "--set", "x/y"], 5)])
+def test_bench_stub_names_its_part(args, part):
+    r = run("bench", *args)
+    assert r.returncode == 2 and f"not built yet (Stage 3 part {part})" in r.stderr
 
 
 def test_cache_build_needs_a_workspace():

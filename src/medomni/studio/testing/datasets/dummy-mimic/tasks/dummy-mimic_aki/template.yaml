@@ -5,7 +5,7 @@ targets:
 - {name: aki, label: "dummy-mimic:aki", metric: auc}
 - {name: creat_high, label: "dummy-mimic:creat_high", metric: auc}
 input: {tables: [patients, admissions, labevents, chartevents], families: [ecg-12lead-500hz-mv, cxr-radiograph-2d]}
-variants: [default, full]
+evidence: [default, full]
 agent:
   instruction: "Predict {{ targets }} for this patient from the record up to the prediction time."
   environment: {cpus: 1, memory_mb: 2048, allow_internet: false, agent_timeout_sec: 600, verifier_timeout_sec: 120}

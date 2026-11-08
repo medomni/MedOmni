@@ -114,18 +114,11 @@ def test_verify_catches_an_edited_cache_json(ws, raw):
     assert any("do not give its key" in p for p in c.verify(ws.read(e.path)))
 
 
-def test_verify_set_names_the_differing_entry(ws, raw, tmp_path, capsys):
-    good, _ = _build(ws, raw)
-    other, _ = _build(ws, raw, version="2")
-    s = EXAMPLES["task-set"][0]
-    entry = dict(s["tasks"][0], cache=[{"key": good.meta.key, "content_hash": good.meta.content_hash},
-                                       {"key": other.meta.key, "content_hash": "f" * 64}])
-    p = tmp_path / "smoke-dummy.yaml"
-    p.write_text(yaml.safe_dump(dict(s, tasks=[entry])))
-    assert main(["cache", "verify", "--set", str(p)]) == 1
-    out = capsys.readouterr().out
-    assert f"DIFFERS  dummy_aki@n20: dummy/events/{other.meta.key}" in out
-    assert good.meta.key not in out.split("DIFFERS")[1] and "1/2 published entries match" in out
+def test_verify_has_no_set_option(ws, raw, capsys):
+    """No cache hash is published, so there is nothing to compare a set with (R-113)."""
+    _build(ws, raw)
+    assert main(["cache", "verify", "--set", "medomni-bench/v1"]) == 2
+    assert "--set" in capsys.readouterr().err
 
 
 def test_gc_removes_unused_entries_and_tmp_folders(ws, raw, capsys):

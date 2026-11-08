@@ -1,7 +1,7 @@
 """`medomni contracts check [<contract> ...]`: validate every contract file in the repository and installed plug-ins.
 
 Content files are found by the repository layout (R-1, R-44). Plug-in folders use the same layout and are read the same
-way (R-69); family files come from the repository only, and task sets from both (R-77). The repository's model cards join in Stage 3,
+way (R-69); family files come from the repository only, and benchmarks with their task sets from both (R-77, R-83). The repository's model cards join in Stage 3,
 when the converted cards are committed (R-66); dataset packages, templates and cohorts join with them (R-68).
 """
 from __future__ import annotations
@@ -12,7 +12,7 @@ from pathlib import Path
 
 from medomni.core import plugins
 
-from . import (AgentConfig, AliasFile, Cohort, CohortTests, ContractError, DatasetConfig, DatasetPolicy,
+from . import (AgentConfig, AliasFile, BenchmarkCard, Cohort, CohortTests, ContractError, DatasetConfig, DatasetPolicy,
                EvidenceRules, FamilyFile, LabelLibrary, ModelCard, TaskSet, TaskTemplate, load)
 
 REPO, PLUGINS, BOTH = "repo", "plugins", "both"
@@ -31,7 +31,8 @@ CONTENT = (
     Content("family registry", "core/families/*.yaml", FamilyFile, exclude=("aliases.yaml",), where=REPO),
     Content("family registry", "core/families/aliases.yaml", AliasFile, where=REPO),
     Content("agent config", "bench/agents/*.yaml", AgentConfig),
-    Content("task set", "bench/sets/*.yaml", TaskSet),
+    Content("benchmark", "bench/benchmarks/*/benchmark.yaml", BenchmarkCard),
+    Content("task set", "bench/benchmarks/*/sets/*.yaml", TaskSet),
     Content("dataset config", "bench/datasets/*/dataset.yaml", DatasetConfig),
     Content("dataset policy", "bench/datasets/*/policy.yaml", DatasetPolicy),
     Content("recipe", "bench/datasets/*/labels.yaml", LabelLibrary),
@@ -43,7 +44,7 @@ CONTENT = (
 )
 
 # Short names accepted on the command line, as on the reference pages
-ALIASES = {"families": "family registry", "agents": "agent config", "sets": "task set", "templates": "task template",
+ALIASES = {"families": "family registry", "agents": "agent config", "benchmarks": "benchmark", "sets": "task set", "templates": "task template",
            "recipes": "recipe", "datasets": "dataset config", "policies": "dataset policy", "cards": "model card"}
 
 

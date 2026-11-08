@@ -21,9 +21,9 @@ def test_s1_recipes_validate():
         labels = c.load(d / "labels.yaml", c.LabelLibrary)
         n_labels += len(labels.root)
         for name, entry in yaml.safe_load((d / "cohorts.yaml").read_text()).items():
-            cohort = c.load_data(entry["cohort"], c.Cohort, name)
+            cohort = c.load_data({"version": "1.0"} | entry["cohort"], c.Cohort, name)  # S1's recipes predate versions (R-106)
             assert check_cohort(name, cohort, dataset=d.name, targets=entry["targets"], labels=labels,
-                                conditions=None, codes=None, families=fams) == [], name
+                                definitions=None, codes=None, families=fams) == [], name
             n_cohorts += 1
         if (d / "evidence.yaml").exists():
             c.load(d / "evidence.yaml", c.EvidenceRules)
@@ -69,7 +69,7 @@ COHORT = "tasks/dummy-mimic_aki/cohorts/n4.yaml"
     ("labels.yaml", lambda d: d["aki"].update(exists="^SEPSIS//"), "label aki: code"),
     (COHORT, lambda d: d["require"].append({"has_label": "sepsis"}), "has_label names 'sepsis'"),
     (COHORT, lambda d: d["draw"].update(by=["sepsis"]), "draw.by names 'sepsis'"),
-    (COHORT, lambda d: d["require"].append({"condition": "adult"}), "condition 'adult'"),
+    (COHORT, lambda d: d["require"].append({"definition": "adult"}), "definition 'adult'"),
     (COHORT, lambda d: d["require"].append({"files": ["no-such-family"]}), "unknown family"),
     (COHORT, lambda d: d["require"].append({"any": ["^NOPE//"]}), "matches nothing"),
     ("evidence.yaml", lambda d: d["tables"].update(no_table={"time": "t"}), "table 'no_table'"),
@@ -82,18 +82,18 @@ def test_references_are_checked(tmp_path, file, edit, match):
 
 
 def test_shared_codes_need_no_listing():
-    assert check_cohort("x", c.load_data({"source": "all", "anchor": {"event": "ICU_ADMISSION"},
+    assert check_cohort("x", c.load_data({"version": "1.0", "source": "all", "anchor": {"event": "ICU_ADMISSION"},
                                            "require": [{"any": ["^DIAGNOSIS//ICD//(N17|584)"]}],
                                            "draw": {"n": 4, "seed": 7}}, c.Cohort),
                         dataset="d", targets={}, labels=c.load_data({"x": {"exists": "A", "from": "any", "to": "any"}},
                                                                      c.LabelLibrary),
-                        conditions=None, codes={"A"}, families=set()) == []
+                        definitions=None, codes={"A"}, families=set()) == []
 
 
 @pytest.mark.parametrize("draw, ok", [({"n": 4, "seed": 7}, True), ({"n": 4, "seed": "2026|ladder", "by": ["a"]}, True),
                                       ({"n": 0, "seed": 7}, False), ({"n": 4}, False), ({"seed": 7}, False)])
 def test_draw(draw, ok):
-    data = {"source": "all", "anchor": {"event": "ADMISSION"}, "draw": draw}
+    data = {"version": "1.0", "source": "all", "anchor": {"event": "ADMISSION"}, "draw": draw}
     if ok:
         c.load_data(data, c.Cohort)
     else:
@@ -108,5 +108,5 @@ def test_label_rules():
                     c.LabelLibrary)
     with pytest.raises(c.ContractError, match="exactly one"):
         c.load_data({"x": {"exists": "A", "none": "B", "from": "any", "to": "any"}}, c.LabelLibrary)
-    c.load_data({"source": "all", "anchor": {"event": "A"}, "require": [{"converts": {"min_families": 3}}],
+    c.load_data({"version": "1.0", "source": "all", "anchor": {"event": "A"}, "require": [{"converts": {"min_families": 3}}],
                  "draw": {"n": 4, "seed": 7}}, c.Cohort)

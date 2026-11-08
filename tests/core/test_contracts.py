@@ -15,7 +15,8 @@ BY_FILE = {s.file: s for s in c.SCHEMAS}
 
 
 def test_seventeen_contracts():
-    assert len(c.CONTRACTS) == 17
+    assert len(c.CONTRACTS) == 17  # the fingerprint left (R-111); the benchmark came (R-83)
+    assert "benchmark" in c.CONTRACTS and "fingerprint" not in c.CONTRACTS
     assert set(BY_FILE) == set(EXAMPLES)
 
 
@@ -102,11 +103,21 @@ def test_rules_inside_contracts():
     refused("aliases", lambda d: d["families"]["ecg-1lead-200hz-uv"]["accepts"].append("missing"), "unknown vocab")
     refused("agent-config", lambda d: d["env"].update(OPENAI_API_KEY="sk-literal"), "only as")
     refused("task-template", lambda d: d.update(template_id="other_aki"), "does not start with its dataset")
-    refused("task-template", lambda d: d.update(variants=["full"]), "include default")
+    refused("task-template", lambda d: d.update(evidence=["full"]), "includes default")
     refused("task-template", lambda d: d["targets"][0].update(metric="f1"), "metric")
     refused("task-set", lambda d: d["tasks"].append(d["tasks"][0]), "twice")
     refused("task-set", lambda d: d["tasks"][0].update(task="dummy_aki"), "template>@<cohort")
-    refused("task-set", lambda d: d["tasks"][0].update(fingerprint="sha256:" + "0" * 64), "fingerprint")
+    refused("task-set", lambda d: d["tasks"][0].update(fingerprint="fp1:" + "0" * 64), "fingerprint")  # R-111
+    refused("task-set", lambda d: d["tasks"][0].update(version=-1), "version")
+    refused("task-set", lambda d: d.update(arms=["encoders", "encoders"]), "arm appears twice")
+    refused("task-set", lambda d: d.update(arms=["my-arm"]), "unknown arm")
+    refused("task-set", lambda d: d.update(arms=[]), "arms")
+    refused("recipe", lambda d: d.update(version=1.0), "version")  # a YAML float would turn 1.10 into 1.1
+    refused("recipe", lambda d: d.update(version="1"), "version")
+    refused("result-record", lambda d: d.update(config_hash="v0.2:" + "0" * 64), "v0.2:")
+    refused("result-record", lambda d: d.update(task_version="0.0"), "v0.2:")
+    refused("result-record", lambda d: d.update(task_set="smoke-dummy"), "task_set")
+    refused("result-record", lambda d: d["agent"].update(arm="enc"), "unknown arm")
     refused("recipe", lambda d: d["require"][0].update({"from": "yesterday"}), "not a time")
     refused("recipe-labels", lambda d: d["aki"].pop("to"), "from and to")
     refused("recipe-labels", lambda d: d["aki"].update(value="LAB//x"), "exactly one")
@@ -117,3 +128,15 @@ def test_rules_inside_contracts():
 def test_local_agent_may_hold_a_placeholder():
     data = copy.deepcopy(EXAMPLES["agent-config"][0]) | {"route": "local", "env": {"OPENAI_API_KEY": "no-key"}}
     assert c.load_data(data, c.AgentConfig).route == "local"
+
+
+def test_imported_v02_record_carries_a_stand_in():
+    data = copy.deepcopy(EXAMPLES["result-record"][0]) | {"task_version": "0.0", "config_hash": "v0.2:" + "0" * 64}
+    assert c.load_data(data, c.RunRecord).config_hash.startswith("v0.2:")
+
+
+def test_arm_variant_is_its_own_field():
+    data = copy.deepcopy(EXAMPLES["result-record"][0])
+    data["agent"] |= {"arm": "modality-ladder", "arm_variant": "r3"}
+    run = c.load_data(data, c.RunRecord)
+    assert (run.agent.arm, run.agent.arm_variant) == ("modality-ladder", "r3")

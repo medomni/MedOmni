@@ -1,7 +1,7 @@
 """Check 7 (R-67): every Core piece on a dummy dataset, in order, for two users in fresh workspaces.
 
 workspace -> `medomni cache build` (loading into the cache) -> recipes -> toy build (atoms) -> family checks and a
-converter -> fingerprints -> predictions; then the second user, `cache verify`, `cache gc`.
+converter -> folder hashes and the config hash -> predictions; then the second user, `cache verify`, `cache gc`.
 
 The toy build is test code standing in for Bench's Build (Stage 3), so nothing here is imported from a project.
 """
@@ -184,7 +184,7 @@ def user(tmp_path, name, monkeypatch):
                 if ev["subject"] == atom.name:
                     assert ev["code"] not in text, (atom.name, ev)
 
-    fps = {a.name: hashing.fingerprint(a) for a in atoms}  # step 6
+    fps = {a.name: hashing.dir_hash(a) for a in atoms}  # step 6: a test compares built folders directly (R-111)
     run = home / "runs" / "toy-run"
     run.mkdir(parents=True)
     with open(run / "predictions.jsonl", "w") as f:  # the handoff to the scorer (R-77)
@@ -194,17 +194,23 @@ def user(tmp_path, name, monkeypatch):
                                     "intelligence": {"kind": "agent", "name": "toy"}}) + "\n")
     assert len(c.load_lines(run / "predictions.jsonl", c.PredictionRecord)) == 8
     return {"home": home, "cache": cache, "entry": entry, "data": data, "pair": pair_dir, "convert": convert,
-            "atoms": fps, "set": hashing.fingerprint(pair_dir),
+            "atoms": fps, "set": hashing.dir_hash(pair_dir),
             "keys": sorted((e.meta.step, e.meta.key, e.meta.content_hash) for e in cache.entries())}
 
 
 def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
     a = user(tmp_path, "alice", monkeypatch)
-    assert all(fp.startswith("fp1:") for fp in a["atoms"].values()) and a["set"].startswith("fp1:")
+    assert all(len(h) == 64 for h in a["atoms"].values()) and len(a["set"]) == 64
 
     b = user(tmp_path, "bob", monkeypatch)  # step 7: a second user, a fresh workspace
     assert b["keys"] == a["keys"]  # same cache keys and content hashes (R-39)
-    assert b["atoms"] == a["atoms"] and b["set"] == a["set"]  # same fingerprints
+    assert b["atoms"] == a["atoms"] and b["set"] == a["set"]  # the same built files
+    from medomni.core.contracts import DatasetConfig, load
+
+    release = load(PKG / "dataset.yaml", DatasetConfig).description.version
+    configs = {p.relative_to(REPO).as_posix(): p for p in (TASK / "template.yaml", TASK / "cohorts/n4.yaml", PKG / "labels.yaml")}
+    cfg = hashing.config_hash(configs, dataset_release=release, medomni_release="0.3.0")
+    assert cfg.startswith("cfg1:")  # the config hash depends on config files and releases only (R-111), not the workspace
 
     monkeypatch.setenv("MEDOMNI_HOME", str(a["home"]))  # step 8: verify catches one changed value
     capsys.readouterr()
@@ -222,7 +228,7 @@ def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
     assert main(["cache", "verify"]) == 1
     assert f"FAIL  {a['entry'].name}" in capsys.readouterr().out
     rebuilt = toy_build(events, a["data"].root, a["home"] / "rebuilt", a["convert"])
-    changed = {p.name for p in rebuilt.iterdir() if p.is_dir() and hashing.fingerprint(p) != a["atoms"].get(p.name)}
+    changed = {p.name for p in rebuilt.iterdir() if p.is_dir() and hashing.dir_hash(p) != a["atoms"].get(p.name)}
     assert changed == {rows[i]["subject_id"]}
 
     monkeypatch.setattr(cache_mod, "CORE_STEPS", {"events": "2"})  # step 9: a new loading version retires the entry

@@ -3,125 +3,30 @@
   "$id": "task-set.schema.json",
   "x-contract": "task set",
   "$defs": {
-    "CacheUse": {
-      "additionalProperties": false,
-      "properties": {
-        "key": {
-          "pattern": "^[0-9a-f]{64}$",
-          "title": "Key",
-          "type": "string"
-        },
-        "content_hash": {
-          "pattern": "^[0-9a-f]{64}$",
-          "title": "Content Hash",
-          "type": "string"
-        }
-      },
-      "required": [
-        "key",
-        "content_hash"
-      ],
-      "title": "CacheUse",
-      "type": "object"
-    },
     "SetEntry": {
       "additionalProperties": false,
+      "description": "One pin: a pair, with its evidence variant, at version N, and nothing else (R-108, R-111). Entries never\nchange; a new N enters only a new set. Imported v0.2 sets pin version 0.",
       "properties": {
         "task": {
           "title": "Task",
           "type": "string"
         },
-        "fingerprint": {
-          "pattern": "^fp1:[0-9a-f]{64}$",
-          "title": "Fingerprint",
-          "type": "string"
-        },
-        "steps": {
-          "default": [],
-          "items": {
-            "$ref": "#/$defs/Step"
-          },
-          "title": "Steps",
-          "type": "array"
-        },
-        "cache": {
-          "default": [],
-          "items": {
-            "$ref": "#/$defs/CacheUse"
-          },
-          "title": "Cache",
-          "type": "array"
-        }
-      },
-      "required": [
-        "task",
-        "fingerprint"
-      ],
-      "title": "SetEntry",
-      "type": "object"
-    },
-    "Step": {
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "minLength": 1,
-          "title": "Name",
-          "type": "string"
-        },
-        "count": {
+        "version": {
           "minimum": 0,
-          "title": "Count",
+          "title": "Version",
           "type": "integer"
         }
       },
       "required": [
-        "name",
-        "count"
+        "task",
+        "version"
       ],
-      "title": "Step",
-      "type": "object"
-    },
-    "TaskSetCard": {
-      "additionalProperties": false,
-      "description": "Who publishes a task set and what it accepts, so a benchmark such as \"MedOmni Bench 1.0\" is a task set with a\ncard, and others publish theirs the same way (R-77).",
-      "properties": {
-        "version": {
-          "minLength": 1,
-          "title": "Version",
-          "type": "string"
-        },
-        "owner": {
-          "minLength": 1,
-          "title": "Owner",
-          "type": "string"
-        },
-        "license": {
-          "minLength": 1,
-          "title": "License",
-          "type": "string"
-        },
-        "accepts": {
-          "items": {
-            "const": "agent",
-            "type": "string"
-          },
-          "minItems": 1,
-          "title": "Accepts",
-          "type": "array"
-        }
-      },
-      "required": [
-        "version",
-        "owner",
-        "license",
-        "accepts"
-      ],
-      "title": "TaskSetCard",
+      "title": "SetEntry",
       "type": "object"
     }
   },
   "additionalProperties": false,
-  "description": "`bench/sets/<name>.yaml`: grow-only pins of `<template>@<cohort>` to fingerprints.",
+  "description": "`bench/benchmarks/<benchmark>/sets/<name>.yaml`: grow-only pins of pairs at a version, and the arms Build\nbuilds them under (R-83, R-84, R-108).",
   "properties": {
     "name": {
       "pattern": "^[a-z0-9][a-z0-9-]*$",
@@ -140,16 +45,14 @@
       "default": null,
       "title": "Description"
     },
-    "card": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/TaskSetCard"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
+    "arms": {
+      "items": {
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Arms",
+      "type": "array"
     },
     "tasks": {
       "items": {
@@ -162,6 +65,7 @@
   },
   "required": [
     "name",
+    "arms",
     "tasks"
   ],
   "title": "TaskSet",

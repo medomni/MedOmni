@@ -10,7 +10,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, ConfigDict, Field, RootModel, model_validator
 
-from .base import Contract, NonEmpty, Slug
+from .base import Contract, NonEmpty, Slug, Version
 
 _OFFSET = r"(anchor|anchor\.event|visit:[^\s]+)(\s*[+-]\s*\d+(\.\d+)?\s*(minutes|hours|days))?"
 _TIME = re.compile(rf"^({_OFFSET}|any)$")
@@ -65,11 +65,11 @@ class Converts(Contract):
     when: Literal["draw"] = "draw"
 
 
-class Condition(Contract):
-    condition: NonEmpty
+class Definition(Contract):
+    definition: NonEmpty  # a definition named in dataset.yaml's `definitions` (R-89)
 
 
-Requirement = Any_ | None_ | Files | HasLabel | Condition | Converts
+Requirement = Any_ | None_ | Files | HasLabel | Definition | Converts
 
 
 class SourceFraction(Contract):
@@ -91,6 +91,7 @@ class Draw(Contract):
 class Cohort(Contract):
     """`tasks/<template>/cohorts/<cohort>.yaml`."""
 
+    version: Version  # the pair's version N.X (R-106); a template-wide change bumps every cohort of the template
     source: Literal["all"] | SourceFraction
     anchor: Anchor
     require: tuple[Requirement, ...] = ()

@@ -1,10 +1,10 @@
 """Plug-in loading: content folders and entry points (R-2, R-65, R-69).
 
-Content pieces (agents, datasets with their `hooks/`, tasks, encoder cards, task sets) are files. A plug-in package ships them in
+Content pieces (agents, datasets with their `hooks/`, tasks, encoder cards, benchmarks with their task sets) are files. A plug-in package ships them in
 one folder laid out like the repository and registers that folder with one entry point in `medomni.plugins`. The
 folder is found with `importlib.util.find_spec`, which runs none of the package's code.
 
-Python pieces (commands, checks, family converters, Studio tools, runners, metrics) register one entry point each, in the group for their
+Python pieces (commands, checks, family converters, Studio tools, runners, metrics, arms) register one entry point each, in the group for their
 kind. Bench, Perception and Studio register their commands in the same groups. Finding Python pieces reads
 entry-point metadata only; a piece is imported the first time it is used.
 
@@ -32,8 +32,9 @@ CONVERTERS = "medomni.converters"  # family converters
 TOOLS = "medomni.tools"  # Studio tools
 RUNNERS = "medomni.runners"  # one runner per intelligence kind; the Harbor harness is the agent runner (R-77)
 METRICS = "medomni.metrics"  # metrics a target may name; contributing metrics stays closed in v0.3 (R-77)
+ARMS = "medomni.arms"  # arms a task set may list; new arms come from plug-in packages (R-85)
 
-GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS)  # groups of Python pieces
+GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS)  # groups of Python pieces
 
 # Commands that Core itself provides. They are not entry points, and no plug-in can replace them.
 CORE_COMMANDS = ("plugins", "contracts", "cache")
@@ -184,7 +185,7 @@ KINDS = (
     Kind("datasets", "bench/datasets/*/dataset.yaml", 1),
     Kind("tasks", "bench/datasets/*/tasks/*/template.yaml", 1),
     Kind("encoders", "perception/encoders/*/*/card.yaml", 1),
-    Kind("sets", "bench/sets/*.yaml", 0),  # task sets, with an optional card (R-77)
+    Kind("benchmarks", "bench/benchmarks/*/benchmark.yaml", 1),  # a card and its task sets in sets/ (R-83)
 )
 
 
@@ -252,3 +253,8 @@ def warn(message: str) -> None:
 def metric_names() -> frozenset[str]:
     """The metrics a target may name: every entry point in `medomni.metrics`, read without importing any."""
     return frozenset(p.name for p in pieces(METRICS))
+
+
+def arm_names() -> frozenset[str]:
+    """The arms a task set or record may name: every entry point in `medomni.arms`, read without importing any."""
+    return frozenset(p.name for p in pieces(ARMS))

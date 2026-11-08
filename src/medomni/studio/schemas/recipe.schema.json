@@ -97,21 +97,6 @@
       "title": "Any_",
       "type": "object"
     },
-    "Condition": {
-      "additionalProperties": false,
-      "properties": {
-        "condition": {
-          "minLength": 1,
-          "title": "Condition",
-          "type": "string"
-        }
-      },
-      "required": [
-        "condition"
-      ],
-      "title": "Condition",
-      "type": "object"
-    },
     "Converts": {
       "additionalProperties": false,
       "description": "At least `min_families` of the patient's files convert and match their family (S1's BDSP recipes). Checked\nbefore the draw, so the pool does not depend on the seed (Build page, file check).",
@@ -145,6 +130,21 @@
         "min_families"
       ],
       "title": "ConvertsRule",
+      "type": "object"
+    },
+    "Definition": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "minLength": 1,
+          "title": "Definition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition"
+      ],
+      "title": "Definition",
       "type": "object"
     },
     "Draw": {
@@ -340,6 +340,11 @@
   "additionalProperties": false,
   "description": "`tasks/<template>/cohorts/<cohort>.yaml`.",
   "properties": {
+    "version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Version",
+      "type": "string"
+    },
     "source": {
       "anyOf": [
         {
@@ -372,7 +377,7 @@
             "$ref": "#/$defs/HasLabel"
           },
           {
-            "$ref": "#/$defs/Condition"
+            "$ref": "#/$defs/Definition"
           },
           {
             "$ref": "#/$defs/Converts"
@@ -387,6 +392,7 @@
     }
   },
   "required": [
+    "version",
     "source",
     "anchor",
     "draw"

@@ -4,22 +4,22 @@
 - `quick_sha`: a cheap identity for large recordings (size, first MiB, last MiB above 2 MiB), 16 hex characters.
   It gives the values v0.2's manifest builder stored.
 - `dir_hash`: a folder's SHA-256, every file in path order, each entry length-prefixed.
-- `fingerprint`: `fp1:` + `dir_hash` of a built `<template>@<cohort>`, without its `FINGERPRINT` file
-  (Tasks reference, "Fingerprint").
+- `config_hash`: `cfg1:` + SHA-256 over a task's config files and the dataset and MedOmni release names (R-111,
+  R-112). It is published, so its recipe never changes under the `cfg1:` prefix.
 
-v0.2 code whose stored outputs depend on its exact recipe (the bridge's own `quick_sha`, `BRIDGE_VERSION`,
-`emit.sha256_dir` and 13 others) keeps it, and moves with its area in Stage 3.
+Nothing is hashed over built data to align results (R-111). v0.2's exact hash recipes live only in the reproduction
+test (R-118).
 """
 from __future__ import annotations
 
 import hashlib
 import os
+from collections.abc import Mapping
 from pathlib import Path
 
 CHUNK = 4 << 20
 MIB = 1 << 20
-FP_PREFIX = "fp1:"
-FINGERPRINT_FILE = "FINGERPRINT"
+CONFIG_PREFIX = "cfg1:"
 
 
 class HashError(ValueError):
@@ -84,6 +84,22 @@ def dir_hash(root: str | os.PathLike, exclude: tuple[str, ...] = ()) -> str:
     return h.hexdigest()
 
 
-def fingerprint(folder: str | os.PathLike) -> str:
-    """The `fp1:` fingerprint of a built `<template>@<cohort>` folder."""
-    return FP_PREFIX + dir_hash(folder, exclude=(FINGERPRINT_FILE,))
+def config_hash(files: Mapping[str, str | os.PathLike | bytes], *, dataset_release: str, medomni_release: str) -> str:
+    """`cfg1:` + sha256 over a task's config files and its releases.
+
+    `files` maps each config file's name (repository-relative, POSIX) to its path or bytes. Names are taken in sorted
+    order; each adds `<name>\\0<length>\\0<bytes>`, as in `dir_hash`. Then `dataset\\0<release>\\0` and
+    `medomni\\0<release>\\0`. Data files are never listed (R-111): the hash says the config matched, not the data.
+    """
+    h = hashlib.sha256()
+    for name in sorted(files):
+        if "\0" in name:
+            raise HashError(f"{name!r}: a config file name holds a NUL")
+        src = files[name]
+        data = src if isinstance(src, bytes) else Path(src).read_bytes()
+        h.update(name.encode("utf-8") + b"\0" + str(len(data)).encode() + b"\0" + data)
+    for label, release in (("dataset", dataset_release), ("medomni", medomni_release)):
+        if not release or "\0" in release:
+            raise HashError(f"{label} release {release!r}: empty or holds a NUL")
+        h.update(label.encode() + b"\0" + release.encode("utf-8") + b"\0")
+    return CONFIG_PREFIX + h.hexdigest()

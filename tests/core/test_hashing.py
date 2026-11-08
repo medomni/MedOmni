@@ -1,4 +1,4 @@
-"""Core's hash functions (part 4): same values as v0.2 where stored values depend on them; fp1 as the Tasks page says.
+"""Core's hash functions (part 4): same values as v0.2 where stored values depend on them; the cfg1: config hash (R-111).
 
 v0.2's helpers are imported from their old files (code, not data). These imports go when the code moves in Stage 3.
 """
@@ -105,7 +105,7 @@ def test_dir_hash_changes_with_names_and_bytes(tmp_path):
 
 
 def test_dir_hash_value_is_pinned(tmp_path):
-    """Published fingerprints must stay checkable: this value may never change for fp1."""
+    """Caches and the stage tests compare folders with this recipe, so its value stays fixed."""
     a = _tree(tmp_path / "a", {"b.txt": b"b", "a/c.txt": b"cc"})
     stream = b"a/c.txt\x002\x00cc" + b"b.txt\x001\x00b"
     assert hashing.dir_hash(a) == hashlib.sha256(stream).hexdigest()
@@ -121,21 +121,27 @@ def test_links_are_refused(tmp_path, kind):
         hashing.dir_hash(a)
 
 
-def _atom(root, data=b"\x00\x01signal"):
-    return _tree(root, {"task.toml": b'template = "dummy_aki"\ncohort = "n20"\n',
-                        "instruction.md": b"Predict aki.\n",
-                        "environment/Dockerfile": b"FROM scratch\n",
-                        "tests/check.py": b"print('ok')\n",
-                        "data/files/DUMMY-1.edf": data})
+def test_config_hash_value_is_pinned():
+    """Config hashes are published (R-111, R-112): this value may never change under cfg1:."""
+    stream = b"a.yaml\x002\x00aa" + b"b/c.yaml\x001\x00c" + b"dataset\x001.0\x00" + b"medomni\x000.3.0\x00"
+    h = hashing.config_hash({"b/c.yaml": b"c", "a.yaml": b"aa"}, dataset_release="1.0", medomni_release="0.3.0")
+    assert h == "cfg1:" + hashlib.sha256(stream).hexdigest()
+    assert h == "cfg1:53457f2fa1238049a88c18c9baa56cd755b42b6d39799a3ace5fb4050fc2efbb"
 
 
-def test_fingerprint(tmp_path):
-    a = _atom(tmp_path / "build-1")
-    fp = hashing.fingerprint(a)
-    assert fp.startswith("fp1:") and len(fp) == 4 + 64
-    (a / "FINGERPRINT").write_text(fp + "\n")
-    assert hashing.fingerprint(a) == fp  # the FINGERPRINT file is left out
-    assert hashing.fingerprint(_atom(tmp_path / "build-2")) == fp  # a second build in another place: same value
-    assert hashing.fingerprint(_atom(tmp_path / "build-3", data=b"\x00\x01signam")) != fp  # one changed byte
-    (a / "data/FINGERPRINT").write_text("x")
-    assert hashing.fingerprint(a) != fp  # only the top-level FINGERPRINT is left out
+def test_config_hash_covers_configs_and_releases_only(tmp_path):
+    cfg = _tree(tmp_path / "pkg", {"template.yaml": b"t", "cohorts/n20.yaml": b"c"})
+    files = {"template.yaml": cfg / "template.yaml", "cohorts/n20.yaml": cfg / "cohorts/n20.yaml"}
+    h = hashing.config_hash(files, dataset_release="1.0", medomni_release="0.3.0")
+    assert h == hashing.config_hash({k: v.read_bytes() for k, v in files.items()}, dataset_release="1.0",
+                                    medomni_release="0.3.0")  # paths or bytes: the same value
+    assert h != hashing.config_hash(files, dataset_release="1.1", medomni_release="0.3.0")
+    assert h != hashing.config_hash(files, dataset_release="1.0", medomni_release="0.3.1")
+    (cfg / "cohorts/n20.yaml").write_bytes(b"c2")
+    assert h != hashing.config_hash(files, dataset_release="1.0", medomni_release="0.3.0")  # one config byte
+    with pytest.raises(hashing.HashError):
+        hashing.config_hash(files, dataset_release="", medomni_release="0.3.0")
+
+
+def test_no_fingerprint_left():
+    assert not hasattr(hashing, "fingerprint") and not hasattr(hashing, "FP_PREFIX")  # R-111

@@ -1,4 +1,5 @@
-"""Task template, task set, fingerprint and task proposal (Tasks reference page; R-23, R-24, R-34, R-44, R-46)."""
+"""Task template, benchmark card, task set and task proposal (Tasks reference page; R-23, R-24, R-34, R-44, R-46, R-83,
+R-106 to R-109, R-111)."""
 from __future__ import annotations
 
 import re
@@ -6,15 +7,15 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, StringConstraints, model_validator
 
-from .base import Contract, Fingerprint, IntelligenceKind, MetricName, NonEmpty, Sha256, Slug
+from .base import ArmName, Contract, IntelligenceKind, MetricName, NonEmpty, Slug
 
 TemplateId = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*$")]
-_PAIR = re.compile(r"^(?P<template>[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*)(:(?P<variant>[a-z0-9-]+))?@(?P<cohort>[a-z0-9][a-z0-9-]*)$")
+_PAIR = re.compile(r"^(?P<template>[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*)(:(?P<evidence>[a-z0-9-]+))?@(?P<cohort>[a-z0-9][a-z0-9-]*)$")
 
 
 def _pair(v: str) -> str:
     if not _PAIR.match(v):
-        raise ValueError(f"'{v}' is not <template>@<cohort> or <template>:<variant>@<cohort>")
+        raise ValueError(f"'{v}' is not <template>@<cohort> or <template>:<evidence>@<cohort>")
     return v
 
 
@@ -55,8 +56,8 @@ class TaskTemplate(Contract):
     dataset: Slug
     authors: tuple[Author, ...] = Field(min_length=1)
     targets: tuple[Target, ...] = Field(min_length=1)
-    input: dict[str, Any] = Field(min_length=1)  # tables and families the default variant stages; shape set in Stage 3
-    variants: tuple[Literal["default", "full"], ...] = ("default",)
+    input: dict[str, Any] = Field(min_length=1)  # tables and families the default evidence stages; shape pending, set in Stage 3 part 2
+    evidence: tuple[Literal["default", "full"], ...] = ("default",)  # evidence variants; each is its own task (R-109)
     exclude: dict[str, tuple[NonEmpty, ...]] = {}
     agent: AgentTask  # what the agent kind needs; later kinds add `llm:` or `model:` beside it (R-77)
 
@@ -67,44 +68,38 @@ class TaskTemplate(Contract):
         names = [t.name for t in self.targets]
         if len(names) != len(set(names)):
             raise ValueError("target names repeat")
-        if "default" not in self.variants:
-            raise ValueError("variants always include default")
+        if "default" not in self.evidence:
+            raise ValueError("evidence always includes default")
         return self
 
 
-class Step(Contract):
-    name: NonEmpty
-    count: int = Field(ge=0)
-
-
-class CacheUse(Contract):
-    key: Sha256
-    content_hash: Sha256
-
-
 class SetEntry(Contract):
+    """One pin: a pair, with its evidence variant, at version N, and nothing else (R-108, R-111). Entries never
+    change; a new N enters only a new set. Imported v0.2 sets pin version 0."""
+
     task: Pair
-    fingerprint: Fingerprint
-    steps: tuple[Step, ...] = ()
-    cache: tuple[CacheUse, ...] = ()
+    version: int = Field(ge=0)
 
 
-class TaskSetCard(Contract):
-    """Who publishes a task set and what it accepts, so a benchmark such as "MedOmni Bench 1.0" is a task set with a
-    card, and others publish theirs the same way (R-77)."""
+class BenchmarkCard(Contract):
+    """`bench/benchmarks/<name>/benchmark.yaml`: who publishes a benchmark and what it accepts. Its task sets are in
+    `sets/` beside it; records name a set `<benchmark>/<set>` (R-77, R-83)."""
 
+    name: Slug
+    description: str | None = None
     version: NonEmpty
     owner: NonEmpty
-    license: NonEmpty
+    license: NonEmpty  # covers the benchmark's own files; each dataset keeps its own licence
     accepts: tuple[IntelligenceKind, ...] = Field(min_length=1)  # the intelligence kinds it may be run with
 
 
 class TaskSet(Contract):
-    """`bench/sets/<name>.yaml`: grow-only pins of `<template>@<cohort>` to fingerprints."""
+    """`bench/benchmarks/<benchmark>/sets/<name>.yaml`: grow-only pins of pairs at a version, and the arms Build
+    builds them under (R-83, R-84, R-108)."""
 
     name: Slug
     description: str | None = None
-    card: TaskSetCard | None = None
+    arms: tuple[ArmName, ...] = Field(min_length=1)
     tasks: tuple[SetEntry, ...] = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -112,14 +107,9 @@ class TaskSet(Contract):
         pairs = [e.task for e in self.tasks]
         if len(pairs) != len(set(pairs)):
             raise ValueError("a pair appears twice in the task set")
+        if len(self.arms) != len(set(self.arms)):
+            raise ValueError("an arm appears twice in the task set")
         return self
-
-
-class FingerprintFile(Contract):
-    """A built `<template>@<cohort>`'s FINGERPRINT, as a record."""
-
-    task: Pair
-    fingerprint: Fingerprint
 
 
 class TaskProposal(Contract):

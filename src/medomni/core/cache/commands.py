@@ -57,21 +57,6 @@ def cmd_status(a) -> int:
     return 0
 
 
-def _published(name: str) -> tuple[str, list]:
-    from medomni.core.contracts import TaskSet, load
-
-    p = Path(name)
-    if not p.suffix:
-        from medomni.core import plugins
-
-        repo = plugins.find_repo()
-        if repo is None:
-            raise FileNotFoundError(f"task set '{name}': give a path, or run inside the repository")
-        p = repo / "bench/sets" / f"{name}.yaml"
-    s = load(p, TaskSet)
-    return s.name, [(e.task, u) for e in s.tasks for u in e.cache]
-
-
 def cmd_verify(a) -> int:
     cache = _cache()
     bad = n = 0
@@ -81,20 +66,6 @@ def cmd_verify(a) -> int:
             bad += 1
             print(f"FAIL  {e.name}: {problem}")
     print(f"{n} entries checked, {bad} problem(s)")
-    if a.set:
-        set_name, uses = _published(a.set)
-        differ = 0
-        for task, use in uses:
-            e = cache.find(use.key)
-            if e is None:
-                differ += 1
-                print(f"MISSING  {task}: entry {use.key} is not in your cache")
-            elif e.meta.content_hash != use.content_hash:
-                differ += 1
-                print(f"DIFFERS  {task}: {e.name} has content hash {e.meta.content_hash}, "
-                      f"published {use.content_hash}")
-        print(f"task set {set_name}: {len(uses) - differ}/{len(uses)} published entries match")
-        bad += differ
     return 1 if bad else 0
 
 
@@ -120,8 +91,7 @@ def main(argv: list[str]) -> int:
     b = sub.add_parser("build", help="load a dataset into the cache (file conversions come with Bench's Build, Stage 3)")
     b.add_argument("dataset")
     sub.add_parser("status", help="entries per dataset and step, with size and whether a current step uses them")
-    v = sub.add_parser("verify", help="recompute every content hash")
-    v.add_argument("--set", help="also compare with a task set's published hashes (a name or a path)")
+    sub.add_parser("verify", help="recompute every content hash; no cache hash is published (R-113)")
     g = sub.add_parser("gc", help="remove entries no current step uses, and unfinished folders")
     g.add_argument("--dry-run", action="store_true")
     try:

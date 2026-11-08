@@ -45,7 +45,7 @@ class DatasetConfig(Contract):
     read: tuple[Reader, ...] = Field(min_length=1)
     verify: dict[str, Any] = {}
     rules: dict[str, Any] = {}
-    conditions: dict[str, Requirement] = {}
+    definitions: dict[str, Requirement] = {}  # named requirements cohorts refer to (R-89)
 
 
 Permission = Literal["allow", "conditional", "deny"]

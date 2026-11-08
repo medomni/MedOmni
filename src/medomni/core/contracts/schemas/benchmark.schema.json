@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "benchmark.schema.json",
+  "x-contract": "benchmark",
+  "additionalProperties": false,
+  "description": "`bench/benchmarks/<name>/benchmark.yaml`: who publishes a benchmark and what it accepts. Its task sets are in\n`sets/` beside it; records name a set `<benchmark>/<set>` (R-77, R-83).",
+  "properties": {
+    "name": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "version": {
+      "minLength": 1,
+      "title": "Version",
+      "type": "string"
+    },
+    "owner": {
+      "minLength": 1,
+      "title": "Owner",
+      "type": "string"
+    },
+    "license": {
+      "minLength": 1,
+      "title": "License",
+      "type": "string"
+    },
+    "accepts": {
+      "items": {
+        "const": "agent",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Accepts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "version",
+    "owner",
+    "license",
+    "accepts"
+  ],
+  "title": "BenchmarkCard",
+  "type": "object"
+}

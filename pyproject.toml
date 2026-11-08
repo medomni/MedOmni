@@ -45,6 +45,19 @@ auc = "medomni.bench.metrics:auc"
 qwk = "medomni.bench.metrics:qwk"
 mae = "medomni.bench.metrics:mae"
 
+# The four built-in arms (R-84, R-85). Names are read from this metadata without importing; the arms are built in
+# Stage 3 part 3 (build side) and part 5 (run side).
+[project.entry-points."medomni.arms"]
+encoders = "medomni.bench.arms:encoders"
+no-perception = "medomni.bench.arms:no_perception"
+encoders-required = "medomni.bench.arms:encoders_required"
+modality-ladder = "medomni.bench.arms:modality_ladder"
+
+# Filled in Stage 3: the Harbor harness as the agent runner (part 5); Bench's and Perception's checks (parts 1-3)
+[project.entry-points."medomni.runners"]
+
+[project.entry-points."medomni.checks"]
+
 [project.entry-points."medomni.commands"]
 bench = "medomni.bench.cli:group"
 perception = "medomni.perception.cli:group"

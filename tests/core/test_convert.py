@@ -79,7 +79,7 @@ def test_cards_stay_in_place_until_stage_3(repo):
         assert "authors" not in yaml.safe_load((repo / rel).read_text(encoding="utf-8"))
 
 
-@pytest.mark.parametrize("kind", ["task-set", "fingerprint", "result-record", "task-template"])
+@pytest.mark.parametrize("kind", ["task-set", "result-record", "task-template"])
 def test_not_converted(kind):
     with pytest.raises(convert.NotConverted, match="Stage 3"):
         convert.refuse(kind)

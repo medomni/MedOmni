@@ -23,13 +23,13 @@ def _bad(data, model, match):
 def test_records_name_the_intelligence():
     run = c.load_data(RUN, c.RunRecord)
     assert (run.intelligence.kind, run.intelligence.name) == ("agent", "my-agent")
-    assert run.agent.condition == "enc" and run.agent.encoder_calls
+    assert run.agent.arm == "encoders" and run.agent.encoder_calls
     assert c.load_data(SCORE_RECORD, c.ScoreRecord).intelligence.kind == "agent"
     _bad({k: v for k, v in RUN.items() if k != "intelligence"} | {"agent": "my-agent"}, c.RunRecord, "intelligence")
 
 
 def test_agent_fields_sit_in_the_agent_block():
-    for moved in ("condition", "encoders_served", "encoder_calls", "files_opened"):
+    for moved in ("arm", "encoders_served", "encoder_calls", "files_opened"):
         _bad(RUN | {moved: RUN["agent"][moved]}, c.RunRecord, moved)
     _bad({k: v for k, v in RUN.items() if k != "agent"}, c.RunRecord, "agent")
 
@@ -79,24 +79,27 @@ def test_predictions_file_names_the_bad_line(tmp_path):
     assert len(c.load_lines(p, c.PredictionRecord)) == 2
 
 
-def test_task_set_card():
-    s = c.load_data(EXAMPLES["task-set"][0], c.TaskSet)
-    assert s.card.accepts == ("agent",)
-    no_card = {k: v for k, v in EXAMPLES["task-set"][0].items() if k != "card"}
-    assert c.load_data(no_card, c.TaskSet).card is None
-    _bad(EXAMPLES["task-set"][0] | {"card": dict(s.card.model_dump(), accepts=[])}, c.TaskSet, "accepts")
+def test_benchmark_card():
+    card = EXAMPLES["benchmark"][0]
+    assert c.load_data(card, c.BenchmarkCard).accepts == ("agent",)
+    _bad(card | {"accepts": []}, c.BenchmarkCard, "accepts")
+    _bad(EXAMPLES["task-set"][0] | {"card": card}, c.TaskSet, "card")  # the card moved to the benchmark (R-83)
 
 
-def test_task_sets_are_plugin_content(site, repo, monkeypatch, capsys):  # noqa: F811
+def test_benchmarks_are_plugin_content(site, repo, monkeypatch, capsys):  # noqa: F811
     import yaml
 
     make_plugin(site, "medomni-one", "fake_one",
-                {"bench/sets/their-bench.yaml": yaml.safe_dump(EXAMPLES["task-set"][0] | {"name": "their-bench"})})
+                {"bench/benchmarks/their-bench/benchmark.yaml":
+                     yaml.safe_dump(EXAMPLES["benchmark"][0] | {"name": "their-bench"}),
+                 "bench/benchmarks/their-bench/sets/v1.yaml": yaml.safe_dump(EXAMPLES["task-set"][0] | {"name": "v1"})})
     kinds = plugins.content(plugins.roots(repo)[0])
-    assert kinds["sets"].pieces["their-bench"].full_name == "medomni-one:their-bench"
+    assert kinds["benchmarks"].pieces["their-bench"].full_name == "medomni-one:their-bench"
     monkeypatch.chdir(repo)
-    main(["contracts", "check", "sets"])
-    assert "ok    medomni-one:bench/sets/their-bench.yaml" in capsys.readouterr().out
+    main(["contracts", "check", "benchmarks", "sets"])
+    out = capsys.readouterr().out
+    assert "ok    medomni-one:bench/benchmarks/their-bench/benchmark.yaml" in out
+    assert "ok    medomni-one:bench/benchmarks/their-bench/sets/v1.yaml" in out
 
 
 def test_metrics_listed_by_medomni_plugins(capsys):

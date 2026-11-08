@@ -91,7 +91,12 @@ def load_lines(path: Path, model: type[M]) -> list[M]:
 # Shared field types
 Slug = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*$")]
 Sha256 = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
-Fingerprint = Annotated[str, StringConstraints(pattern=r"^fp1:[0-9a-f]{64}$")]
+# A task's config hash (R-111, R-112): `cfg1:` over its config files and releases; `v0.2:` only on imported v0.2 records
+ConfigHash = Annotated[str, StringConstraints(pattern=r"^(cfg1|v0\.2):[0-9a-f]{64}$")]
+# A task version N.X (R-106): N rises when results stop being comparable, X for any other change; imports are 0.0
+Version = Annotated[str, StringConstraints(pattern=r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")]
+# A task set as records name it: <benchmark>/<set> (R-83)
+TaskSetRef = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9.-]*$")]
 EnvRef = Annotated[str, StringConstraints(pattern=r"^\$\{[A-Z][A-Z0-9_]*\}$")]
 NonEmpty = Annotated[str, StringConstraints(min_length=1)]
 
@@ -107,6 +112,19 @@ def _metric(v: str) -> str:
 
 # A metric name, checked against the `medomni.metrics` entry points (R-77)
 MetricName = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9_-]*$"), AfterValidator(_metric)]
+
+
+def _arm(v: str) -> str:
+    from medomni.core.plugins import arm_names
+
+    known = arm_names()
+    if v not in known:
+        raise ValueError(f"unknown arm '{v}' (registered in medomni.arms: {', '.join(sorted(known)) or 'none'})")
+    return v
+
+
+# An arm name, checked exactly against the `medomni.arms` entry points; never split (R-84, R-85)
+ArmName = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*$"), AfterValidator(_arm)]
 
 # The kinds of intelligence MedOmni evaluates (R-76): `agent` in v0.3; `llm` and `model` are added later
 IntelligenceKind = Literal["agent"]

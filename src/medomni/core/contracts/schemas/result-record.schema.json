@@ -5,23 +5,25 @@
   "$defs": {
     "AgentRun": {
       "additionalProperties": false,
-      "description": "What only the agent runner records: the condition and how the agent used encoders and files (R-76).",
+      "description": "What only the agent runner records: the arm and how the agent used encoders and files (R-76, R-84).",
       "properties": {
-        "condition": {
+        "arm": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Arm",
+          "type": "string"
+        },
+        "arm_variant": {
           "anyOf": [
             {
-              "enum": [
-                "enc",
-                "noenc",
-                "enc-forced"
-              ],
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
               "type": "string"
             },
             {
-              "type": "string"
+              "type": "null"
             }
           ],
-          "title": "Condition"
+          "default": null,
+          "title": "Arm Variant"
         },
         "encoders_served": {
           "default": [],
@@ -49,7 +51,7 @@
         }
       },
       "required": [
-        "condition"
+        "arm"
       ],
       "title": "AgentRun",
       "type": "object"
@@ -116,7 +118,7 @@
           "type": "string"
         },
         "task_set": {
-          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9.-]*$",
           "title": "Task Set",
           "type": "string"
         },
@@ -124,17 +126,18 @@
           "title": "Task",
           "type": "string"
         },
-        "intelligence": {
-          "$ref": "#/$defs/IntelligenceRef"
-        },
-        "fingerprint": {
-          "pattern": "^fp1:[0-9a-f]{64}$",
-          "title": "Fingerprint",
+        "task_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Task Version",
           "type": "string"
         },
-        "fingerprint_match": {
-          "title": "Fingerprint Match",
-          "type": "boolean"
+        "config_hash": {
+          "pattern": "^(cfg1|v0\\.2):[0-9a-f]{64}$",
+          "title": "Config Hash",
+          "type": "string"
+        },
+        "intelligence": {
+          "$ref": "#/$defs/IntelligenceRef"
         },
         "model_served": {
           "anyOf": [
@@ -190,9 +193,9 @@
         "release",
         "task_set",
         "task",
+        "task_version",
+        "config_hash",
         "intelligence",
-        "fingerprint",
-        "fingerprint_match",
         "model_served"
       ],
       "title": "RunRecord",
@@ -217,7 +220,7 @@
           "type": "string"
         },
         "task_set": {
-          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9.-]*$",
           "title": "Task Set",
           "type": "string"
         },
@@ -231,10 +234,41 @@
           "title": "Target",
           "type": "string"
         },
-        "fingerprint": {
-          "pattern": "^fp1:[0-9a-f]{64}$",
-          "title": "Fingerprint",
+        "task_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Task Version",
           "type": "string"
+        },
+        "config_hash": {
+          "pattern": "^(cfg1|v0\\.2):[0-9a-f]{64}$",
+          "title": "Config Hash",
+          "type": "string"
+        },
+        "arm": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arm"
+        },
+        "arm_variant": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arm Variant"
         },
         "n_atoms": {
           "minimum": 0,
@@ -287,7 +321,8 @@
         "task_set",
         "task_set_hash",
         "target",
-        "fingerprint",
+        "task_version",
+        "config_hash",
         "n_atoms",
         "n_failed",
         "intelligence",

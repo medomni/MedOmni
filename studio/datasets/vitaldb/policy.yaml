@@ -1,0 +1,23 @@
+dataset: vitaldb
+version: 1.0.0
+access: open
+license:
+  id: CC-BY-4.0
+  url: https://physionet.org/content/vitaldb/1.0.0/
+publish:
+  schema: allow
+  templates: allow
+  recipes: allow
+  id_lists: allow
+  labels: allow
+  per_record_derived: allow
+  samples: allow
+routes:
+  local: allow
+  cloud: allow
+use:
+  commercial: true
+attribution: Lee HC, Park Y, Yoon SB, Yang SM, Park D, Jung CW. VitalDB, a high-fidelity multi-parameter vital signs database
+  in surgical patients. Sci Data 2022.
+sources:
+- docs/reference/datasets.md

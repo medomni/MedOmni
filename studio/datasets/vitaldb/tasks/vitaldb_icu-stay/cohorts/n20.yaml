@@ -1,0 +1,10 @@
+version: '1.0'
+source: all
+anchor: {event: OP//END}
+require:
+- files: [ecg-monitor-3to5lead-250hz-continuous]
+  to: anchor
+draw:
+  n: 20
+  by: [icu_stay]
+  seed: 7

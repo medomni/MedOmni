@@ -1,0 +1,12 @@
+# Evidence rules (Recipes reference page).
+tables:
+  labs:
+    time: dt
+    drop: guard
+static:
+  blank: guard.fields
+  aliases: {}
+files: {}
+reading_note: 'A recording''s channels and native sampling rates differ per file: read each file''s own header rather than
+  assuming one layout or rate.'
+views: views

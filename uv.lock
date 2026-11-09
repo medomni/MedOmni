@@ -1257,6 +1257,7 @@ dependencies = [
     { name = "requests" },
     { name = "scikit-learn" },
     { name = "uvicorn" },
+    { name = "vitaldb" },
     { name = "wfdb" },
 ]
 
@@ -1286,6 +1287,7 @@ requires-dist = [
     { name = "requests", specifier = ">=2.31" },
     { name = "scikit-learn", specifier = ">=1.5" },
     { name = "uvicorn", specifier = ">=0.29" },
+    { name = "vitaldb", specifier = ">=1.7,<2" },
     { name = "wfdb", specifier = ">=4.1" },
 ]
 
@@ -2695,6 +2697,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/da/34/30e9280707135d2cfc589dfff3cb796bd07a3aeb1a3e415ba09dd89d7bb4/uvicorn-0.54.0.tar.gz", hash = "sha256:a2e33cbfaa0306f8e6b0c13e0cb89d7d7a2da3e62b90c66e18c33d9807b28620", size = 112283, upload-time = "2026-09-25T06:52:37.601Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/38/0c/b54a4fdd7f90a3af8b02ebc9ce6712c2c208b7926a2f7bad95c33ebbe943/uvicorn-0.54.0-py3-none-any.whl", hash = "sha256:505bdb0f318731d45f1f712071fc781a8981f6847a31c902c9f5e652d4f67faf", size = 87427, upload-time = "2026-09-25T06:52:35.829Z" },
+]
+
+[[package]]
+name = "vitaldb"
+version = "1.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "requests" },
+    { name = "wfdb" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f4/1c/f48900276672017f7f72f3d2c0b94ac435c80fc0907ec663cedb6be76cf3/vitaldb-1.7.2.tar.gz", hash = "sha256:70e0ce784b13d52bbf6a315b742ab06d5ed0599b8b01f76182971a391dd64130", size = 67723, upload-time = "2026-06-08T04:10:46.252Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/97/940bf86430760cec92aa59e4e0159030b4fe174f35377e8df88bf8f8da44/vitaldb-1.7.2-py3-none-any.whl", hash = "sha256:9037b11ca172bf3a674275f1fd89db03a02c92e8c9eed15b6cf80b328cd2cb2e", size = 68910, upload-time = "2026-06-08T04:10:47.376Z" },
 ]
 
 [[package]]

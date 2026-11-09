@@ -1,0 +1,16 @@
+template_id: vitaldb_icu-stay
+dataset: vitaldb
+authors:
+- {name: Bosong Huang}
+targets:
+- {name: icu_stay, label: 'vitaldb:icu_stay', metric: auc}
+input: {note: the whole case record up to the end of the operation}
+agent:
+  statement: Predict whether this patient stays in intensive care for at least one day after this operation.
+  instruction: '## Prediction time
+
+
+    The prediction is made at the moment this operation ends. Every record, test and signal you are given was taken at or
+    before that moment; surgical times are in seconds from the start of the case.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: false, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

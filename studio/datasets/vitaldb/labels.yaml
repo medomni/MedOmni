@@ -1,0 +1,36 @@
+# The label library (Recipes reference page). From S1's p17_labels.yaml and p16_recipes.yaml.
+cr_max_7d:
+  from: anchor
+  guard:
+    codes:
+    - LAB//cr
+    fields:
+    - preop_cr
+  include_from: false
+  pick: max
+  question: Your prediction is the numeric value of the highest blood creatinine (mg/dL) in the 7 days after the end of
+    this operation.
+  to: anchor + 7 days
+  value: LAB//cr
+death_inhosp:
+  from: any
+  guard:
+    fields:
+    - death_inhosp
+  op: ==
+  question: Your prediction is the probability that the patient dies in hospital after this operation. Higher values MUST
+    mean more likely positive/higher class — do not invert.
+  to: any
+  value: VITALDB//DEATH_INHOSP
+  x: 1
+icu_stay:
+  from: any
+  guard:
+    fields:
+    - icu_days
+  op: '>='
+  question: Your prediction is the probability that the patient stays in intensive care for at least one day after this
+    operation. Higher values MUST mean more likely positive/higher class — do not invert.
+  to: any
+  value: VITALDB//ICU_DAYS
+  x: 1

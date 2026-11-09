@@ -1,5 +1,5 @@
 name: vitaldb
-description: The VitalDB templates on open data.
+description: The 3 VitalDB templates, written to test adding a new dataset; no task proposal behind them.
 arms: [encoders, no-perception]
 tasks:
 - {task: vitaldb_icu-stay@n20, version: 1}

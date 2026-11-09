@@ -1,21 +1,67 @@
-"""`medomni studio`."""
+"""`medomni studio`: every tool's command, found through `tools.found()`, plus `check <tool>`."""
 from __future__ import annotations
 
 import argparse
+import sys
+
+
+def _parser(loaded: dict) -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser(prog="medomni studio", description="The tools around Bench and Perception: survey, "
+                                 "propose, review, preview, report, assets.")
+    sub = ap.add_subparsers(dest="cmd", metavar="<command>")
+    for name, tool in sorted(loaded.items()):
+        p = sub.add_parser(name, help=tool.summary, description=tool.summary)
+        if tool.target:
+            p.add_argument("target", metavar=tool.target, help=tool.target_help or None)
+        p.add_argument("--out", help="write here instead of the tool's folder in the workspace")
+        tool.options(p)
+    c = sub.add_parser("check", help="check a tool against its kind's interface")
+    c.add_argument("tool", metavar="<tool>")
+    return ap
 
 
 def group(argv: list[str]) -> int:
-    from . import dummy
+    from medomni.core import plugins
+    from medomni.core.contracts import ContractError
+    from medomni.core.workspace import WorkspaceError
 
-    parser = argparse.ArgumentParser(prog="medomni studio",
-                                     description="Make tasks: survey, propose, review, preview, report.")
-    sub = parser.add_subparsers(dest="cmd")
-    dummy.add_parser(sub)
+    from . import tools
+
+    found = tools.found()
+    loaded, errors = {}, list(found.errors)
+    for name, target in found.targets.items():
+        try:
+            loaded[name] = tools.load(target, name)
+        except plugins.PluginError as e:
+            errors.append(str(e))
+    ap = _parser(loaded)
     try:
-        a = parser.parse_args(argv)
+        a = ap.parse_args(argv)
     except SystemExit as e:
         return int(e.code or 0)
     if a.cmd is None:
-        parser.print_help()
+        ap.print_help()
         return 0
-    return {"dummy": dummy.run}[a.cmd](a)
+    if a.cmd == "check":
+        return _check(a.tool, found, loaded, errors)
+    for e in errors:
+        print(f"medomni studio: {e}", file=sys.stderr)
+    try:
+        return loaded[a.cmd].run(a, tools.Context())
+    except (tools.ToolError, WorkspaceError, ContractError) as e:
+        print(f"medomni studio {a.cmd}: {e}", file=sys.stderr)
+        return 2
+
+
+def _check(name: str, found, loaded: dict, errors: list[str]) -> int:
+    from . import tools
+
+    if name not in loaded:
+        print(f"no tool '{name}' ({', '.join(sorted(loaded))})" if name not in found.targets else
+              f"{name}: cannot be loaded: {next((e for e in errors if found.targets[name] in e), errors)}", file=sys.stderr)
+        return 1
+    problems = tools.problems(loaded[name], name)
+    for p in problems:
+        print(f"  {name}: {p}")
+    print(f"{name}: {'ok' if not problems else f'{len(problems)} problem(s)'} ({loaded[name].kind})")
+    return 1 if problems else 0

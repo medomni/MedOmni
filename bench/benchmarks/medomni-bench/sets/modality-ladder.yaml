@@ -1,0 +1,9 @@
+name: modality-ladder
+description: The 5 ladder templates at their ladder cohort.
+arms: [modality-ladder]
+tasks:
+- {task: aireadi_crp-white-cell-count@ladder, version: 1}
+- {task: aireadi_prior-hypertension-cardiovas@ladder, version: 1}
+- {task: bdsp_snoring-metrics@ladder, version: 1}
+- {task: mimic-iv_ckd-staging@ladder, version: 1}
+- {task: mimic-iv_hf@ladder, version: 1}

@@ -1,0 +1,6 @@
+name: medomni-bench
+description: MedOmni's own benchmark of clinical prediction tasks over several modalities.
+version: '1.0'
+owner: MedOmni team
+license: CC-BY-4.0  # the benchmark's own files; each dataset keeps its own licence
+accepts: [agent]

@@ -125,8 +125,17 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
         pool = [c for c in by_table.get(name, []) if event.pattern().match(c) and not any(r.search(c) for r in label_codes)]
         return pool[int(g.integers(0, len(pool)))] if pool else None
 
+    keys = {}  # table -> key column a tree entry maps its path {subject} through (subject_from)
+    for e, fs in files.items():
+        if fs.subject_from:
+            keys.setdefault(fs.subject_from.table, set()).add(fs.subject_from.key)
+
     def base_row(name, spec, subject, t):
         row = {spec.subject: subject}
+        for col, vals in spec.where.items():
+            row[col] = vals[0]  # a row the table's filter keeps
+        for col in keys.get(name, ()):
+            row[col] = str(subject)  # the folder name a tree entry finds this subject's files under
         if spec.visit:
             row[spec.visit] = visits[subject]
         if spec.time:
@@ -151,6 +160,15 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
             row[event.text] = f"dummy text {int(g.integers(0, 1000))}"
         if event.time:
             row[event.time] = _fmt(t0s[subject] + DISCHARGE, kind, t0s[subject])
+        for c, vals in event.equals.items():
+            row[c] = vals[0]  # a row the event's condition emits
+        for c in event.present:
+            row.setdefault(c, _fmt(t0s[subject] + DISCHARGE, kind, t0s[subject]))
+        for c in event.absent:
+            row.pop(c, None)
+        if event.path:
+            row.update({f: f"dummy-{f}" for _, f, _, _ in __import__("string").Formatter().parse(event.path)
+                        if f and f not in row})
         return True
 
     rows: dict[str, list[dict]] = {n: [] for n in tables}
@@ -175,10 +193,17 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
     for s in ids:
         planted["subjects"][str(s)] = {"t0": _fmt(t0s[s], "datetime", t0s[s]),
                                        "anchor": _fmt(t0s[s] + ANCHOR, "datetime", t0s[s])}
+    hook_only = {c["code"] for c in codes if c["source_table"].startswith("hook:")}
     for label_name, lab in labels.items():
         if not (lab.exists or lab.value):
             continue
         rule = re.compile(lab.exists) if lab.exists else re.compile("^" + re.escape(lab.value) + "$")
+        table_codes = [c for n in tables for c in by_table.get(n, []) if rule.search(c)]
+        if not table_codes and any(rule.search(c) for c in hook_only):
+            continue  # a hook derives this code from other rows: nothing to plant
+        if any(str(w or "").startswith("visit:") for w in (lab.from_, lab.to)):
+            planted.setdefault("not_planted", []).append(label_name)  # a window on a visit's event: no canary
+            continue
         target = next(((n, spec, e, c) for n, spec in tables.items() for e in spec.events
                        for c in by_table.get(n, []) if rule.search(c) and e.pattern().match(c)
                        and (lab.exists or e.value)), None)
@@ -227,14 +252,27 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
         planted["labels"][label_name] = {"positive": [str(s) for s in positives], "events": events}
 
     root = out / "raw"
+    by_file: dict[str, list[dict]] = {}  # tables reading one file (with different filters) share its rows
+    named: dict[str, list[str]] = {}  # every column the options name, so a table with no rows still has its header
     for name, spec in tables.items():
-        cols = list(dict.fromkeys(k for r in rows[name] for k in r))
-        p = root / spec.file
+        by_file.setdefault(spec.file, []).extend(rows[name])
+        named.setdefault(spec.file, []).extend(spec.column_names())
+    for file, file_rows in by_file.items():
+        cols = list(dict.fromkeys([*(k for r in file_rows for k in r), *named[file]]))
+        p = root / file.replace("*", "dummy")  # a glob gets one file
         p.parent.mkdir(parents=True, exist_ok=True)
-        with open(p, "w", newline="", encoding="utf-8") as f:
+        ordered = sorted(file_rows, key=lambda r: tuple(str(r.get(c, "")) for c in cols))
+        if p.suffix == ".parquet":
+            import pyarrow as pa
+            import pyarrow.parquet as pq
+
+            pq.write_table(pa.table({c: [str(r.get(c, "")) for r in ordered] for c in cols}), p)
+            continue
+        opener = __import__("gzip").open if p.suffix == ".gz" else open
+        with opener(p, "wt", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=cols, lineterminator="\n")
             w.writeheader()
-            w.writerows(sorted(rows[name], key=lambda r: tuple(str(r.get(c, "")) for c in cols)))
+            w.writerows(ordered)
 
     for entry, spec in files.items():
         for i, subject in enumerate(ids):
@@ -255,6 +293,19 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
                 if written.name != rel.name:
                     raise DummyError(f"files.{entry}: pattern ends in '{rel.suffix}', a {data_format(family)} "
                                      f"file is '{written.suffix}'")
+    rule = config.verify.get("version")
+    if rule:  # the file the package reads the copy's version from
+        vp = root / rule["file"]
+        vp.parent.mkdir(parents=True, exist_ok=True)
+        vp.write_text(json.dumps({rule["key"]: config.description.version}) + "\n" if "key" in rule
+                      else f"{rule['contains']}\n", encoding="utf-8")
+    from medomni.core.loading import hooks
+
+    for kind, o in readers:
+        if kind == "hook":
+            mod = hooks.module(package, o.hook)
+            if hasattr(mod, "dummy"):
+                mod.dummy(root, {str(s): t0s[s] for s in ids}, dict(o.params), g)
     out.mkdir(parents=True, exist_ok=True)
     (out / "planted.json").write_text(json.dumps(planted, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return DummyDataset(root, planted, tuple(ids))

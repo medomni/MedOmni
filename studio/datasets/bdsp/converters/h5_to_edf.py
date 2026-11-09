@@ -88,6 +88,16 @@ def _channel_sources(family_id: str, proto: dict, alias: dict):
     return [(r, [str(r).lower()] + role_maps.get(str(r).lower(), []), False) for r in proto.get("roles", [])]
 
 
+def available(signals, family_id: str, root: Path | None = None) -> bool:
+    """Whether a night whose h5 `signals` group holds these names supplies the family, by the conversion's own
+    rule (every required channel, or at least one role), without converting it."""
+    protocols, alias = _raw(folder(root).resolve())
+    names = set(signals)
+    found = [(required, any(c in names for c in cands))
+             for _, cands, required in _channel_sources(family_id, protocols[family_id], alias)]
+    return bool(found) and all(ok for req, ok in found if req) and any(ok for _, ok in found)
+
+
 def h5_to_family_edf(src: Path, dest: Path, family_id: str, proto: dict, alias: dict) -> None:
     """A family-conformant EDF: protocol channels only, int16 copied bit for bit, whole seconds."""
     import h5py

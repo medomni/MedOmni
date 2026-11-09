@@ -1,0 +1,83 @@
+# AI-READI mini (100 participants), one cross-sectional study visit. From S1's U1.19 package (p19_datasets.yaml).
+description: {unit: participant, time: visit-dates, version: "1.0.0"}
+units: {table: person, column: person_id}
+source: all
+verify:
+  manifests: "*/manifest.tsv"  # every file a modality manifest lists exists
+  version: {file: dataset_description.json, key: version}  # the copy names its release
+read:
+- reader: csv
+  options:
+    tables:
+      person:
+        file: clinical_data/person.csv
+        subject: person_id
+        subject_type: int
+        events:
+        - code: VISIT  # the one study visit: every event is known at it (rules)
+        - {code: FILE//clinical-record-table, path: clinical_data}
+        - {code: FILE//clinical-measurement-irregular, path: clinical_data}
+      measurement:
+        file: clinical_data/measurement.csv
+        subject: person_id
+        subject_type: int
+        clean: {measurement_source_value: {before: ","}}  # "<variable>, <label>": the variable
+        events:
+        - {code: "OMOP//{measurement_source_value}", value: value_as_number}
+      observation:
+        file: clinical_data/observation.csv
+        subject: person_id
+        subject_type: int
+        clean: {observation_source_value: {before: ","}}
+        events:
+        - {code: "OMOP//{observation_source_value}", value: value_as_number}
+      condition_occurrence:
+        file: clinical_data/condition_occurrence.csv
+        subject: person_id
+        subject_type: int
+        time: condition_start_date
+        visit: visit_occurrence_id
+        load: false  # evidence only
+        events:
+        - code: "CONDITION//{condition_source_value}"
+      procedure_occurrence:
+        file: clinical_data/procedure_occurrence.csv
+        subject: person_id
+        subject_type: int
+        time: procedure_date
+        visit: visit_occurrence_id
+        load: false
+        events:
+        - code: "PROCEDURE//{procedure_source_value}"
+      visit_occurrence:
+        file: clinical_data/visit_occurrence.csv
+        subject: person_id
+        subject_type: int
+        time: visit_start_date
+        visit: visit_occurrence_id
+        load: false
+        events:
+        - code: STUDY_VISIT
+- reader: tree
+  options:
+    files:  # v0.2's FILE_TREES and protocol filters (adapters/aireadi.py)
+      fundus-photography-2d: {pattern: "retinal_photography/cfp/*/{subject}/{record}.dcm"}
+      fundus-faf-mono8-2d: {pattern: "retinal_photography/faf/*/{subject}/{record}.dcm"}
+      oct-volume-raster-mono8-3d:
+        pattern: "retinal_oct/structural_oct/*/{subject}/{record}.dcm"
+        exclude: [onh_rc, 3d_radial, _octa_]  # radial+circle sets, radial scans, OCTA structure channels
+      oct-bscanset-radial24-circle3-mono8:
+        pattern: "retinal_oct/structural_oct/heidelberg_spectralis/{subject}/*onh_rc{record}.dcm"
+      octa-enface-slab-mono8-2d: {pattern: "retinal_octa/enface/*/{subject}/{record}.dcm", exclude: [spectralis]}
+      octa-flowcube-mono8-3d: {pattern: "retinal_octa/flow_cube/*/{subject}/{record}.dcm", exclude: [spectralis]}
+      retinal-heightmap-surfaces-f32: {pattern: "retinal_octa/segmentation/*/{subject}/{record}.dcm"}
+      flio-tcspc-256x256x1024bin-u16: {pattern: "retinal_flio/flio/*/{subject}/{record}.dcm"}
+      ecg-12lead-500hz-mv: {pattern: "cardiac_ecg/ecg_12lead/*/{subject}/{record}.hea"}
+      cgm-5min-mgdl: {pattern: "wearable_blood_glucose/continuous_glucose_monitoring/*/{subject}/{record}.json"}
+      wearable-hr-1min-bpm: {pattern: "wearable_activity_monitor/heart_rate/*/{subject}/{record}.json"}
+      wearable-spo2-1min-pct: {pattern: "wearable_activity_monitor/oxygen_saturation/*/{subject}/{record}.json"}
+      wearable-resprate-1min-brpm: {pattern: "wearable_activity_monitor/respiratory_rate/*/{subject}/{record}.json"}
+      numeric-observation: {pattern: "wearable_activity_monitor/physical_activity/*/{subject}/{record}.json"}
+rules:
+  untimed: true  # cross-sectional: every event is known at the visit
+  one_visit: VISIT

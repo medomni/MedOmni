@@ -1,0 +1,52 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_heart-failure-mm
+dataset: mimic-iv
+authors:
+- {name: Bosong Huang}
+targets:
+- {name: heart_failure, label: 'mimic-iv:derived:heart-failure', metric: auc}
+input:
+  demographics: [age, sex]
+  files: {cxr-radiograph-2d: 'one frontal (PA/AP) radiograph, PNG', ecg-12lead-500hz-mv: 'one WFDB record (.hea + .dat), latest
+      on disk'}
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+exclude:
+  streams: [labs, diagnoses, notes]
+agent:
+  statement: Predict whether this patient has heart failure.
+  instruction: '# mimic_heart-failure-mm
+
+
+    Predict, for each patient, the probability that their hospital record carries a **heart failure** diagnosis (ICD-10 I50.x
+    / ICD-9 428.x).
+
+
+    ## Data (under `/workspace/data/`)
+
+
+    - `patients.jsonl` — one line per patient: slice inventory plus modality `files`, each tagged with its input family
+
+    - `slices/<id>_clinical-record-table.jsonl` — age, sex
+
+    - `slices/<id>_clinical-measurement-irregular.jsonl` — ED vital signs
+
+    - `files/<id>/…` — one frontal chest radiograph (PNG) and one 12-lead ECG (WFDB .hea/.dat), per patient
+
+
+    A Perception service may be reachable (`PERCEPTION_URL`); its encoders turn a modality file into structured evidence (e.g.
+    radiograph pathology scores, ECG diagnostic-statement probabilities). When evidence blocks appear with a patient, weigh
+    them together with the vitals and demographics.
+
+
+    No labs and no diagnosis codes are provided — the diagnosis is the target.
+
+
+    ## Submission
+
+
+    Write `/workspace/submission/predictions.csv` — CSV `subject_id,probability`, one row per patient, probability in [0,1].
+    Metric: AUC.
+
+    '
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

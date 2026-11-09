@@ -5,8 +5,13 @@
   "$defs": {
     "AgentTask": {
       "additionalProperties": false,
-      "description": "The part of a template only the agent kind uses: its instruction, environment and answer path.",
+      "description": "The part of a template only the agent kind uses: its clinical question, instruction, environment and answer\npath. `statement` is the question alone; the renderer opens every atom's instruction with it (U2.9).",
       "properties": {
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
         "instruction": {
           "minLength": 1,
           "title": "Instruction",
@@ -22,6 +27,7 @@
         }
       },
       "required": [
+        "statement",
         "instruction",
         "environment",
         "submission_path"
@@ -93,6 +99,46 @@
         "verifier_timeout_sec"
       ],
       "title": "Environment",
+      "type": "object"
+    },
+    "FullEvidence": {
+      "additionalProperties": false,
+      "description": "What the `full` evidence variant stages differently from `default`: its own `input` and `exclude`, each\nreplacing the template's when given (v0.2's `-full` twins that overrode them).",
+      "properties": {
+        "input": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input"
+        },
+        "exclude": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclude"
+        }
+      },
+      "title": "FullEvidence",
       "type": "object"
     },
     "Target": {
@@ -191,6 +237,17 @@
       "default": {},
       "title": "Exclude",
       "type": "object"
+    },
+    "full": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FullEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "agent": {
       "$ref": "#/$defs/AgentTask"

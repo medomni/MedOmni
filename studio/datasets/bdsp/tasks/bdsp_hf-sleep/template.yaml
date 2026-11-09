@@ -1,0 +1,51 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: bdsp_hf-sleep
+dataset: bdsp
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: heart_failure, label: 'bdsp:derived:heart-failure', metric: auc}
+input:
+  psg: {engine: psg, source: PSG/ (per-session h5), family: eeg-sleep-6ch-200hz-uv, channels_note: whole recording staged;
+      channel list is informational, note: 'whole-night h5 recording, staged at bootstrap from MEDOMNI_DATA_ROOT (manifest.jsonl;
+      ~200 MB/patient)'}
+  demographics: [age, sex]
+evidence: [default, full]
+full:
+  input:
+    psg: {engine: psg, source: PSG/ (per-session h5), family: eeg-sleep-6ch-200hz-uv, channels_note: whole recording staged;
+        channel list is informational, note: 'whole-night h5 recording, staged at bootstrap from MEDOMNI_DATA_ROOT (manifest.jsonl;
+        ~200 MB/patient)', families: all}
+    demographics: [age, sex]
+agent:
+  statement: Predict whether this patient has heart failure.
+  instruction: '# bdsp_hf-sleep
+
+
+    Predict, for each patient, the probability that their linked EHR carries a **heart failure** diagnosis (ICD-10 I50.x /
+    ICD-9 428.x), from their overnight polysomnography.
+
+
+    ## Data (under `/workspace/data/`)
+
+
+    - `patients.jsonl` — one line per patient: slice inventory plus the PSG recording file tagged with its input family
+
+    - `slices/<id>_clinical-record-table.jsonl` — age at visit, sex, study type, recording start/duration
+
+    - `files/<id>/sub-*.h5` — the whole-night PSG recording (EEG, ECG, PPG, SpO2, respiratory channels), staged at bootstrap
+
+
+    A Perception service may be reachable (`PERCEPTION_URL`); when encoder evidence appears with a patient, weigh it together
+    with the demographics.
+
+
+    ## Submission
+
+
+    Write `/workspace/submission/predictions.csv` — CSV `subject_id,probability`, one row per patient, probability in [0,1].
+    Metric: AUC.
+
+    '
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

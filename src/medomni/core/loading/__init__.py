@@ -59,16 +59,101 @@ def _time(raw: str | None, kind: str, where: str) -> str | None:
         raise LoadError(f"check: {where}: time '{raw}' is not a {kind} time") from None
 
 
-def verify(config, readers, raw_root: Path) -> None:
+def verify(config, readers, raw_root: Path, package: Path | None = None) -> None:
+    from . import hooks
+    from .readers import csv_, tree
+
     missing = []
     for kind, o in readers:
         if kind == "csv":
-            missing += [s.file for s in o.tables.values() if not (raw_root / s.file).is_file()]
+            for s in o.tables.values():
+                if not csv_.files(s, raw_root) or not all(p.is_file() for p in csv_.files(s, raw_root)):
+                    missing.append(s.file)
+        elif kind == "hook" and package is not None:
+            missing += [f for f in hooks.inputs(package, o.hook, raw_root, o.params) if not (raw_root / f).exists()]
     if missing:
         raise LoadError(f"verify: missing {len(missing)} listed file(s): {', '.join(sorted(missing))}")
-    unknown = sorted(set(config.verify) - {"unit_files"})
+    unknown = sorted(set(config.verify) - set(VERIFY))
     if unknown:
-        raise LoadError(f"verify: unknown check {', '.join(unknown)} (known: unit_files)")
+        raise LoadError(f"verify: unknown check {', '.join(unknown)} (known: {', '.join(VERIFY)})")
+    if "version" in config.verify:
+        found = copy_version(raw_root, config.verify["version"])
+        if found != config.description.version:
+            raise LoadError(f"verify: the copy is version {found!r}; the package describes {config.description.version!r}")
+    if "manifests" in config.verify:
+        bad = manifest_problems(raw_root, str(config.verify["manifests"]))
+        if bad:
+            raise LoadError(f"verify: {len(bad)} file(s) a manifest lists are missing, such as {bad[0]}")
+
+
+VERIFY = ("unit_files", "manifests", "version")
+NO_FILE = ("", "None", "Not reported", None)  # what a manifest writes where it lists no file
+
+
+def copy_version(raw_root: Path, rule: dict) -> str | None:
+    """The copy's version by the package's `verify.version` rule: `{file, key}` reads a JSON field; `{file, contains,
+    version}` is that version when the file holds the text. None when the file is missing or says nothing."""
+    p = raw_root / rule["file"]
+    if not p.is_file():
+        return None
+    if "key" in rule:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        return str(doc.get(rule["key"])) if isinstance(doc, dict) and rule["key"] in doc else None
+    return str(rule["version"]) if rule["contains"] in p.read_text(encoding="utf-8", errors="replace") else None
+
+
+def missing_columns(readers, raw_root: Path) -> list[str]:
+    """`<file>: <column>` for every column a csv table's options name that its first file lacks."""
+    from .readers import csv_
+
+    out = []
+    for kind, o in readers:
+        if kind != "csv":
+            continue
+        for name, spec in o.tables.items():
+            paths = csv_.files(spec, raw_root)
+            if not paths or not paths[0].is_file():
+                continue
+            have = set(csv_.columns(paths[0]))
+            out += [f"{spec.file}: {c}" for c in spec.column_names() if c not in have]
+    return out
+
+
+def manifest_problems(raw_root: Path, pattern: str) -> list[str]:
+    """Paths a manifest's `*filepath` or `*file_path` columns name that do not exist (manifests: tab-separated, paths
+    relative to the data root or to the manifest's folder; `None` and `Not reported` mean no file)."""
+    import csv as csvmod
+
+    bad = []
+    for m in sorted(raw_root.glob(pattern)):
+        with open(m, newline="", encoding="utf-8") as f:
+            for row in csvmod.DictReader(f, delimiter="\t"):
+                for col, val in row.items():
+                    if col and col.endswith(("filepath", "file_path")) and val not in NO_FILE:
+                        rel = val.lstrip("/")
+                        if not ((raw_root / rel).exists() or (m.parent / rel).exists()):
+                            bad.append(f"{m.relative_to(raw_root).as_posix()}: {col}")
+    return bad
+
+
+def subject_maps(readers, raw_root: Path) -> dict:
+    """For each tree entry with `subject_from`: the key column's value -> the table's subject id."""
+    from .readers import csv_
+
+    tables = {n: s for kind, o in readers if kind == "csv" for n, s in o.tables.items()}
+    out = {}
+    for kind, o in readers:
+        if kind != "tree":
+            continue
+        for entry, spec in o.files.items():
+            if spec.subject_from:
+                t = tables.get(spec.subject_from.table)
+                if t is None:
+                    raise LoadError(f"read: files.{entry}: subject_from names {spec.subject_from.table}, "
+                                    f"not a csv table")
+                out[entry] = {r.get(spec.subject_from.key, ""): r.get(t.subject, "")
+                              for r in csv_.table_rows(t, raw_root)}
+    return out
 
 
 def load(package: str | Path, raw_root: str | Path, out: str | Path, *, tables: set[str] | None = None,
@@ -77,6 +162,7 @@ def load(package: str | Path, raw_root: str | Path, out: str | Path, *, tables: 
     from medomni.core import families as registry
     from medomni.core.contracts import DatasetConfig, EventTable, load as load_contract, load_data
 
+    from . import hooks
     from .readers import csv_, tree
     from .rules import apply
 
@@ -85,14 +171,20 @@ def load(package: str | Path, raw_root: str | Path, out: str | Path, *, tables: 
     readers = [(r.reader, options(r)) for r in config.read]
     known = _codes(package)
 
-    verify(config, readers, raw_root)
+    verify(config, readers, raw_root, package)
     stats: dict = {}
     rows: list[dict] = []
+    maps = subject_maps(readers, raw_root) if tables is None else {}
     for kind, o in readers:
         if kind == "csv":
             rows += csv_.read(o, raw_root, tables=tables, stats=stats)
         elif kind == "tree" and tables is None:
-            rows += tree.read(o, raw_root, families=families, stats=stats)
+            rows += tree.read(o, raw_root, families=families, stats=stats, subject_maps=maps)
+    for kind, o in readers:
+        if kind == "hook" and tables is None:
+            new = hooks.derive(package, o.hook, rows, raw_root, o.params)
+            stats[f"hook:{o.hook}"] = len(new)
+            rows += new
     if codes is not None:
         keep = [re.compile(c) for c in codes]
         rows = [r for r in rows if any(k.search(r["code"]) for k in keep)]
@@ -161,7 +253,8 @@ def inputs(package: Path, raw_root: Path) -> list[tuple[str, str]]:
     from medomni.core import hashing
     from medomni.core.contracts import DatasetConfig, load as load_contract
 
-    from .readers import tree
+    from . import hooks
+    from .readers import csv_, tree
     from .readers.headers import file_hash
 
     package, raw_root = Path(package), Path(raw_root)
@@ -170,15 +263,16 @@ def inputs(package: Path, raw_root: Path) -> list[tuple[str, str]]:
     for r in config.read:
         o = options(r)
         if r.reader == "csv":
-            out += [(s.file, hashing.sha256_file(raw_root / s.file)) for s in o.tables.values()
-                    if (raw_root / s.file).is_file()]
+            out += [(p.relative_to(raw_root).as_posix(), hashing.sha256_file(p)) for s in o.tables.values()
+                    for p in csv_.files(s, raw_root) if p.is_file()]
         elif r.reader == "tree":
             for spec in o.files.values():
-                rx = tree._regex(spec.pattern)
-                for f in sorted(raw_root.glob(re.sub(r"\{(subject|record)\}", "*", spec.pattern))):
-                    rel = f.relative_to(raw_root).as_posix()
-                    if f.is_file() and rx.match(rel):
-                        out.append((rel, file_hash(f)))
+                out += [(rel, file_hash(f)) for f, rel, _ in tree.matches(spec, raw_root)]
+        elif r.reader == "hook":
+            out.append((f"package/hooks/{o.hook}.py", hashing.sha256_file(package / "hooks" / f"{o.hook}.py")))
+            for rel in hooks.inputs(package, o.hook, raw_root, o.params):
+                p = raw_root / rel
+                out += [(rel, hashing.dir_hash(p) if p.is_dir() else hashing.sha256_file(p))] if p.exists() else []
     return sorted(set(out))
 
 

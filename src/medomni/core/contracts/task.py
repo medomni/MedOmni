@@ -42,11 +42,21 @@ class Environment(Contract):
 
 
 class AgentTask(Contract):
-    """The part of a template only the agent kind uses: its instruction, environment and answer path."""
+    """The part of a template only the agent kind uses: its clinical question, instruction, environment and answer
+    path. `statement` is the question alone; the renderer opens every atom's instruction with it (U2.9)."""
 
+    statement: NonEmpty
     instruction: NonEmpty
     environment: Environment
     submission_path: NonEmpty
+
+
+class FullEvidence(Contract):
+    """What the `full` evidence variant stages differently from `default`: its own `input` and `exclude`, each
+    replacing the template's when given (v0.2's `-full` twins that overrode them)."""
+
+    input: dict[str, Any] | None = None
+    exclude: dict[str, tuple[NonEmpty, ...]] | None = None
 
 
 class TaskTemplate(Contract):
@@ -56,9 +66,10 @@ class TaskTemplate(Contract):
     dataset: Slug
     authors: tuple[Author, ...] = Field(min_length=1)
     targets: tuple[Target, ...] = Field(min_length=1)
-    input: dict[str, Any] = Field(min_length=1)  # tables and families the default evidence stages; shape pending, set in Stage 3 part 2
+    input: dict[str, Any] = Field(min_length=1)  # what the default evidence stages; read by Build (Stage 3 part 3)
     evidence: tuple[Literal["default", "full"], ...] = ("default",)  # evidence variants; each is its own task (R-109)
     exclude: dict[str, tuple[NonEmpty, ...]] = {}
+    full: FullEvidence | None = None  # the full variant's own input or exclude, when they differ from default's
     agent: AgentTask  # what the agent kind needs; later kinds add `llm:` or `model:` beside it (R-77)
 
     @model_validator(mode="after")
@@ -70,6 +81,8 @@ class TaskTemplate(Contract):
             raise ValueError("target names repeat")
         if "default" not in self.evidence:
             raise ValueError("evidence always includes default")
+        if self.full is not None and "full" not in self.evidence:
+            raise ValueError("full: is given but evidence lists no full variant")
         return self
 
 

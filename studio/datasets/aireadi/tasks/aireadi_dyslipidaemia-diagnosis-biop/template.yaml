@@ -1,0 +1,37 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_dyslipidaemia-diagnosis-biop
+dataset: aireadi
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: tg_ge_200, label: 'aireadi:omopthresh:import_triglycerides:>=200', metric: auc}
+- {name: total_cholesterol, label: 'aireadi:omopnum:import_total_cholesterol', metric: mae}
+- {name: ldl_cholesterol, label: 'aireadi:omopnum:import_ldl_cholesterol', metric: mae}
+- {name: hdl_cholesterol, label: 'aireadi:omopnum:import_hdl_cholesterol', metric: mae}
+input:
+  omop_terms: [CES-D-10 depression score, Diet score, Vision-related difficulty questions (VIA), Smoking history, Alcohol
+      use, Cannabis use, Vaping, 'Diabetes lifestyle survey (exercise, diet habits, foot care)', Medication use survey, Education
+      level, Food insecurity (PhenX), Neighbourhood environment (PhenX), Racial / ethnic discrimination (PhenX), Health insurance
+      coverage (PhenX), Discrimination in health care (PhenX), Driving habits, Years of education]
+  omop: [ces1, ces10, ces2, ces3, ces4, ces5, ces6, ces7, ces8, ces9, cestl, cm_act, cm_ant, cm_asp, cm_dcg, cm_ibp, cm_slp,
+    cmtrt_a1c, cmtrt_glcs, cmtrt_insln, cmtrt_lfst, dietscore, dmlact, dmledu, dmlfeet, dmlfrveg, dmlgrain, dmlhex, dmlmd,
+    dmlpor, dmlsugar, dmlvex, dri1, dri2, food_insecurity_change_diet_frequency, sualcage, sualcdrv, sualckncf, subrdosfr,
+    subrkncf, sulqdosfr, sulqkncf, sumrjcdur, sumrjceddur, sumrjfr, sumrjkncf, sumrjstage, sumrjtrt, susmkcdur, susmkdosfr,
+    susmkncf, susmkstaage, susmkstoage, suvpcdur, suvpdosfr, suvpkncf1, suvpstage, suvptoage, suvptoyr, suwndosfr, suwnkncf,
+    via1, via2, via3, via4, via5, via6, years_of_education]
+evidence: [default, full]
+agent:
+  statement: Predict this participant's blood lipid profile.
+  instruction: '# aireadi_dyslipidaemia-diagnosis-biop
+
+
+    Given a participant’s biopsychosocial, socioeconomic, and demographic data, predict their dyslipidaemia diagnosis and
+    severity.
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

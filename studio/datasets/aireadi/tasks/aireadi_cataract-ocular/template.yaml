@@ -1,0 +1,29 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_cataract-ocular
+dataset: aireadi
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: cataract_history, label: 'aireadi:omopbin:mhoccur_crt', metric: auc}
+input:
+  omop_terms: [Type 2 diabetes on oral / non-insulin medication, Healthy (no diabetes), 'Pre-diabetes, lifestyle-controlled',
+    'Type 2 diabetes, insulin-dependent', HbA1c, 'Photopic visual acuity (LogMAR, OD/OS)', Autorefraction — sphere / cylinder
+      / axis, Photopic contrast sensitivity (log)]
+  files: {fundus-photography-2d: retinal_photography/cfp/, oct-volume-raster-mono8-3d: 'aireadi:oct-volume-raster-mono8-3d'}
+  omop: [cmtrt_glcs, cmtrt_insln, import_hba1c, mhterm_dm1, mhterm_dm2, mhterm_predm]
+evidence: [default, full]
+agent:
+  statement: Predict whether this participant has a history of cataract in one or both eyes.
+  instruction: '# aireadi_cataract-ocular
+
+
+    Given ocular imaging, visual function, and relevant clinical data, predict whether the participant has a history of cataracts
+    in one or both eyes. Performance will be judged by how accurately the predicted cataract status matches the recorded condition.
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

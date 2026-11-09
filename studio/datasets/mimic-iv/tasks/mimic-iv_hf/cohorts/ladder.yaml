@@ -1,0 +1,18 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+version: '1.0'
+anchor: {event: MIMIC//ADMISSION, pick: first, plus: 24 hours}
+draw:
+  by: [heart_failure]
+  n: 20
+  seed: 20260925|ladder-mid|mimic_hf
+require:
+- any: [MIMIC//DISCHARGE, MIMIC//DEATH]
+  same_visit: true
+- from: anchor.event
+  none: [MIMIC//DISCHARGE, MIMIC//DEATH]
+  same_visit: true
+  to: anchor
+- {has_label: heart_failure}
+- files: [cxr-radiograph-2d, ecg-12lead-500hz-mv]
+  to: anchor
+source: {}

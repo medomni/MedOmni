@@ -1,0 +1,27 @@
+# The dataset policy (Datasets reference page). A summary of the data owner's agreement, not legal advice.
+dataset: aireadi
+version: "1.0.0"
+access: credentialed
+license:
+  id: AI-READI Data License Agreement v2.0
+  url: https://doi.org/10.60775/fairhub.4
+publish:
+  schema: allow
+  templates: allow
+  recipes: allow
+  id_lists: deny
+  labels: deny
+  per_record_derived: deny
+  samples: conditional
+routes:
+  local: allow
+  cloud: conditional
+route_conditions:
+  cloud: a HIPAA business associate agreement between the vendor and your institution; never for model training
+  samples: a small representative sample in a paper only
+use:
+  commercial: true  # licence section 2: research, commercial and non-commercial purposes
+  restriction: type 2 diabetes research only
+sources:
+- the dataset's LICENSE.txt (AI-READI Data License Agreement, Version 2.0)
+- https://doi.org/10.60775/fairhub.4

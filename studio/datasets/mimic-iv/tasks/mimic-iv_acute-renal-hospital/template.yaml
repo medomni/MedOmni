@@ -1,0 +1,29 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_acute-renal-hospital
+dataset: mimic-iv
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: acute_renal_failure, label: 'mimic-iv:derived:acute-renal-failure', metric: auc}
+input:
+  labs: {'50912': creatinine, '52546': creatinine, '51006': urea_nitrogen, '52647': urea_nitrogen, '50971': potassium, '52610': potassium,
+    '50983': sodium, '52623': sodium, '50882': bicarbonate}
+  demographics: [age, sex]
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+evidence: [default, full]
+agent:
+  statement: Predict whether this patient's hospital admission will be given a diagnosis of acute renal failure.
+  instruction: '# mimic_acute-renal-hospital
+
+
+    Given demographic, medication, and laboratory data available within the first 24 hours of hospital admission, predict
+    whether the patient will subsequently be diagnosed with acute renal failure during the admission. Performance will be
+    judged by how accurately the prediction matches the recorded diagnosis.
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

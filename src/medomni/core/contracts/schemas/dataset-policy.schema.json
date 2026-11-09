@@ -162,13 +162,7 @@
   "additionalProperties": false,
   "properties": {
     "dataset": {
-      "enum": [
-        "mimic-iv",
-        "aireadi",
-        "bdsp",
-        "vitaldb",
-        "dummy"
-      ],
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
       "title": "Dataset",
       "type": "string"
     },

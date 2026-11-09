@@ -1,0 +1,35 @@
+# The dataset policy (Datasets reference page). A summary of the data owner's agreement, not legal advice.
+dataset: mimic-iv
+version: "3.1"
+access: credentialed
+license:
+  id: PhysioNet Credentialed Health Data License 1.5.0
+  url: https://physionet.org/content/mimiciv/view-license/3.1/
+modules:
+  ecg:
+    id: ODbL 1.0 (MIMIC-IV-ECG 1.0)
+    url: https://opendatacommons.org/licenses/odbl/1-0/
+  wdb:
+    id: ODbL 1.0 (MIMIC-IV Waveform 0.1.0)
+    url: https://opendatacommons.org/licenses/odbl/1-0/
+publish:
+  schema: allow
+  templates: allow
+  recipes: allow
+  id_lists: deny
+  labels: deny
+  per_record_derived: deny
+  samples: deny
+routes:
+  local: allow
+  cloud: conditional
+route_conditions:
+  cloud: verified zero retention, no training and no human review
+use:
+  commercial: false
+  restriction: lawful use in scientific research only (licence item 6)
+attribution: MIMIC-IV-ECG and MIMIC-IV Waveform samples carry ODbL attribution and share alike
+sources:
+- the dataset's core/LICENSE.txt (PhysioNet Credentialed Health Data License 1.5.0)
+- https://physionet.org/content/mimiciv/3.1/
+- https://physionet.org/content/mimic-iv-ecg/1.0/

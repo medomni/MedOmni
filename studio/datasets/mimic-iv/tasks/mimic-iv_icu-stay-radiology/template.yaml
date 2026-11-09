@@ -1,0 +1,27 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_icu-stay-radiology
+dataset: mimic-iv
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: icu_admission, label: 'mimic-iv:outcome:icu-admission', metric: auc}
+- {name: in_hospital_death, label: 'mimic-iv:outcome:in-hospital-death', metric: auc}
+- {name: cxr_before_anchor, label: 'mimic-iv:derived:cxr-before-anchor', metric: auc}
+input:
+  files: {cxr-radiograph-2d: cxr/files/}
+  demographics: [age, sex]
+agent:
+  statement: At the moment this patient is admitted to hospital, predict whether the stay will include intensive care and
+    whether they will survive it.
+  instruction: '# mimic_icu-stay-radiology
+
+
+    Prediction of ICU stay using radiology reports
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

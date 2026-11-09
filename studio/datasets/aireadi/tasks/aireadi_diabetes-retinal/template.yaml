@@ -1,0 +1,27 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_diabetes-retinal
+dataset: aireadi
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: diabetes_status, label: 'aireadi:aireadi-dmstatus', metric: qwk}
+input:
+  files: {fundus-photography-2d: retinal_photography/cfp/, oct-volume-raster-mono8-3d: 'aireadi:oct-volume-raster-mono8-3d',
+    octa-enface-slab-mono8-2d: retinal_octa/enface/}
+  omop: []
+evidence: [default, full]
+agent:
+  statement: Classify this participant's diabetes status.
+  instruction: '# aireadi_diabetes-retinal
+
+
+    Given colour fundus photographs, structural OCT, and OCT angiography collected at the study visit, classify the participant
+    as healthy, pre-diabetic, or having type 2 diabetes. Evaluate the prediction against their study enrolment diabetes status.
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

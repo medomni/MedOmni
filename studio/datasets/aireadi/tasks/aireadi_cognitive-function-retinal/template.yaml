@@ -1,0 +1,31 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_cognitive-function-retinal
+dataset: aireadi
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: moca_lt_26, label: 'aireadi:omopthresh:moca_total_score:<26', metric: auc}
+input:
+  omop_terms: [HbA1c, Serum glucose, Triglycerides, Creatinine, hs-CRP, Systolic blood pressure, Diastolic blood pressure,
+    BMI, Smoking history]
+  files: {cgm-5min-mgdl: wearable_blood_glucose/continuous_glucose_monitoring/, fundus-photography-2d: retinal_photography/cfp/,
+    octa-enface-slab-mono8-2d: retinal_octa/enface/}
+  omop: [bmi_vsorres, bp1_sysbp_vsorres, bp2_sysbp_vsorres, import_crp_hs, import_glucose, import_hba1c, import_triglycerides,
+    susmkcdur, susmkdosfr, susmkncf, susmkstaage, susmkstoage]
+evidence: [default, full]
+agent:
+  statement: Predict this participant's cognitive function as measured by the Montreal Cognitive Assessment (MoCA).
+  instruction: '# aireadi_cognitive-function-retinal
+
+
+    Given retinal imaging, continuous glucose monitoring, and clinical/metabolic data, predict the participant’s MoCA total
+    score as a measure of cognitive function. Performance will be judged by how closely the predicted score matches the measured
+    MoCA total score.
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

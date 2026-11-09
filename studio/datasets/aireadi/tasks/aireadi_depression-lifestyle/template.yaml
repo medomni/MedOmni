@@ -1,0 +1,29 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_depression-lifestyle
+dataset: aireadi
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: cesd10_ge_10, label: 'aireadi:omopthresh:cestl:>=10', metric: auc}
+input:
+  omop_terms: [BMI, Diet score, Smoking history, Alcohol use, Education level, Food insecurity (PhenX), Neighbourhood environment
+      (PhenX), Discrimination in health care (PhenX)]
+  files: {cgm-5min-mgdl: wearable_blood_glucose/continuous_glucose_monitoring/, wearable-hr-1min-bpm: wearable_activity_monitor/heart_rate/}
+  omop: [bmi_vsorres, dietscore, dmledu, sualcage, sualcdrv, sualckncf, subrdosfr, subrkncf, sulqdosfr, sulqkncf, susmkcdur,
+    susmkdosfr, susmkncf, susmkstaage, susmkstoage, suwndosfr, suwnkncf, years_of_education]
+evidence: [default, full]
+agent:
+  statement: Predict this participant's depressive symptoms as measured by the CES-D-10 questionnaire.
+  instruction: '# aireadi_depression-lifestyle
+
+
+    Given lifestyle, social determinant, metabolic, and wearable data, predict the participant’s CES-D-10 depression score.
+    Performance will be judged by how closely the predicted score matches the measured CES-D-10 score.
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

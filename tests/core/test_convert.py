@@ -82,7 +82,7 @@ def test_shipped_cards_are_converted(repo):
         assert load(repo / rel, ModelCard).authors, rel
 
 
-@pytest.mark.parametrize("kind", ["task-set", "result-record", "task-template"])
+@pytest.mark.parametrize("kind", ["task-set", "result-record"])
 def test_not_converted(kind):
     with pytest.raises(convert.NotConverted, match="Stage 3"):
         convert.refuse(kind)

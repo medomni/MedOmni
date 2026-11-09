@@ -1,0 +1,46 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_stroke-infarct-ed
+dataset: mimic-iv
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: cerebral_infarction, label: 'mimic-iv:derived:cerebral-infarction', metric: auc}
+input:
+  demographics: [age, sex]
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+  labs: {}
+evidence: [default, full]
+exclude:
+  streams: [diagnoses, notes, 'medications (deferred, would need own leakage review)']
+agent:
+  statement: Predict whether this patient's hospital admission will be given a diagnosis of cerebral infarction.
+  instruction: '# mimic_stroke-infarct-ed
+
+
+    Predict, for each patient, the probability that their **index hospital admission** (the first admission on record) receives
+    a discharge diagnosis of **cerebral infarction**. You see only data charted in the first 24 hours of that admission (plus
+    the ED encounter that led to it): demographics, ED triage, and ED vital signs. No diagnoses, notes, medications, or laboratory
+    panel are provided.
+
+
+    ## Data (under `/workspace/data/`)
+
+
+    - `patients.jsonl` — one line per patient (subject_id, 24h window, slice inventory)
+
+    - `slices/<id>_clinical-record-table.jsonl` — age, sex, race
+
+    - `slices/<id>_clinical-record-table.triage.jsonl` — ED triage record(s), when present
+
+    - `slices/<id>_clinical-measurement-irregular.jsonl` — ED vital signs inside the window, timestamped
+
+
+    ## Submission
+
+
+    Write `/workspace/submission/predictions.csv` — CSV `subject_id,probability`, one row per patient, probability in [0,1].
+    Metric: AUC.
+
+    '
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

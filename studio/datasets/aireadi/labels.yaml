@@ -1,0 +1,164 @@
+# The label library (Recipes reference page). From S1's p17_labels.yaml, all 65 targets equal to v0.2's (U1.17).
+aireadi-dmstatus:
+  cases:
+  - then: 2
+    when:
+      op: ==
+      pick: last
+      value: OMOP//mhterm_dm2
+      x: 1
+  - then: 1
+    when:
+      op: ==
+      pick: last
+      value: OMOP//mhterm_predm
+      x: 1
+  else: 0
+  from: any
+  to: any
+omopbin:mhoccur_ca:
+  from: any
+  op: ==
+  pick: last
+  to: any
+  value: OMOP//mhoccur_ca
+  x: 1
+omopbin:mhoccur_crt:
+  from: any
+  op: ==
+  pick: last
+  to: any
+  value: OMOP//mhoccur_crt
+  x: 1
+omopbin:mhoccur_hbp:
+  from: any
+  op: ==
+  pick: last
+  to: any
+  value: OMOP//mhoccur_hbp
+  x: 1
+omopnum:import_hdl_cholesterol:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//import_hdl_cholesterol
+omopnum:import_ldl_cholesterol:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//import_ldl_cholesterol
+omopnum:import_total_cholesterol:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//import_total_cholesterol
+omopnum:lbscat_wbc:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//lbscat_wbc
+omopnum:moca_abstraction:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//moca_abstraction
+omopnum:moca_combined_mis_score:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//moca_combined_mis_score
+omopnum:moca_orientation:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//moca_orientation
+omopnum:viaodcyl:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//viaodcyl
+omopnum:viaodsph:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//viaodsph
+omopnum:viaoscyl:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//viaoscyl
+omopnum:viaossph:
+  from: any
+  pick: last
+  to: any
+  value: OMOP//viaossph
+omopthresh:cestl:>=10:
+  from: any
+  op: '>='
+  pick: last
+  to: any
+  value: OMOP//cestl
+  x: 10.0
+omopthresh:import_crp_hs:>=3:
+  from: any
+  op: '>='
+  pick: last
+  to: any
+  value: OMOP//import_crp_hs
+  x: 3.0
+omopthresh:import_triglycerides:>=200:
+  from: any
+  op: '>='
+  pick: last
+  to: any
+  value: OMOP//import_triglycerides
+  x: 200.0
+omopthresh:moca_total_score:<26:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//moca_total_score
+  x: 26.0
+omopthresh:msslffl:<10:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//msslffl
+  x: 10.0
+omopthresh:mssrffl:<10:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//mssrffl
+  x: 10.0
+omopthresh:viaodmlog:<70:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//viaodmlog
+  x: 70.0
+omopthresh:viaodplog:<80:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//viaodplog
+  x: 80.0
+omopthresh:viaosmlog:<70:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//viaosmlog
+  x: 70.0
+omopthresh:viaosplog:<80:
+  from: any
+  op: <
+  pick: last
+  to: any
+  value: OMOP//viaosplog
+  x: 80.0

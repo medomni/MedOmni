@@ -1,0 +1,466 @@
+code,description,source_table
+VISIT,The one study visit,person
+STUDY_VISIT,A visit_occurrence row (evidence only),visit_occurrence
+OMOP//age_years_at_interview,age_years_at_interview,observation
+OMOP//bmi_vsorres,BMI,measurement
+OMOP//bp1_diabp_vsorres,Diastolic (mmHg),measurement
+OMOP//bp1_sysbp_vsorres,Systolic (mmHg),measurement
+OMOP//bp2_diabp_vsorres,Diastolic (mmHg),measurement
+OMOP//bp2_sysbp_vsorres,Systolic (mmHg),measurement
+OMOP//brthyy,Year (e.g. 1967),observation
+OMOP//c184390,Paper consent obtained,observation
+OMOP//c184390_dat,Date paper consent completed,observation
+OMOP//cage,Age (in years),observation
+OMOP//ces1,I was bothered by things that usually don't,observation
+OMOP//ces10,"I could not ""get going""",observation
+OMOP//ces2,I had trouble keeping my mind on what I was,observation
+OMOP//ces3,I felt depressed,observation
+OMOP//ces4,I felt that everything I did was an effort,observation
+OMOP//ces5,I felt hopeful about the future,observation
+OMOP//ces6,I felt fearful,observation
+OMOP//ces7,My sleep was restless,observation
+OMOP//ces8,I was happy,observation
+OMOP//ces9,I felt lonely,observation
+OMOP//cesmpdat,CES-D-10 survey date,observation
+OMOP//cesstartts,CES-D-10 Survey Started Timestamp (fr,observation
+OMOP//cestl,CESD-10 Score,observation
+OMOP//cl_maristat,Marital Status,observation
+OMOP//clock_visuospatial_executive,clock_visuospatial_executive,measurement
+OMOP//clock_visuospatial_executive_time,clock_visuospatial_executive_time,measurement
+OMOP//cm_act,"Have you taken acetaminophen medicines, s",observation
+OMOP//cm_ant,"Have you taken antihistamines, such as co",observation
+OMOP//cm_asp,Have you taken aspirin in the past 2 week,observation
+OMOP//cm_dcg,"Have you taken decongestants, such as col",observation
+OMOP//cm_ibp,Have you taken ibuprofen or ibuprofen-con,observation
+OMOP//cm_slp,Have you taken sleeping pills in the past,observation
+OMOP//cmcmpdat,Date medications assessment conducted,observation
+OMOP//cmtrt_a1c,Do you take pills to control your A1C,observation
+OMOP//cmtrt_glcs,Do you use other injections to contro,observation
+OMOP//cmtrt_insln,Do you inject insulin to control you,observation
+OMOP//cmtrt_lfst,Do you use lifestyle changes to contr,observation
+OMOP//cube_visuospatial_executive,cube_visuospatial_executive,measurement
+OMOP//cube_visuospatial_executive_time,cube_visuospatial_executive_time,measurement
+OMOP//delayed_recall_with_no_clue,delayed_recall_with_no_clue,measurement
+OMOP//delayed_recall_with_no_clue_time,delayed_recall_with_no_clue_time,measurement
+OMOP//diet1,How many times a week did you eat fast foo,observation
+OMOP//diet2,How many servings of fruit did you eat eac,observation
+OMOP//diet3,How many servings of vegetables did you ea,observation
+OMOP//diet4,How many regular sodas or glasses of sweet,observation
+OMOP//diet5,How many times a week did you eat beans (l,observation
+OMOP//diet6,How many times a week did you eat regular,observation
+OMOP//diet7,How many times a week did you eat desserts,observation
+OMOP//diet8,"How much margarine, butter, or meat fat do",observation
+OMOP//diet9,How many servings of fruit juice did you d,observation
+OMOP//dietscore,Diet score,observation
+OMOP//dietstartts,Dietary Survey Start Timestamp (from,observation
+OMOP//digitspan,digitspan,measurement
+OMOP//digitspan_time,digitspan_time,measurement
+OMOP//dmgcmpdat,Demographic survey date (date survey/f,observation
+OMOP//dmgcmpts,Demograhics Survey Completed Timestamp,observation
+OMOP//dmgstartts,Demographics Survey Started Timestamp,observation
+OMOP//dmlact,What would you consider your typical acti,observation
+OMOP//dmlcmpdat,Diabetes survey date,observation
+OMOP//dmlcmpts,Diabetes Survey Completed Timestamp (fr,observation
+OMOP//dmledu,How often would you say that you engage i,observation
+OMOP//dmlfeet,How often do you inspect your feet?,observation
+OMOP//dmlfrveg,"In a typical day, how many servings of",observation
+OMOP//dmlgrain,"In a typical day, how often do you cons",observation
+OMOP//dmlhex,How often would you say that you engage i,observation
+OMOP//dmlmd,Which of the following options best descri,observation
+OMOP//dmlpor,When reflecting on your typical eating ha,observation
+OMOP//dmlstartts,Diabetes Survey Started Timestamp (fr,observation
+OMOP//dmlsugar,When reflecting on your typical eating,observation
+OMOP//dmlvex,"In a typical week, how often do you engag",observation
+OMOP//dri1,"In an average week, how many days per week",observation
+OMOP//dri2,About how many miles did you personally dri,observation
+OMOP//dricmpdat,Date driving record assessment conduct,observation
+OMOP//dvamwstdat,Date device given to participant,observation
+OMOP//dvenvstdat,Date device given to participant,observation
+OMOP//eos_ds,Did the subject complete the study?,observation
+OMOP//eos_dsstdat,What was the study discontinuation o,observation
+OMOP//faqcmpts,FAQ Survey Completed Timestamp (from RE,observation
+OMOP//faqstartts,FAQ Survey Started Timestamp (from RE,observation
+OMOP//fh_dm2pt,Were either of your parents diagnosed w,observation
+OMOP//fh_dm2ptsp,"If yes, which parent?",observation
+OMOP//fh_dm2sb,Has a sibling been diagnosed with Type,observation
+OMOP//fh_dm2sbsp,"If yes, please check all that apply:",observation
+OMOP//fluency_language,fluency_language,measurement
+OMOP//fluency_language_time,fluency_language_time,measurement
+OMOP//food_insecurity_change_diet_frequency,How often,observation
+OMOP//height_vsorres,Height (cm),measurement
+OMOP//hip_vsorres,Hip Circumference (cm),measurement
+OMOP//import_a_g_ratio,Albumin/Globulin ratio,measurement
+OMOP//import_albumin,Albumin [Mass/volume] in Serum or,measurement
+OMOP//import_alkaline_phosphatase,Alkaline phosphatase,measurement
+OMOP//import_alt_got,Alanine aminotransferase [Enzymat,measurement
+OMOP//import_ast_got,Aspartate aminotransferase [Enzym,measurement
+OMOP//import_bilirubin_total,Bilirubin.total [Mass/vol,measurement
+OMOP//import_bun,Urea nitrogen [Mass/volume] in Serum,measurement
+OMOP//import_buncreatinineratio,BUN/Creatinine ratio,measurement
+OMOP//import_c_peptide,C peptide [Mass/volume] in Seru,measurement
+OMOP//import_calcium,Calcium [Mass/volume] in Serum or,measurement
+OMOP//import_carbon_dioxide_total,"Carbon dioxide, tota",measurement
+OMOP//import_chloride,Chloride [Moles/volume] in Serum,measurement
+OMOP//import_creatinine,Creatinine [Mass/volume] in Se,measurement
+OMOP//import_crp_hs,C reactive protein [Mass/volume] i,measurement
+OMOP//import_globulin_total,Globulin [Mass/volume] in,measurement
+OMOP//import_glucose,Glucose [Mass/volume] in Serum or,measurement
+OMOP//import_hba1c,Hemoglobin A1c/Hemoglobin.total in,measurement
+OMOP//import_hdl_cholesterol,Cholesterol in HDL [Mass/,measurement
+OMOP//import_insulin,Insulin [Units/volume] in Serum o,measurement
+OMOP//import_ldl_cholesterol,Cholesterol in LDL [Mass/,measurement
+OMOP//import_nt_probnp,Natriuretic peptide.B prohormon,measurement
+OMOP//import_potassium,Potassium [Moles/volume] in Ser,measurement
+OMOP//import_protein_total,Protein [Mass/volume] in Se,measurement
+OMOP//import_sodium,Sodium [Moles/volume] in Serum or,measurement
+OMOP//import_total_cholesterol,Cholesterol [Mass/volum,measurement
+OMOP//import_triglycerides,Triglyceride [Mass/volume],measurement
+OMOP//import_troponin_t,Troponin T.cardiac [Mass/volum,measurement
+OMOP//import_urine_albumin,Albumin [Mass/volume] in Ur,measurement
+OMOP//import_urine_creatinine,Creatinine [Mass/volume],measurement
+OMOP//lbdattim1,Date & time clinical labs performed,observation
+OMOP//lbscat_a1c,Hemoglobin - g/dL,measurement
+OMOP//lbscat_hct,Hematocrit  - %,measurement
+OMOP//lbscat_mch,MCH - pg,measurement
+OMOP//lbscat_mchc,MCHC - g/dL,measurement
+OMOP//lbscat_mcv,MCV - fL,measurement
+OMOP//lbscat_plt,Platelets - x10E3/µL,measurement
+OMOP//lbscat_rbc,Red Blood Cells (RBC) - x10E6/µL,measurement
+OMOP//lbscat_rdw,RDW - %,measurement
+OMOP//lbscat_wbc,White Blood Cells (WBC) - x10E3/µL,measurement
+OMOP//lettera,lettera,measurement
+OMOP//lettera_time,lettera_time,measurement
+OMOP//memory_trial1,memory_trial1,measurement
+OMOP//memory_trial1_time,memory_trial1_time,measurement
+OMOP//memory_trial2,memory_trial2,measurement
+OMOP//memory_trial2_time,memory_trial2_time,measurement
+OMOP//mh_a1c,Elevated A1C levels (elevated blood sugar,observation
+OMOP//mh_dm_age,"If yes, at what age were you first dia",observation
+OMOP//mhcmpdat,Health survey date,observation
+OMOP//mhcmpts,Heath Survey Completed Timestamp (from R,observation
+OMOP//mhoccur_ad,Dementia (Examples: Alzheimer's Disea,observation
+OMOP//mhoccur_amd,Age-related macular degeneration (AM,observation
+OMOP//mhoccur_ca,Cancer (any type),observation
+OMOP//mhoccur_circ,Circulation problems (Examples: art,observation
+OMOP//mhoccur_clsh,High blood cholesterol,observation
+OMOP//mhoccur_cns,Other neurological conditions,observation
+OMOP//mhoccur_cogn,Mild cognitive impairment (known as,observation
+OMOP//mhoccur_crt,Cataracts (in one or both eyes),observation
+OMOP//mhoccur_cvdot,Other heart issues (Examples: pace,observation
+OMOP//mhoccur_ded,Dry eye (in one or both eyes),observation
+OMOP//mhoccur_ear,Hearing impairment,observation
+OMOP//mhoccur_fall,Have you fallen in the last 12 mont,observation
+OMOP//mhoccur_fallot,"If so, how many times in the last",observation
+OMOP//mhoccur_gi,Digestive problems (Examples: stomach,observation
+OMOP//mhoccur_glc,Glaucoma (in one or both eyes),observation
+OMOP//mhoccur_hbp,High blood pressure,observation
+OMOP//mhoccur_lbp,Low blood pressure,observation
+OMOP//mhoccur_mi,Heart attack,observation
+OMOP//mhoccur_ms,Multiple sclerosis,observation
+OMOP//mhoccur_oa,Osteoporosis,observation
+OMOP//mhoccur_obs,Obesity,observation
+OMOP//mhoccur_pd,Parkinson's disease,observation
+OMOP//mhoccur_pdr,Diabetic retinopathy (in one or both,observation
+OMOP//mhoccur_plm,Chronic pulmonary (lung) problems (E,observation
+OMOP//mhoccur_ra,Arthritis (joint pain),observation
+OMOP//mhoccur_rnl,Kidney problems,observation
+OMOP//mhoccur_rvo,"Retinal vascular occlusion (""stroke",observation
+OMOP//mhoccur_strk,Stroke,observation
+OMOP//mhoccur_ua,Urinary problems (Examples: urinary t,observation
+OMOP//mhoccur_yn,Have you been diagnosed with any cond,observation
+OMOP//mhstartts,Health Survey Started Timestamp (from,observation
+OMOP//mhterm_dm1,Type I Diabetes,observation
+OMOP//mhterm_dm2,Type II Diabetes,observation
+OMOP//mhterm_predm,Pre-diabetes,observation
+OMOP//mlcscmpdat,Date procedure performed,observation
+OMOP//mlcsodfcl,OD: Value of final correct letter,measurement
+OMOP//mlcsodlog,OD: Log Contrast Sensitivity,measurement
+OMOP//mlcsodmiss,OD: Number of misses prior to stoppin,measurement
+OMOP//mlcsosfcl,OS: Value of final correct letter,measurement
+OMOP//mlcsoslog,OS: Log Contrast Sensitivity,measurement
+OMOP//mlcsosmiss,OS: Number of misses prior to stoppin,measurement
+OMOP//moca_abstraction,moca_abstraction,measurement
+OMOP//moca_abstraction_time,moca_abstraction_time,measurement
+OMOP//moca_combined_mis_score,moca_combined_mis_score,measurement
+OMOP//moca_orientation,moca_orientation,measurement
+OMOP//moca_orientation_time,moca_orientation_time,measurement
+OMOP//moca_total_score,moca_total_score,measurement
+OMOP//moca_total_score_time,moca_total_score_time,observation
+OMOP//mocacmpdattim,Date time MoCA performed,observation
+OMOP//msscmpdat,Date monofilament performed,observation
+OMOP//msslffl,Left Foot - Felt:,measurement
+OMOP//mssrffl,Right Foot - Felt:,measurement
+OMOP//naming,naming,measurement
+OMOP//naming_time,naming_time,measurement
+OMOP//paate,How many hours since you last ate? (number,observation
+OMOP//pacmpdat,Date Assessment Performed --- Populated,observation
+OMOP//paid_cml,Coping with complications of diabetes,observation
+OMOP//paid_dpr,Feeling depressed when you think about,observation
+OMOP//paid_eng,Feeling that diabetes is taking up too,observation
+OMOP//paid_scrd,Feeling scared when you think about li,observation
+OMOP//paid_wr,Worrying about the future and the possib,observation
+OMOP//paidcmpts,PAID-5 DM Survey Completed Timestamp (,observation
+OMOP//paidscore,PAID score,observation
+OMOP//paidstartts,PAID-5 DM Survey Start Timestamp (fr,observation
+OMOP//pdrx9,"On a scale of 1-6, how stressful was this",observation
+OMOP//plcscmpdat,Date procedure performed,observation
+OMOP//plcsodfcl,OD: Value of final correct letter,measurement
+OMOP//plcsodlog,OD: Log Contrast Sensitivity,measurement
+OMOP//plcsodmiss,OD: Number of misses prior to stoppin,measurement
+OMOP//plcsosfcl,OS: Value of final correct letter,measurement
+OMOP//plcsoslog,OS: Log Contrast Sensitivity,measurement
+OMOP//plcsosmiss,OS: Number of misses prior to stoppin,measurement
+OMOP//preconcmpdat,Pre-consent survey/form date (date,observation
+OMOP//preconcmpts,Pre-consent Survey Completed Timesta,observation
+OMOP//preconstartts,Pre-consent Survey Started Timesta,observation
+OMOP//prtcmpdat,Participant contact survey/form date (,observation
+OMOP//pulse_vsorres,Heart Rate (bpm),measurement
+OMOP//pulse_vsorres_2,Heart Rate (bpm),measurement
+OMOP//px011002_metadata,PhenX Education Attainment Met,observation
+OMOP//px11502_metadata,PhenX Health Insurance MetaData,observation
+OMOP//px270101_metadata,PhenX Health Care Access MetaD,observation
+OMOP//px270201_metadata,PhenX English Proficiency Meta,observation
+OMOP//px270301_metadata,PhenX MetaData,observation
+OMOP//px280301_metadata,PhenX Job Security MetaData,observation
+OMOP//px280801_metadata,PhenX Prescriptions Affordabil,observation
+OMOP//px280901_metadata,PhenX Healthcare Discriminatio,observation
+OMOP//px281401_metadata,PhenX Housing Insecurity MetaD,observation
+OMOP//px281501_metadata,PhenX Racial/Ethnic MetaData,observation
+OMOP//pxahc1,About how long has it been since you last,observation
+OMOP//pxahc10,"During the past 12 months, was there any",observation
+OMOP//pxahc2,"Was this a wellness visit, physical, or g",observation
+OMOP//pxahc3,About how long has it been since you last,observation
+OMOP//pxahc4,Is there a place that you USUALLY go to i,observation
+OMOP//pxahc5,What kind of place is it/do you go to mos,observation
+OMOP//pxahc7,"During the past 12 months, how many times",observation
+OMOP//pxahc8,"During the past 12 months, have you been",observation
+OMOP//pxahc9,"During the past 12 months, have you DELAY",observation
+OMOP//pxdhc1,You are treated with less courtesy than o,observation
+OMOP//pxdhc2,You are treated with less respect than ot,observation
+OMOP//pxdhc3,You receive poorer service than others.,observation
+OMOP//pxdhc4,A doctor or nurse acts as if he or she th,observation
+OMOP//pxdhc5,A doctor or nurse acts as if he or she is,observation
+OMOP//pxdhc6,A doctor or nurse acts as if he or she is,observation
+OMOP//pxdhc7,You feel like a doctor or nurse is not li,observation
+OMOP//pxed1,What is the highest grade or level of scho,observation
+OMOP//pxep1,Is English your first language?,observation
+OMOP//pxep2,Do you speak another language at home?,observation
+OMOP//pxep3,Since you speak a language other than Engl,observation
+OMOP//pxfi1,"The first statement is, ""The food that (I/",observation
+OMOP//pxfi2,"""(I/we) couldn't afford to eat balanced me",observation
+OMOP//pxfi3,"In the last year, did you and/or other adu",observation
+OMOP//pxfi4,"In the last 12 months, did you ever eat le",observation
+OMOP//pxfi5,"In the last 12 months, were you ever hungr",observation
+OMOP//pxfistartts,PhenX Food Insecurity Survey Started,observation
+OMOP//pxhi1,What is your living situation today?,observation
+OMOP//pxhi2,Think about the place you live. Do you hav,observation
+OMOP//pxhic1,Insurance through a current or former emp,observation
+OMOP//pxhic2,Insurance purchased directly from an insu,observation
+OMOP//pxhic3,"Medicare, for people 65 and older, or peo",observation
+OMOP//pxhic4,"Medicaid, Medical Assistance (MA), the Ch",observation
+OMOP//pxhic5,"TRICARE or other military health care, in",observation
+OMOP//pxhic7,Any other type of health insurance covera,observation
+OMOP//pxhic8,Does this mean you currently have no heal,observation
+OMOP//pxji1,"Thinking about the next 12 months, how lik",observation
+OMOP//pxji2,About how easy would it be for you to find,observation
+OMOP//pxne1,What is the main type of housing in your n,observation
+OMOP//pxne10,There are many interesting things to look,observation
+OMOP//pxne11,How many motor vehicles in working order,observation
+OMOP//pxne12,There are many four-way intersections in,observation
+OMOP//pxne13,The sidewalks in my neighborhood are well,observation
+OMOP//pxne14,Places for bicycling (such as bike paths),observation
+OMOP//pxne15,There is so much traffic on the streets t,observation
+OMOP//pxne16,The crime rate in my neighborhood makes i,observation
+OMOP//pxne17,There are many places to go within easy w,observation
+OMOP//pxne2,"Many shops, stores, markets or other place",observation
+OMOP//pxne3,It is within a 10-15 minute walk to a tran,observation
+OMOP//pxne4,There are sidewalks on most of the streets,observation
+OMOP//pxne5,There are facilities to bicycle in or near,observation
+OMOP//pxne6,My neighborhood has several free or low co,observation
+OMOP//pxne7,The crime rate in my neighborhood makes it,observation
+OMOP//pxne8,There is so much traffic on the streets th,observation
+OMOP//pxne9,I see many people being physically active,observation
+OMOP//pxnecmpts,PhenX Neighborhood Environment Survey,observation
+OMOP//pxnestartts,PhenX Neighborhood Enviroment Survey,observation
+OMOP//pxpa1,"In the last 12 months, have you delayed ge",observation
+OMOP//pxpa2,Did any other person in your household del,observation
+OMOP//pxpa3,"In the last 12 months, was there any time",observation
+OMOP//pxpa4,"In the last 12 months, was there any time",observation
+OMOP//pxrd1,How often in the past year?,observation
+OMOP//pxrd10,How often in the past year?,observation
+OMOP//pxrd11,How often in your entire life?,observation
+OMOP//pxrd12,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd13,How often in the past year?,observation
+OMOP//pxrd14,How often in your entire life?,observation
+OMOP//pxrd15,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd16,How often in the past year?,observation
+OMOP//pxrd17,How often in your entire life?,observation
+OMOP//pxrd18,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd19,How often in the past year?,observation
+OMOP//pxrd2,How often in your entire life?,observation
+OMOP//pxrd20,How often in your entire life?,observation
+OMOP//pxrd21,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd22,How often in the past year?,observation
+OMOP//pxrd23,How often in your entire life?,observation
+OMOP//pxrd24,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd25,How often in the past year?,observation
+OMOP//pxrd26,How often in your entire life?,observation
+OMOP//pxrd27,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd28,How often in the past year?,observation
+OMOP//pxrd29,How often in your entire life?,observation
+OMOP//pxrd3,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd30,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd31,How often in the past year?,observation
+OMOP//pxrd32,How often in your entire life?,observation
+OMOP//pxrd33,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd34,How often in the past year?,observation
+OMOP//pxrd35,How often in your entire life?,observation
+OMOP//pxrd36,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd37,How often in the past year?,observation
+OMOP//pxrd38,How often in your entire life?,observation
+OMOP//pxrd39,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd4,How often in the past year?,observation
+OMOP//pxrd40,How often in the past year?,observation
+OMOP//pxrd41,How often in your entire life?,observation
+OMOP//pxrd42,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd43,How often in the past year?,observation
+OMOP//pxrd44,How often in your entire life?,observation
+OMOP//pxrd45,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd46,How often in the past year?,observation
+OMOP//pxrd47,How often in your entire life?,observation
+OMOP//pxrd48,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd49,How often in the past year?,observation
+OMOP//pxrd5,How often in your entire life?,observation
+OMOP//pxrd50,How often in your entire life?,observation
+OMOP//pxrd51,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd52,In the Past Year?,observation
+OMOP//pxrd53,In your entire life?,observation
+OMOP//pxrd54,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd6,"On a scale of 1-6, how stressful was this",observation
+OMOP//pxrd7,How often in the past year?,observation
+OMOP//pxrd8,How often in your entire life?,observation
+OMOP//pxrdcmpdat,PhenX Racial/Ethnic Discrimination su,observation
+OMOP//pxrdcmpts,PhenX Racial/Ethnic Discrimination Sur,observation
+OMOP//pxrdstartts,PhenX Racial/Ethnic Discrimination S,observation
+OMOP//pxsdohcmpdat,PhenX SDOH survey date,observation
+OMOP//pxsdohstartts,PhenX SDOH Survey Started Timestam,observation
+OMOP//pxsficmpdat,PhenX Food Insecurity survey date,observation
+OMOP//pxsficmpts,PhenX Food Insecurity Survey Complete,observation
+OMOP//reccmpdat,Recruitment survey date (date survey/f,observation
+OMOP//reccmpts,Recruitment Survey Completed Timestamp,observation
+OMOP//recstartts,Recruitment Survey Started Timestamp,observation
+OMOP//repetition,repetition,measurement
+OMOP//repetition_time,repetition_time,measurement
+OMOP//rt_dat,Assessment Date,observation
+OMOP//rtci_odd1,Cirrus-Disc Cube-200x200-OCT,observation
+OMOP//rtci_odd2,Cirrus-Disc 6x6-OCTA,observation
+OMOP//rtci_odm1,Cirrus-Mac Cube-512x128-OCT,observation
+OMOP//rtci_odm2,Cirrus-Macula 6x6-OCTA,observation
+OMOP//rtci_osd1,Cirrus-Disc Cube-200x200-OCT,observation
+OMOP//rtci_osd2,Cirrus-Disc 6x6-OCTA,observation
+OMOP//rtci_osm1,Cirrus-Mac Cube-512x128-OCT,observation
+OMOP//rtci_osm2,Cirrus-Macula 6x6-OCTA,observation
+OMOP//rtei_odfaf,Eidon-UWF Central-FAF,observation
+OMOP//rtei_odir,Eidon-UWF Central-IR,observation
+OMOP//rtei_osfaf,Eidon-UWF Central-FAF,observation
+OMOP//rtei_osir,Eidon-UWF Central-IR,observation
+OMOP//rtfl_od,FLIO-Mac-HS,observation
+OMOP//rtfl_os,FLIO-Mac-HS,observation
+OMOP//rtma_odm,M2-3D Macula 6x6-OCT,observation
+OMOP//rtma_odm1,M2-Mac 6x6-360x360-(rep3)-OCTA,observation
+OMOP//rtma_odw,M2-3D Wide(H) 12x9-OCT,observation
+OMOP//rtma_osm,M2-3D Macula 6x6-OCT,observation
+OMOP//rtma_osm1,M2-Mac 6x6-360x360-(rep3)-OCTA,observation
+OMOP//rtma_osw,M2-3D Wide(H) 12x9-OCT,observation
+OMOP//rtop_odd,OptoMed-Disc centered-CFP,observation
+OMOP//rtop_odm,OptoMed-Mac centered-CFP,observation
+OMOP//rtop_osd,OptoMed-Disc centered-CFP,observation
+OMOP//rtop_osm,OptoMed-Mac centered-CFP,observation
+OMOP//rtsm_odc,Eidon-UWF Central-CFP,observation
+OMOP//rtsm_odm,Eidon-Create Mosaic Image-CFP,observation
+OMOP//rtsm_odn,Eidon-UWF Nasal-CFP,observation
+OMOP//rtsm_odt,Eidon-UWF Temporal-CFP,observation
+OMOP//rtsm_osc,Eidon-UWF Central-CFP,observation
+OMOP//rtsm_osm,Eidon- Create Mosaic Image-CFP,observation
+OMOP//rtsm_osn,Eidon-UWF Nasal-CFP,observation
+OMOP//rtsm_ost,Eidon-UWF temporal-CFP,observation
+OMOP//rtso_odm,Spec-Mac-20x20-HS-512 lines-OCTA,observation
+OMOP//rtso_odo,Spec-ONH-RC-HR-OCT,observation
+OMOP//rtso_odp,Spec-PPole Mac-HR-61 lines-OCT,observation
+OMOP//rtso_osm,Spec-Mac-20x20-HS-512 lines-OCTA,observation
+OMOP//rtso_oso,Spec-ONH-RC-HR-OCT,observation
+OMOP//rtso_osp,Spec-PPole Mac-HR-61 lines-OCT,observation
+OMOP//rttr_odm1,Triton-Macula 6x6-OCTA,observation
+OMOP//rttr_odm2,Triton-Macula 12x12-OCTA,observation
+OMOP//rttr_odr,Triton-3D(H)+Radial 12x9-OCT,observation
+OMOP//rttr_osm1,Triton-Macula 6x6-OCTA,observation
+OMOP//rttr_osm2,Triton-Macula 12x12-OCTA,observation
+OMOP//rttr_osr,Triton-3D(H)+Radial 12x9-OCT,observation
+OMOP//scrcmpdat,Screening survey date (date survey/for,observation
+OMOP//scrcmpts,Screening Survey Completed Timestamp (f,observation
+OMOP//scrstartts,Screening Survey Started Timestamp (f,observation
+OMOP//studyid,Participant Study ID,observation
+OMOP//sualcage,At what age did you start drinking alco,observation
+OMOP//sualcdrv,"Do you drive after having a drink, even",observation
+OMOP//sualckncf,Have you ever consumed alcohol?,observation
+OMOP//subrdosfr,"During the average week, how many 12 o",observation
+OMOP//subrkncf,Have you had any beer or ale in the pas,observation
+OMOP//subtraction,subtraction,measurement
+OMOP//subtraction_time,subtraction_time,measurement
+OMOP//sucmpdat,Substance use survey date,observation
+OMOP//sucmpts,Substance Use Survey Completed Timestamp,observation
+OMOP//sulqdosfr,"During the average week, how many 1.5",observation
+OMOP//sulqkncf,Have you had any liquor in the past yea,observation
+OMOP//sumrjcdur,Do you use marijuana now?,observation
+OMOP//sumrjceddur,How many total years have you used m,observation
+OMOP//sumrjfr,"When you used marijuana, approximately h",observation
+OMOP//sumrjkncf,Have you ever used marijuana (cannabis,observation
+OMOP//sumrjstage,At what age did you start using marij,observation
+OMOP//sumrjtrt,In what form do you usually use marijua,observation
+OMOP//susmkcdur,Do you smoke now?,observation
+OMOP//susmkdosfr,On average how many cigarettes do/did,observation
+OMOP//susmkncf,Have you smoked at least 100 cigarettes,observation
+OMOP//susmkstaage,At what age did you start smoking? (,observation
+OMOP//susmkstoage,How many total years have you smoked,observation
+OMOP//sustartts,Substance Use Survey Started Timestamp,observation
+OMOP//suvpcdur,Do you vape or use e-cigarettes now?,observation
+OMOP//suvpdosfr,"When you vaped or used e-cigarettes, a",observation
+OMOP//suvpkncf1,Have you ever vaped or used e-cigarett,observation
+OMOP//suvpstage,At what age did you start vaping or us,observation
+OMOP//suvptoage,How many total years have you vaped or,observation
+OMOP//suvptoyr,How many total years have you consumed,observation
+OMOP//suwndosfr,"During the average week, how many 5 oz",observation
+OMOP//suwnkncf,Have you had any wine in the past year?,observation
+OMOP//test_upload_date,test_upload_date,observation
+OMOP//trails_visuospatial_executive,trails_visuospatial_executive,measurement
+OMOP//trails_visuospatial_executive_time,trails_visuospatial_executive_time,measurement
+OMOP//via1,"How much difficulty, if any, do you have in",observation
+OMOP//via2,"How much difficulty, if any, do you have re",observation
+OMOP//via3,"Because of your eyesight, how much difficul",observation
+OMOP//via4,When was the last time you had your eyes ex,observation
+OMOP//via5,You have indicated that you have not seen a,observation
+OMOP//via6,When was the last time you had an eye exam,observation
+OMOP//viacmpdat,Ophthalmic survey date,observation
+OMOP//viacmpts,Ophthalmic Survey Completed Timestamp (,observation
+OMOP//viaocmpdat,Date BCVA performed,observation
+OMOP//viaodaxi,OD - Autorefractor - Axis,measurement
+OMOP//viaodcyl,OD - Autorefractor - Cylinder,measurement
+OMOP//viaodmlog,LLVA Letter Score - Mesopic VA - OD,measurement
+OMOP//viaodmscore,Mesopic LogMAR OD Score,measurement
+OMOP//viaodplog,VA Letter Score - Photopic VA - OD,measurement
+OMOP//viaodpscore,Photopic LogMAR OD Score,measurement
+OMOP//viaodsph,OD - Autorefractor - Sphere,measurement
+OMOP//viaomthd,Method used to complete form,observation
+OMOP//viaosaxi,OS - Autorefractor - Axis,measurement
+OMOP//viaoscyl,OS - Autorefractor - Cylinder,measurement
+OMOP//viaosmlog,LLVA Letter Score - Mesopic VA - OS,measurement
+OMOP//viaosmscore,Mesopic LogMAR OS Score,measurement
+OMOP//viaosplog,VA Letter Score - Photopic VA - OS,measurement
+OMOP//viaospscore,Photopic LogMAR OS Score,measurement
+OMOP//viaossph,OS - Autorefractor - Sphere,measurement
+OMOP//viastartts,Ophthalmic Survey Started Timestamp (,observation
+OMOP//visdat,Planned date & time of in-person visit,observation
+OMOP//waist_vsorres,Waist Circumference (cm),measurement
+OMOP//weight_vsorres,Weight (kilograms),measurement
+OMOP//whr_vsorres,Waist to Hip Ratio (WHR),measurement
+OMOP//years_of_education,years_of_education,observation

@@ -10,7 +10,6 @@ import sys
 
 # command -> the Stage 3 part that builds it
 PENDING = {
-    "data connect": 2, "data check": 2, "data new": 2,
     "task new": 3, "task build": 3, "task check": 3,
     "agent new": 5, "run": 5, "score": 5,
 }
@@ -63,6 +62,11 @@ def group(argv: list[str]) -> int:
         ap.print_help()
         return 0
     name = f"{a.cmd} {a.sub}" if getattr(a, "sub", None) else a.cmd
+    if a.cmd == "data":
+        from medomni.bench import data
+
+        return {"connect": lambda: data.connect(a.dataset, a.path), "check": lambda: data.check(a.dataset),
+                "new": lambda: data.new(a.dataset)}[a.sub]()
     part = PENDING[name]
     if name == "task check" and (a.set or a.release):
         part = CHECK_SET_PART

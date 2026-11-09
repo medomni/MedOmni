@@ -1,0 +1,8 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+version: '1.0'
+anchor: {event: VISIT}
+draw:
+  by: [moca_lt_26]
+  n: 20
+  seed: 7
+source: all

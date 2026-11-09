@@ -143,3 +143,164 @@ def test_rules_refused(raw, tmp_path, rules, match):
 def test_description_is_written(loaded):
     desc = json.loads((loaded["dummy-omop"].path.parent / DESCRIPTION).read_text())
     assert desc["dataset"] == "dummy-omop" and desc["description"]["time"] == "visit-dates"
+
+
+# ---- the reader options part 2 added (Stage 3)
+def _package(tmp_path, tables, extra_read=(), rules=None, codes=("A", "B"), verify=None):
+    p = tmp_path / "pkg"
+    (p / "hooks").mkdir(parents=True, exist_ok=True)
+    read = [{"reader": "csv", "options": {"tables": tables}}, *extra_read]
+    cfg = {"description": {"unit": "patient", "time": "datetime", "version": "1"},
+           "units": {"table": next(iter(tables)), "column": "s"}, "source": "all", "read": read}
+    if rules:
+        cfg["rules"] = rules
+    if verify:
+        cfg["verify"] = verify
+    (p / "dataset.yaml").write_text(yaml.safe_dump(cfg))
+    (p / "codes.csv").write_text("code,description,source_table\n" + "".join(f"{c},d,t\n" for c in codes))
+    return p
+
+
+def _raw(tmp_path, files):
+    root = tmp_path / "raw"
+    for rel, text in files.items():
+        f = root / rel
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(text)
+    return root
+
+
+def _codes(p, root, tmp_path):
+    return [(e["subject_id"], e["time"], e["code"]) for e in rows(load(p, root, tmp_path / "o").path)]
+
+
+T = {"file": "t.csv", "subject": "s", "time": "t", "events": [{"code": "A"}]}
+
+
+def test_where_keeps_listed_rows(tmp_path):
+    p = _package(tmp_path, {"t": {**T, "where": {"k": ["1"]}}})
+    root = _raw(tmp_path, {"t.csv": "s,t,k\n1,2150-01-01,1\n2,2150-01-01,2\n"})
+    assert [c[0] for c in _codes(p, root, tmp_path)] == ["1"]
+
+
+def test_a_glob_reads_every_file_and_parquet_as_text(tmp_path):
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    p = _package(tmp_path, {"t": {**T, "file": "d/*.parquet"}})
+    root = tmp_path / "raw"
+    (root / "d").mkdir(parents=True)
+    for i in (1, 2):
+        pq.write_table(pa.table({"s": [i * 11], "t": ["2150-01-01"]}), root / "d" / f"{i}.parquet")
+    assert sorted(c[0] for c in _codes(p, root, tmp_path)) == ["11", "22"]
+
+
+def test_clean_before_remove_lower(tmp_path):
+    t = {**T, "clean": {"k": {"before": ",", "remove": ".", "lower": True}}, "events": [{"code": "C//{k}"}]}
+    p = _package(tmp_path, {"t": t}, codes=("C//a1",))
+    root = _raw(tmp_path, {"t.csv": 's,t,k\n1,2150-01-01,"A.1, some label"\n'})
+    assert _codes(p, root, tmp_path)[0][2] == "C//a1"
+
+
+def test_event_conditions_and_missing_time(tmp_path):
+    t = {**T, "time": "a", "events": [
+        {"code": "A", "time": "d", "present": ["d"]},
+        {"code": "A", "time": "e", "absent": ["d"], "equals": {"f": ["1"]}}]}
+    p = _package(tmp_path, {"t": t})
+    root = _raw(tmp_path, {"t.csv": "s,a,d,e,f\n1,2150-01-01,2150-01-02,2150-01-03,1\n2,2150-01-01,,2150-01-04,1\n3,2150-01-01,,2150-01-05,0\n"})
+    assert sorted(c[:2] for c in _codes(p, root, tmp_path)) == [("1", "2150-01-02T00:00:00"), ("2", "2150-01-04T00:00:00")]
+
+
+def test_missing_time_drop(tmp_path):
+    p = _package(tmp_path, {"t": {**T, "missing_time": "drop"}})
+    root = _raw(tmp_path, {"t.csv": "s,t\n1,2150-01-01\n2,\n"})
+    assert [c[0] for c in _codes(p, root, tmp_path)] == ["1"]
+
+
+def test_a_load_false_table_is_verified_but_not_read(tmp_path):
+    p = _package(tmp_path, {"t": T, "big": {**T, "file": "big.csv", "load": False}})
+    root = _raw(tmp_path, {"t.csv": "s,t\n1,2150-01-01\n"})
+    with pytest.raises(LoadError, match="big.csv"):
+        load(p, root, tmp_path / "o")
+    (root / "big.csv").write_text("s,t\n9,2150-01-01\n")
+    assert [c[0] for c in _codes(p, root, tmp_path)] == ["1"]
+
+
+def test_csv_event_path_only_on_file_codes(tmp_path):
+    t = {**T, "events": [{"code": "FILE//clinical-record-table", "path": "d/{s}"}]}
+    p = _package(tmp_path, {"t": t})
+    root = _raw(tmp_path, {"t.csv": "s,t\n7,2150-01-01\n"})
+    assert rows(load(p, root, tmp_path / "o").path)[0]["path"] == "d/7"
+    p = _package(tmp_path, {"t": {**T, "events": [{"code": "A", "path": "d"}]}})
+    with pytest.raises(LoadError, match="FILE//<family>"):
+        load(p, root, tmp_path / "o2")
+
+
+def _tree(tmp_path, entry, table_rows="s,t,f\n1,2150-01-01,sub-a\n"):
+    tree = {"reader": "tree", "options": {"files": {"cxr-radiograph-2d": entry}}}
+    return _package(tmp_path, {"t": T}, extra_read=[tree]), _raw(tmp_path, {"t.csv": table_rows})
+
+
+def test_tree_skips_dotfiles_and_excluded(tmp_path):
+    p, root = _tree(tmp_path, {"pattern": "x/{subject}/{record}.png", "exclude": ["skip"]})
+    for name in ("a.png", ".partial.png", "skip-me.png"):
+        f = root / "x/1" / name
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(b"x")
+    (root / "x/1/empty.png").write_bytes(b"")
+    assert [r["path"] for r in rows(load(p, root, tmp_path / "o").path) if r["path"]] == ["x/1/a.png"]
+
+
+def test_tree_subject_from_maps_a_folder_to_the_subject(tmp_path):
+    p, root = _tree(tmp_path, {"pattern": "x/{subject}/{record}.png", "subject_from": {"table": "t", "key": "f"}})
+    for d in ("sub-a", "sub-unknown"):
+        (root / "x" / d).mkdir(parents=True)
+        (root / "x" / d / "a.png").write_bytes(b"x")
+    files = [r for r in rows(load(p, root, tmp_path / "o").path) if r["path"]]
+    assert [(r["subject_id"], r["path"]) for r in files] == [("1", "x/sub-a/a.png")]
+
+
+HOOK = """\
+def inputs(raw_root, params):
+    return [params["file"]]
+def derive(rows, raw_root, params):
+    return [{"subject_id": r["subject_id"], "code": "B", "time": None} for r in rows if r["code"] == "A"]
+"""
+
+
+def test_a_hook_sees_earlier_rows_and_its_inputs_are_verified(tmp_path):
+    p = _package(tmp_path, {"t": T}, extra_read=[{"reader": "hook", "options": {"hook": "h", "params": {"file": "in.txt"}}}])
+    (p / "hooks/h.py").write_text(HOOK)
+    root = _raw(tmp_path, {"t.csv": "s,t\n1,2150-01-01\n"})
+    with pytest.raises(LoadError, match="in.txt"):
+        load(p, root, tmp_path / "o")
+    (root / "in.txt").write_text("x")
+    assert sorted(c[2] for c in _codes(p, root, tmp_path)) == ["A", "B"]
+
+
+def test_a_hook_row_needs_a_code_and_event_columns_only(tmp_path):
+    p = _package(tmp_path, {"t": T}, extra_read=[{"reader": "hook", "options": {"hook": "h"}}])
+    (p / "hooks/h.py").write_text("def derive(rows, raw_root, params):\n    return [{'subject_id': '1', 'code': 'A', 'x': 1}]\n")
+    root = _raw(tmp_path, {"t.csv": "s,t\n1,2150-01-01\n"})
+    with pytest.raises(LoadError, match="only event columns"):
+        load(p, root, tmp_path / "o")
+
+
+def test_verify_manifests(tmp_path):
+    p = _package(tmp_path, {"t": T}, verify={"manifests": "*/manifest.tsv"})
+    root = _raw(tmp_path, {"t.csv": "s,t\n1,2150-01-01\n", "m/manifest.tsv": "x\tdata_filepath\tother_file_path\n1\t/m/a.txt\tNot reported\n2\t/m/a.txt\tNone\n"})
+    with pytest.raises(LoadError, match="manifest lists"):
+        load(p, root, tmp_path / "o")
+    (root / "m/a.txt").write_text("x")
+    assert _codes(p, root, tmp_path)
+
+
+@pytest.mark.parametrize("rule,text", [({"file": "v.json", "key": "version"}, '{"version": "1"}'),
+                                       ({"file": "v.txt", "contains": "release 1", "version": "1"}, "the release 1 notes")])
+def test_verify_version(tmp_path, rule, text):
+    p = _package(tmp_path, {"t": T}, verify={"version": rule})
+    root = _raw(tmp_path, {"t.csv": "s,t\n1,2150-01-01\n", rule["file"]: text})
+    assert _codes(p, root, tmp_path)
+    (root / rule["file"]).write_text('{"version": "2"}')
+    with pytest.raises(LoadError, match="the package describes"):
+        load(p, root, tmp_path / "o2")

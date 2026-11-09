@@ -1,0 +1,52 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_coag-hemorrhagic
+dataset: mimic-iv
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: coagulation_hemorrhagic, label: 'mimic-iv:derived:coagulation-hemorrhagic', metric: auc}
+input:
+  labs: {'51221': hematocrit, '51265': platelet_count, '51222': hemoglobin, '51301': white_blood_cells, '51248': mch, '51249': mchc,
+    '51250': mcv, '51279': red_blood_cells, '51277': rdw, '50912': creatinine, '52546': creatinine, '51006': urea_nitrogen,
+    '52647': urea_nitrogen, '50931': glucose, '52569': glucose, '50971': potassium, '52610': potassium, '50983': sodium, '52623': sodium,
+    '50902': chloride, '52535': chloride, '50882': bicarbonate, '50868': anion_gap, '52500': anion_gap, '50920': estimated_gfr_mdrd_equation,
+    '51146': basophils, '51200': eosinophils, '51244': lymphocytes, '51254': monocytes, '51256': neutrophils, '50893': calcium_total,
+    '50960': magnesium, '50861': alanine_aminotransferase_alt, '50970': phosphate}
+  demographics: [age, sex]
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+  files: {cxr-radiograph-2d: cxr/files/, ecg-12lead-500hz-mv: ecg/files/}
+evidence: [default, full]
+exclude:
+  streams: [diagnoses, notes, 'medications (deferred, would need own leakage review)']
+agent:
+  statement: Predict whether this patient's hospital admission will be given a diagnosis of a coagulation or hemorrhagic disorder.
+  instruction: '# mimic_coag-hemorrhagic
+
+
+    Predict, for each patient, the probability that their **index hospital admission** (the first admission on record) receives
+    a discharge diagnosis of **coagulation hemorrhagic**. You see only data charted in the first 24 hours of that admission
+    (plus the ED encounter that led to it): demographics, ED triage and vital signs, and the proposed laboratory panel. No
+    diagnoses, notes, or medications are provided.
+
+
+    ## Data (under `/workspace/data/`)
+
+
+    - `patients.jsonl` — one line per patient (subject_id, 24h window, slice inventory)
+
+    - `slices/<id>_clinical-record-table.jsonl` — age, sex, race
+
+    - `slices/<id>_clinical-record-table.triage.jsonl` — ED triage record(s), when present
+
+    - `slices/<id>_clinical-measurement-irregular.jsonl` — labs + ED vital signs inside the window, timestamped
+
+
+    ## Submission
+
+
+    Write `/workspace/submission/predictions.csv` — CSV `subject_id,probability`, one row per patient, probability in [0,1].
+    Metric: AUC.
+
+    '
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

@@ -4,10 +4,10 @@ Each converter reads v0.2's files from a repository root and returns {path in v0
 written until `write()` is called. The converted files are committed as content; the converters are deleted once
 Stage 3 has used them.
 
-    python -m medomni.core.contracts.convert families|agents|cards --repo <v0.2 root> --out <dir>
+    python -m medomni.core.contracts.convert families|agents|cards|templates --repo <v0.2 root> --out <dir>
 
-Task templates and cohorts are converted in Stage 3, with their dataset packages (R-68); imported v0.2 result
-records in Stage 3 part 5. Task sets are not converted: they are rebuilt (U2.1). v0.2's fingerprints have no v0.3
+Task templates and their cohorts are converted in Stage 3 part 2, into their dataset packages (`templates`, R-68);
+imported v0.2 result records in Stage 3 part 5. Task sets are not converted: they are rebuilt (U2.1). v0.2's fingerprints have no v0.3
 counterpart (R-111).
 """
 from __future__ import annotations
@@ -19,11 +19,10 @@ import yaml
 NOT_CONVERTED = {
     "task-set": "task sets are rebuilt in Stage 3 part 4: v0.3 sets pin pairs at a version (R-108)",
     "result-record": "v0.2 result records are imported in Stage 3 part 5, at version 0 with a v0.2: stand-in (R-90)",
-    "task-template": "task templates are converted in Stage 3, with their dataset packages (R-68)",
 }
 
 # Converters Stage 3 adds, and the part that fills each slot
-PENDING = {"templates": 2, "cohorts": 2, "benchmarks": 4, "result-records": 5}
+PENDING = {"benchmarks": 4, "result-records": 5}
 
 
 class NotConverted(ValueError):

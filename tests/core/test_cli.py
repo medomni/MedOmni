@@ -72,7 +72,7 @@ def test_project_command_runs(project):
     assert expected in r.stdout
 
 
-@pytest.mark.parametrize("args,part", [(["data", "check", "mimic-iv"], 2), (["task", "build", "--set", "medomni-bench/v1"], 3),
+@pytest.mark.parametrize("args,part", [(["task", "build", "--set", "medomni-bench/v1"], 3),
                                        (["task", "check", "--set", "medomni-bench/v1"], 4),
                                        (["task", "check", "--release"], 4), (["run", "--agent", "a", "--set", "x/y"], 5),
                                        (["score", "--set", "x/y"], 5)])

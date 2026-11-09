@@ -1,0 +1,37 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: bdsp_snoring-metrics
+dataset: bdsp
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: osa_severity_ahi, label: 'bdsp:psgclass:ahi-severity', metric: qwk}
+- {name: low_sleep_efficiency, label: 'bdsp:psgmetric:eff-low', metric: auc}
+- {name: reduced_rem, label: 'bdsp:psgmetric:rem-low', metric: auc}
+- {name: reduced_n3, label: 'bdsp:psgmetric:n3-low', metric: auc}
+- {name: high_arousal_index, label: 'bdsp:psgmetric:arousal-high', metric: auc}
+- {name: frequent_limb_movements, label: 'bdsp:psgmetric:limb-high', metric: auc}
+input:
+  psg: {engine: psg, source: PSG/ (per-session h5), family: eeg-sleep-6ch-200hz-uv, channels_note: whole recording staged;
+      channel list is informational, note: whole-night h5; annotation-stripped for annotation-derived targets}
+  demographics: [age, sex]
+evidence: [default, full]
+full:
+  input:
+    psg: {engine: psg, source: PSG/ (per-session h5), family: eeg-sleep-6ch-200hz-uv, channels_note: whole recording staged;
+        channel list is informational, note: whole-night h5; annotation-stripped for annotation-derived targets, families: all}
+    demographics: [age, sex]
+agent:
+  statement: Predict the severity of this patient's obstructive sleep apnea and other measures of their night's sleep.
+  instruction: '# bdsp_snoring-metrics
+
+
+    Using EEG, EOG, chin and limb EMG, airflow, respiratory-effort belts, SpO₂, PPG, pulse rate, ECG, to predict snoring-derived
+    metrics
+
+
+    ## Submission
+
+
+    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

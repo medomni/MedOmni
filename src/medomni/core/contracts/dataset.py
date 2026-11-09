@@ -9,7 +9,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
-from .base import Contract, NonEmpty, Sha256
+from .base import Contract, NonEmpty, Sha256, Slug
 from .recipe import Requirement
 
 
@@ -77,7 +77,7 @@ class Use(Contract):
 
 
 class DatasetPolicy(Contract):
-    dataset: Literal["mimic-iv", "aireadi", "bdsp", "vitaldb", "dummy"]
+    dataset: Slug  # matching its package folder
     version: NonEmpty
     access: Literal["open", "credentialed"]
     license: License

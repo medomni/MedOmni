@@ -52,7 +52,7 @@ def v02_draw(result) -> list[str]:
     if pair.dataset == "bdsp":
         return [s for s in parent(pair)["cohort"] if s in result.patients]
     primary = pair.template.targets[0].name
-    n, seed = pair.cohort.draw.n, pair.cohort.draw.seed
+    n, seed = pair.cohort.select.n, pair.cohort.select.seed
     gold = {s: int(p.answers[primary]) for s, p in result.patients.items() if p.answers[primary] is not None}
     classes = sorted(set(gold.values()))
     if pair.cohort_name == "ladder":
@@ -71,8 +71,8 @@ def v02_draw(result) -> list[str]:
             out += members[: n // len(classes)]
         return out
     rng, out = random.Random(seed), []
-    if pair.cohort.draw.balance:
-        film = {s: bool(p.balance[pair.cohort.draw.balance[0]]) for s, p in result.patients.items()}
+    if pair.cohort.select.balance:
+        film = {s: bool(p.balance[pair.cohort.select.balance[0]]) for s, p in result.patients.items()}
         for c in classes:
             for has in (True, False):
                 cell = sorted(s for s in result.patients if gold.get(s) == c and film[s] == has)

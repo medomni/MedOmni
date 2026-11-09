@@ -68,7 +68,7 @@ COHORT = "tasks/dummy-mimic_aki/cohorts/n4.yaml"
     ("labels.yaml", lambda d: d["aki"]["guard"].update(codes=["^NOPE//"]), "guard: code '\\^NOPE//'"),
     ("labels.yaml", lambda d: d["aki"].update(exists="^SEPSIS//"), "label aki: code"),
     (COHORT, lambda d: d["require"].append({"has_label": "sepsis"}), "has_label names 'sepsis'"),
-    (COHORT, lambda d: d["draw"].update(by=["sepsis"]), "draw.by names 'sepsis'"),
+    (COHORT, lambda d: d["select"].update(by=["sepsis"]), "select.by names 'sepsis'"),
     (COHORT, lambda d: d["require"].append({"definition": "adult"}), "definition 'adult'"),
     (COHORT, lambda d: d["require"].append({"files": ["no-such-family"]}), "unknown family"),
     (COHORT, lambda d: d["require"].append({"any": ["^NOPE//"]}), "matches nothing"),
@@ -84,7 +84,7 @@ def test_references_are_checked(tmp_path, file, edit, match):
 def test_shared_codes_need_no_listing():
     assert check_cohort("x", c.load_data({"version": "1.0", "source": "all", "anchor": {"event": "ICU_ADMISSION"},
                                            "require": [{"any": ["^DIAGNOSIS//ICD//(N17|584)"]}],
-                                           "draw": {"n": 4, "seed": 7}}, c.Cohort),
+                                           "select": {"n": 4, "seed": 7}}, c.Cohort),
                         dataset="d", targets={}, labels=c.load_data({"x": {"exists": "A", "from": "any", "to": "any"}},
                                                                      c.LabelLibrary),
                         definitions=None, codes={"A"}, families=set()) == []
@@ -93,7 +93,7 @@ def test_shared_codes_need_no_listing():
 @pytest.mark.parametrize("draw, ok", [({"n": 4, "seed": 7}, True), ({"n": 4, "seed": "2026|ladder", "by": ["a"]}, True),
                                       ({"n": 0, "seed": 7}, False), ({"n": 4}, False), ({"seed": 7}, False)])
 def test_draw(draw, ok):
-    data = {"version": "1.0", "source": "all", "anchor": {"event": "ADMISSION"}, "draw": draw}
+    data = {"version": "1.0", "source": "all", "anchor": {"event": "ADMISSION"}, "select": draw}
     if ok:
         c.load_data(data, c.Cohort)
     else:
@@ -109,4 +109,4 @@ def test_label_rules():
     with pytest.raises(c.ContractError, match="exactly one"):
         c.load_data({"x": {"exists": "A", "none": "B", "from": "any", "to": "any"}}, c.LabelLibrary)
     c.load_data({"version": "1.0", "source": "all", "anchor": {"event": "A"}, "require": [{"converts": {"min_families": 3}}],
-                 "draw": {"n": 4, "seed": 7}}, c.Cohort)
+                 "select": {"n": 4, "seed": 7}}, c.Cohort)

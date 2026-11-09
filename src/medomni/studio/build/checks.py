@@ -85,7 +85,7 @@ def _short(values: list, metric: str) -> dict | None:
 def enough_patients(result: Pool, drawn: list[str]) -> tuple[list[str], dict]:
     """Refuses a target the draw balances on; any other short target is marked and left out of scoring (Bosong, 2026-11-09)."""
     problems, marks = [], {}
-    drawn_on = set(result.pair.cohort.draw.by)
+    drawn_on = set(result.pair.cohort.select.by)
     for t in result.pair.template.targets:
         short = _short([result.patients[s].answers[t.name] for s in drawn], t.metric)
         if short is None:

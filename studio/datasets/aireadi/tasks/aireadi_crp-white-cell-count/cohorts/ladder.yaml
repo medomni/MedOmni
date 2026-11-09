@@ -1,7 +1,7 @@
 # Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
 version: '1.0'
 anchor: {event: VISIT}
-draw:
+select:
   by: [hs_crp_ge_3]
   n: 20
   seed: 20260925|ladder-mid|aireadi_crp-white-cell-count

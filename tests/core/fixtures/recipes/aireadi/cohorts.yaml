@@ -3,7 +3,7 @@ aireadi_cancer-history-metabolic@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - cancer_history
       n: 20
@@ -15,7 +15,7 @@ aireadi_cataract-ocular@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - cataract_history
       n: 20
@@ -27,7 +27,7 @@ aireadi_cognitive-function-retinal@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - moca_lt_26
       n: 20
@@ -39,7 +39,7 @@ aireadi_cognitive-score-metabolic@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - moca_lt_26
       n: 20
@@ -54,7 +54,7 @@ aireadi_crp-wcc-lifestyle@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - hs_crp_ge_3
       n: 20
@@ -67,7 +67,7 @@ aireadi_crp-white-cell-count-2@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - hs_crp_ge_3
       n: 20
@@ -80,7 +80,7 @@ aireadi_crp-white-cell-count@ladder:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - hs_crp_ge_3
       n: 20
@@ -111,7 +111,7 @@ aireadi_crp-white-cell-count@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - hs_crp_ge_3
       n: 20
@@ -124,7 +124,7 @@ aireadi_depression-lifestyle@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - cesd10_ge_10
       n: 20
@@ -136,7 +136,7 @@ aireadi_diabetes-diagnosis-biopsycho@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - diabetes_status
       n: 20
@@ -148,7 +148,7 @@ aireadi_diabetes-retinal@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - diabetes_status
       n: 20
@@ -160,7 +160,7 @@ aireadi_dpn-neuropathy-metabolic@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - foot_sensation_impaired_right
       n: 20
@@ -173,7 +173,7 @@ aireadi_dyslipidaemia-diagnosis-biop@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - tg_ge_200
       n: 20
@@ -188,7 +188,7 @@ aireadi_foot-sensation-metabolic@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - foot_sensation_impaired_right
       n: 20
@@ -201,7 +201,7 @@ aireadi_prior-hypertension-cardiovas@ladder:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - hypertension_history
       n: 20
@@ -231,7 +231,7 @@ aireadi_prior-hypertension-cardiovas@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - hypertension_history
       n: 20
@@ -243,7 +243,7 @@ aireadi_visual-function-biopsychosoc@n20:
   cohort:
     anchor:
       event: VISIT
-    draw:
+    select:
       by:
       - photopic_va_reduced_od
       n: 20

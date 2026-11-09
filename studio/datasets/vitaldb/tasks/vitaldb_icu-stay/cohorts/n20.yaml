@@ -4,7 +4,7 @@ anchor: {event: OP//END}
 require:
 - files: [ecg-monitor-3to5lead-250hz-continuous]
   to: anchor
-draw:
+select:
   n: 20
   by: [icu_stay]
   seed: 7

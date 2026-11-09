@@ -5,4 +5,4 @@ require:
 - {any: [ADMISSION], to: anchor}
 - {files: [cxr-radiograph-2d], to: anchor}
 - {has_label: aki}
-draw: {n: 4, by: [aki], seed: 7}
+select: {n: 4, by: [aki], seed: 7}

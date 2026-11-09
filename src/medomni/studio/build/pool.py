@@ -157,7 +157,7 @@ def pool(pair: Pair, events: dict[str, list[dict]], source: set[str], hooks=None
     """Prediction time, requirements and labels for every source patient."""
     defs = pair.config.definitions
     reqs = _event_requirements(pair.cohort, defs)
-    must = {q.has_label for q in pair.cohort.require if isinstance(q, HasLabel)} | set(pair.cohort.draw.by)
+    must = {q.has_label for q in pair.cohort.require if isinstance(q, HasLabel)} | set(pair.cohort.select.by)
     counts = {"source population": len(source)}
     anchored = {}
     for s in sorted(source):
@@ -172,7 +172,7 @@ def pool(pair: Pair, events: dict[str, list[dict]], source: set[str], hooks=None
         answers = {t.name: label(pair.rule(t.label), ctx, hooks) for t in pair.template.targets}
         if any(answers[m] is None for m in must):
             continue
-        balance = {b: label(pair.labels.root[b], ctx, hooks) for b in pair.cohort.draw.balance}
+        balance = {b: label(pair.labels.root[b], ctx, hooks) for b in pair.cohort.select.balance}
         if any(v is None for v in balance.values()):
             continue
         patients[s] = Patient(s, ctx, answers, balance)
@@ -244,7 +244,7 @@ def _split(n: int, cells: int) -> list[int]:
 
 
 def cell_of(p: Patient, cohort: Cohort) -> tuple:
-    return tuple(p.answers[b] for b in cohort.draw.by) + tuple(p.balance[b] for b in cohort.draw.balance)
+    return tuple(p.answers[b] for b in cohort.select.by) + tuple(p.balance[b] for b in cohort.select.balance)
 
 
 def draw(result: Pool, check=None) -> list[str]:
@@ -256,11 +256,11 @@ def draw(result: Pool, check=None) -> list[str]:
     cells = defaultdict(list)
     for p in result.patients.values():
         cells[cell_of(p, cohort)].append(p)
-    if not cohort.draw.by and not cohort.draw.balance:
+    if not cohort.select.by and not cohort.select.balance:
         cells = {(): list(result.patients.values())}
     plan = []
-    for key, k in zip(sorted(cells), _split(cohort.draw.n, len(cells))):
-        ranked = sorted(cells[key], key=lambda p: _rank(cohort.draw.seed, p.id, p.time))
+    for key, k in zip(sorted(cells), _split(cohort.select.n, len(cells))):
+        ranked = sorted(cells[key], key=lambda p: _rank(cohort.select.seed, p.id, p.time))
         if len(ranked) < k:
             raise BuildError(f"{result.pair.id}: draw: class {key} has {len(ranked)} patients, needs {k}")
         plan.append({"key": key, "k": k, "ranked": ranked, "next": 0, "kept": []})

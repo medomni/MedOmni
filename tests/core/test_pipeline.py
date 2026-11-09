@@ -98,11 +98,11 @@ def toy_build(events_path, raw_root, tasks_root, convert):
         if values["aki"] is None:
             continue
         pool.append((s, anchor, values, before))
-    k = cohort.draw.n // 2  # balanced over the two classes of draw.by
+    k = cohort.select.n // 2  # balanced over the two classes of select.by
     drawn = []
     for cls in (0, 1):
-        ranked = sorted((p for p in pool if p[2][cohort.draw.by[0]] == cls),
-                        key=lambda p: hashlib.sha256(f"{cohort.draw.seed}|{p[0]}|{p[1].isoformat()}".encode()).hexdigest())
+        ranked = sorted((p for p in pool if p[2][cohort.select.by[0]] == cls),
+                        key=lambda p: hashlib.sha256(f"{cohort.select.seed}|{p[0]}|{p[1].isoformat()}".encode()).hexdigest())
         drawn += ranked[:k]
     pair_dir = tasks_root / "agent" / PAIR
     answers = []

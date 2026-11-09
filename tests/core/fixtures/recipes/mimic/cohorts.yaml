@@ -5,7 +5,7 @@ mimic_acute-renal-hospital@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - acute_renal_failure
       n: 20
@@ -28,7 +28,7 @@ mimic_ckd-staging@ladder:
   cohort:
     anchor:
       event: CKD//SPAN_END
-    draw:
+    select:
       by:
       - lab_ckd
       n: 20
@@ -46,7 +46,7 @@ mimic_ckd-staging@n20:
   cohort:
     anchor:
       event: CKD//SPAN_END
-    draw:
+    select:
       by:
       - lab_ckd
       n: 20
@@ -60,7 +60,7 @@ mimic_coag-hemorrhagic@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - coagulation_hemorrhagic
       n: 20
@@ -85,7 +85,7 @@ mimic_heart-failure-mm@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - heart_failure
       n: 20
@@ -110,7 +110,7 @@ mimic_hf@ladder:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - heart_failure
       n: 20
@@ -140,7 +140,7 @@ mimic_hf@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - heart_failure
       n: 20
@@ -165,7 +165,7 @@ mimic_in-hospital-death-icu@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - in_hospital_death
       n: 20
@@ -197,7 +197,7 @@ mimic_sepsis-hospital@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - septicemia
       n: 20
@@ -222,7 +222,7 @@ mimic_stroke-infarct-ed@n20:
       event: MIMIC//ADMISSION
       pick: first
       plus: 24 hours
-    draw:
+    select:
       by:
       - cerebral_infarction
       n: 20

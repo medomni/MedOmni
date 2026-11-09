@@ -42,7 +42,7 @@ def _cohorts(package: Path) -> list:
             if cp.name.endswith(".tests.yaml"):
                 continue
             c = load(cp, Cohort)
-            rows.append({"pair": f"{tpl.template_id}@{cp.stem}", "n": c.draw.n, "by": list(c.draw.by),
+            rows.append({"pair": f"{tpl.template_id}@{cp.stem}", "n": c.select.n, "by": list(c.select.by),
                          "targets": len(tpl.targets),
                          "families_required": sorted({f for q in c.require if isinstance(q, Files) for f in q.files})})
     return rows

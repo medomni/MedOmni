@@ -27,7 +27,7 @@ def _copy_package(root: Path) -> Path:
     (pkg / "labels.yaml").write_text(yaml.safe_dump(labels, sort_keys=False))
     co = pkg / "tasks/dummy-mimic_aki/cohorts"
     cohort = yaml.safe_load((co / "n4.yaml").read_text())
-    cohort["draw"]["n"] = 10
+    cohort["select"]["n"] = 10
     (co / "n10.yaml").write_text(yaml.safe_dump(cohort, sort_keys=False))
     (co / "n4.yaml").unlink()
     (pkg / "tasks/dummy-mimic_aki/template.yaml").write_text(

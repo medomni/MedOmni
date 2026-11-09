@@ -11,7 +11,7 @@ Sources, all in this repository until Stage 3 part 8:
 - the cohorts S2 ported from S1's recipes, `tests/core/fixtures/recipes/<dataset>/cohorts.yaml` (n20 and ladder;
   the base `standard` tier was never built and is not converted, Bosong 2026-11-09). The one cohort S2 left out,
   `mimic_icu-stay-radiology@n20`, comes from S1's `p16_recipes.yaml`: its inline balance rule becomes the label
-  `derived:cxr-before-anchor`, named by the cohort's `draw.balance` so it is never scored (Bosong, 2026-11-09).
+  `derived:cxr-before-anchor`, named by the cohort's `select.balance` so it is never scored (Bosong, 2026-11-09).
 
 `agent.instruction` holds the template's own instruction paragraph: v0.2's definitions block for the kind of prediction
 time the template asks about (`templates/blocks/definitions.<kind>.md`).
@@ -118,7 +118,7 @@ def _inline_cohort(repo: Path, key: str) -> dict:
     if any(not isinstance(b, str) for b in by):
         raise ValueError(f"{key}: draw.by still holds an inline rule")
     cohort = {"source": "all" if r["universe"] == "all" else {}, "anchor": r["anchor"], "require": r["require"],
-              "draw": {"n": r["draw"]["n"], "by": by, "balance": [inline["label"]], "seed": r["draw"]["seed"]}}
+              "select": {"n": r["draw"]["n"], "by": by, "balance": [inline["label"]], "seed": r["draw"]["seed"]}}
     return {"targets": targets, "cohort": cohort}
 
 

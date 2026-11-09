@@ -147,52 +147,6 @@
       "title": "Definition",
       "type": "object"
     },
-    "Draw": {
-      "additionalProperties": false,
-      "properties": {
-        "n": {
-          "minimum": 1,
-          "title": "N",
-          "type": "integer"
-        },
-        "by": {
-          "default": [],
-          "items": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "title": "By",
-          "type": "array"
-        },
-        "balance": {
-          "default": [],
-          "items": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "title": "Balance",
-          "type": "array"
-        },
-        "seed": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "minLength": 1,
-              "type": "string"
-            }
-          ],
-          "title": "Seed"
-        }
-      },
-      "required": [
-        "n",
-        "seed"
-      ],
-      "title": "Draw",
-      "type": "object"
-    },
     "Files": {
       "additionalProperties": false,
       "properties": {
@@ -324,6 +278,52 @@
       "title": "None_",
       "type": "object"
     },
+    "Select": {
+      "additionalProperties": false,
+      "properties": {
+        "n": {
+          "minimum": 1,
+          "title": "N",
+          "type": "integer"
+        },
+        "by": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "By",
+          "type": "array"
+        },
+        "balance": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Balance",
+          "type": "array"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "minLength": 1,
+              "type": "string"
+            }
+          ],
+          "title": "Seed"
+        }
+      },
+      "required": [
+        "n",
+        "seed"
+      ],
+      "title": "Select",
+      "type": "object"
+    },
     "SourceFraction": {
       "additionalProperties": false,
       "properties": {
@@ -396,15 +396,15 @@
       "title": "Require",
       "type": "array"
     },
-    "draw": {
-      "$ref": "#/$defs/Draw"
+    "select": {
+      "$ref": "#/$defs/Select"
     }
   },
   "required": [
     "version",
     "source",
     "anchor",
-    "draw"
+    "select"
   ],
   "title": "Cohort",
   "type": "object"

@@ -3,7 +3,7 @@ vitaldb_postop-creatinine@opend:
   cohort:
     anchor:
       event: OP//END
-    draw:
+    select:
       by: []
       n: 20
       seed: 7

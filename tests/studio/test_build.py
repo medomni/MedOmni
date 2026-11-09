@@ -131,6 +131,6 @@ def test_draw_is_nested_and_stable():
     pair = pool_mod.load_pair(PAIR)
     patients = {str(i): pool_mod.Patient(str(i), type("C", (), {"anchor": None})(), {"hs_crp_ge_3": i % 2, "wbc_value": 1.0}, {}) for i in range(60)}
     small = pool_mod.draw(pool_mod.Pool(pair, dict(patients), {}))
-    big_pair = type(pair)(**{**pair.__dict__, "cohort": pair.cohort.model_copy(update={"draw": pair.cohort.draw.model_copy(update={"n": 50})})})
+    big_pair = type(pair)(**{**pair.__dict__, "cohort": pair.cohort.model_copy(update={"select": pair.cohort.select.model_copy(update={"n": 50})})})
     big = pool_mod.draw(pool_mod.Pool(big_pair, dict(patients), {}))
     assert set(small) <= set(big)

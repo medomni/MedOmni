@@ -1,7 +1,7 @@
 # Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
 version: '1.0'
 anchor: {event: RECORDING//END}
-draw:
+select:
   by: [sex_female]
   n: 20
   seed: 7

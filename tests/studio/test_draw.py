@@ -9,7 +9,7 @@ from medomni.bench.build.pool import BuildError, Patient, Pool, draw
 
 def _pool(n, seed):
     rng = random.Random(seed)
-    cohort = NS(draw=NS(by=["y"], balance=[], n=20, seed=7))
+    cohort = NS(select=NS(by=["y"], balance=[], n=20, seed=7))
     patients = {f"p{i}": Patient(f"p{i}", NS(anchor=f"t{i}"), {"y": rng.randint(0, 1)}, {}) for i in range(n)}
     return Pool(NS(id="t@n20", cohort=cohort), patients)
 

@@ -35,7 +35,7 @@ class RecipePreview(Preview):
         result = pool(pair, read_events(path, source), source)
         try:
             drawn = len(draw(result, None if a.no_file_check else file_checker(pair, raw, cache)))
-            verdict = f"draw: {drawn} of {pair.cohort.draw.n}"
+            verdict = f"draw: {drawn} of {pair.cohort.select.n}"
         except BuildError as e:
             verdict = f"draw: would refuse: {e}"
         cells = defaultdict(int)
@@ -43,7 +43,7 @@ class RecipePreview(Preview):
             cells[cell_of(p, pair.cohort)] += 1
         stats = content.pool_stats(result)
         lines = [f"{target}"] + [f"  {step}: {n}" for step, n in result.counts.items()] + [f"  {verdict}", "", "per class:"]
-        by = pair.cohort.draw.by + pair.cohort.draw.balance
+        by = pair.cohort.select.by + pair.cohort.select.balance
         lines += [f"  {dict(zip(by, key))}: {n}" for key, n in sorted(cells.items(), key=str)] or ["  (the cohort draws on no class)"]
         lines += ["", common.table(["target", "metric", "n", "counts"],
                                    [[t, s["metric"], s["n"], s["counts"]] for t, s in stats.items()])]

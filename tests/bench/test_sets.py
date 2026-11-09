@@ -46,7 +46,7 @@ def package(tmp_path):
     p = tmp_path / "bench/datasets/d"
     t = p / "tasks/d_t"
     (t / "cohorts").mkdir(parents=True)
-    (t / "cohorts/n20.yaml").write_text("version: '1.0'\nanchor: {event: A}\ndraw: {n: 20, seed: 7}\n")
+    (t / "cohorts/n20.yaml").write_text("version: '1.0'\nanchor: {event: A}\nselect: {n: 20, seed: 7}\n")
     (t / "template.yaml").write_text("targets:\n- {name: y, label: 'd:l', metric: auc}\nagent: {statement: old words}\n")
     (p / "labels.yaml").write_text("l: {exists: X, from: any, to: any, question: old}\n")
     (p / "dataset.yaml").write_text("description: {version: '1'}\n")

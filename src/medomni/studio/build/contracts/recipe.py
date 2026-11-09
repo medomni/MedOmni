@@ -82,7 +82,7 @@ class Anchor(Contract):
     plus: str | None = None  # an offset, such as '24 hours'
 
 
-class Draw(Contract):
+class Select(Contract):
     n: int = Field(ge=1)
     by: tuple[NonEmpty, ...] = ()  # target names that define the classes; empty for a continuous target
     balance: tuple[NonEmpty, ...] = ()  # labels of the library that split each class further; never scored or shown
@@ -96,7 +96,7 @@ class Cohort(Contract):
     source: Literal["all"] | SourceFraction
     anchor: Anchor
     require: tuple[Requirement, ...] = ()
-    draw: Draw
+    select: Select
 
 
 class CohortTestPatient(Contract):

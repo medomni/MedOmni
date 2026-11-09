@@ -2,7 +2,7 @@
 
 Each file's own fields are checked by its contract (`Cohort`, `LabelLibrary`, `EvidenceRules`). Here:
 
-- a cohort's `has_label` and `draw.by` name targets of its template; each target's label (`<dataset>:<label>`)
+- a cohort's `has_label` and `select.by` name targets of its template; each target's label (`<dataset>:<label>`)
   names its own dataset and a label in that dataset's `labels.yaml`;
 - a `definition` requirement names a definition in `dataset.yaml`; a `files` requirement names known families;
 - every code a cohort, label or guard names, as a code or a pattern, matches a code in `codes.csv` or a shared code;
@@ -63,12 +63,12 @@ def check_cohort(name: str, cohort, *, dataset: str, targets: dict[str, str], la
             out.append(f"{name}: target {t} names a label of {ds}, not of {dataset}")
         elif label not in labels.root:
             out.append(f"{name}: target {t} names label {label!r}, which {dataset}'s labels.yaml lacks")
-    for b in cohort.draw.by:
+    for b in cohort.select.by:
         if b not in targets:
-            out.append(f"{name}: draw.by names {b!r}, which is not a target of the template")
-    for b in cohort.draw.balance:
+            out.append(f"{name}: select.by names {b!r}, which is not a target of the template")
+    for b in cohort.select.balance:
         if b not in labels.root:
-            out.append(f"{name}: draw.balance names {b!r}, which is not in {dataset}'s labels.yaml")
+            out.append(f"{name}: select.balance names {b!r}, which is not in {dataset}'s labels.yaml")
     _codes(f"{name} anchor", [cohort.anchor.event], codes, out)
     for i, q in enumerate(cohort.require, 1):
         where = f"{name} require {i}"

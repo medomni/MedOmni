@@ -5,7 +5,7 @@ require:
 - any: [LAB//cr]
   to: anchor
 - {has_label: cr_max_7d}
-draw:
+select:
   n: 20
   by: []
   seed: 7

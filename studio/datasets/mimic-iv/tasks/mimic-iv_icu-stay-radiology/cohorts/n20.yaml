@@ -9,7 +9,7 @@ require:
 - none: [MIMIC//DEATH]
   to: anchor
   same_visit: true
-draw:
+select:
   n: 20
   by: [icu_admission]
   balance: ['derived:cxr-before-anchor']

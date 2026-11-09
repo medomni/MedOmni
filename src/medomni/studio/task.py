@@ -102,7 +102,7 @@ COHORT = """\
 version: '1.0'
 source: {{}}
 anchor: {{event: <an anchor code>}}
-draw: {{n: 20, by: [<target>], seed: {seed!r}}}
+select: {{n: 20, by: [<target>], seed: {seed!r}}}
 """
 
 

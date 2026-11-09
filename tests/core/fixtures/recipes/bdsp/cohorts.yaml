@@ -3,7 +3,7 @@ bdsp_arousal@n20:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - high_arousal_index_15h
       n: 20
@@ -19,7 +19,7 @@ bdsp_demographic-eeg@n20:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - sex_female
       n: 20
@@ -38,7 +38,7 @@ bdsp_depression-sleep@n20:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - depressive_disorders
       n: 20
@@ -54,7 +54,7 @@ bdsp_hf-sleep@n20:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - heart_failure
       n: 20
@@ -70,7 +70,7 @@ bdsp_snoring-demographic@n20:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - osa_severity_ahi
       n: 20
@@ -91,7 +91,7 @@ bdsp_snoring-metrics@ladder:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - osa_severity_ahi
       n: 20
@@ -125,7 +125,7 @@ bdsp_snoring-metrics@n20:
   cohort:
     anchor:
       event: RECORDING//END
-    draw:
+    select:
       by:
       - osa_severity_ahi
       n: 20

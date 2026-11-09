@@ -39,7 +39,7 @@ EXAMPLES = {
                 "require": [{"any": ["^DIAGNOSIS//ICD//(N17|584)"], "from": "anchor - 24 hours", "to": "anchor"},
                             {"files": ["cxr-radiograph-2d"], "same_visit": True},
                             {"has_label": "aki"}, {"definition": "adult"}],
-                "draw": {"n": 20, "by": ["aki"], "seed": 7}}, "draw"),
+                "select": {"n": 20, "by": ["aki"], "seed": 7}}, "select"),
     "recipe-tests": ({"patients": [{"events": [{"subject_id": "DUMMY-1", "code": "ADMISSION"}],
                                     "expect": {"in": False}}]}, "patients"),
     "recipe-labels": ({"aki": {"exists": "^DIAGNOSIS//ICD//N17", "from": "anchor", "to": "anchor + 7 days",

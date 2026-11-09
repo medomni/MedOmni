@@ -4,7 +4,7 @@ anchor: {event: OP//END}
 require:
 - files: [abp-waveform-125hz-mmhg]
   to: anchor
-draw:
+select:
   n: 20
   by: [death_inhosp]
   seed: 7

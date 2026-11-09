@@ -101,15 +101,17 @@ def test_download_list_bdsp_hook(t1_guard, tmp_path, monkeypatch, capsys):
     from medomni.core.families.dummy.datasets import make_dataset
 
     ws_dir = workspace.home()
-    copy = make_dataset(REPO / "bench/datasets/bdsp", tmp_path / "bdsp", subjects=25)
+    copy = make_dataset(REPO / "bench/datasets/bdsp", tmp_path / "bdsp", subjects=80)
     cfg = workspace.load()
     text = (ws_dir / "workspace.yaml").read_text() if (ws_dir / "workspace.yaml").exists() else ""
     assert cfg is not None
     (ws_dir / "workspace.yaml").write_text(text.replace("datasets: {", f"datasets: {{bdsp: {{path: {copy.root}}}, ", 1))
     assert studio("download-list", "bdsp") == 0
-    out = (written("preview", "download-list") / "bdsp.txt").read_text().split()
-    assert all(p.endswith((".h5", "_scores.csv", "_events.csv")) for p in out)
-    assert len(out) % 3 == 0
+    rows = [line.split("\t") for line in (written("preview", "download-list") / "bdsp.txt").read_text().splitlines()]
+    assert all(len(r) == 2 for r in rows)
+    nights = [r for r in rows if not r[1].startswith("_index/")]
+    assert len(rows) - len(nights) == 3 and nights and len(nights) % 3 == 0
+    assert all(k.startswith("PSG/bids/I0006/") and p.endswith((".h5", "_scores.csv", "_events.csv")) for k, p in nights)
 
 
 def test_build_sheet(built):

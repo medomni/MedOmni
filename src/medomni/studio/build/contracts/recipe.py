@@ -58,8 +58,8 @@ class ConvertsRule(Contract):
 
 
 class Converts(Contract):
-    """At least `min_families` of the patient's files convert and match their family (S1's BDSP recipes). Checked
-    before the draw, so the pool does not depend on the seed (Build page, file check)."""
+    """At least `min_families` of the patient's files convert and match their family (S1's BDSP recipes). Checked in
+    draw order, and a patient who fails is replaced by the next (Build page, file check)."""
 
     converts: ConvertsRule
     when: Literal["draw"] = "draw"

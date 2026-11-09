@@ -17,7 +17,7 @@ from medomni.core.cache import Cache
 from medomni.core.loading import build as load_dataset
 
 from . import checks, content, evidence, render
-from .pool import BuildError, Pool, draw, event_subjects, file_check, load_pair, pool, read_events, source_ids
+from .pool import BuildError, Pool, draw, event_subjects, file_checker, load_pair, pool, read_events, source_ids
 
 __all__ = ["BuildError", "build", "run_checks"]
 
@@ -87,8 +87,10 @@ def build(pair_ids: list[str], arm_names: list[str], ws=None, source_with=None, 
         results, drawn = {}, {}
         for p in group:
             r = pool(p, events, sources[p.id])
-            r = r if reproduction else file_check(r, raw, cache)
-            drawn[p.id], results[p.id] = (draw_with(r) if draw_with else draw(r)), r
+            check = None if reproduction or draw_with else file_checker(p, raw, cache)
+            if check is None and not reproduction:
+                r.counts["file check"] = len(r.patients)
+            drawn[p.id], results[p.id] = (draw_with(r) if draw_with else draw(r, check)), r
             print(f"{p.id}: pool {len(r.patients)}, drawn {len(drawn[p.id])}", file=stream)
         tables = _tables_for(group, raw, set().union(*drawn.values()))
         for p in group:

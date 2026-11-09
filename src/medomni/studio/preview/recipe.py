@@ -21,7 +21,7 @@ class RecipePreview(Preview):
 
     def make(self, target, a, ctx) -> Result:
         from medomni.bench.build import BuildError, content
-        from medomni.bench.build.pool import cell_of, draw, event_subjects, file_check, pool, read_events, source_ids
+        from medomni.bench.build.pool import cell_of, draw, event_subjects, file_checker, pool, read_events, source_ids
         from medomni.core import workspace
         from medomni.core.cache import Cache
         from medomni.core.loading import build
@@ -33,17 +33,15 @@ class RecipePreview(Preview):
         path = entry.path / "events.parquet"
         source = source_ids(pair, event_subjects(path))
         result = pool(pair, read_events(path, source), source)
-        if not a.no_file_check:
-            result = file_check(result, raw, cache)
+        try:
+            drawn = len(draw(result, None if a.no_file_check else file_checker(pair, raw, cache)))
+            verdict = f"draw: {drawn} of {pair.cohort.draw.n}"
+        except BuildError as e:
+            verdict = f"draw: would refuse: {e}"
         cells = defaultdict(int)
         for p in result.patients.values():
             cells[cell_of(p, pair.cohort)] += 1
         stats = content.pool_stats(result)
-        try:
-            drawn = len(draw(result))
-            verdict = f"draw: {drawn} of {pair.cohort.draw.n}"
-        except BuildError as e:
-            verdict = f"draw: would refuse: {e}"
         lines = [f"{target}"] + [f"  {step}: {n}" for step, n in result.counts.items()] + [f"  {verdict}", "", "per class:"]
         by = pair.cohort.draw.by + pair.cohort.draw.balance
         lines += [f"  {dict(zip(by, key))}: {n}" for key, n in sorted(cells.items(), key=str)] or ["  (the cohort draws on no class)"]

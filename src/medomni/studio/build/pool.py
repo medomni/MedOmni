@@ -205,34 +205,33 @@ def converted_files(p: Patient) -> list[tuple[str, str]]:
     return [(e["code"][6:], e["path"]) for e in p.ctx.events if e["code"].startswith("FILE//") and needs_converting(e["path"] or "")]
 
 
-def file_check(result: Pool, raw_root: Path, cache, workers: int = 6) -> Pool:
-    """The `converts` requirement: run before the draw, so the pool does not depend on the seed."""
+def file_checker(pair: Pair, raw_root: Path, cache, workers: int = 6):
+    """The `converts` requirement as a function from patients to those whose files convert; None when the cohort has none."""
     from multiprocessing import get_context
 
     from medomni.core import hashing
     from medomni.core.families import converters
 
-    rule = next((q.converts for q in result.pair.cohort.require if isinstance(q, Converts)), None)
+    rule = next((q.converts for q in pair.cohort.require if isinstance(q, Converts)), None)
     if rule is None:
-        result.counts["file check"] = len(result.patients)
-        return result
-    jobs, hashes = [], {}
+        return None
     found = converters.load()
-    for p in result.patients.values():
-        for family, rel in converted_files(p):
-            raw_hash = hashes.setdefault(rel, hashing.quick_id(Path(raw_root) / rel))
-            jobs.append((str(cache.root), converters.for_family(family, Path(rel).suffix[1:], found).name, result.pair.dataset,
-                         str(raw_root), rel, family, raw_hash))
-    with get_context("spawn").Pool(workers) as ex:
-        done = ex.map(_convert_one, jobs, chunksize=4)
-    made = defaultdict(int)
-    for job, ok in zip(jobs, done):
-        made[job[4]] += ok  # per night
-    for p in list(result.patients.values()):
-        if sum(made[rel] for rel in {r for _, r in converted_files(p)}) < rule.min_families:
-            del result.patients[p.id]
-    result.counts["file check"] = len(result.patients)
-    return result
+
+    def check(patients: list[Patient]) -> set[str]:
+        jobs, hashes = [], {}
+        for p in patients:
+            for family, rel in converted_files(p):
+                raw_hash = hashes.setdefault(rel, hashing.quick_id(Path(raw_root) / rel))
+                jobs.append((str(cache.root), converters.for_family(family, Path(rel).suffix[1:], found).name, pair.dataset,
+                             str(raw_root), rel, family, raw_hash))
+        made = defaultdict(int)
+        if jobs:
+            with get_context("spawn").Pool(min(workers, len(jobs))) as ex:
+                for job, ok in zip(jobs, ex.map(_convert_one, jobs, chunksize=1)):
+                    made[job[4]] += ok  # per night
+        return {p.id for p in patients if sum(made[rel] for rel in {r for _, r in converted_files(p)}) >= rule.min_families}
+
+    return check
 
 
 def _rank(seed, subject: str, time: str) -> str:
@@ -248,19 +247,50 @@ def cell_of(p: Patient, cohort: Cohort) -> tuple:
     return tuple(p.answers[b] for b in cohort.draw.by) + tuple(p.balance[b] for b in cohort.draw.balance)
 
 
-def draw(result: Pool) -> list[str]:
-    """The drawn patients (R-36): n split evenly across the cells of `by` and `balance`, ranked by hash in each."""
+def draw(result: Pool, check=None) -> list[str]:
+    """The drawn patients (R-36): n split evenly across the cells of `by` and `balance`, ranked by hash in each.
+
+    `check` (see `file_checker`) is applied going down each cell's ranking, and a patient who fails is replaced by the next
+    one. The draw is the one a check of the whole pool would give, for the conversions of the patients drawn."""
     cohort = result.pair.cohort
     cells = defaultdict(list)
     for p in result.patients.values():
         cells[cell_of(p, cohort)].append(p)
     if not cohort.draw.by and not cohort.draw.balance:
         cells = {(): list(result.patients.values())}
-    out = []
+    plan = []
     for key, k in zip(sorted(cells), _split(cohort.draw.n, len(cells))):
         ranked = sorted(cells[key], key=lambda p: _rank(cohort.draw.seed, p.id, p.time))
         if len(ranked) < k:
             raise BuildError(f"{result.pair.id}: draw: class {key} has {len(ranked)} patients, needs {k}")
-        out += [p.id for p in ranked[:k]]
+        plan.append({"key": key, "k": k, "ranked": ranked, "next": 0, "kept": []})
+    if check is None:
+        for c in plan:
+            c["kept"] = c["ranked"][:c["k"]]
+    else:
+        tried = 0
+        while True:
+            batch = []
+            for c in plan:
+                need = c["k"] - len(c["kept"])
+                c["batch"] = c["ranked"][c["next"]:c["next"] + need]
+                c["next"] += need
+                batch += c["batch"]
+            if not batch:
+                break
+            tried += len(batch)
+            passed = check(batch)
+            for c in plan:
+                for p in c["batch"]:
+                    if p.id in passed:
+                        c["kept"].append(p)
+                    else:
+                        del result.patients[p.id]
+        result.counts["file check"] = len(result.patients)
+        result.counts["file check tried"] = tried
+        for c in plan:
+            if len(c["kept"]) < c["k"]:
+                raise BuildError(f"{result.pair.id}: draw: class {c['key']} has {len(c['kept'])} patients whose files convert, needs {c['k']}")
+    out = [p.id for c in plan for p in c["kept"]]
     result.counts["draw"] = len(out)
     return out

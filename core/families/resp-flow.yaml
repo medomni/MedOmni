@@ -3,7 +3,7 @@ read_by: deep-encoder
 protocol:
   format: [edf]
   roles: [nasal-pressure, derived-flow, thermistor]
-  rate_hz: null
+  rate_hz: 20  # the most common rate in v0.2's BDSP nights; others are accepted in aliases.yaml (R-87, p13)
   units: per-transducer
   ndim: 1
   dtype: int16

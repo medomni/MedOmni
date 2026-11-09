@@ -10,4 +10,4 @@ uv run python -c "from medomni.core import families; from medomni.core.families.
 
 - Generator: `medomni.core.families.dummy`, MedOmni 0.3.0.dev0, seed 2026, subject `DUMMY-1`.
 - License: the repository's license.
-- `expected.json` was produced from an earlier input and is regenerated when the encoder image runs on this file (Stage 3, T2).
+- `expected.json` is the encoder image's response to this file (Stage 3, T2); v0.2.1's image gives the same response.

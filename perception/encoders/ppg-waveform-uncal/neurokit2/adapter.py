@@ -1,7 +1,7 @@
 """Pulse metrics from the NeuroKit2 Elgendi pipeline."""
 import neurokit2 as nk
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = 'ppg-waveform-uncal'
 

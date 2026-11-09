@@ -1,0 +1,21 @@
+[
+  {
+    "path": "RETFound_mae_natureCFP.pth",
+    "sha256": "e1e4f66a1b792eeb6e2efaf158f33be35c8255f36b3d17ed67cd5129da246485",
+    "repo": "YukunZhou/RETFound_mae_natureCFP",
+    "file": "RETFound_mae_natureCFP.pth",
+    "revision": "556830f78214f0e8da35af965292ac5a3180ac47",
+    "type": "model",
+    "weights": true
+  },
+  {
+    "path": "models_vit.py",
+    "sha256": "f5a91312fcbac14141405d24a92ac3a95e2573e98260bbd3c5b044792edd2f75",
+    "url": "https://raw.githubusercontent.com/rmaphoh/RETFound/ae9a9ecf37857cf47b8aa9f87cd6f710d75db287/models_vit.py"
+  },
+  {
+    "path": "LICENSE",
+    "sha256": "517acfe79046fca3d989a5a6f8b55b8c3919bb442609bd9ed0e81af6e25deb3a",
+    "url": "https://raw.githubusercontent.com/rmaphoh/RETFound/ae9a9ecf37857cf47b8aa9f87cd6f710d75db287/LICENSE"
+  }
+]

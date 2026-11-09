@@ -1,12 +1,23 @@
-{
-  "source": {
+[
+  {
+    "path": "source.tar.gz",
+    "sha256": "b5cd4619dbbbfec92b6219a7548910d67b32163aca5f20c4a08f62dd7af677ac",
     "url": "https://github.com/joncarter1/wav2sleep/archive/278e30463c8149c4e6899b8784da492fec695bd9.tar.gz",
-    "sha256": "b5cd4619dbbbfec92b6219a7548910d67b32163aca5f20c4a08f62dd7af677ac"
+    "unpack": {
+      "glob": "wav2sleep-*",
+      "to": "source",
+      "check": "src/wav2sleep/models/wav2sleep.py"
+    }
   },
-  "config": {
-    "sha256": "39005892a36a1037b87f40bf5bf4e7ed21d763a21eb41020563a343b41e18207"
+  {
+    "path": "model/config.yaml",
+    "sha256": "39005892a36a1037b87f40bf5bf4e7ed21d763a21eb41020563a343b41e18207",
+    "url": "https://huggingface.co/datasets/MedOmni/encoder-assets/resolve/cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/code/eog-2ch-200hz-uv__wav2sleep-eog/config.yaml"
   },
-  "weights": {
-    "sha256": "5702782e6ce89cfb6d51e348a708d355eed04f3fe4b9653046f9c7af75213e0a"
+  {
+    "path": "model/state_dict.pth",
+    "sha256": "5702782e6ce89cfb6d51e348a708d355eed04f3fe4b9653046f9c7af75213e0a",
+    "url": "https://huggingface.co/datasets/MedOmni/encoder-assets/resolve/cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/weights/eog-2ch-200hz-uv__wav2sleep-eog/state_dict.pth",
+    "weights": true
   }
-}
+]

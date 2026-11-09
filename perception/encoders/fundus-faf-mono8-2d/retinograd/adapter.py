@@ -9,7 +9,7 @@ The adapter owns only what is specific to this model: the RGB expansion, the
 768x768 resize and the plain [0,1] scaling the upstream script uses, with no
 normalization. Reading the DICOM, and collapsing a three-plane colour container
 to the one plane this family declares, is family work and already happens in
-runtime/contract.py.
+medomni.perception.runtime.
 
 Card: card.yaml   Contract: perception/spec/container-api.md §5
 """
@@ -19,7 +19,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "fundus-faf-mono8-2d"
 

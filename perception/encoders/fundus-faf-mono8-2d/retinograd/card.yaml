@@ -1,42 +1,31 @@
 id: fundus-faf-mono8-2d__retinograd
 family: fundus-faf-mono8-2d
 modality: fundus-autofluorescence
-
-summary: >-
-  Whether a fundus autofluorescence frame is gradable, as two probabilities from
-  an Inception-ResNet-v2 trained on FAF images of inherited retinal disease.
-intended_use: >-
-  A quality gate ahead of any other autofluorescence evidence. An ungradable
-  frame is not a finding, and knowing that it is ungradable is what stops a
-  reader from weighing whatever else was computed from it.
-limits:
-  - Answers gradability only. It reports no disease, no lesion and no measurement.
-  - "Trained on FAF images of inherited retinal disease at Moorfields; frames from other populations or devices are outside the training distribution, and nothing here measures that distance."
-  - The frame is resized to 768 square and scaled to 0..1 with no normalization, exactly as the published script does. Aspect ratio is not preserved.
-  - One plane is repeated into three channels, which is what the upstream RGB conversion of a greyscale image does.
-  - The two probabilities come from one softmax, so they sum to one. They describe this frame, not the eye and not the patient.
-  - Gradability is a judgement a reader also makes by eye. A disagreement is not evidence that the frame is fine.
-  - "On the five published AI-READI samples this model answers ungradable for four (p_gradable 0.009, 0.002, 0.003, 0.144) and gradable for one (0.962). Those frames are iCare Eidon ultra-widefield captures that are 39-52 percent near-black with a median intensity of 0 to 21, which is not the exposure the model was trained on. Read the answer as a distribution mismatch until someone measures it against graders."
-  - A frame smaller than 32 pixels on a side degrades rather than being enlarged to 768.
+summary: Whether a fundus autofluorescence frame is gradable, as two probabilities from an Inception-ResNet-v2 trained on
+  FAF images of inherited retinal disease.
+authors:
+- {name: Xianglong Bao}
+intended_use: A quality gate ahead of any other autofluorescence evidence. An ungradable frame is not a finding, and knowing
+  that it is ungradable is what stops a reader from weighing whatever else was computed from it.
+limits: ['Answers gradability only. It reports no disease, no lesion and no measurement.', 'Trained on FAF images of inherited
+    retinal disease at Moorfields; frames from other populations or devices are outside the training distribution, and nothing
+    here measures that distance.', 'The frame is resized to 768 square and scaled to 0..1 with no normalization, exactly as
+    the published script does. Aspect ratio is not preserved.', 'One plane is repeated into three channels, which is what
+    the upstream RGB conversion of a greyscale image does.', 'The two probabilities come from one softmax, so they sum to
+    one. They describe this frame, not the eye and not the patient.', Gradability is a judgement a reader also makes by eye.
+    A disagreement is not evidence that the frame is fine., 'On the five published AI-READI samples this model answers ungradable
+    for four (p_gradable 0.009, 0.002, 0.003, 0.144) and gradable for one (0.962). Those frames are iCare Eidon ultra-widefield
+    captures that are 39-52 percent near-black with a median intensity of 0 to 21, which is not the exposure the model was
+    trained on. Read the answer as a distribution mismatch until someone measures it against graders.', A frame smaller than
+    32 pixels on a side degrades rather than being enlarged to 768.]
 outputs:
-  - kind: labels
-    scale: probability
-    # Upstream README: "Class 0: Ungradable", "Class 1: Gradable", in head order.
-    labels:
-      - faf_ungradable
-      - faf_gradable
-
-reliability:
-  status: unmeasured
+- kind: labels
+  scale: probability
+  labels: [faf_ungradable, faf_gradable]
+reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source:
-  url: https://github.com/Eye2Gene/retinograd-ai
-  rev: e9dd11bfe7b40ae2d00260994b811a0c987c70ec      # branch main
-weights:
-  sha256: 5bb21bf274a0659d1a642e21fb063502ef714f2a53a83c0b7b24aabf4202a7cf
-  uri: https://github.com/eye2gene/retinograd-ai/releases/download/V0.0.1/FAF_inception_resenet_2Class_classification.pth
-runtime:
-  image: ghcr.io/medomni/fundus-faf-mono8-2d__retinograd
-  digest: null                 # until the image is pushed. README phase 5.
+source: {url: 'https://github.com/Eye2Gene/retinograd-ai', rev: e9dd11bfe7b40ae2d00260994b811a0c987c70ec}
+weights: {sha256: 5bb21bf274a0659d1a642e21fb063502ef714f2a53a83c0b7b24aabf4202a7cf, uri: 'https://github.com/eye2gene/retinograd-ai/releases/download/V0.0.1/FAF_inception_resenet_2Class_classification.pth'}
+runtime: {image: ghcr.io/medomni/fundus-faf-mono8-2d__retinograd, digest: null}
 acceptance: pending

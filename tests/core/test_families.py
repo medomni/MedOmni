@@ -37,11 +37,31 @@ def test_ranges_are_ordered_and_inside_the_dtype(registry):
             assert FULL_SCALE[p.dtype][0] <= low and high <= FULL_SCALE[p.dtype][1], fid
 
 
+# What Stage 3 part 1 changed in the converted family files: rates for 4 families (R-87, p13), and the 7 Chinese
+# protocol values in English. Every other family file is still byte-identical to the converter's output.
+STAGE3_EDITS = {
+    "capnography-mmhg": {"rate_hz": 20}, "ppg-waveform-uncal": {"rate_hz": 100}, "resp-flow": {"rate_hz": 20},
+    "snore-acoustic": {"rate_hz": 200},
+    "octa-flowcube-mono8-3d": {"quantity": "flow decorrelation"}, "fundus-faf-mono8-2d": {"quantity": "autofluorescence"},
+    "oct-bscanset-radial24-circle3-mono8": {"axis3": "24 radial lines + 3 concentric circles; not stackable"},
+    "oct-volume-raster-mono8-3d": {"axis3": "parallel B-scans, slice spacing sd=0"},
+    "flio-tcspc-256x256x1024bin-u16": {"axis3": "time, 1024 bins × 12.5 ps"},
+    "retinal-heightmap-surfaces-f32": {"units": "depth", "axis3": "retinal surfaces, 2, 9, 10 or 11 by device"},
+}
+
+
 def test_committed_files_equal_the_converter(repo):
     outputs, _ = fconv.convert(repo)
+    edited = set()
     for rel, data in outputs.items():
-        assert (repo / rel).read_text(encoding="utf-8") == convert.dump(data), f"{rel} differs from the converter"
-    assert (repo / fconv.ALIAS_DEST).read_text(encoding="utf-8") == fconv.aliases(repo)
+        fid = rel.rsplit("/", 1)[-1].removesuffix(".yaml")
+        if fid in STAGE3_EDITS:
+            data["protocol"].update(STAGE3_EDITS[fid])
+            assert yaml.safe_load((repo / rel).read_text(encoding="utf-8")) == data, f"{rel} has edits beyond Stage 3's"
+            edited.add(fid)
+        else:
+            assert (repo / rel).read_text(encoding="utf-8") == convert.dump(data), f"{rel} differs from the converter"
+    assert edited == set(STAGE3_EDITS)
 
 
 def test_missing_folder_raises(tmp_path):

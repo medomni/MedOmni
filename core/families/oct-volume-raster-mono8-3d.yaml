@@ -6,6 +6,6 @@ protocol:
   dtype: uint8
   range: null
   planes: 1
-  axis3: 平行 B 扫描，层距 sd=0
+  axis3: parallel B-scans, slice spacing sd=0
 status: declared
 samples: {hf_repo: MedOmni/family-samples, revision: 6fbf8020bf72e8fcc736d11f43f73dd45453eebc, dir: families/oct-volume-raster-mono8-3d/}

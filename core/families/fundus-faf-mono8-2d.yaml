@@ -6,6 +6,6 @@ protocol:
   dtype: uint8
   range: null
   planes: 1
-  quantity: 自发荧光
+  quantity: autofluorescence
 status: declared
 samples: {hf_repo: MedOmni/family-samples, revision: 44576464d4647cc2cc1347103ca0b09746c26d9f, dir: families/fundus-faf-mono8-2d/}

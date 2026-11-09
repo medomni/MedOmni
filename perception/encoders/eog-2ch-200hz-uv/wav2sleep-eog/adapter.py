@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from scipy.signal import resample_poly
 
-from contract import BadRequest, Degraded, events
+from medomni.perception.runtime import BadRequest, Degraded, events
 from wav2sleep import load_model
 
 FAMILY = "eog-2ch-200hz-uv"

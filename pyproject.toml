@@ -45,6 +45,10 @@ auc = "medomni.bench.metrics:auc"
 qwk = "medomni.bench.metrics:qwk"
 mae = "medomni.bench.metrics:mae"
 
+# Core's family converters (R-19): v0.2's bridge as h5-to-edf (R-105)
+[project.entry-points."medomni.converters"]
+h5-to-edf = "medomni.core.families.h5_to_edf:CONVERTER"
+
 # The four built-in arms (R-84, R-85). Names are read from this metadata without importing; the arms are built in
 # Stage 3 part 3 (build side) and part 5 (run side).
 [project.entry-points."medomni.arms"]

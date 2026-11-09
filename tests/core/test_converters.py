@@ -10,6 +10,8 @@ from medomni.core.families import converters
 
 from .test_plugins import make_dist
 
+BUILTIN = {"h5-to-edf"}  # Core's own converter, v0.2's bridge (R-105)
+
 DUMMY = '''
 import hashlib
 from datetime import datetime
@@ -66,7 +68,7 @@ def test_dummy_converter_registers_and_converts(site, repo, tmp_path):
 
     _install(site, "medomni-one", "fake_one")
     found = converters.load()
-    assert not found.errors and set(found.found) == {"npy-to-edf"}
+    assert not found.errors and set(found.found) == {"npy-to-edf"} | BUILTIN
     conv = converters.for_family("spo2-series-10hz-pct", "npy", found)
     src = tmp_path / "x.npy"
     np.save(src, np.array([[90, 95, 97, 99] * 25], dtype=np.int16))
@@ -84,7 +86,7 @@ def test_same_name_twice_is_refused(site):
     _install(site, "medomni-one", "fake_one")
     _install(site, "medomni-two", "fake_two")
     found = converters.load()
-    assert not found.found and len(found.errors) == 2 and all("none is loaded" in e for e in found.errors)
+    assert set(found.found) == BUILTIN and len(found.errors) == 2 and all("none is loaded" in e for e in found.errors)
     with pytest.raises(LookupError, match="0 converters"):
         converters.for_family("spo2-series-10hz-pct", "npy", found)
 
@@ -92,7 +94,7 @@ def test_same_name_twice_is_refused(site):
 def test_name_must_match_the_entry_point(site):
     _install(site, "medomni-one", "fake_one", name="other-name")
     found = converters.load()
-    assert not found.found and "names itself 'npy-to-edf'" in found.errors[0]
+    assert set(found.found) == BUILTIN and "names itself 'npy-to-edf'" in found.errors[0]
 
 
 def test_a_converter_is_deterministic(site, tmp_path, repo):
@@ -109,4 +111,4 @@ def test_a_converter_is_deterministic(site, tmp_path, repo):
 def test_not_a_converter(site):
     make_dist(site, "medomni-one", "fake_one", {plugins.CONVERTERS: {"x": "fake_one:OBJ"}})
     found = converters.load()
-    assert not found.found and "not a family converter" in found.errors[0]
+    assert set(found.found) == BUILTIN and "not a family converter" in found.errors[0]

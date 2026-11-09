@@ -1,0 +1,13 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/octa-enface-slab-mono8-2d/vessel-density/adapter.py
+!perception/encoders/octa-enface-slab-mono8-2d/vessel-density/card.yaml
+!perception/encoders/octa-enface-slab-mono8-2d/vessel-density/norms.py
+!perception/encoders/octa-enface-slab-mono8-2d/vessel-density/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

@@ -9,7 +9,7 @@ metric, a z-score is reported.
 """
 import numpy as np
 from scipy import ndimage
-from contract import Degraded, labels, text
+from medomni.perception.runtime import Degraded, labels, text
 from norms import NORMS
 
 FAMILY = "octa-enface-slab-mono8-2d"

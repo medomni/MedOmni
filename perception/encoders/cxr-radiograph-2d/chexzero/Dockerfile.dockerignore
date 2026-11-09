@@ -1,0 +1,15 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/cxr-radiograph-2d/chexzero/adapter.py
+!perception/encoders/cxr-radiograph-2d/chexzero/assets
+!perception/encoders/cxr-radiograph-2d/chexzero/assets.json
+!perception/encoders/cxr-radiograph-2d/chexzero/card.yaml
+!perception/encoders/cxr-radiograph-2d/chexzero/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+!src/medomni/perception/runtime/assets.py
+**/__pycache__
+**/*.pyc

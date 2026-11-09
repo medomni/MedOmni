@@ -1,6 +1,5 @@
 """The one-time v0.2 converters (R-58): every converted file validates; the output is stable."""
 import pytest
-import yaml
 
 from medomni.core import contracts as c
 from medomni.core.contracts import convert
@@ -73,10 +72,14 @@ def test_responses_of_shipped_encoders_validate(repo):
     assert n == 105
 
 
-def test_cards_stay_in_place_until_stage_3(repo):
-    """R-66: v0.2's cards are unchanged; v0.2's own schema still accepts them."""
-    for rel in cards.convert(repo)[0]:
-        assert "authors" not in yaml.safe_load((repo / rel).read_text(encoding="utf-8"))
+def test_shipped_cards_are_converted(repo):
+    """R-66: Stage 3 part 1 commits the 44 converted cards at their v0.2 paths; each carries authors (R-62)."""
+    from medomni.core.contracts import ModelCard, load
+
+    rels = list(cards.convert(repo)[0])
+    assert len(rels) == 44
+    for rel in rels:
+        assert load(repo / rel, ModelCard).authors, rel
 
 
 @pytest.mark.parametrize("kind", ["task-set", "result-record", "task-template"])

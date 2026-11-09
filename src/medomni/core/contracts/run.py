@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, model_validator
 
-from .base import (ArmName, ConfigHash, Contract, EnvRef, IntelligenceRef, MetricName, NonEmpty, Sha256, Slug,
+from .base import (ArmName, ConfigHash, Contract, IntelligenceRef, MetricName, NonEmpty, Sha256, Slug,
                    TaskSetRef, Version)
 from .task import Pair
 

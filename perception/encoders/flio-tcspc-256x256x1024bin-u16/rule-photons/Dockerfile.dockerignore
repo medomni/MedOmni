@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/flio-tcspc-256x256x1024bin-u16/rule-photons/adapter.py
+!perception/encoders/flio-tcspc-256x256x1024bin-u16/rule-photons/card.yaml
+!perception/encoders/flio-tcspc-256x256x1024bin-u16/rule-photons/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torchvision import transforms
-from contract import Degraded, labels, text
+from medomni.perception.runtime import Degraded, labels, text
 
 FAMILY = 'fundus-photography-2d'
 # Head index order = the 39 JSIEC training folders sorted by name ("0.0.Normal" ... "9.Pathological myopia";

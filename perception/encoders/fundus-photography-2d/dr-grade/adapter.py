@@ -21,7 +21,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "fundus-photography-2d"
 

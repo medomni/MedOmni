@@ -57,13 +57,26 @@ def _labels(family, labels: list[str], problems: list[str]) -> None:
             problems.append(f"channels {got} are not among the family's roles {sorted(want)}")
 
 
+def _accepted_rates(family) -> tuple[float, ...]:
+    """Rates the family accepts besides its own, from aliases.yaml (R-87)."""
+    from . import FamilyError
+    from .aliases import resolve
+
+    try:
+        return resolve(family.id).rates
+    except (FamilyError, FileNotFoundError):  # no repository here: only the declared rate is known
+        return ()
+
+
 def _rate(family, rates: list[float], problems: list[str]) -> None:
     want = family.protocol.rate_hz
     if want is None:
         return
-    bad = sorted({r for r in rates if abs(r - want) > RATE_TOLERANCE * want})
+    ok = (want, *_accepted_rates(family))
+    bad = sorted({r for r in rates if all(abs(r - w) > RATE_TOLERANCE * w for w in ok)})
     if bad:
-        problems.append(f"rates {bad} Hz differ from the family's {want} Hz")
+        accepted = f" or the accepted {sorted(ok[1:])}" if len(ok) > 1 else ""
+        problems.append(f"rates {bad} Hz differ from the family's {want} Hz{accepted}")
 
 
 def _units(family, units: list[str], problems: list[str]) -> None:

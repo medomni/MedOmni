@@ -3,7 +3,7 @@ import warnings
 import numpy as np
 from pobm.obm.desat import DesaturationsMeasures
 from pobm.obm.burden import HypoxicBurdenMeasures
-from contract import Degraded, labels, events
+from medomni.perception.runtime import Degraded, labels, events
 FAMILY = 'spo2-series-10hz-pct'
 
 def encode(sample, options):

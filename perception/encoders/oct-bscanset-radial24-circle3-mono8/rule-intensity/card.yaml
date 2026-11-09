@@ -1,40 +1,21 @@
-{
-  "id": "oct-bscanset-radial24-circle3-mono8__rule-intensity",
-  "family": "oct-bscanset-radial24-circle3-mono8",
-  "modality": "retinal",
-  "summary": "Intensity summaries across 24 radial and 3 circular OCT B-scans without treating them as a raster volume.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "Requires exactly 27 acquisition frames; geometry comes from the asserted family.",
-    "Frames are pooled only for intensity statistics, never stacked as a spatial volume.",
-    "No retinal thickness, segmentation, inter-frame gradients or disease predictions."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "intensity_mean",
-        "intensity_std",
-        "zero_fraction",
-        "saturated_fraction",
-        "intensity_entropy",
-        "frame_count"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/oct-bscanset-radial24-circle3-mono8__rule-intensity:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: oct-bscanset-radial24-circle3-mono8__rule-intensity
+family: oct-bscanset-radial24-circle3-mono8
+modality: retinal
+summary: Intensity summaries across 24 radial and 3 circular OCT B-scans without treating them as a raster volume.
+authors:
+- {name: Nicolas Zumarraga}
+- {name: Bosong Huang}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: [Requires exactly 27 acquisition frames; geometry comes from the asserted family., 'Frames are pooled only for intensity
+    statistics, never stacked as a spatial volume.', 'No retinal thickness, segmentation, inter-frame gradients or disease
+    predictions.']
+outputs:
+- kind: labels
+  scale: physical
+  labels: [intensity_mean, intensity_std, zero_fraction, saturated_fraction, intensity_entropy, frame_count]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/oct-bscanset-radial24-circle3-mono8__rule-intensity:dev', digest: null}
+acceptance: pending

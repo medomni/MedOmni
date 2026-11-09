@@ -68,7 +68,7 @@ def test_project_command_runs(project):
     r = run(project)
     assert r.returncode == 0, r.stderr
     assert f"usage: medomni {project}" in r.stdout
-    expected = {"bench": "<command>", "perception": "No commands yet.", "studio": "dummy"}[project]
+    expected = {"bench": "<command>", "perception": "<command>", "studio": "dummy"}[project]
     assert expected in r.stdout
 
 

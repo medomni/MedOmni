@@ -1,43 +1,20 @@
-{
-  "id": "wearable-spo2-1min-pct__rule-summary",
-  "family": "wearable-spo2-1min-pct",
-  "modality": "wearable",
-  "summary": "Observed wearable oxygen-saturation statistics in percent, excluding missing and invalid readings.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "Descriptive summaries only; not ODI, hypoxic burden, or a diagnosis.",
-    "Values outside (0,100] percent and non-finite values are excluded and counted.",
-    "Empty records and conflicting duplicate timestamps degrade. Five pinned HF samples are empty.",
-    "Means are observation-weighted; no gap filling or time-weighted estimates."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "spo2_min",
-        "spo2_max",
-        "spo2_mean",
-        "spo2_median",
-        "spo2_std",
-        "valid_count",
-        "excluded_count",
-        "observed_span"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/wearable-spo2-1min-pct__rule-summary:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: wearable-spo2-1min-pct__rule-summary
+family: wearable-spo2-1min-pct
+modality: wearable
+summary: Observed wearable oxygen-saturation statistics in percent, excluding missing and invalid readings.
+authors:
+- {name: Nicolas Zumarraga}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: ['Descriptive summaries only; not ODI, hypoxic burden, or a diagnosis.', 'Values outside (0,100] percent and non-finite
+    values are excluded and counted.', Empty records and conflicting duplicate timestamps degrade. Five pinned HF samples
+    are empty., Means are observation-weighted; no gap filling or time-weighted estimates.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [spo2_min, spo2_max, spo2_mean, spo2_median, spo2_std, valid_count, excluded_count, observed_span]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/wearable-spo2-1min-pct__rule-summary:dev', digest: null}
+acceptance: pending

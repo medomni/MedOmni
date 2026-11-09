@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/fundus-faf-mono8-2d/rule-intensity/adapter.py
+!perception/encoders/fundus-faf-mono8-2d/rule-intensity/card.yaml
+!perception/encoders/fundus-faf-mono8-2d/rule-intensity/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

@@ -9,7 +9,6 @@ from medomni.core.cache import commands
 from medomni.core.cli import main
 from medomni.core.contracts import CacheEntry, load
 
-from .contract_examples import EXAMPLES
 
 
 @pytest.fixture

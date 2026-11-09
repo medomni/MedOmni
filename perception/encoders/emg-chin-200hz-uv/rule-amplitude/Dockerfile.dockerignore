@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/emg-chin-200hz-uv/rule-amplitude/adapter.py
+!perception/encoders/emg-chin-200hz-uv/rule-amplitude/card.yaml
+!perception/encoders/emg-chin-200hz-uv/rule-amplitude/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

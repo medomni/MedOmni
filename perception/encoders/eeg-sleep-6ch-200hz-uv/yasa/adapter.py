@@ -4,7 +4,7 @@ from pathlib import Path
 import mne
 import numpy as np
 import yasa
-from contract import Degraded, events
+from medomni.perception.runtime import Degraded, events
 
 FAMILY = 'eeg-sleep-6ch-200hz-uv'
 MODEL_SHA256 = '330c1afdc86396e0b6d9f1294d4c4796beb5f7e7cd38be424c10feae98867e31'

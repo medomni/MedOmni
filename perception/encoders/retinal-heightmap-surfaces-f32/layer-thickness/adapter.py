@@ -8,7 +8,7 @@ Where a published normative mean and SD exist for the device, each thickness get
 a below/within/above flag at +-2 SD.
 """
 import numpy as np
-from contract import Degraded, labels, text
+from medomni.perception.runtime import Degraded, labels, text
 from norms import AXIAL_UM, NORMS
 
 FAMILY = "retinal-heightmap-surfaces-f32"

@@ -11,68 +11,66 @@
       "label": "Wake",
       "t_start": 0.0,
       "t_end": 30.0,
-      "score": 0.475507527589798
+      "score": 0.9561978578567505
      },
      {
       "label": "Wake",
       "t_start": 30.0,
       "t_end": 60.0,
-      "score": 0.5410056710243225
+      "score": 0.9639567732810974
      },
      {
       "label": "Wake",
       "t_start": 60.0,
       "t_end": 90.0,
-      "score": 0.4883264899253845
+      "score": 0.8937382102012634
      },
      {
       "label": "Wake",
       "t_start": 90.0,
       "t_end": 120.0,
-      "score": 0.9264534711837769
+      "score": 0.49948638677597046
      },
      {
       "label": "Wake",
       "t_start": 120.0,
       "t_end": 150.0,
-      "score": 0.9904189705848694
+      "score": 0.9381088614463806
      },
      {
       "label": "Wake",
       "t_start": 150.0,
       "t_end": 180.0,
-      "score": 0.9843531250953674
+      "score": 0.9825469851493835
      },
      {
       "label": "Wake",
       "t_start": 180.0,
       "t_end": 210.0,
-      "score": 0.994088888168335
+      "score": 0.966057300567627
      },
      {
       "label": "Wake",
       "t_start": 210.0,
       "t_end": 240.0,
-      "score": 0.9717446565628052
+      "score": 0.9993341565132141
      },
      {
       "label": "Wake",
       "t_start": 240.0,
       "t_end": 270.0,
-      "score": 0.9616750478744507
+      "score": 0.9944220185279846
      },
      {
       "label": "Wake",
       "t_start": 270.0,
       "t_end": 300.0,
-      "score": 0.9901319742202759
+      "score": 0.9826077818870544
      }
     ]
    }
   ],
   "notes": [
-   "e1 read as e1-m2",
-   "e2 read as e2-m1",
    "EOG channels resampled from 200 Hz to 4096 samples per 30-second epoch and globally z-scored"
   ]
  }

@@ -67,3 +67,24 @@ def for_family(family_id: str, source_format: str, converters: Converters | None
         names = ", ".join(sorted(x.name for x in matches)) or "none"
         raise LookupError(f"{len(matches)} converters from {source_format} to {family_id} ({names}); need one")
     return matches[0]
+
+
+def cached(cache, converter: FamilyConverter, dataset: str, raw_root: Path, rel: str, family_id: str,
+           raw_hash: str | None = None):
+    """The cache entry holding `rel` (a raw file under `raw_root`) converted into `family_id`: `(entry, created)`.
+
+    The step is `convert-<name>` at the converter's version; the params are the converter's `params(family_id)`
+    when it has one (h5-to-edf hashes only what the conversion reads, R-86), else just the family; the input is the
+    raw file by its sha256 (pass `raw_hash` when several families share one file). The entry holds `<family>.edf`.
+    """
+    from medomni.core import hashing
+
+    src = Path(raw_root) / rel
+    params = converter.params(family_id) if hasattr(converter, "params") else {"family": family_id}
+    digest = raw_hash or hashing.sha256_file(src)
+
+    def write(folder: Path) -> dict[str, int]:
+        converter.convert(src, family_id, folder / f"{family_id}.edf")
+        return {"files": 1}
+
+    return cache.create(dataset, f"convert-{converter.name}", converter.version, params, [(rel, digest)], write)

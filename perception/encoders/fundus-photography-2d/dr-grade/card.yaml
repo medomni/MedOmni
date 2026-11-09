@@ -1,43 +1,38 @@
 id: fundus-photography-2d__dr-grade
 family: fundus-photography-2d
 modality: fundus-photography
-
-summary: >-
-  A diabetic retinopathy severity score for a colour fundus photograph, on the
-  0..4 clinical scale, with the nearest whole grade beside it.
-intended_use: >-
-  A reading of the one finding fundus photography is most often taken for in a
-  diabetes cohort. The family's other encoder returns a representation; this
-  one returns a number on the scale clinicians grade with, so a reader that
-  cannot use a vector still has something to weigh.
-limits:
-  - "The head is a regressor with one output, not a classifier: the model places an image on the 0..4 International Clinical Diabetic Retinopathy scale. `dr_grade_nearest` is that score rounded, and no class probabilities exist to report."
-  - "Trained on Aptos, EyePACS, DDR and IDRiD. Reported quadratic-weighted kappa: 0.751 on EyePACS, 0.751 on IDRiD, 0.712 on DDR — the uploader's numbers on those test sets, not ours, and not measured on this benchmark's data."
-  - "Provenance is a Hugging Face upload with a model card, not a paper: the architecture, training sets and metrics are stated there, and no peer-reviewed report was found. Weights and config are pinned by commit and sha256, which fixes what runs but not what it is worth."
-  - Reads a colour photograph. An infrared frame is a single plane and a different acquisition, and degrades rather than being graded.
-  - "Preprocessing reproduces the checkpoint's own config: bicubic resize so the short side is 256, centre crop to 224, ImageNet normalisation. A photograph smaller than 224 on a side degrades rather than being enlarged."
-  - "The crop is centred on the frame, not on the macula. A photograph whose disc or macula sits far off centre is graded on whatever the centre holds."
-  - "A score outside 0..4 is reported as the model emitted it, with a note; only the rounded grade is clamped. Grading is a scale, not a probability, and a score near a boundary is not evidence of certainty either way."
-  - "On the five published AI-READI samples the scores are 0.118, 0.049, 0.264, -0.173 and 0.643, so four round to grade 0 and one to grade 1. That is what a screening cohort should look like and is not evidence the model works here; one score falls below the scale, which is what a regressor does near its floor."
-  - Reports diabetic retinopathy only. Glaucoma, age-related macular degeneration and every other finding a photograph carries are outside what this head was trained on, and absent from the response.
+summary: A diabetic retinopathy severity score for a colour fundus photograph, on the 0..4 clinical scale, with the nearest
+  whole grade beside it.
+authors:
+- {name: Xianglong Bao}
+intended_use: A reading of the one finding fundus photography is most often taken for in a diabetes cohort. The family's other
+  encoder returns a representation; this one returns a number on the scale clinicians grade with, so a reader that cannot
+  use a vector still has something to weigh.
+limits: ['The head is a regressor with one output, not a classifier: the model places an image on the 0..4 International Clinical
+    Diabetic Retinopathy scale. `dr_grade_nearest` is that score rounded, and no class probabilities exist to report.', 'Trained
+    on Aptos, EyePACS, DDR and IDRiD. Reported quadratic-weighted kappa: 0.751 on EyePACS, 0.751 on IDRiD, 0.712 on DDR —
+    the uploader''s numbers on those test sets, not ours, and not measured on this benchmark''s data.', 'Provenance is a Hugging
+    Face upload with a model card, not a paper: the architecture, training sets and metrics are stated there, and no peer-reviewed
+    report was found. Weights and config are pinned by commit and sha256, which fixes what runs but not what it is worth.',
+  'Reads a colour photograph. An infrared frame is a single plane and a different acquisition, and degrades rather than being
+    graded.', 'Preprocessing reproduces the checkpoint''s own config: bicubic resize so the short side is 256, centre crop
+    to 224, ImageNet normalisation. A photograph smaller than 224 on a side degrades rather than being enlarged.', 'The crop
+    is centred on the frame, not on the macula. A photograph whose disc or macula sits far off centre is graded on whatever
+    the centre holds.', 'A score outside 0..4 is reported as the model emitted it, with a note; only the rounded grade is
+    clamped. Grading is a scale, not a probability, and a score near a boundary is not evidence of certainty either way.',
+  'On the five published AI-READI samples the scores are 0.118, 0.049, 0.264, -0.173 and 0.643, so four round to grade 0 and
+    one to grade 1. That is what a screening cohort should look like and is not evidence the model works here; one score falls
+    below the scale, which is what a regressor does near its floor.', 'Reports diabetic retinopathy only. Glaucoma, age-related
+    macular degeneration and every other finding a photograph carries are outside what this head was trained on, and absent
+    from the response.']
 outputs:
-  - kind: labels
-    scale: score
-    labels:
-      - dr_severity_score
-      - dr_grade_nearest
-
-reliability:
-  status: unmeasured
+- kind: labels
+  scale: score
+  labels: [dr_severity_score, dr_grade_nearest]
+reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source:
-  url: https://huggingface.co/ClementP/FundusDRGrading-efficientnet_b0
-  rev: aa5741419b902b6f4d6607e2819a0458682e3a49
-weights:
-  sha256: 0d9a18b0cb6c90d1f30bf2e66153b368bd7ff0bcb45b6690e8d5ce14fa19f69b
-  uri: https://huggingface.co/ClementP/FundusDRGrading-efficientnet_b0/resolve/aa5741419b902b6f4d6607e2819a0458682e3a49/model.safetensors
-runtime:
-  image: ghcr.io/medomni/fundus-photography-2d__dr-grade
-  digest: null
+source: {url: 'https://huggingface.co/ClementP/FundusDRGrading-efficientnet_b0', rev: aa5741419b902b6f4d6607e2819a0458682e3a49}
+weights: {sha256: 0d9a18b0cb6c90d1f30bf2e66153b368bd7ff0bcb45b6690e8d5ce14fa19f69b, uri: 'https://huggingface.co/ClementP/FundusDRGrading-efficientnet_b0/resolve/aa5741419b902b6f4d6607e2819a0458682e3a49/model.safetensors'}
+runtime: {image: ghcr.io/medomni/fundus-photography-2d__dr-grade, digest: null}
 acceptance: pending

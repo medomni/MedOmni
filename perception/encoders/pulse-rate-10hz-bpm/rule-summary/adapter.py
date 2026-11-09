@@ -1,6 +1,6 @@
 """Pulse-rate observations at native 10 Hz; no beat detection."""
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 FAMILY = "pulse-rate-10hz-bpm"
 
 

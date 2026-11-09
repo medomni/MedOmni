@@ -1,8 +1,8 @@
 """`medomni contracts check [<contract> ...]`: validate every contract file in the repository and installed plug-ins.
 
 Content files are found by the repository layout (R-1, R-44). Plug-in folders use the same layout and are read the same
-way (R-69); family files come from the repository only, and benchmarks with their task sets from both (R-77, R-83). The repository's model cards join in Stage 3,
-when the converted cards are committed (R-66); dataset packages, templates and cohorts join with them (R-68).
+way (R-69); family files come from the repository only, and benchmarks with their task sets from both (R-77, R-83). The repository's
+model cards are checked from Stage 3 part 1 (R-66); dataset packages, templates and cohorts from part 2 (R-68).
 """
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ CONTENT = (
     Content("task template", "bench/datasets/*/tasks/*/template.yaml", TaskTemplate),
     Content("recipe", "bench/datasets/*/tasks/*/cohorts/*.tests.yaml", CohortTests),
     Content("recipe", "bench/datasets/*/tasks/*/cohorts/*.yaml", Cohort, exclude=("*.tests.yaml",)),
-    Content("model card", "perception/encoders/*/*/card.yaml", ModelCard, where=PLUGINS),  # repository: Stage 3
+    Content("model card", "perception/encoders/*/*/card.yaml", ModelCard),  # the repository's since Stage 3 part 1 (R-66)
 )
 
 # Short names accepted on the command line, as on the reference pages

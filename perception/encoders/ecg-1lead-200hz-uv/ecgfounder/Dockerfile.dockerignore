@@ -1,0 +1,15 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/ecg-1lead-200hz-uv/ecgfounder/adapter.py
+!perception/encoders/ecg-1lead-200hz-uv/ecgfounder/assets
+!perception/encoders/ecg-1lead-200hz-uv/ecgfounder/assets.json
+!perception/encoders/ecg-1lead-200hz-uv/ecgfounder/card.yaml
+!perception/encoders/ecg-1lead-200hz-uv/ecgfounder/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+!src/medomni/perception/runtime/assets.py
+**/__pycache__
+**/*.pyc

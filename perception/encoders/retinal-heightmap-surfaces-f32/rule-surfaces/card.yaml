@@ -1,59 +1,23 @@
-{
-  "id": "retinal-heightmap-surfaces-f32__rule-surfaces",
-  "family": "retinal-heightmap-surfaces-f32",
-  "modality": "retinal",
-  "summary": "Per-surface stored-depth mean and range for floating-point retinal heightmaps, without anatomical or unit assumptions.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "No published real sample is available; decoder compatibility is only synthetically verified.",
-    "Accepts DICOM Float Pixel Data with 2, 9, 10 or 11 frames in acquisition order.",
-    "Surface indices have no anatomical names; no layer thickness or calibrated depth is inferred.",
-    "Depth units and real-world calibration are unspecified by this family. Output units are null.",
-    "All pixels must be finite; no imputation, segmentation or normalization."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "surface_count",
-        "surface_0_mean",
-        "surface_0_range",
-        "surface_1_mean",
-        "surface_1_range",
-        "surface_2_mean",
-        "surface_2_range",
-        "surface_3_mean",
-        "surface_3_range",
-        "surface_4_mean",
-        "surface_4_range",
-        "surface_5_mean",
-        "surface_5_range",
-        "surface_6_mean",
-        "surface_6_range",
-        "surface_7_mean",
-        "surface_7_range",
-        "surface_8_mean",
-        "surface_8_range",
-        "surface_9_mean",
-        "surface_9_range",
-        "surface_10_mean",
-        "surface_10_range"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/retinal-heightmap-surfaces-f32__rule-surfaces:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: retinal-heightmap-surfaces-f32__rule-surfaces
+family: retinal-heightmap-surfaces-f32
+modality: retinal
+summary: Per-surface stored-depth mean and range for floating-point retinal heightmaps, without anatomical or unit assumptions.
+authors:
+- {name: Nicolas Zumarraga}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: [No published real sample is available; decoder compatibility is only synthetically verified., 'Accepts DICOM Float
+    Pixel Data with 2, 9, 10 or 11 frames in acquisition order.', Surface indices have no anatomical names; no layer thickness
+    or calibrated depth is inferred., Depth units and real-world calibration are unspecified by this family. Output units
+    are null., 'All pixels must be finite; no imputation, segmentation or normalization.']
+outputs:
+- kind: labels
+  scale: physical
+  labels: [surface_count, surface_0_mean, surface_0_range, surface_1_mean, surface_1_range, surface_2_mean, surface_2_range,
+    surface_3_mean, surface_3_range, surface_4_mean, surface_4_range, surface_5_mean, surface_5_range, surface_6_mean, surface_6_range,
+    surface_7_mean, surface_7_range, surface_8_mean, surface_8_range, surface_9_mean, surface_9_range, surface_10_mean, surface_10_range]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/retinal-heightmap-surfaces-f32__rule-surfaces:dev', digest: null}
+acceptance: pending

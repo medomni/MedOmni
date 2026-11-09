@@ -149,7 +149,7 @@ def user(tmp_path, name, monkeypatch):
 
     assert check_package(PKG) == []  # step 3: recipes load through their models and cross-references resolve
 
-    (conv,) = load_converters().found.values()
+    conv = load_converters().found["npy-to-edf"]  # the test's dummy converter, beside Core's h5-to-edf
     fam = families.get("spo2-series-10hz-pct", REPO)
     converted = {}
 

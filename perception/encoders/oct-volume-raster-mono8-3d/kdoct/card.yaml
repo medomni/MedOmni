@@ -1,60 +1,35 @@
 id: oct-volume-raster-mono8-3d__kdoct
 family: oct-volume-raster-mono8-3d
 modality: oct
-summary: 'SEMANTIC: named macular OCT findings, not an embedding. Probability of CNV, diabetic macular
-  oedema, drusen or normal per volume, from KD-OCT (EfficientNet-B2) trained on Kermany OCT2017.'
-intended_use: 'Read the named findings directly: central_* is the middle B-scan, mean_*/max_* summarise
-  every B-scan, top_share_* is the fraction of B-scans on which the finding ranks first. The text line
-  states the same in words and marks an uncertain read.'
-limits:
-- Trained on Kermany OCT2017 (84k Spectralis B-scans, UCSD and partners; 98.4% on its test set), not on
-  this cohort. Probabilities are interpretable but not calibrated here.
-- Every B-scan is resampled to Spectralis pixel geometry (3.872 um axial, 11.7 um lateral) from the file's
-  own pixel spacing and cropped to 496 rows around the brightest band, then resized to 384 square with
-  ImageNet normalisation (the training transform).
-- 'Checked on AI-READI samples: confident on Spectralis and Maestro2 (every B-scan >= 0.6); Cirrus volumes,
-  especially the 200-A-scan 6x6 cube, read with lower confidence and mixed classes. Treat Cirrus reads
-  as weaker evidence.'
-- Four classes only; a finding outside them (e.g. epiretinal membrane, macular hole) is forced onto the
-  nearest class.
-- The central B-scan is the stored middle frame; the fovea is not located. Blank B-scans are skipped and
-  reported.
-- Optic-nerve-head scans are not this encoder's family and receive no finding.
+summary: 'SEMANTIC: named macular OCT findings, not an embedding. Probability of CNV, diabetic macular oedema, drusen or normal
+  per volume, from KD-OCT (EfficientNet-B2) trained on Kermany OCT2017.'
+authors:
+- {name: Bosong Huang}
+intended_use: 'Read the named findings directly: central_* is the middle B-scan, mean_*/max_* summarise every B-scan, top_share_*
+  is the fraction of B-scans on which the finding ranks first. The text line states the same in words and marks an uncertain
+  read.'
+limits: ['Trained on Kermany OCT2017 (84k Spectralis B-scans, UCSD and partners; 98.4% on its test set), not on this cohort.
+    Probabilities are interpretable but not calibrated here.', 'Every B-scan is resampled to Spectralis pixel geometry (3.872
+    um axial, 11.7 um lateral) from the file''s own pixel spacing and cropped to 496 rows around the brightest band, then
+    resized to 384 square with ImageNet normalisation (the training transform).', 'Checked on AI-READI samples: confident
+    on Spectralis and Maestro2 (every B-scan >= 0.6); Cirrus volumes, especially the 200-A-scan 6x6 cube, read with lower
+    confidence and mixed classes. Treat Cirrus reads as weaker evidence.', 'Four classes only; a finding outside them (e.g.
+    epiretinal membrane, macular hole) is forced onto the nearest class.', The central B-scan is the stored middle frame;
+    the fovea is not located. Blank B-scans are skipped and reported., Optic-nerve-head scans are not this encoder's family
+    and receive no finding.]
 outputs:
 - kind: labels
   scale: probability
-  labels:
-  - central_cnv
-  - central_dme
-  - central_drusen
-  - central_normal
-  - mean_cnv
-  - mean_dme
-  - mean_drusen
-  - mean_normal
-  - max_cnv
-  - max_dme
-  - max_drusen
-  - max_normal
+  labels: [central_cnv, central_dme, central_drusen, central_normal, mean_cnv, mean_dme, mean_drusen, mean_normal, max_cnv,
+    max_dme, max_drusen, max_normal]
 - kind: labels
   scale: score
-  labels:
-  - top_share_cnv
-  - top_share_dme
-  - top_share_drusen
-  - top_share_normal
-- kind: text
-reliability:
-  status: unmeasured
+  labels: [top_share_cnv, top_share_dme, top_share_drusen, top_share_normal]
+- {kind: text}
+reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source:
-  url: https://huggingface.co/Erfan-Nourbakhsh/KD-OCT-EfficientNet
-  rev: ae35bf52b292bd5db4777b9808f2b9296f1c0cb7
-weights:
-  sha256: ed41be8404e9093d03faf2021ec76fc8093dbed2945a45f672f36cf0f2ca8a0f
-  uri: hf://datasets/MedOmni/encoder-assets@375012c0ea81de92d9b8fc7cbff2c86616a39c9b/weights/oct-volume-raster-mono8-3d__kdoct/KD-OCT-EfficientNet_model.pth
-runtime:
-  image: ghcr.io/medomni/oct-volume-raster-mono8-3d__kdoct
-  digest: null
+source: {url: 'https://huggingface.co/Erfan-Nourbakhsh/KD-OCT-EfficientNet', rev: ae35bf52b292bd5db4777b9808f2b9296f1c0cb7}
+weights: {sha256: ed41be8404e9093d03faf2021ec76fc8093dbed2945a45f672f36cf0f2ca8a0f, uri: 'hf://datasets/MedOmni/encoder-assets@375012c0ea81de92d9b8fc7cbff2c86616a39c9b/weights/oct-volume-raster-mono8-3d__kdoct/KD-OCT-EfficientNet_model.pth'}
+runtime: {image: ghcr.io/medomni/oct-volume-raster-mono8-3d__kdoct, digest: null}
 acceptance: pending

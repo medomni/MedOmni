@@ -7,7 +7,7 @@ import open_clip
 from open_clip.factory import _MODEL_CONFIGS
 from open_clip.tokenizer import HFTokenizer
 from PIL import Image
-from contract import Degraded, labels, embedding
+from medomni.perception.runtime import Degraded, labels, embedding
 FAMILY = 'cxr-radiograph-2d'
 _model = _transform = _text = None
 

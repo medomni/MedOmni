@@ -1,40 +1,20 @@
-{
-  "id": "oct-volume-raster-mono8-3d__rule-intensity",
-  "family": "oct-volume-raster-mono8-3d",
-  "modality": "retinal",
-  "summary": "OCT raster-volume intensity distribution and frame-count features.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "No retinal layer segmentation, thickness estimation or disease classification.",
-    "Equal-pixel pooled intensity features; physical voxel spacing is not inferred.",
-    "Acquisition order is preserved. MONOCHROME1 is explicitly inverted."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "intensity_mean",
-        "intensity_std",
-        "zero_fraction",
-        "saturated_fraction",
-        "intensity_entropy",
-        "frame_count"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/oct-volume-raster-mono8-3d__rule-intensity:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: oct-volume-raster-mono8-3d__rule-intensity
+family: oct-volume-raster-mono8-3d
+modality: retinal
+summary: OCT raster-volume intensity distribution and frame-count features.
+authors:
+- {name: Nicolas Zumarraga}
+- {name: Bosong Huang}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: ['No retinal layer segmentation, thickness estimation or disease classification.', Equal-pixel pooled intensity features;
+    physical voxel spacing is not inferred., Acquisition order is preserved. MONOCHROME1 is explicitly inverted.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [intensity_mean, intensity_std, zero_fraction, saturated_fraction, intensity_entropy, frame_count]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/oct-volume-raster-mono8-3d__rule-intensity:dev', digest: null}
+acceptance: pending

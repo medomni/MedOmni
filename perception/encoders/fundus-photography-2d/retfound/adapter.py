@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torchvision import transforms
-from contract import Degraded, embedding
+from medomni.perception.runtime import Degraded, embedding
 
 FAMILY = 'fundus-photography-2d'
 WEIGHT_SHA256 = 'e1e4f66a1b792eeb6e2efaf158f33be35c8255f36b3d17ed67cd5129da246485'

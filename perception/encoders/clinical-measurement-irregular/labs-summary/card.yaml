@@ -2,24 +2,20 @@ id: clinical-measurement-irregular__labs-summary
 family: clinical-measurement-irregular
 modality: labs
 summary: Summary statistics for numeric lab measurements, grouped by name, item ID, and source unit.
-intended_use: >-
-  Any source decoding to the clinical-measurement-irregular family. Describes the numeric lab rows present; it does not interpret them clinically.
+authors:
+- {name: Timo Stoffregen}
+- {name: Bosong Huang}
+intended_use: Any source decoding to the clinical-measurement-irregular family. Describes the numeric lab rows present; it
+  does not interpret them clinically.
 outputs:
-- kind: text
-limits:
-- The text output is a JSON array of measurement summaries, not a diagnosis.
-- Different source units and item IDs remain separate. No unit conversion is inferred.
-- Latest values require valid timestamps. Missing or mixed timezone information degrades the input.
-- Conflicting values at the latest timestamp give latest null and an explanatory note.
-- Counts and means describe available samples, not elapsed time.
-reliability:
-  status: unmeasured
+- {kind: text}
+limits: ['The text output is a JSON array of measurement summaries, not a diagnosis.', Different source units and item IDs
+    remain separate. No unit conversion is inferred., Latest values require valid timestamps. Missing or mixed timezone information
+    degrades the input., Conflicting values at the latest timestamp give latest null and an explanatory note., 'Counts and
+    means describe available samples, not elapsed time.']
+reliability: {status: unmeasured}
 non_training: true
 license: Apache-2.0
-source:
-  url: "in-repository rule extractor"
-  rev: v0.1.1
-runtime:
-  image: ghcr.io/medomni/clinical-measurement-irregular__labs-summary
-  digest: null
+source: {url: in-repository rule extractor, rev: v0.1.1}
+runtime: {image: ghcr.io/medomni/clinical-measurement-irregular__labs-summary, digest: null}
 acceptance: pending

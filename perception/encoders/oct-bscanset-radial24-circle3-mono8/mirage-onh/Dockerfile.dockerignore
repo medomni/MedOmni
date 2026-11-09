@@ -1,0 +1,13 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/adapter.py
+!perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/card.yaml
+!perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/fetch_assets.py
+!perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

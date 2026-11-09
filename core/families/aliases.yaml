@@ -46,6 +46,7 @@ families:
   resp-flow:
     accepts:
     - roles: {cflow: derived-flow, flow-patient: derived-flow, airflow: thermistor, ptaf: nasal-pressure}  # BDSP h5 keys (ruled 2026-09-24): airflow → thermistor is a PSG naming-convention ASSUMPTION like hr (no BDSP docs locally); measured on 12 served nights: airflow breathes 12/12, ptaf breathes when a cannula was worn, cflow = CPAP flow, near-flat on diagnostic nights
+      rates: [10, 50, 100, 200]  # BDSP nights besides the main 20 Hz; nasal pressure and thermistor often at 200 Hz (p13)
   abp-waveform-125hz-mmhg:
     accepts:
     - rates: [62.4725]        # MIMIC wdb quarter-rate frame variant
@@ -58,3 +59,9 @@ families:
   fundus-faf-mono8-2d:
     accepts:
     - colors: [YBR_FULL_422]  # FAF supply arrives as color DICOM; reader converts to mono8
+  capnography-mmhg:
+    accepts:
+    - rates: [2, 10]  # BDSP nights besides the main 20 Hz (p13)
+  snore-acoustic:
+    accepts:
+    - rates: [500]  # BDSP nights besides the main 200 Hz (p13)

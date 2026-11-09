@@ -1,34 +1,22 @@
 id: ecg-1lead-200hz-uv__neurokit2
 family: ecg-1lead-200hz-uv
 modality: ecg
-summary: R-peaks, heart rate, template quality and time-domain heart-rate variability
-  from single-lead ECG.
+summary: R-peaks, heart rate, template quality and time-domain heart-rate variability from single-lead ECG.
+authors:
+- {name: Timo Stoffregen}
 outputs:
 - kind: labels
   scale: physical
-  labels:
-  - heart_rate_mean
-  - beat_count
-  - rr_mean
-  - sdnn
-  - rmssd
+  labels: [heart_rate_mean, beat_count, rr_mean, sdnn, rmssd]
 - kind: labels
   scale: score
-  labels:
-  - template_quality_mean
-limits:
-- Requires 30 seconds to 30 minutes of finite, non-flat ECG at 200 Hz in microvolts.
-- RR statistics include all detected beats; ectopy and detection errors affect HRV.
-  No rhythm diagnosis is made.
-- Template quality is a correlation score, not a probability.
-reliability:
-  status: unmeasured
+  labels: [template_quality_mean]
+limits: ['Requires 30 seconds to 30 minutes of finite, non-flat ECG at 200 Hz in microvolts.', RR statistics include all detected
+    beats; ectopy and detection errors affect HRV. No rhythm diagnosis is made., 'Template quality is a correlation score,
+    not a probability.']
+reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source:
-  url: https://github.com/neuropsychology/NeuroKit
-  rev: ff419d983568ef492eb8d229af643c0ef0100b32
-runtime:
-  image: ghcr.io/medomni/ecg-1lead-200hz-uv__neurokit2
-  digest: null
+source: {url: 'https://github.com/neuropsychology/NeuroKit', rev: ff419d983568ef492eb8d229af643c0ef0100b32}
+runtime: {image: ghcr.io/medomni/ecg-1lead-200hz-uv__neurokit2, digest: null}
 acceptance: pending

@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/octa-flowcube-mono8-3d/flow-metrics/adapter.py
+!perception/encoders/octa-flowcube-mono8-3d/flow-metrics/card.yaml
+!perception/encoders/octa-flowcube-mono8-3d/flow-metrics/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

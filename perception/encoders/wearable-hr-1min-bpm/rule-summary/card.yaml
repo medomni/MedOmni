@@ -1,42 +1,21 @@
-{
-  "id": "wearable-hr-1min-bpm__rule-summary",
-  "family": "wearable-hr-1min-bpm",
-  "modality": "wearable",
-  "summary": "Unweighted heart-rate summary over valid observations, with exclusions and observed time span.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "No clinical classification or time-weighted estimates. Gaps are not filled.",
-    "Nonpositive and non-finite values are excluded and counted; all-invalid input degrades.",
-    "Irregular timing is preserved. No assumption that records cover every minute."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "heart_rate_min",
-        "heart_rate_max",
-        "heart_rate_mean",
-        "heart_rate_median",
-        "heart_rate_std",
-        "valid_count",
-        "excluded_count",
-        "observed_span"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/wearable-hr-1min-bpm__rule-summary:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: wearable-hr-1min-bpm__rule-summary
+family: wearable-hr-1min-bpm
+modality: wearable
+summary: Unweighted heart-rate summary over valid observations, with exclusions and observed time span.
+authors:
+- {name: Nicolas Zumarraga}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: [No clinical classification or time-weighted estimates. Gaps are not filled., Nonpositive and non-finite values are
+    excluded and counted; all-invalid input degrades., Irregular timing is preserved. No assumption that records cover every
+    minute.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_median, heart_rate_std, valid_count, excluded_count,
+    observed_span]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/wearable-hr-1min-bpm__rule-summary:dev', digest: null}
+acceptance: pending

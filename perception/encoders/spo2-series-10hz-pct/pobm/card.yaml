@@ -1,36 +1,22 @@
 id: spo2-series-10hz-pct__pobm
 family: spo2-series-10hz-pct
 modality: spo2
-summary: Three-point desaturations, desaturation index, hypoxic area and time below
-  90 percent saturation.
+summary: Three-point desaturations, desaturation index, hypoxic area and time below 90 percent saturation.
+authors:
+- {name: Timo Stoffregen}
 outputs:
 - kind: labels
   scale: physical
-  labels:
-  - odi3
-  - time_below_90_pct
-  - desaturation_count
-  - hypoxic_area_below_90
-  - desaturation_area_from_max
+  labels: [odi3, time_below_90_pct, desaturation_count, hypoxic_area_below_90, desaturation_area_from_max]
 - kind: events
-  labels:
-  - desaturation
-limits:
-- Requires 5 minutes to 12 hours of finite saturation in (0,100] at 10 Hz.
-- One-second median aggregation precedes POBM analysis. Zero or missing readings are
-  rejected, not filled.
-- Uses a relative three-percentage-point drop and the upstream 90-second maximum event
-  length.
-- Hypoxic areas use POBM CA at baseline 90 and AODmax; both are divided by recording
-  duration and reported in percentage points.
-reliability:
-  status: unmeasured
+  labels: [desaturation]
+limits: ['Requires 5 minutes to 12 hours of finite saturation in (0,100] at 10 Hz.', 'One-second median aggregation precedes
+    POBM analysis. Zero or missing readings are rejected, not filled.', Uses a relative three-percentage-point drop and the
+    upstream 90-second maximum event length., Hypoxic areas use POBM CA at baseline 90 and AODmax; both are divided by recording
+    duration and reported in percentage points.]
+reliability: {status: unmeasured}
 non_training: true
 license: GPL-3.0
-source:
-  url: https://github.com/aim-lab/Oximetry_Toolbox
-  rev: 1.2.0
-runtime:
-  image: ghcr.io/medomni/spo2-series-10hz-pct__pobm
-  digest: null
+source: {url: 'https://github.com/aim-lab/Oximetry_Toolbox', rev: 1.2.0}
+runtime: {image: ghcr.io/medomni/spo2-series-10hz-pct__pobm, digest: null}
 acceptance: pending

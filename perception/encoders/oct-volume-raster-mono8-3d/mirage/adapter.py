@@ -26,7 +26,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from contract import Degraded, embedding
+from medomni.perception.runtime import Degraded, embedding
 
 FAMILY = "oct-volume-raster-mono8-3d"
 

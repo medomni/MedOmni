@@ -1,0 +1,11 @@
+[
+  {
+    "path": "model.pth",
+    "sha256": "ed41be8404e9093d03faf2021ec76fc8093dbed2945a45f672f36cf0f2ca8a0f",
+    "repo": "MedOmni/encoder-assets",
+    "file": "weights/oct-volume-raster-mono8-3d__kdoct/KD-OCT-EfficientNet_model.pth",
+    "revision": "375012c0ea81de92d9b8fc7cbff2c86616a39c9b",
+    "type": "dataset",
+    "weights": true
+  }
+]

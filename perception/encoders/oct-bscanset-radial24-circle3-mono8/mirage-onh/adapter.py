@@ -22,7 +22,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from contract import Degraded, embedding, labels
+from medomni.perception.runtime import Degraded, embedding, labels
 
 FAMILY = "oct-bscanset-radial24-circle3-mono8"
 

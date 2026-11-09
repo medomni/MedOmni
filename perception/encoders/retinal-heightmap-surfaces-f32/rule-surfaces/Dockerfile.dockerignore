@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/retinal-heightmap-surfaces-f32/rule-surfaces/adapter.py
+!perception/encoders/retinal-heightmap-surfaces-f32/rule-surfaces/card.yaml
+!perception/encoders/retinal-heightmap-surfaces-f32/rule-surfaces/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

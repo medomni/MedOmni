@@ -1,0 +1,13 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/oct-volume-raster-mono8-3d/mirage/adapter.py
+!perception/encoders/oct-volume-raster-mono8-3d/mirage/card.yaml
+!perception/encoders/oct-volume-raster-mono8-3d/mirage/fetch_assets.py
+!perception/encoders/oct-volume-raster-mono8-3d/mirage/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

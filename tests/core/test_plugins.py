@@ -196,7 +196,7 @@ def test_plugin_content_is_checked_like_the_repository(site, repo, monkeypatch, 
     })
     counts, failed = check(repo, only=None, out=io.StringIO())
     assert failed == 1
-    assert counts["model card"] == [1, 0] and counts["dataset config"] == [1, 0]
+    assert counts["model card"] == [44 + 1, 0] and counts["dataset config"] == [1, 0]  # the 44 shipped cards (R-63) and the plug-in's
     monkeypatch.chdir(repo)
     assert main(["plugins"]) == 1
     out = capsys.readouterr().out

@@ -22,7 +22,7 @@ Card: card.yaml   Contract: perception/spec/container-api.md §5
 """
 import numpy as np
 
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "octa-flowcube-mono8-3d"
 

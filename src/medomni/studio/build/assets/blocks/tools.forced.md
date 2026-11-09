@@ -1,0 +1,1 @@
+**Required step for this task:** before you predict, call each encoder listed in `encoder_manifest.md` at least once on a staged file of its family, if this task has one. You may then use or ignore what it returns.

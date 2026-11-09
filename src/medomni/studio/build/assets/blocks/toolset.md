@@ -1,0 +1,1 @@
+You can read every file directly with the software in this image: `numpy`, `scipy`, `pandas`, `scikit-learn`, and readers for the staged formats (`wfdb`, `pyedflib`, `pydicom`, `h5py`, `pillow`). Nothing else can be installed. {hazard}

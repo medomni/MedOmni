@@ -1,0 +1,25 @@
+# MedOmni Harbor base JobConfig (layered: harbor run -c base.yaml -c agents/<a>.yaml -c campaigns/<c>.yaml —
+# later files override earlier). Scheme + rulings: docs/roadmaps/harness_execution.md §Harbor.
+# Bosong 2026-09-19: n_attempts stays 1 — our rep axis is SEPARATE jobs (rep in the job name), never Harbor attempts.
+# ext4 required: the exfat workspace has no chmod and crashes Harbor's trial-dir setup (2026-09-20)
+# Every job overlay rendered by build.py emit sets its own jobs_dir = runs/experiments/<exp>/jobs
+# (fix roadmap harness-runtime §6). This default only catches a hand-run job, so it never lands in cwd.
+jobs_dir: <v0.2 checkout>/runs/experiments/_adhoc/jobs
+n_attempts: 1
+# Agent time cap lives in the TASK (task.toml [agent] timeout_sec = 1200 from the fix-smoke
+# generation on); no runner multiplier, so the contract and the runner agree (fix roadmap S4).
+# Turn cap: agents/<a>.yaml kwargs.max_turns (terminus-2 default is 1,000,000).
+n_concurrent_trials: 4   # reverted to validated-comfortable level, 2026-09-22
+environment:
+  type: docker
+  delete: true
+retry:
+  max_retries: 0
+  # if retries are ever enabled, verifier/timeout failures are REAL results, never retried
+  # (HealthAgentBench precedent: timeouts count as reward=0)
+  exclude_exceptions:
+    - VerifierOutputParseError
+    - AgentTimeoutError
+    - RewardFileEmptyError
+    - RewardFileNotFoundError
+    - VerifierTimeoutError

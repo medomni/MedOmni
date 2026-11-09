@@ -72,13 +72,9 @@ def test_project_command_runs(project):
     assert expected in r.stdout
 
 
-@pytest.mark.parametrize("args,part", [(["task", "build", "--set", "medomni-bench/v1"], 3),
-                                       (["task", "check", "--set", "medomni-bench/v1"], 4),
-                                       (["task", "check", "--release"], 4), (["run", "--agent", "a", "--set", "x/y"], 5),
-                                       (["score", "--set", "x/y"], 5)])
-def test_bench_stub_names_its_part(args, part):
-    r = run("bench", *args)
-    assert r.returncode == 2 and f"not built yet (Stage 3 part {part})" in r.stderr
+def test_bench_commands_need_a_workspace_or_a_real_set():
+    r = run("bench", "score", "--set", "x/y")
+    assert r.returncode == 1 and "workspace" in r.stderr
 
 
 def test_cache_build_needs_a_workspace():

@@ -1,20 +1,11 @@
 """`medomni bench`.
 
-Every command the CLI page lists has a slot here. Until the Stage 3 part that builds it lands, it exits 2 and names
-that part.
+Every command the CLI page lists has a slot here.
 """
 from __future__ import annotations
 
 import argparse
 import sys
-
-# command -> the Stage 3 part that builds it
-PENDING = {
-    "task new": 3, "task build": 3, "task check": 3,
-    "agent new": 5, "run": 5, "score": 5,
-}
-CHECK_SET_PART = 4  # `task check --set` and `--release`
-
 
 def _parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="medomni bench", description="Build tasks, run agents and score them.")
@@ -67,8 +58,24 @@ def group(argv: list[str]) -> int:
 
         return {"connect": lambda: data.connect(a.dataset, a.path), "check": lambda: data.check(a.dataset),
                 "new": lambda: data.new(a.dataset)}[a.sub]()
-    part = PENDING[name]
-    if name == "task check" and (a.set or a.release):
-        part = CHECK_SET_PART
-    print(f"medomni bench {name}: not built yet (Stage 3 part {part})", file=sys.stderr)
-    return 2
+    if a.cmd == "task":
+        from medomni.bench import task
+
+        return {"new": lambda: task.new(a.template, a.dataset), "build": lambda: task.build(a.pair, a.set, a.arm),
+                "check": lambda: task.check(a.pair, a.set, a.release)}[a.sub]()
+    if a.cmd in ("run", "score"):
+        from medomni.bench import runs
+        from medomni.bench.build.pool import BuildError
+
+        try:
+            if a.cmd == "score":
+                return runs.score(a.set)
+            runs.run(a.set, a.agent, a.arm)
+            return 0
+        except (BuildError, RuntimeError, LookupError, FileNotFoundError) as e:
+            print(e, file=sys.stderr)
+            return 1
+    if a.cmd == "agent":
+        from medomni.bench import task
+
+        return task.new_agent(a.name)

@@ -254,6 +254,31 @@
       "default": {},
       "title": "Files",
       "type": "object"
+    },
+    "reading_note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reading Note"
+    },
+    "views": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Views"
     }
   },
   "title": "EvidenceRules",

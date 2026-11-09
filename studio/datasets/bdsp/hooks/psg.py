@@ -151,8 +151,9 @@ def derive(rows, raw_root: Path, params: dict) -> list[dict]:
 
         with h5py.File(raw_root / rel, "r") as f:
             names = list(f["signals"].keys())
-        out += [{"subject_id": pid, "time": start, "code": f"FILE//{fam}", "path": rel}
-                for fam in families if h5_to_edf.available(names, fam)]
+            out += [{"subject_id": pid, "time": start, "code": f"FILE//{fam}", "path": rel}
+                    for fam in families if h5_to_edf.available(names, fam)
+                    and (fam not in params.get("rate_enforced", ()) or h5_to_edf.rate_accepted(f["signals"], fam))]
         stages, events = scoring(raw_root, rel)
         out += [{"subject_id": pid, "time": end, "code": f"SLEEP//{k}", "numeric_value": v}
                 for k, v in metrics(stages, events).items()]
@@ -223,3 +224,14 @@ def dummy(raw_root: Path, subjects: dict, params: dict, rng) -> None:
 def problems(raw_root: Path, params: dict) -> list[str]:
     """`bench data check`: every raw label the label vocabulary does not classify (v0.2's labelvocab gate)."""
     return [f"raw label not classified in vocab.yaml: {x}" for x in unclassified(raw_root, params)]
+
+
+def demographics(subjects, raw_root: Path, params: dict) -> dict[str, dict]:
+    """What Build shows of a patient's study, from the latest night's metadata row (evidence rules name this hook as
+    `views`)."""
+    found, out = nights(raw_root, params), {}
+    for s in subjects:
+        m = found[s]
+        out[s] = {"sex": m["SexDSC"], "age_at_visit": m["AgeAtVisit"],
+                  "study_type": m.get("StudyType") or m.get("StudyTypeName"), "session_start": m["StartDateTime"][:19]}
+    return out

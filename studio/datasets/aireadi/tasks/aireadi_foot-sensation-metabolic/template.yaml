@@ -23,17 +23,11 @@ input:
 evidence: [default, full]
 agent:
   statement: Predict whether this participant has impaired protective foot sensation on monofilament testing.
-  instruction: '# aireadi_foot-sensation-metabolic
+  instruction: '## Prediction time
 
 
-    Given diabetes data, lipid profile data, blood pressure, metabolical data, renal measurements and the 10-day CGM record,
-    together with colour fundus photographs, structural OCT and OCT angiography en-face images, predict the number of correctly
-    perceived 10-g monofilament applications for the right and left foot separately.
+    - The evidence is the participant''s data from their study visit.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

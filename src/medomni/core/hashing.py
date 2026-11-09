@@ -52,6 +52,11 @@ def quick_sha(path: str | os.PathLike) -> str:
     return h.hexdigest()[:16]
 
 
+def quick_id(path: str | os.PathLike) -> str:
+    """`quick_sha` in the 64-character form a cache key's inputs use: cheap, for files too large to read on each build."""
+    return hashlib.sha256(quick_sha(path).encode()).hexdigest()
+
+
 def files(root: str | os.PathLike, exclude: tuple[str, ...] = ()) -> list[str]:
     """Every file under `root` as a relative POSIX path, sorted. Links are refused, never followed."""
     root = Path(root)

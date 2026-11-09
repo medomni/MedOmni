@@ -1,0 +1,7 @@
+# FIXTURE bounds (wide sanity ranges, invented for the test — NOT the real registry/plausible.yaml)
+psgmetric:limb-high:
+  prevalence: [0.05, 0.60]
+  source: fixture
+omopnum:moca_orientation:
+  values: [0, 6]
+  source: fixture

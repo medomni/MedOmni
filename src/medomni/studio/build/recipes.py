@@ -66,6 +66,9 @@ def check_cohort(name: str, cohort, *, dataset: str, targets: dict[str, str], la
     for b in cohort.draw.by:
         if b not in targets:
             out.append(f"{name}: draw.by names {b!r}, which is not a target of the template")
+    for b in cohort.draw.balance:
+        if b not in labels.root:
+            out.append(f"{name}: draw.balance names {b!r}, which is not in {dataset}'s labels.yaml")
     _codes(f"{name} anchor", [cohort.anchor.event], codes, out)
     for i, q in enumerate(cohort.require, 1):
         where = f"{name} require {i}"

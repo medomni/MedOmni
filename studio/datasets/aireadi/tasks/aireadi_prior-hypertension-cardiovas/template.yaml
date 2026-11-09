@@ -17,17 +17,11 @@ input:
 evidence: [default, full]
 agent:
   statement: Predict whether this participant has a history of high blood pressure.
-  instruction: '# aireadi_prior-hypertension-cardiovas
+  instruction: '## Prediction time
 
 
-    Given resting heart rate, renal measurements, HbA1c and diabetes data, raw 12-lead ECG, colour fundus photographs and
-    OCT angiography en-face images, estimate the probability that the participant reported previously being told by a healthcare
-    professional that they had high blood pressure.
+    - The evidence is the participant''s data from their study visit.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

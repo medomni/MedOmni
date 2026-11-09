@@ -190,8 +190,8 @@ def load(package: str | Path, raw_root: str | Path, out: str | Path, *, tables: 
         rows = [r for r in rows if any(k.search(r["code"]) for k in keep)]
     unit = config.units
     if "unit_files" in config.verify:
-        have = {r["subject_id"] for r in rows if r["code"].startswith("FILE//")}
-        lacking = sorted({r["subject_id"] for r in rows} - have)
+        pattern = str(config.verify["unit_files"])  # the file itself: a unit may have no row naming a family
+        lacking = sorted(u for u in {r["subject_id"] for r in rows} if not (raw_root / pattern.format(unit=u)).is_file())
         if lacking:
             raise LoadError(f"verify: {len(lacking)} units have no file (unit_files), such as {lacking[0]}")
 
@@ -248,8 +248,8 @@ def find_package(name: str | Path) -> Path:
 
 
 def inputs(package: Path, raw_root: Path) -> list[tuple[str, str]]:
-    """(name, sha256) of everything the load reads: the package's config and codes, every table file and every
-    family file the readers find. These are the cache key's inputs."""
+    """(name, hash) of everything the load reads, the cache key's inputs: the package's config and codes and every
+    table file by sha256; every family file by its quick identity, since its bytes are not read by the load."""
     from medomni.core import hashing
     from medomni.core.contracts import DatasetConfig, load as load_contract
 
@@ -272,7 +272,10 @@ def inputs(package: Path, raw_root: Path) -> list[tuple[str, str]]:
             out.append((f"package/hooks/{o.hook}.py", hashing.sha256_file(package / "hooks" / f"{o.hook}.py")))
             for rel in hooks.inputs(package, o.hook, raw_root, o.params):
                 p = raw_root / rel
-                out += [(rel, hashing.dir_hash(p) if p.is_dir() else hashing.sha256_file(p))] if p.exists() else []
+                if p.exists():
+                    table = p.suffix in (".csv", ".tsv", ".parquet", ".gz")
+                    out.append((rel, hashing.dir_hash(p) if p.is_dir() else
+                                hashing.sha256_file(p) if table else file_hash(p)))
     return sorted(set(out))
 
 

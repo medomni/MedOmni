@@ -195,10 +195,12 @@ def test_cxr_rows_and_path(tmp_path):
     p = tmp_path / "m.csv"
     with open(p, "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["dicom_id", "subject_id", "study_id", "StudyDate", "StudyTime"])
-        w.writerow(["abc", "12345678", "50000001", "21500102", "120000.5"])
+        w.writerow(["dicom_id", "subject_id", "study_id", "StudyDate", "StudyTime", "ViewPosition"])
+        w.writerow(["abc", "12345678", "50000001", "21500102", "120000.5", "PA"])
+        w.writerow(["lat", "12345678", "50000001", "21500102", "120000.5", "LATERAL"])
     rows = hook("mimic-iv", "cxr").derive([], tmp_path, {"metadata": "m.csv"})
     assert {r["code"] for r in rows} == {"CXR//STUDY", "FILE//cxr-radiograph-2d"}
+    assert len([r for r in rows if r["code"] == "CXR//STUDY"]) == 2  # every study; only frontal films are files
     assert next(r for r in rows if r["code"].startswith("FILE"))["path"] == "cxr/files/p12/p12345678/s50000001/abc.jpg"
 
 
@@ -223,3 +225,27 @@ def test_no_scored_sleep_has_no_metrics():
     from collections import Counter
 
     assert hook("bdsp", "psg").metrics(Counter(), Counter()) == {}
+
+
+def _numerics(tmp_path):
+    import gzip
+
+    rec = tmp_path / "wdb/waves/p100/p10000001/81000001"
+    rec.mkdir(parents=True)
+    (rec / "81000001.hea").write_text("81000001/2 1 62.47 1000 10:00:00.000 01/01/2150\n81000001_0001 1000\n")
+    with gzip.open(rec / "81000001n.csv.gz", "wt") as f:
+        f.write("time,HR [bpm]\n0,80\n3600,90\n7200,100\n")
+    return "wdb/waves/p100/p10000001/81000001/81000001n.csv.gz"
+
+
+def test_bedside_numerics_are_cut_at_the_prediction_time(tmp_path):
+    import gzip
+
+    rel = _numerics(tmp_path)
+    data = hook("mimic-iv", "views").crop_file(rel, tmp_path, {}, "2150-01-01 11:00:00")
+    assert gzip.decompress(data).decode().splitlines() == ["time,HR [bpm]", "0,80", "3600,90"]
+
+
+def test_a_numerics_table_with_nothing_before_the_cutoff_is_not_staged(tmp_path):
+    rel = _numerics(tmp_path)
+    assert hook("mimic-iv", "views").crop_file(rel, tmp_path, {}, "2149-12-31 00:00:00") is None

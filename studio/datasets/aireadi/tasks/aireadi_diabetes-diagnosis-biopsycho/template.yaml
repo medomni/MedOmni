@@ -17,15 +17,11 @@ input:
 evidence: [default, full]
 agent:
   statement: Classify this participant's diabetes status.
-  instruction: '# aireadi_diabetes-diagnosis-biopsycho
+  instruction: '## Prediction time
 
 
-    Given a participant’s biopsychosocial, socioeconomic, and demographic data, predict their diabetes diagnosis and severity.
+    - The evidence is the participant''s data from their study visit.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

@@ -1,0 +1,10 @@
+[metadata]
+fixture = true
+
+[atom]
+parent = "mimic_in-hospital-death-icu"
+subject_id = "FX0101"
+batch = "fixture"
+boundary_kind = "adm24h"
+boundary_ts = "2150-03-02 08:00:00"
+targets = ["in_hospital_death"]

@@ -42,7 +42,7 @@ def test_dummy_datasets_load(raw, loaded, shape):
     on_disk = {p.relative_to(raw[shape].root).as_posix() for p in raw[shape].root.rglob("*")
                if p.is_file() and p.suffix in (".hea", ".png", ".dcm", ".json", ".h5")}
     assert {e["path"] for e in files} == on_disk
-    assert all(e["sha256"] and len(e["sha256"]) == 64 for e in files)
+    assert all(e["sha256"] is None for e in files)  # the load never reads a whole recording to hash it
     if shape == "dummy-bdsp":  # one h5 night carries 10 families: one FILE row per family
         assert len(files) == 4 * 10
 

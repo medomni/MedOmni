@@ -75,7 +75,7 @@ def cached(cache, converter: FamilyConverter, dataset: str, raw_root: Path, rel:
 
     The step is `convert-<name>` at the converter's version; the params are the converter's `params(family_id)`
     when it has one (h5-to-edf hashes only what the conversion reads, R-86), else just the family; the input is the
-    raw file by its sha256 (pass `raw_hash` when several families share one file). The entry holds `<family>.edf`.
+    raw file by its sha256 (pass `raw_hash`, usually `hashing.quick_id`, for a large file several families share). The entry holds `<family>.edf`.
     """
     from medomni.core import hashing
 

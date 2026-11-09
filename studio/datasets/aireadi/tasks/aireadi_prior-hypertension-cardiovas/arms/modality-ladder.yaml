@@ -1,0 +1,15 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+rungs:
+  r1: {}
+  r2:
+    families: [wearable-hr-1min-bpm, wearable-spo2-1min-pct, wearable-resprate-1min-brpm, numeric-observation]
+  r3:
+    families: [ecg-12lead-500hz-mv]
+  r4:
+    families: [cgm-5min-mgdl]
+  r5:
+    families: [fundus-photography-2d, fundus-faf-mono8-2d, oct-volume-raster-mono8-3d, oct-bscanset-radial24-circle3-mono8,
+      octa-enface-slab-mono8-2d, octa-flowcube-mono8-3d, retinal-heightmap-surfaces-f32, flio-tcspc-256x256x1024bin-u16]
+  r6:
+    families: [clinical-record-table, clinical-measurement-irregular]
+    all_tables: true

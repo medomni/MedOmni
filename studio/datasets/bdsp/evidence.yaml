@@ -18,3 +18,5 @@ tables:
   diagnosis:
     drop: guard
     time: shifted_dx_time_date
+reading_note: "The EDF channel layout and native sampling rates differ per file — read each file's own header rather than assuming one layout or rate."
+views: psg

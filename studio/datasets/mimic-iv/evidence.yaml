@@ -1,5 +1,6 @@
 # Evidence rules (Recipes reference page). From S1's p22_evidence.yaml (U1.22).
-files: {}
+files:
+  crop: [numeric-observation]  # one table for the whole stay, with no start time of its own
 static: {}
 tables:
   admissions:
@@ -41,3 +42,5 @@ tables:
     time: charttime
   omr:
     time: chartdate
+reading_note: "Each file format needs its own reader; a WFDB waveform record is a `.hea` header plus its companion `.dat` signal file."
+views: views

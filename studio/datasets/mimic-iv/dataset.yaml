@@ -110,4 +110,6 @@ read:
 - reader: hook
   options: {hook: cxr, params: {metadata: cxr/mimic-cxr-2.0.0-metadata.csv.gz}}
 - reader: hook
+  options: {hook: wdb, params: {root: wdb/waves}}
+- reader: hook
   options: {hook: ckd, params: {creatinine: ["LAB//50912", "LAB//52546"]}}

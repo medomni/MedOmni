@@ -256,6 +256,19 @@
           "default": null,
           "title": "Hook"
         },
+        "question": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question"
+        },
         "same_visit": {
           "default": false,
           "title": "Same Visit",

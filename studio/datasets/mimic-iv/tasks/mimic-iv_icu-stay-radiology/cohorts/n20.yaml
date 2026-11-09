@@ -11,5 +11,6 @@ require:
   same_visit: true
 draw:
   n: 20
-  by: [icu_admission, cxr_before_anchor]
+  by: [icu_admission]
+  balance: ['derived:cxr-before-anchor']
   seed: 7

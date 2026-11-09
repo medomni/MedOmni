@@ -2,30 +2,61 @@
 bdspdemo:age-ge65:
   default: 0
   from: any
+  guard:
+    fields:
+    - age
   op: '>='
+  question: Your prediction is the probability that the patient is aged 65 or older at the PSG visit. Higher values MUST
+    mean more likely positive/higher class — do not invert.
   to: any
   value: DEMO//AGE
   x: 65
 bdspdemo:deceased-6mo:
   exists: DEATH
   from: visit:RECORDING//START
+  guard:
+    fields:
+    - death_date
   include_to: false
+  question: Your prediction is the probability that the patient dies within 6 months (183 days) after the start of this
+    PSG recording. Higher values MUST mean more likely positive/higher class — do not invert.
   to: visit:RECORDING//START + 184 days
 bdspdemo:race-black:
   exists: DEMO//RACE//black
   from: any
+  guard:
+    fields:
+    - race
+  question: Your prediction is the probability that the patient's EHR-recorded race is Black or African American. Higher
+    values MUST mean more likely positive/higher class — do not invert.
   to: any
 bdspdemo:sex-female:
   exists: ^DEMO//SEX//f
   from: any
+  guard:
+    fields:
+    - sex
+  question: Your prediction is the probability that the patient's EHR-recorded sex is female. Higher values MUST mean more
+    likely positive/higher class — do not invert.
   to: any
 derived:depression:
   exists: ^DIAGNOSIS//ICD//(F32|F33|2962|2963|3004|311)
   from: any
+  guard:
+    codes:
+    - ^DIAGNOSIS//ICD//(2962|2963|3004|311|F32|F33)
+  question: Your prediction is the probability that the patient's record carries a coded diagnosis of depression (any ICD-9/10
+    code starting with F32 / F33 / 2962 / 2963 / 3004 / 311). Higher values MUST mean more likely positive/higher class
+    — do not invert.
   to: any
 derived:heart-failure:
   exists: ^DIAGNOSIS//ICD//(I50|428)
   from: any
+  guard:
+    codes:
+    - ^DIAGNOSIS//ICD//(428|I50)
+  question: Your prediction is the probability that the patient's record carries a coded diagnosis of heart failure (any
+    ICD-9/10 code starting with I50 / 428). Higher values MUST mean more likely positive/higher class — do not invert.
   to: any
 psgclass:ahi-severity:
   bins:
@@ -33,35 +64,47 @@ psgclass:ahi-severity:
   - 15
   - 30
   from: any
+  question: 'Your prediction is the OSA severity CLASS by AHI: 0 (<5/h) · 1 (5–15) · 2 (15–30) · 3 (>=30); submission column
+    is the class number. Higher values MUST mean more likely positive/higher class — do not invert.'
   to: any
   value: SLEEP//AHI
 psgmetric:arousal-high:
   from: any
   op: '>='
+  question: Your prediction is the probability that the arousal index is >= 15 events per hour of sleep. Higher values MUST
+    mean more likely positive/higher class — do not invert.
   to: any
   value: SLEEP//AROUSAL_INDEX
   x: 15
 psgmetric:eff-low:
   from: any
   op: <
+  question: Your prediction is the probability that sleep efficiency is < 80%. Higher values MUST mean more likely positive/higher
+    class — do not invert.
   to: any
   value: SLEEP//EFFICIENCY
   x: 0.8
 psgmetric:limb-high:
   from: any
   op: '>='
+  question: Your prediction is the probability of >= 15 scored limb events per hour of sleep. Higher values MUST mean more
+    likely positive/higher class — do not invert.
   to: any
   value: SLEEP//LIMB_INDEX
   x: 15
 psgmetric:n3-low:
   from: any
   op: <
+  question: Your prediction is the probability that N3 is < 10% of total sleep time. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: SLEEP//N3_FRACTION
   x: 0.1
 psgmetric:rem-low:
   from: any
   op: <
+  question: Your prediction is the probability that REM is < 15% of total sleep time. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: SLEEP//REM_FRACTION
   x: 0.15

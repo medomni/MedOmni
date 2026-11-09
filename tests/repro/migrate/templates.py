@@ -11,7 +11,10 @@ Sources, all in this repository until Stage 3 part 8:
 - the cohorts S2 ported from S1's recipes, `tests/core/fixtures/recipes/<dataset>/cohorts.yaml` (n20 and ladder;
   the base `standard` tier was never built and is not converted, Bosong 2026-11-09). The one cohort S2 left out,
   `mimic_icu-stay-radiology@n20`, comes from S1's `p16_recipes.yaml`: its inline balance rule becomes the label
-  `derived:cxr-before-anchor` and the target `cxr_before_anchor`.
+  `derived:cxr-before-anchor`, named by the cohort's `draw.balance` so it is never scored (Bosong, 2026-11-09).
+
+`agent.instruction` holds the template's own instruction paragraph: v0.2's definitions block for the kind of prediction
+time the template asks about (`templates/blocks/definitions.<kind>.md`).
 
 Field placement (U2.9, Bosong 2026-11-09): `statement` goes into `agent:`; `data_mode` is a dataset rule in
 AI-READI's `evidence.yaml`; `version`, `prediction_time_note`, `readme_note`, `approved_by` and
@@ -34,6 +37,9 @@ from .cards import git_authors
 
 SPECS = "data_task/taskbuilder/specs"
 EMIT = "data_task/taskbuilder/emit_atomic.py"
+BLOCKS = "data_task/taskbuilder/templates/blocks"
+LADDER = "data_task/taskbuilder/ladder.yaml"
+ICD_CODE = "^DIAGNOSIS//ICD//({})"
 FIXTURES = "tests/core/fixtures/recipes"
 S1_RECIPES = "internal_docs/roadmaps/v0.3.0/roadmaps/probes/s1/p16_recipes.yaml"
 DEST = "bench/datasets"
@@ -61,8 +67,11 @@ AUTHOR_ALIASES = {"Boson": "Bosong Huang"}  # one person, two git names (same Gi
 INLINE = {"mimic_icu-stay-radiology@n20": {
     "rule": {"exists": "CXR//STUDY", "to": "anchor"},
     "label": "derived:cxr-before-anchor",
-    "target": "cxr_before_anchor",
 }}
+# v0.2 worded one target by the prediction time: here it is asked at admission, not 24 hours in
+QUESTIONS = {"mimic_icu-stay-radiology": {"in_hospital_death": (
+    "Your prediction is the probability that the patient dies before discharge from the index admission. "
+    "Higher values MUST mean more likely positive/higher class — do not invert.")}}
 INLINE_LABELS = {"mimic-iv": {"derived:cxr-before-anchor": {"exists": "CXR//STUDY", "from": "any", "to": "anchor"}}}
 
 
@@ -105,13 +114,41 @@ def _inline_cohort(repo: Path, key: str) -> dict:
     inline = INLINE[key]
     ds = r["dataset"]
     targets = {lab["name"]: f"{ds}:{lab['derivation']}" for lab in r["labels"]}
-    targets[inline["target"]] = f"{ds}:{inline['label']}"
-    by = [inline["target"] if b == inline["rule"] else b for b in r["draw"]["by"]]
+    by = [b for b in r["draw"]["by"] if b != inline["rule"]]
     if any(not isinstance(b, str) for b in by):
         raise ValueError(f"{key}: draw.by still holds an inline rule")
     cohort = {"source": "all" if r["universe"] == "all" else {}, "anchor": r["anchor"], "require": r["require"],
-              "draw": {"n": r["draw"]["n"], "by": by, "seed": r["draw"]["seed"]}}
+              "draw": {"n": r["draw"]["n"], "by": by, "balance": [inline["label"]], "seed": r["draw"]["seed"]}}
     return {"targets": targets, "cohort": cohort}
+
+
+def _ladder(repo: Path, old_id: str, spec_dataset: str) -> dict | None:
+    """The modality-ladder arm's definition for one template (R-89): rungs r1-r6 and the template's masks, as codes."""
+    doc = yaml.safe_load((repo / LADDER).read_text(encoding="utf-8"))
+    if old_id not in doc["tasks"]:
+        return None
+    rungs = {f"r{k[1:]}": {f: v for f, v in e.items() if f != "demographics"} for k, e in doc["rungs"][spec_dataset].items()}
+    out = {"rungs": rungs}
+    pre = (doc.get("masks") or {}).get(old_id, {}).get("icd_prefixes")
+    if pre:
+        out["masks"] = [ICD_CODE.format("|".join(str(p).replace(".", "") for p in pre))]
+    return out
+
+
+def _definitions(repo: Path, spec: dict) -> str:
+    """v0.2's definitions block for the template's kind of prediction time (emit_atomic.boundary_kind)."""
+    d = spec["target"]["derivation"]
+    if spec["dataset"] == "aireadi":
+        kind = "visit"
+    elif spec["dataset"] == "bdsp":
+        kind = "psg"
+    elif "ckd" in d:
+        kind = "span"
+    elif d == "outcome:icu-admission":
+        kind = "adm0"
+    else:
+        kind = "windowed"
+    return (repo / BLOCKS / f"definitions.{kind}.md").read_text(encoding="utf-8").strip()
 
 
 def _authors(repo: Path, spec: dict, name: str) -> list[dict]:
@@ -191,6 +228,8 @@ def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
             if name not in labels:
                 raise ValueError(f"{old_id}: target {name} has no label in any cohort")
             targets.append({"name": name, "label": labels[name], "metric": m})
+            if name in QUESTIONS.get(old_id, {}):
+                targets[-1]["question"] = QUESTIONS[old_id][name]
 
         template = {"template_id": tid, "dataset": ds, "authors": _authors(repo, spec, old_id), "targets": targets,
                     "input": spec["input"]}
@@ -208,12 +247,15 @@ def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
                 template["full"]["exclude"] = _exclude(_merge(spec.get("excluded_from_inputs") or {},
                                                               full["excluded_from_inputs"]))
         env = spec["environment"]
-        template["agent"] = {"statement": spec["statement"], "instruction": spec["instruction"],
+        template["agent"] = {"statement": spec["statement"], "instruction": _definitions(repo, spec),
                              "environment": {k: env[k] for k in ENVIRONMENT},
                              "submission_path": spec["submission_path"]}
 
         base = f"{DEST}/{ds}/tasks/{tid}"
         outputs[f"{base}/template.yaml"] = _plain(template)  # no shared objects, so no YAML aliases
+        ladder = _ladder(repo, old_id, spec["dataset"])
+        if ladder:
+            outputs[f"{base}/arms/modality-ladder.yaml"] = _plain(ladder)
         for tier, c in cohorts.items():
             outputs[f"{base}/cohorts/{tier}.yaml"] = _plain({"version": COHORT_VERSION, **c["cohort"]})
         notes[tid] = {"from": old_id, "cohorts": sorted(cohorts), "targets": len(targets),

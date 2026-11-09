@@ -98,6 +98,21 @@ def available(signals, family_id: str, root: Path | None = None) -> bool:
     return bool(found) and all(ok for req, ok in found if req) and any(ok for _, ok in found)
 
 
+def rate_accepted(signals, family_id: str, root: Path | None = None) -> bool:
+    """Whether each channel of a family on this night is at a rate the family accepts (its own, or a listed one). The
+    converter copies samples and never resamples, so a family at any other rate must not be requested."""
+    from .aliases import resolve
+
+    protocols, alias = _raw(folder(root).resolve())
+    ok = {float(protocols[family_id]["rate_hz"])} if protocols[family_id].get("rate_hz") else set()
+    ok |= set(resolve(family_id, root).rates)
+    for _, cands, _req in _channel_sources(family_id, protocols[family_id], alias):
+        name = next((c for c in cands if c in signals), None)
+        if name is not None and ok and float(signals[name].attrs["fs"]) not in ok:
+            return False
+    return True
+
+
 def h5_to_family_edf(src: Path, dest: Path, family_id: str, proto: dict, alias: dict) -> None:
     """A family-conformant EDF: protocol channels only, int16 copied bit for bit, whole seconds."""
     import h5py

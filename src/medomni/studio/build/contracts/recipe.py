@@ -85,6 +85,7 @@ class Anchor(Contract):
 class Draw(Contract):
     n: int = Field(ge=1)
     by: tuple[NonEmpty, ...] = ()  # target names that define the classes; empty for a continuous target
+    balance: tuple[NonEmpty, ...] = ()  # labels of the library that split each class further; never scored or shown
     seed: int | NonEmpty  # hashed into the rank (R-36), so text works as well as a number
 
 
@@ -139,6 +140,7 @@ class Label(Window):
     else_: int | float | str | None = Field(default=None, alias="else")
     default: int | float | str | None = None
     hook: NonEmpty | None = None
+    question: NonEmpty | None = None  # the sentence that tells the agent exactly what this target asks
     same_visit: bool = False  # only events in the anchor's visit count
     other_visit: bool = False  # only events in another visit count (readmission)
     guard: Guard = Guard()
@@ -212,3 +214,5 @@ class EvidenceRules(Contract):
     tables: dict[NonEmpty, TableRule] = {}
     static: Static = Static()
     files: dict[str, Any] = {}
+    reading_note: str | None = None  # a fact about reading this dataset's files, told to the agent in every arm
+    views: NonEmpty | None = None  # a package hook giving the agent-facing forms: demographics, measurements, file_meta

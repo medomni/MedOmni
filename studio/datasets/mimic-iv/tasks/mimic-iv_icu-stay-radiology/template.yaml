@@ -5,23 +5,23 @@ authors:
 - {name: Ming Shen Lu}
 targets:
 - {name: icu_admission, label: 'mimic-iv:outcome:icu-admission', metric: auc}
-- {name: in_hospital_death, label: 'mimic-iv:outcome:in-hospital-death', metric: auc}
-- {name: cxr_before_anchor, label: 'mimic-iv:derived:cxr-before-anchor', metric: auc}
+- {name: in_hospital_death, label: 'mimic-iv:outcome:in-hospital-death', metric: auc, question: Your prediction is the probability
+    that the patient dies before discharge from the index admission. Higher values MUST mean more likely positive/higher class
+    — do not invert.}
 input:
   files: {cxr-radiograph-2d: cxr/files/}
   demographics: [age, sex]
 agent:
   statement: At the moment this patient is admitted to hospital, predict whether the stay will include intensive care and
     whether they will survive it.
-  instruction: '# mimic_icu-stay-radiology
+  instruction: '## Prediction time
 
 
-    Prediction of ICU stay using radiology reports
+    - Index admission: the patient''s first hospital admission on record.
 
+    - The prediction is made at the moment of that admission. The evidence is everything recorded before it: earlier hospital
+    history and the emergency department visit that led to this admission.
 
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - No patient here is in intensive care at that moment.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

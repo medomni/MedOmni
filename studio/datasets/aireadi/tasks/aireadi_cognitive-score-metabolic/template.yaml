@@ -21,17 +21,11 @@ input:
 evidence: [default, full]
 agent:
   statement: Predict this participant's performance on the Montreal Cognitive Assessment (MoCA).
-  instruction: '# aireadi_cognitive-score-metabolic
+  instruction: '## Prediction time
 
 
-    Given years of education, CES-D-10 score, diabetic parameters, lipid profiles, and other related metabolic parameters,
-    together with the participant’s CGM record, wearable sleep staging, step counts estimate the recorded MoCA total score
-    and relevant subscore at the study visit.
+    - The evidence is the participant''s data from their study visit.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

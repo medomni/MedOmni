@@ -15,150 +15,271 @@ aireadi-dmstatus:
       x: 1
   else: 0
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//mhterm_dm1$
+    - ^(OMOP|CONDITION|PROCEDURE)//mhterm_dm2$
+    - ^(OMOP|CONDITION|PROCEDURE)//mhterm_predm$
+  question: 'Your prediction is the diabetes status CLASS: 0 healthy · 1 pre-diabetes · 2 type-2 diabetes; submission column
+    is the class number. Higher values MUST mean more likely positive/higher class — do not invert.'
   to: any
 omopbin:mhoccur_ca:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//mhoccur_ca$
   op: ==
   pick: last
+  question: Your prediction is the probability that `mhoccur_ca` is YES (recorded value 1) for the participant. Higher values
+    MUST mean more likely positive/higher class — do not invert.
   to: any
   value: OMOP//mhoccur_ca
   x: 1
 omopbin:mhoccur_crt:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//mhoccur_crt$
   op: ==
   pick: last
+  question: Your prediction is the probability that `mhoccur_crt` is YES (recorded value 1) for the participant. Higher
+    values MUST mean more likely positive/higher class — do not invert.
   to: any
   value: OMOP//mhoccur_crt
   x: 1
 omopbin:mhoccur_hbp:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//mhoccur_hbp$
   op: ==
   pick: last
+  question: Your prediction is the probability that `mhoccur_hbp` is YES (recorded value 1) for the participant. Higher
+    values MUST mean more likely positive/higher class — do not invert.
   to: any
   value: OMOP//mhoccur_hbp
   x: 1
 omopnum:import_hdl_cholesterol:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//import_hdl_cholesterol$
   pick: last
+  question: Your prediction is the numeric value of `import_hdl_cholesterol`.
   to: any
   value: OMOP//import_hdl_cholesterol
 omopnum:import_ldl_cholesterol:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//import_ldl_cholesterol$
   pick: last
+  question: Your prediction is the numeric value of `import_ldl_cholesterol`.
   to: any
   value: OMOP//import_ldl_cholesterol
 omopnum:import_total_cholesterol:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//import_total_cholesterol$
   pick: last
+  question: Your prediction is the numeric value of `import_total_cholesterol`.
   to: any
   value: OMOP//import_total_cholesterol
 omopnum:lbscat_wbc:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//lbscat_wbc$
   pick: last
+  question: Your prediction is the numeric value of `lbscat_wbc`.
   to: any
   value: OMOP//lbscat_wbc
 omopnum:moca_abstraction:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//moca_abstraction$
   pick: last
+  question: Your prediction is the numeric value of `moca_abstraction`.
   to: any
   value: OMOP//moca_abstraction
 omopnum:moca_combined_mis_score:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//moca_combined_mis_score$
   pick: last
+  question: Your prediction is the numeric value of `moca_combined_mis_score`.
   to: any
   value: OMOP//moca_combined_mis_score
 omopnum:moca_orientation:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//moca_orientation$
   pick: last
+  question: Your prediction is the numeric value of `moca_orientation`.
   to: any
   value: OMOP//moca_orientation
 omopnum:viaodcyl:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaodcyl$
   pick: last
+  question: Your prediction is the numeric value of `viaodcyl`.
   to: any
   value: OMOP//viaodcyl
 omopnum:viaodsph:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaodsph$
   pick: last
+  question: Your prediction is the numeric value of `viaodsph`.
   to: any
   value: OMOP//viaodsph
 omopnum:viaoscyl:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaoscyl$
   pick: last
+  question: Your prediction is the numeric value of `viaoscyl`.
   to: any
   value: OMOP//viaoscyl
 omopnum:viaossph:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaossph$
   pick: last
+  question: Your prediction is the numeric value of `viaossph`.
   to: any
   value: OMOP//viaossph
 omopthresh:cestl:>=10:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//cestl$
   op: '>='
   pick: last
+  question: Your prediction is the probability that the participant's `cestl` is >=10. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//cestl
   x: 10.0
 omopthresh:import_crp_hs:>=3:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//import_crp_hs$
   op: '>='
   pick: last
+  question: Your prediction is the probability that the participant's `import_crp_hs` is >=3. Higher values MUST mean more
+    likely positive/higher class — do not invert.
   to: any
   value: OMOP//import_crp_hs
   x: 3.0
 omopthresh:import_triglycerides:>=200:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//import_triglycerides$
   op: '>='
   pick: last
+  question: Your prediction is the probability that the participant's `import_triglycerides` is >=200. Higher values MUST
+    mean more likely positive/higher class — do not invert.
   to: any
   value: OMOP//import_triglycerides
   x: 200.0
 omopthresh:moca_total_score:<26:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//moca_total_score$
+    - ^(OMOP|CONDITION|PROCEDURE)//moca_
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `moca_total_score` is <26. Higher values MUST mean
+    more likely positive/higher class — do not invert.
   to: any
   value: OMOP//moca_total_score
   x: 26.0
 omopthresh:msslffl:<10:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//msslffl$
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `msslffl` is <10. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//msslffl
   x: 10.0
 omopthresh:mssrffl:<10:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//mssrffl$
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `mssrffl` is <10. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//mssrffl
   x: 10.0
 omopthresh:viaodmlog:<70:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaodmlog$
+    - ^(OMOP|CONDITION|PROCEDURE)//viaodmscore$
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `viaodmlog` is <70. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//viaodmlog
   x: 70.0
 omopthresh:viaodplog:<80:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaodplog$
+    - ^(OMOP|CONDITION|PROCEDURE)//viaodpscore$
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `viaodplog` is <80. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//viaodplog
   x: 80.0
 omopthresh:viaosmlog:<70:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaosmlog$
+    - ^(OMOP|CONDITION|PROCEDURE)//viaosmscore$
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `viaosmlog` is <70. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//viaosmlog
   x: 70.0
 omopthresh:viaosplog:<80:
   from: any
+  guard:
+    codes:
+    - ^(OMOP|CONDITION|PROCEDURE)//viaosplog$
+    - ^(OMOP|CONDITION|PROCEDURE)//viaospscore$
   op: <
   pick: last
+  question: Your prediction is the probability that the participant's `viaosplog` is <80. Higher values MUST mean more likely
+    positive/higher class — do not invert.
   to: any
   value: OMOP//viaosplog
   x: 80.0

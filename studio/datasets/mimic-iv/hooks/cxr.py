@@ -9,7 +9,8 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-COLUMNS = ["dicom_id", "subject_id", "study_id", "StudyDate", "StudyTime"]
+COLUMNS = ["dicom_id", "subject_id", "study_id", "StudyDate", "StudyTime", "ViewPosition"]
+FRONTAL = ("PA", "AP")
 
 
 def _time(date: str, tm: str) -> str | None:
@@ -30,8 +31,9 @@ def derive(rows, raw_root: Path, params: dict) -> list[dict]:
     for r in read_table(raw_root / params["metadata"], columns=COLUMNS):
         s, t = r["subject_id"], _time(r["StudyDate"], r["StudyTime"])
         out.append({"subject_id": s, "time": t, "code": "CXR//STUDY", "native_id": r["dicom_id"]})
-        out.append({"subject_id": s, "time": t, "code": "FILE//cxr-radiograph-2d", "native_id": r["dicom_id"],
-                    "path": f"cxr/files/p{s[:2]}/p{s}/s{r['study_id']}/{r['dicom_id']}.jpg"})
+        if r["ViewPosition"] in FRONTAL:  # the family is frontal films
+            out.append({"subject_id": s, "time": t, "code": "FILE//cxr-radiograph-2d", "native_id": r["dicom_id"],
+                        "path": f"cxr/files/p{s[:2]}/p{s}/s{r['study_id']}/{r['dicom_id']}.jpg"})
     return out
 
 
@@ -48,4 +50,4 @@ def dummy(raw_root: Path, subjects: dict, params: dict, rng) -> None:
         w.writerow(COLUMNS)
         for i, (s, t0) in enumerate(sorted(subjects.items())):
             t = t0 + timedelta(hours=1)
-            w.writerow([f"dummy-dicom-{i + 1}", s, 50000000 + i, t.strftime("%Y%m%d"), t.strftime("%H%M%S") + ".000"])
+            w.writerow([f"dummy-dicom-{i + 1}", s, 50000000 + i, t.strftime("%Y%m%d"), t.strftime("%H%M%S") + ".000", "PA"])

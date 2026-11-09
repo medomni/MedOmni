@@ -290,7 +290,7 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
                 family = get_family(entry)
                 written = make_dummy(family, seed + i, root / rel.parent, rel.stem, subject=str(subject), start=start,
                                      level=level)
-                if written.name != rel.name:
+                if written.name != rel.name and rel.suffix != ".*":  # `.*`: every file of a record
                     raise DummyError(f"files.{entry}: pattern ends in '{rel.suffix}', a {data_format(family)} "
                                      f"file is '{written.suffix}'")
     rule = config.verify.get("version")
@@ -306,6 +306,11 @@ def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed:
             mod = hooks.module(package, o.hook)
             if hasattr(mod, "dummy"):
                 mod.dummy(root, {str(s): t0s[s] for s in ids}, dict(o.params), g)
+    if "unit_files" in config.verify and (package / "hooks/views.py").is_file():
+        views = hooks.module(package, "views", derives=False)
+        if hasattr(views, "dummy_unit"):
+            for s in ids:
+                views.dummy_unit(root / config.verify["unit_files"].format(unit=s), g)
     out.mkdir(parents=True, exist_ok=True)
     (out / "planted.json").write_text(json.dumps(planted, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return DummyDataset(root, planted, tuple(ids))

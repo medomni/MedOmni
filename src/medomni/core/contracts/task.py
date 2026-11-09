@@ -31,6 +31,7 @@ class Target(Contract):
     name: Slug | Annotated[str, StringConstraints(pattern=r"^[a-z0-9_]+$")]
     label: Annotated[str, StringConstraints(pattern=r"^[a-z0-9-]+:.+$")]  # <dataset>:<label>
     metric: MetricName  # registered in medomni.metrics (R-77)
+    question: NonEmpty | None = None  # replaces the label's `question` when this template asks it differently
 
 
 class Environment(Contract):

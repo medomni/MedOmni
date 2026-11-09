@@ -1,0 +1,15 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+rungs:
+  r1: {}
+  r2:
+    families: [snore-acoustic, body-position-code-10hz]
+  r3:
+    families: [resp-flow, resp-effort-rip-2ch-50hz]
+  r4:
+    families: [spo2-series-10hz-pct, pulse-rate-10hz-bpm]
+  r5:
+    families: [eeg-sleep-6ch-200hz-uv, eog-2ch-200hz-uv, emg-chin-200hz-uv, emg-limb-200hz-uv]
+  r6:
+    families: [ecg-1lead-200hz-uv, psg-cardiorespiratory-4ch-200hz-mixed, ppg-waveform-uncal, clinical-record-table]
+    all_tables: true
+masks: [^DIAGNOSIS//ICD//(G473|3272|78051|78053|78057|32751|G4761)]

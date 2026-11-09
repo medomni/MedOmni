@@ -40,7 +40,7 @@ SCORED = {  # v0.2's n20 trees: template -> {target: metric} (atomtasks/_parents
     'mimic_sepsis-hospital': {'septicemia': 'auc'},
     'mimic_stroke-infarct-ed': {'cerebral_infarction': 'auc'},
 }
-BALANCE = {"mimic_icu-stay-radiology": {"cxr_before_anchor": "auc"}}  # S1's inline balance rule, now a target
+BALANCE = {}  # S1's inline balance rule is `draw.balance`, not a target (Bosong, 2026-11-09)
 
 
 @pytest.fixture(scope="module")
@@ -55,8 +55,11 @@ def _templates(outputs):
 def test_every_file_validates(converted):
     outputs, _ = converted
     for rel, data in outputs.items():
+        if "/arms/" in rel:
+            continue
         model = c.TaskTemplate if rel.endswith("/template.yaml") else c.Cohort
         c.load_data(data, model, rel)
+    assert sum("/arms/" in r for r in outputs) == 5
     assert sum(r.endswith("/template.yaml") for r in outputs) == 30
     assert sorted(Path(r).name for r in outputs if "/cohorts/" in r).count("ladder.yaml") == 5
     assert sum(r.endswith("/cohorts/n20.yaml") for r in outputs) == 30
@@ -102,7 +105,8 @@ def test_u29_placement(converted):
 
 def test_committed_tree_is_the_converter_output(repo, converted):
     outputs, _ = converted
-    committed = {p.relative_to(repo).as_posix() for p in (repo / "bench/datasets").glob("*/tasks/*/**/*.yaml")}
+    committed = {p.relative_to(repo).as_posix() for p in (repo / "bench/datasets").glob("*/tasks/*/**/*.yaml")
+                 if p.relative_to(repo / "bench/datasets").parts[0] != "vitaldb"}  # written for v0.3, not converted
     assert committed == set(outputs)
     for rel, data in outputs.items():
         assert (repo / rel).read_text(encoding="utf-8") == templates.HEADER + convert.dump(data), rel

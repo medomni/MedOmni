@@ -10,3 +10,5 @@ tables:
   observation: *id001
   procedure_occurrence: *id001
   visit_occurrence: *id001
+reading_note: "Each file format needs its own reader; read each file's own header rather than assuming a layout."
+views: views

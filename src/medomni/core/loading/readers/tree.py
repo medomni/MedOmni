@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from .headers import file_hash, start
+from .headers import start
 
 
 def _regex(pattern: str) -> re.Pattern:
@@ -47,12 +47,11 @@ def read(options, root: Path, *, families: set[str] | None = None, stats: dict |
                 continue
             found += 1
             t, native = start(p)
-            h = file_hash(p)
             for f in fams:
                 if families is None or f in families:
                     out.append({"subject_id": subject, "time": t.isoformat() if t else None,
                                 "code": f"FILE//{f}", "numeric_value": None, "text_value": None, "visit_id": None,
-                                "path": rel, "sha256": h, "native_id": native, "_table": None})
+                                "path": rel, "sha256": None, "native_id": native, "_table": None})
         if stats is not None:
             stats[entry] = found
     return out

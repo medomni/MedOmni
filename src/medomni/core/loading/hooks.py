@@ -26,14 +26,14 @@ from .readers import LoadError
 COLUMNS = ("subject_id", "time", "code", "numeric_value", "text_value", "visit_id", "path", "sha256", "native_id")
 
 
-def module(package: Path, name: str):
+def module(package: Path, name: str, derives: bool = True):
     path = Path(package) / "hooks" / f"{name}.py"
     if not path.is_file():
         raise LoadError(f"read: hook {name}: no {path.relative_to(Path(package).parent)}")
     spec = importlib.util.spec_from_file_location(f"medomni_hook_{Path(package).name.replace('-', '_')}_{name}", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    if not callable(getattr(mod, "derive", None)):
+    if derives and not callable(getattr(mod, "derive", None)):
         raise LoadError(f"read: hook {name}: defines no derive(rows, raw_root, params)")
     return mod
 

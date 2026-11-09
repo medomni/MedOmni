@@ -17,16 +17,12 @@ full:
     demographics: [age, sex]
 agent:
   statement: Predict whether this patient has a depressive disorder.
-  instruction: '# bdsp_depression-sleep
+  instruction: '## Prediction time
 
 
-    Given overnight polysomnography signals and demographic information, predict whether the patient has a depressive disorder.
-    Performance will be judged by how accurately the predicted diagnosis matches the EHR-recorded depressive disorder diagnosis.
+    - The evidence is one full overnight sleep study (polysomnogram), the whole recording, together with the patient''s clinical
+    records up to its end.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of the end of the recording.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

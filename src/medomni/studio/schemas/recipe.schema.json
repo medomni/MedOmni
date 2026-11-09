@@ -164,6 +164,15 @@
           "title": "By",
           "type": "array"
         },
+        "balance": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Balance",
+          "type": "array"
+        },
         "seed": {
           "anyOf": [
             {

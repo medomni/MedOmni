@@ -35,6 +35,7 @@ read:
         file: clinical_data/condition_occurrence.csv
         subject: person_id
         subject_type: int
+        clean: {condition_source_value: {before: ","}}
         time: condition_start_date
         visit: visit_occurrence_id
         load: false  # evidence only
@@ -44,6 +45,7 @@ read:
         file: clinical_data/procedure_occurrence.csv
         subject: person_id
         subject_type: int
+        clean: {procedure_source_value: {before: ","}}
         time: procedure_date
         visit: visit_occurrence_id
         load: false
@@ -72,7 +74,7 @@ read:
       octa-flowcube-mono8-3d: {pattern: "retinal_octa/flow_cube/*/{subject}/{record}.dcm", exclude: [spectralis]}
       retinal-heightmap-surfaces-f32: {pattern: "retinal_octa/segmentation/*/{subject}/{record}.dcm"}
       flio-tcspc-256x256x1024bin-u16: {pattern: "retinal_flio/flio/*/{subject}/{record}.dcm"}
-      ecg-12lead-500hz-mv: {pattern: "cardiac_ecg/ecg_12lead/*/{subject}/{record}.hea"}
+      ecg-12lead-500hz-mv: {pattern: "cardiac_ecg/ecg_12lead/*/{subject}/{record}.*"}  # the header and its signal file: both are staged
       cgm-5min-mgdl: {pattern: "wearable_blood_glucose/continuous_glucose_monitoring/*/{subject}/{record}.json"}
       wearable-hr-1min-bpm: {pattern: "wearable_activity_monitor/heart_rate/*/{subject}/{record}.json"}
       wearable-spo2-1min-pct: {pattern: "wearable_activity_monitor/oxygen_saturation/*/{subject}/{record}.json"}

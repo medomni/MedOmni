@@ -17,16 +17,12 @@ full:
     demographics: [age, sex]
 agent:
   statement: Predict whether this patient's overnight sleep study shows a high arousal index.
-  instruction: '# bdsp_arousal
+  instruction: '## Prediction time
 
 
-    Using the overnight polysomnogram — EEG, EOG, chin and limb EMG, airflow, respiratory-effort belts, SpO₂, PPG, pulse rate,
-    single-lead ECG, snoring and body position — predict, for each patient, whether the night shows a high arousal index.
+    - The evidence is one full overnight sleep study (polysomnogram), the whole recording, together with the patient''s clinical
+    records up to its end.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of the end of the recording.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

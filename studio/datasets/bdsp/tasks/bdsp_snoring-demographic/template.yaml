@@ -20,15 +20,12 @@ full:
     psg: {family: eeg-sleep-6ch-200hz-uv, families: all}
 agent:
   statement: Predict the severity of this patient's obstructive sleep apnea and other measures of their night's sleep.
-  instruction: '# bdsp_snoring-demographic
+  instruction: '## Prediction time
 
 
-    Use demographic data and EEG, EMG, EOG, airflow, repiratory parameters etc. to predict snoring-derived parameters
+    - The evidence is one full overnight sleep study (polysomnogram), the whole recording, together with the patient''s clinical
+    records up to its end.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of the end of the recording.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

@@ -21,16 +21,14 @@ evidence: [default, full]
 agent:
   statement: From this patient's first day in hospital, predict whether they survive the admission, how long it lasts, and
     whether they return to hospital or the emergency department within 30 days of discharge.
-  instruction: '# mimic_in-hospital-death-icu
+  instruction: '## Prediction time
 
 
-    Using microbiology culture to predict in-hospital mortality, subsequent ICU admission, ICU length of stay among patients
-    admitted to intensive care, and unplanned hospital readmission or ED re-presentation within 30 days of discharge.
+    - Index admission: the patient''s first hospital admission on record.
 
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
 
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

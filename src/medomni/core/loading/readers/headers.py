@@ -67,8 +67,9 @@ def start(path: Path) -> tuple[datetime | None, str | None]:
 
 
 def file_hash(path: Path) -> str:
-    """sha256 of a file; for a WFDB record, of its header and signal files together; for a manifest, of it and the
-    files it lists. Length-prefixed, as `hashing.dir_hash`."""
+    """A cheap identity of a family file for the cache key: `hashing.quick_sha`, so a load never reads a whole recording
+    only to fingerprint it. A WFDB record covers its header and signal files; a manifest covers it and the files it
+    lists. Length-prefixed, as `hashing.dir_hash`."""
     import hashlib
 
     from medomni.core import hashing
@@ -84,9 +85,9 @@ def file_hash(path: Path) -> str:
         if isinstance(doc, dict) and (doc.get("files") or doc.get("file")):
             parts = [path] + [path.parent / n for n in (doc.get("files") or [doc["file"]])]
     if len(parts) == 1:
-        return hashing.sha256_file(parts[0])
+        return hashing.quick_id(parts[0])
     h = hashlib.sha256()
     for p in parts:
         h.update(p.name.encode() + b"\0" + str(p.stat().st_size).encode() + b"\0")
-        h.update(hashing.sha256_file(p).encode())
+        h.update(hashing.quick_id(p).encode())
     return h.hexdigest()

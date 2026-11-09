@@ -13,17 +13,14 @@ input:
 evidence: [default, full]
 agent:
   statement: Predict whether this patient's hospital admission will be given a diagnosis of acute renal failure.
-  instruction: '# mimic_acute-renal-hospital
+  instruction: '## Prediction time
 
 
-    Given demographic, medication, and laboratory data available within the first 24 hours of hospital admission, predict
-    whether the patient will subsequently be diagnosed with acute renal failure during the admission. Performance will be
-    judged by how accurately the prediction matches the recorded diagnosis.
+    - Index admission: the patient''s first hospital admission on record.
 
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
 
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

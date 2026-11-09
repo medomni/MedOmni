@@ -19,33 +19,12 @@ full:
     demographics: [age, sex]
 agent:
   statement: Predict whether this patient has heart failure.
-  instruction: '# bdsp_hf-sleep
+  instruction: '## Prediction time
 
 
-    Predict, for each patient, the probability that their linked EHR carries a **heart failure** diagnosis (ICD-10 I50.x /
-    ICD-9 428.x), from their overnight polysomnography.
+    - The evidence is one full overnight sleep study (polysomnogram), the whole recording, together with the patient''s clinical
+    records up to its end.
 
-
-    ## Data (under `/workspace/data/`)
-
-
-    - `patients.jsonl` — one line per patient: slice inventory plus the PSG recording file tagged with its input family
-
-    - `slices/<id>_clinical-record-table.jsonl` — age at visit, sex, study type, recording start/duration
-
-    - `files/<id>/sub-*.h5` — the whole-night PSG recording (EEG, ECG, PPG, SpO2, respiratory channels), staged at bootstrap
-
-
-    A Perception service may be reachable (`PERCEPTION_URL`); when encoder evidence appears with a patient, weigh it together
-    with the demographics.
-
-
-    ## Submission
-
-
-    Write `/workspace/submission/predictions.csv` — CSV `subject_id,probability`, one row per patient, probability in [0,1].
-    Metric: AUC.
-
-    '
+    - The prediction is made as of the end of the recording.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

@@ -10,7 +10,7 @@ from medomni.core.families import converters
 
 from .test_plugins import make_dist
 
-BUILTIN = {"h5-to-edf"}  # Core's own converter, v0.2's bridge (R-105)
+BUILTIN = {"h5-to-edf", "vital-to-wfdb"}
 
 DUMMY = '''
 import hashlib

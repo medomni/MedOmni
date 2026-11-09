@@ -16,17 +16,11 @@ input:
 evidence: [default, full]
 agent:
   statement: Predict whether this participant has impaired protective foot sensation on monofilament testing.
-  instruction: '# aireadi_dpn-neuropathy-metabolic
+  instruction: '## Prediction time
 
 
-    Given retinal imaging, continuous glucose monitoring, and clinical/metabolic data, predict peripheral neuropathy as measured
-    by monofilament foot sensation. Performance will be judged by how accurately the predicted monofilament sensation matches
-    the measured result.
+    - The evidence is the participant''s data from their study visit.
 
-
-    ## Submission
-
-
-    Write /workspace/submission/predictions.csv — CSV `subject_id,probability`. Metric: AUC.'
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

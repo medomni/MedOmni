@@ -24,31 +24,12 @@ full:
 agent:
   statement: Predict whether this patient has chronic kidney disease. Kidney function tests (creatinine, urea nitrogen, eGFR,
     urine albumin) have been removed from the record.
-  instruction: '# mimic_ckd-staging
+  instruction: '## Prediction time
 
 
-    Predict, for each patient, the probability that they have **chronic kidney disease** by the KDIGO criterion (two eGFR
-    < 60 at least 90 days apart), **without access to any direct renal marker**: creatinine, BUN, eGFR and all kidney diagnosis
-    codes are deliberately absent from your data.
+    - The evidence is the patient''s record up to the end of the period over which their kidney function was monitored. The
+    kidney function tests themselves are removed.
 
-
-    ## Data (under `/workspace/data/`)
-
-
-    - `patients.jsonl` — one line per patient (subject_id + slice inventory)
-
-    - `slices/<subject_id>_clinical-record-table.jsonl` — age at last data, sex
-
-    - `slices/<subject_id>_clinical-measurement-irregular.jsonl` — most recent lab results (up to 30 per test): hemoglobin,
-    bicarbonate, potassium, phosphate, calcium_total, albumin_serum, sodium, glucose
-
-
-    ## Submission
-
-
-    Write `/workspace/submission/predictions.csv` — CSV with header `subject_id,probability`, one row per patient in `patients.jsonl`,
-    probability in [0,1]. Metric: AUC.
-
-    '
+    - The prediction is made at the end of that period.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

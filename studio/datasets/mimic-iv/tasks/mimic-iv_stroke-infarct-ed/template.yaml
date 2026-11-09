@@ -14,33 +14,14 @@ exclude:
   streams: [diagnoses, notes, 'medications (deferred, would need own leakage review)']
 agent:
   statement: Predict whether this patient's hospital admission will be given a diagnosis of cerebral infarction.
-  instruction: '# mimic_stroke-infarct-ed
+  instruction: '## Prediction time
 
 
-    Predict, for each patient, the probability that their **index hospital admission** (the first admission on record) receives
-    a discharge diagnosis of **cerebral infarction**. You see only data charted in the first 24 hours of that admission (plus
-    the ED encounter that led to it): demographics, ED triage, and ED vital signs. No diagnoses, notes, medications, or laboratory
-    panel are provided.
+    - Index admission: the patient''s first hospital admission on record.
 
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
 
-    ## Data (under `/workspace/data/`)
-
-
-    - `patients.jsonl` — one line per patient (subject_id, 24h window, slice inventory)
-
-    - `slices/<id>_clinical-record-table.jsonl` — age, sex, race
-
-    - `slices/<id>_clinical-record-table.triage.jsonl` — ED triage record(s), when present
-
-    - `slices/<id>_clinical-measurement-irregular.jsonl` — ED vital signs inside the window, timestamped
-
-
-    ## Submission
-
-
-    Write `/workspace/submission/predictions.csv` — CSV `subject_id,probability`, one row per patient, probability in [0,1].
-    Metric: AUC.
-
-    '
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
   environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

@@ -1,0 +1,24 @@
+{
+ "type": "mimic_in-hospital-death-icu",
+ "generation": "fix-fixture",
+ "batch": "fixture",
+ "boundary_kind": "adm24h",
+ "targets": [
+  {
+   "name": "in_hospital_death",
+   "derivation": "outcome:in-hospital-death",
+   "metric_family": "auc"
+  }
+ ],
+ "cohort": [
+  "FX0101"
+ ],
+ "index_stay": {
+  "FX0101": {
+   "hadm_id": "FXH0002",
+   "admit": "2150-03-01 08:00:00",
+   "disch": "2150-03-02 08:00:00",
+   "death": null
+  }
+ }
+}

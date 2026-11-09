@@ -129,6 +129,15 @@ psg_events:          # BDSP *_events.csv, column Event -> resp | arousal | limb 
     "Optimal Pressure Start": ignored   # 1
     "Talking": ignored   # 1
     "Video Edit Mark In": ignored   # 1
+    # Added 2026-11-10 (Bosong): labels first seen in the v0.3 BDSP download; each occurs at most 12 times.
+    "Hypopnea Central": resp
+    "Spontaneous-Auton Arousal": arousal
+    "Bruxism Tonic": ignored
+    "Cresc": ignored
+    "Event": ignored
+    "Hyperventilation Start": ignored
+    "Optimal Pressure Stop": ignored
+    "Sigh": ignored
   patterns:
     - {regex: '-?[0-9]+(\.[0-9]+)?', class: ignored, reason: 'a numeric value in the Event column (2,380 distinct), not an event label'}
     - {regex: '', class: ignored, reason: 'empty label'}
@@ -140,6 +149,8 @@ bdsp_race:           # BDSP EHR demographics `race` -> black | white | asian | o
     "Asian": asian
     "American Indian or Alaskan Native": other
     "Multiple": other
+    "Native Hawaiian or Other Pacific Islander": other
     "Unknown, Unavailable or Unreported": unknown
+    "Patient Declines": unknown
     "": unknown
   patterns: []

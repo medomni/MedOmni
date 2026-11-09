@@ -108,10 +108,30 @@ def test_download_list_bdsp_hook(t1_guard, tmp_path, monkeypatch, capsys):
     (ws_dir / "workspace.yaml").write_text(text.replace("datasets: {", f"datasets: {{bdsp: {{path: {copy.root}}}, ", 1))
     assert studio("download-list", "bdsp") == 0
     rows = [line.split("\t") for line in (written("preview", "download-list") / "bdsp.txt").read_text().splitlines()]
-    assert all(len(r) == 2 for r in rows)
+    assert all(len(r) == 3 and r[2] in ("file", "folder") for r in rows)
     nights = [r for r in rows if not r[1].startswith("_index/")]
     assert len(rows) - len(nights) == 3 and nights and len(nights) % 3 == 0
-    assert all(k.startswith("PSG/bids/I0006/") and p.endswith((".h5", "_scores.csv", "_events.csv")) for k, p in nights)
+    assert all(k.startswith("PSG/bids/I0006/") and p.endswith((".h5", "_scores.csv", "_events.csv")) for k, p, _ in nights)
+
+
+def test_download_hooks_vitaldb_and_mimic(tmp_path):
+    """Both hooks list the index first, then one entry set per source patient, paths in the package's own layout."""
+    from medomni.core.loading import find_package, hooks
+
+    v = hooks.module(find_package("vitaldb"), "download", derives=False)
+    assert [e[2] for e in v.index_files()] == ["gunzip"] * 3
+    assert v.files(tmp_path, {}, {"12": {}, "3": {}}) == [
+        ("https://api.vitaldb.net/3.vital", "cases/3.vital", "file"), ("https://api.vitaldb.net/12.vital", "cases/12.vital", "file")]
+    m = hooks.module(find_package("mimic-iv"), "download", derives=False)
+    for rel, line in [("cxr/IMAGE_FILENAMES", "files/p10/p10000032/s1/a.jpg\nfiles/p11/p11000001/s2/b.jpg"),
+                      ("ecg/record_list.csv", "subject_id,path\n10000032,files/p1000/p10000032/s3/3\n11000001,files/p1100/p11000001/s4/4"),
+                      ("wdb/RECORDS", "waves/p100/p10000032/1/\n")]:
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text(line + "\n")
+    got = m.files(tmp_path, {}, {"10000032": {}})
+    assert [p for _, p, _ in got] == ["cxr/files/p10/p10000032/s1/a.jpg", "ecg/files/p1000/p10000032/s3/3.hea",
+                                      "ecg/files/p1000/p10000032/s3/3.dat", "wdb/waves/p100/p10000032/1/"]
+    assert got[-1][2] == "folder" and all(s.startswith("https://physionet.org/files/") for s, _, _ in got)
 
 
 def test_build_sheet(built):

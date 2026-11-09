@@ -1,8 +1,8 @@
 """`medomni studio download-list <dataset>`: for a dataset downloaded in parts, the files its source population needs.
 
 Needs the dataset's index tables on disk. The patients are chosen by the dataset's hash rule (R-32, R-41). A dataset with
-a `download` hook (BDSP) lists each file's server key and its path in your copy; anything else is listed by each `tree`
-entry's pattern, with the subject filled in.
+a `download` hook lists each file's source, its path in your copy and how to fetch it; anything else is listed by each
+`tree` entry's pattern, with the subject filled in.
 """
 from __future__ import annotations
 
@@ -42,15 +42,20 @@ def download_hook(package: Path):
     return hooks.module(package, "download", derives=False) if (package / "hooks" / "download.py").is_file() else None
 
 
-def from_hooks(mod, config, rows: dict[str, dict]) -> list[tuple[str, str]]:
-    """(server key, path in your copy) of the index tables and each patient's files."""
+def from_hooks(mod, config, raw: Path, rows: dict[str, dict]) -> list[tuple[str, str, str]]:
+    """(source, path in your copy, how) of the index tables and of the source population's files."""
     from medomni.core.loading.options import options
 
-    params = next(dict(options(r).params) for r in config.read if r.reader == "hook")
-    out = list(mod.index_files())
-    for s in sorted(rows):
-        out += mod.night_files(params, rows[s])
-    return out
+    params = {options(r).hook: dict(options(r).params) for r in config.read if r.reader == "hook"}
+    try:
+        return list(mod.index_files()) + list(mod.files(raw, params, rows))
+    except FileNotFoundError as e:
+        raise ToolError(_first(f"{Path(e.filename).relative_to(raw) if e.filename else e} is not in your copy", mod)) from None
+
+
+def _first(problem: str, mod) -> str:
+    return "\n".join([problem, "Download these first (source, path in your copy, how):"]
+                     + ["  " + "  ".join(entry) for entry in mod.index_files()])
 
 
 def from_tree(config, subjects: list[str]) -> list[str]:
@@ -83,14 +88,12 @@ class DownloadList(Preview):
         try:
             rows = source_rows(config, raw)
         except ToolError as e:
-            if mod is None:
-                raise
-            raise ToolError("\n".join([str(e), "Download these first (server key, then path in your copy):"]
-                                       + ["  " + "  ".join(pair) for pair in mod.index_files()])) from None
+            raise (e if mod is None else ToolError(_first(str(e), mod))) from None
         slug = f"{target}.txt"
         if mod is not None:
-            pairs = from_hooks(mod, config, rows)
-            text = "".join(f"{key}\t{local}\n" for key, local in pairs)
-            return Result(f"{target}: {len(rows)} patients, {len(pairs)} files; server key and path in your copy, in {slug}", {slug: text})
+            entries = from_hooks(mod, config, raw, rows)
+            text = "".join("\t".join(e) + "\n" for e in entries)
+            return Result(f"{target}: {len(rows)} patients, {len(entries)} entries (source, path in your copy, how) in {slug}",
+                          {slug: text})
         files = from_tree(config, sorted(rows))
         return Result(f"{target}: {len(rows)} patients, {len(files)} files; list in {slug}", {slug: "\n".join(files) + "\n"})

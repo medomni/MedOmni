@@ -105,8 +105,8 @@
           "$ref": "#/$defs/ConvertsRule"
         },
         "when": {
-          "const": "draw",
-          "default": "draw",
+          "const": "select",
+          "default": "select",
           "title": "When",
           "type": "string"
         }

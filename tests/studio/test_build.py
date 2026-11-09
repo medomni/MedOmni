@@ -123,7 +123,7 @@ def test_too_few_patients_in_a_class_stops_the_draw(ws):
     pair = pool_mod.load_pair(PAIR)
     p = pool_mod.Patient("1", type("C", (), {"anchor": None})(), {t.name: 1 for t in pair.template.targets}, {})
     r = pool_mod.Pool(pair, {"1": p}, {})
-    with pytest.raises(pool_mod.BuildError, match="draw"):
+    with pytest.raises(pool_mod.BuildError, match="select"):
         pool_mod.draw(r)
 
 

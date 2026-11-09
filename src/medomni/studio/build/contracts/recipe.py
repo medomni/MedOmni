@@ -62,7 +62,7 @@ class Converts(Contract):
     draw order, and a patient who fails is replaced by the next (Build page, file check)."""
 
     converts: ConvertsRule
-    when: Literal["draw"] = "draw"
+    when: Literal["select"] = "select"
 
 
 class Definition(Contract):

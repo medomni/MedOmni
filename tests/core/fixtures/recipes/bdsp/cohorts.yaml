@@ -11,7 +11,7 @@ bdsp_arousal@n20:
     require:
     - converts:
         min_families: 3
-      when: draw
+      when: select
     source: all
   targets:
     high_arousal_index_15h: bdsp:psgmetric:arousal-high
@@ -27,7 +27,7 @@ bdsp_demographic-eeg@n20:
     require:
     - converts:
         min_families: 3
-      when: draw
+      when: select
     source: all
   targets:
     age_ge_65: bdsp:bdspdemo:age-ge65
@@ -46,7 +46,7 @@ bdsp_depression-sleep@n20:
     require:
     - converts:
         min_families: 3
-      when: draw
+      when: select
     source: all
   targets:
     depressive_disorders: bdsp:derived:depression
@@ -62,7 +62,7 @@ bdsp_hf-sleep@n20:
     require:
     - converts:
         min_families: 3
-      when: draw
+      when: select
     source: all
   targets:
     heart_failure: bdsp:derived:heart-failure
@@ -78,7 +78,7 @@ bdsp_snoring-demographic@n20:
     require:
     - converts:
         min_families: 3
-      when: draw
+      when: select
     source: all
   targets:
     frequent_limb_movements: bdsp:psgmetric:limb-high
@@ -133,7 +133,7 @@ bdsp_snoring-metrics@n20:
     require:
     - converts:
         min_families: 3
-      when: draw
+      when: select
     source: all
   targets:
     frequent_limb_movements: bdsp:psgmetric:limb-high

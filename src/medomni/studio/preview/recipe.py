@@ -35,9 +35,9 @@ class RecipePreview(Preview):
         result = pool(pair, read_events(path, source), source)
         try:
             drawn = len(draw(result, None if a.no_file_check else file_checker(pair, raw, cache)))
-            verdict = f"draw: {drawn} of {pair.cohort.select.n}"
+            verdict = f"select: {drawn} of {pair.cohort.select.n}"
         except BuildError as e:
-            verdict = f"draw: would refuse: {e}"
+            verdict = f"select: would refuse: {e}"
         cells = defaultdict(int)
         for p in result.patients.values():
             cells[cell_of(p, pair.cohort)] += 1
@@ -47,6 +47,6 @@ class RecipePreview(Preview):
         lines += [f"  {dict(zip(by, key))}: {n}" for key, n in sorted(cells.items(), key=str)] or ["  (the cohort draws on no class)"]
         lines += ["", common.table(["target", "metric", "n", "counts"],
                                    [[t, s["metric"], s["n"], s["counts"]] for t, s in stats.items()])]
-        doc = {"pair": target, "counts": result.counts, "draw": verdict, "classes": {str(k): v for k, v in cells.items()}, "targets": stats}
+        doc = {"pair": target, "counts": result.counts, "select": verdict, "classes": {str(k): v for k, v in cells.items()}, "targets": stats}
         slug = target.replace("@", "_").replace(":", "_")
         return Result("\n".join(lines), {f"{slug}.json": json.dumps(doc, indent=1) + "\n"})

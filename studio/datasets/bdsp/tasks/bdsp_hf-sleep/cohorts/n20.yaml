@@ -7,5 +7,5 @@ select:
   seed: 7
 require:
 - converts: {min_families: 3}
-  when: draw
+  when: select
 source: all

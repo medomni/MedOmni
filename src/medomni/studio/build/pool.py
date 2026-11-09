@@ -262,7 +262,7 @@ def draw(result: Pool, check=None) -> list[str]:
     for key, k in zip(sorted(cells), _split(cohort.select.n, len(cells))):
         ranked = sorted(cells[key], key=lambda p: _rank(cohort.select.seed, p.id, p.time))
         if len(ranked) < k:
-            raise BuildError(f"{result.pair.id}: draw: class {key} has {len(ranked)} patients, needs {k}")
+            raise BuildError(f"{result.pair.id}: select: class {key} has {len(ranked)} patients, needs {k}")
         plan.append({"key": key, "k": k, "ranked": ranked, "next": 0, "kept": []})
     if check is None:
         for c in plan:
@@ -290,7 +290,7 @@ def draw(result: Pool, check=None) -> list[str]:
         result.counts["file check tried"] = tried
         for c in plan:
             if len(c["kept"]) < c["k"]:
-                raise BuildError(f"{result.pair.id}: draw: class {c['key']} has {len(c['kept'])} patients whose files convert, needs {c['k']}")
+                raise BuildError(f"{result.pair.id}: select: class {c['key']} has {len(c['kept'])} patients whose files convert, needs {c['k']}")
     out = [p.id for c in plan for p in c["kept"]]
-    result.counts["draw"] = len(out)
+    result.counts["select"] = len(out)
     return out

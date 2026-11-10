@@ -1,6 +1,6 @@
 """The one Docker runner (R-117): start an encoder image, adopt one already running under our labels, wait until it
 answers, read its card, call it, stop it. The gateway's pool calls `DockerRunner` through asyncio.to_thread, so
-the event loop stays free; Bench's perception service subclasses it (`labels_for`, `tag_for`, `start`).
+the event loop stays free; the perception service (sidecar/) subclasses it (`labels_for`, `tag_for`, `container`).
 
 `Encoder` talks to a running container over the Container API and knows nothing of Docker; `Container` owns one
 container's lifecycle. This is the only module in the gateway that shells out.
@@ -442,10 +442,11 @@ class DockerRunner:
         self._image_ids[tag] = (found, time.monotonic())
         return found
 
-    def start(self, encoder_id):
-        """Start the container, or adopt the one already running under our labels."""
+    def container(self, encoder_id):
+        """The Container that start() runs for one encoder. The perception service returns one that joins an atom's
+        network instead of publishing a port."""
         data_root = self.deployment.data_root
-        box = Container(
+        return Container(
             encoder_id,
             data=str(data_root) if data_root else None,
             baked=data_root is None,      # no data root: read the samples in the image
@@ -456,6 +457,10 @@ class DockerRunner:
             bind_host=self.deployment.bind_host,
             tag=self.tag_for(encoder_id),
         )
+
+    def start(self, encoder_id):
+        """Start the container, or adopt the one already running under our labels."""
+        box = self.container(encoder_id)
         try:
             encoder = box.start()
             encoder.timeout = self.deployment.encode_timeout_s

@@ -14,10 +14,11 @@ import re
 import yaml
 from pydantic import Field, model_validator
 
+from medomni.core import plugins
 from medomni.core.contracts import Contract, load_data
 from medomni.core.contracts.base import NonEmpty
 
-from . import write_records
+from . import RunError, write_records
 
 
 class HarborSettings(Contract):
@@ -93,6 +94,34 @@ def served_model(trial: Path):
     return names[0] if len(names) == 1 else None
 
 
+PERCEPTION = "perception"  # the `medomni.services` entry an arm with a call budget attaches
+
+
+def perception_service():
+    """The perception service's image handle (`image`, `build_command`, `present`), from `medomni.services`.
+
+    Perception owns the service; Bench looks it up by name and talks to it only over the Gateway API.
+    """
+    piece = plugins.resolve(plugins.SERVICES).pieces.get(PERCEPTION)
+    if piece is None:
+        raise RunError(f"no service '{PERCEPTION}' in {plugins.SERVICES}; install MedOmni with Perception")
+    try:
+        return piece.load()
+    except plugins.PluginError as e:
+        raise RunError(str(e)) from None
+
+
+def require_services(arm) -> None:
+    """Refuse a run whose arm attaches the perception service when its image is not on this machine."""
+    if arm.max_calls is None:
+        return
+    service = perception_service()
+    if not service.present():
+        repo = plugins.find_repo() or Path("<repository>")
+        raise RunError(f"arm {arm.name} attaches the perception service, but image {service.image} is not on this "
+                       f"machine. Build it from the repository: {' '.join(service.build_command(repo))}")
+
+
 class Harness:
     name = "agent"
     settings = HarborSettings  # what an agent config's `settings` holds for this runner
@@ -104,6 +133,7 @@ class Harness:
     def run(self, job) -> None:
         if shutil.which("harbor") is None:
             raise RuntimeError("Harbor isn't installed here (see Run your agent)")
+        require_services(job.arm)
         subprocess.run(["harbor", "run", "-c", str(job.folder / "job.yaml")], check=True)
 
     def collect(self, job) -> None:

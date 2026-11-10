@@ -81,12 +81,13 @@ def config_hashes(pair, arms: list) -> dict[str, str]:
     return out
 
 
-def build(pair_ids: list[str], arm_names: list[str], ws=None, source_with=None, draw_with=None, reproduction=False,
-          stream=None) -> list[Path]:
+def build(pair_ids: list[str], arm_names: list[str], ws=None, source_with=None, draw_with=None, events_with=None,
+          reproduction=False, stream=None) -> list[Path]:
     """Build each pair under each arm. Returns the content folders.
 
-    `source_with` and `draw_with` replace the source population and the draw, and `reproduction` skips the pool-wide
-    conversion and keeps v0.2's uncut numerics files: the reproduction test only (R-118)."""
+    `source_with` and `draw_with` replace the source population and the draw, `events_with(dataset, events)` filters
+    the event rows, and `reproduction` skips the pool-wide conversion and keeps v0.2's uncut numerics files: the
+    reproduction test only (R-118)."""
     stream = stream or sys.stdout
     ws = ws or workspace.load()
     cache = Cache(Path(ws.cache))
@@ -102,6 +103,8 @@ def build(pair_ids: list[str], arm_names: list[str], ws=None, source_with=None, 
         everyone = event_subjects(events_path)
         sources = {p.id: (source_with(p) if source_with else source_ids(p, everyone)) for p in group}
         events = read_events(events_path, set().union(*sources.values()))
+        if events_with:
+            events = events_with(dataset, events)
         results, drawn = {}, {}
         for p in group:
             r = pool(p, events, sources[p.id])

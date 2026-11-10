@@ -40,6 +40,20 @@ def v02_source(pair) -> set[str]:
     return {p.stem for p in (V02 / "data_manifest/dataplane" / DATASET[pair.dataset] / "patients").glob("*.json")}
 
 
+def v02_events(dataset, events) -> dict[str, list[dict]]:
+    """v0.2's copy held only some of a subject's MIMIC ECGs. Files downloaded since (R-91) weren't v0.2's, so each
+    subject keeps the ECGs its v0.2 manifest lists. Other families' raw copies are unchanged."""
+    if dataset != "mimic-iv":
+        return events
+    fam, strip = "ecg-12lead-500hz-mv", lambda p: str(Path(p).with_suffix(""))
+    out = {}
+    for s, rows in events.items():
+        f = V02 / "data_manifest/dataplane/mimic/patients" / f"{s}.json"
+        known = {strip(m["path"]) for m in json.loads(f.read_text())["modalities"].get(fam, [])} if f.is_file() else set()
+        out[s] = [r for r in rows if r["code"] != f"FILE//{fam}" or strip(r["path"] or "") in known]
+    return out
+
+
 def _split(n, k):
     base, extra = divmod(n, k)
     return [base + (1 if i < extra else 0) for i in range(k)]
@@ -199,7 +213,7 @@ def test_build_reproduces_v02(cohort, ws):
     only = os.environ.get("MEDOMNI_REPRO_ONLY")
     pairs = _pairs(only)[cohort]
     tree_old, arm = ATOMS[cohort]
-    build(pairs, [arm], ws=ws, source_with=v02_source, draw_with=v02_draw, reproduction=True)
+    build(pairs, [arm], ws=ws, source_with=v02_source, draw_with=v02_draw, events_with=v02_events, reproduction=True)
     raw = {d: str(workspace.dataset_path(ws, d)) for d in ws.datasets}
     tally, why, cohorts, gold, pools = (collections.Counter() for _ in range(5))
     old_root, new_root = V02 / "data_task" / tree_old, TREE / "atomtasks" / arm

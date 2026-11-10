@@ -6,7 +6,8 @@ Rules from v0.2's scorer, kept:
 - an agent failure is a real result, imputed at chance on probability targets; an infrastructure failure refuses the cell;
 - a target with no prediction from a patient refuses the cell;
 - a target marked `too_few` by Build has no value;
-- a refusal is written as a row with no value, so a stale number can never stand as the latest for that row.
+- a refusal is written as a row with no value, so a stale number can never stand as the latest for that row;
+- on an arm with the perception service, each row carries the cell's encoder use (`encoder_use.py`).
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from pathlib import Path
 
 from medomni import __version__
 from medomni.bench.metrics import auc, mae, qwk
+from medomni.bench.scoring import encoder_use
 
 METRICS = {"auc": auc, "qwk": qwk, "mae": mae}
 FAILED = "agent"  # RunRecord.error_kind of a failure that is a real result
@@ -96,29 +98,38 @@ def score_run(job: Path, content_root: Path, task_set_hash: str, results: Path) 
     values = defaultdict(lambda: defaultdict(dict))
     for p in preds:
         values[p.run_id][p.target] = float(p.value)
+    use = None  # run_id -> graded encoder calls; only a job whose arm has the perception service writes the file
+    if (job / "encoder_use.jsonl").is_file():
+        use = {}
+        for line in open(job / "encoder_use.jsonl", encoding="utf-8"):
+            if line.strip():
+                r = json.loads(line)
+                use[r["run_id"]] = r["calls"]
     rows = []
     for pair, group in sorted(by_pair.items()):
-        rows += _score_pair(pair, group, values, content_root / pair, task_set_hash)
+        rows += _score_pair(pair, group, values, content_root / pair, task_set_hash, use)
     with open(results, "a", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
     return rows
 
 
-def _score_pair(pair: str, runs: list, values: dict, content: Path, task_set_hash: str) -> list[dict]:
+def _score_pair(pair: str, runs: list, values: dict, content: Path, task_set_hash: str, use: dict | None = None) -> list[dict]:
     from medomni.core.contracts import ScoreRecord, load_data
 
     metrics, gold, subject_of = read_gold(content)
     meta = json.loads((content / "content.json").read_text(encoding="utf-8"))
     first = runs[0]
     job = first.run_id.split("/", 1)[0]
+    used = {} if use is None else encoder_use.summary({r.run_id: use.get(r.run_id, []) for r in runs}, len(subject_of))
 
     def row(target: str, metric: str, value, flags, n_failed: int = 0) -> dict:
         doc = {"kind": "score", "run_id": f"{job}/{pair}/{target}", "release": __version__,
                "task_set": first.task_set, "task_set_hash": task_set_hash, "target": target,
                "task_version": first.task_version, "config_hash": first.config_hash, "arm": first.agent.arm if first.agent else None,
                "arm_variant": first.agent.arm_variant if first.agent else None, "n_atoms": len(subject_of), "n_failed": n_failed,
-               "intelligence": first.intelligence.model_dump(mode="json"), "metric": metric, "value": value, "flags": list(flags)}
+               "intelligence": first.intelligence.model_dump(mode="json"), "metric": metric, "value": value, "flags": list(flags),
+               "encoder_use": used}
         return load_data(doc, ScoreRecord, doc["run_id"]).model_dump(mode="json", exclude_none=True, exclude_defaults=False)
 
     def marked():

@@ -1,0 +1,39 @@
+{
+ "status": "ok",
+ "encoders": "on",
+ "calls": [
+  {
+   "encoder_id": "ecg-1lead-200hz-uv__ecgfounder",
+   "path": "files/FX0001/ecg-1lead-200hz-uv.edf",
+   "healthy": true,
+   "status": 200,
+   "cached": false,
+   "outcome": "healthy",
+   "t": 1790000020.0,
+   "outputs": [
+    {
+     "kind": "labels",
+     "items": [
+      {
+       "label": "ABNORMAL ECG",
+       "value": 0.8312
+      },
+      {
+       "label": "NORMAL ECG",
+       "value": 0.1204
+      },
+      {
+       "label": "ATRIAL FIBRILLATION",
+       "value": 0.0413
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "opened": [],
+ "budget": {
+  "used": 1,
+  "max": 300
+ }
+}

@@ -4,8 +4,10 @@ from __future__ import annotations
 import csv
 import datetime as dt
 import json
+import os
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
@@ -73,14 +75,21 @@ def submission_of(trial: Path) -> dict[str, float] | None:
 
 
 def write_records(job: Job, trials: list[tuple[str, str, Path, str | None, str | None]]) -> None:
-    """`runs.jsonl` and `predictions.jsonl` from finished trials: (pair, atom, trial folder, error kind, model served)."""
+    """`runs.jsonl` and `predictions.jsonl` from finished trials: (pair, atom, trial folder, error kind, model served).
+    On an arm with the perception service, each trial's encoder calls are counted in its run record and graded into
+    `encoder_use.jsonl`, which the scorer summarises."""
+    from medomni.bench.scoring import encoder_use
     from medomni.core.contracts import IntelligenceRef, PredictionRecord, RunRecord, load_data
 
     job.folder.mkdir(parents=True, exist_ok=True)
     hashes, versions = {}, {}
     who = load_data({"kind": "agent", "name": job.agent.name}, IntelligenceRef, "intelligence").model_dump(mode="json")
     key = f"{job.arm.name}/{job.variant}" if job.variant else job.arm.name
-    with open(job.folder / "runs.jsonl", "w", encoding="utf-8") as runs, open(job.folder / "predictions.jsonl", "w", encoding="utf-8") as preds:
+    graded = job.arm.max_calls is not None  # only an arm with the perception service has encoder use to grade
+    if not graded:
+        (job.folder / "encoder_use.jsonl").unlink(missing_ok=True)
+    with open(job.folder / "runs.jsonl", "w", encoding="utf-8") as runs, open(job.folder / "predictions.jsonl", "w", encoding="utf-8") as preds, \
+            open(job.folder / "encoder_use.jsonl" if graded else os.devnull, "w", encoding="utf-8") as use:
         for pair, atom, trial, error, served in trials:
             content = job.tree / "_content" / pair
             if pair not in hashes:
@@ -90,6 +99,10 @@ def write_records(job: Job, trials: list[tuple[str, str, Path, str | None, str |
             doc = {"kind": "run", "run_id": run_id, "release": __version__, "task_set": job.set_name,
                    "task": pair, "task_version": versions[pair], "config_hash": hashes[pair], "intelligence": who,
                    "model_served": served, "error_kind": error, "agent": {"arm": job.arm.name, "arm_variant": job.variant}}
+            calls = encoder_use.levels(trial) if graded and (trial / "verifier/gateway_usage.json").is_file() else []
+            if calls:
+                doc["agent"]["encoder_calls"] = dict(Counter(c["encoder_id"] for c in calls if c["encoder_id"]))
+                use.write(json.dumps({"run_id": run_id, "calls": calls}) + "\n")
             runs.write(json.dumps(load_data(doc, RunRecord, run_id).model_dump(mode="json")) + "\n")
             for target, value in (submission_of(trial) or {}).items():
                 rec = load_data({"run_id": run_id, "atom": atom, "target": target, "value": value, "intelligence": who}, PredictionRecord, run_id)

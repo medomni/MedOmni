@@ -1,0 +1,5 @@
+{"version": 2, "width": 160, "height": 40, "timestamp": 1790000000}
+[18.0, "i", "curl -s -X POST ... | python3 -m json.tool\r"]
+[20.6, "o", "{\"encoder_id\": \"body-position-code-10hz__rule-occupancy\", \"healthy\": true, \"outputs\": [{\"kind\": \"labels\", \"items\": [{\"label\": \"code_count\", \"value\": 3}, {\"label\": \"modal_fraction\", \"value\": 0.9513394018205462}, {\"label\": \"code_entropy\", \"value\": 0.2812395385710813}, {\"label\": \"transition_count\", \"value\": 13}]}]}\r\n"]
+[40.0, "i", "python3 -c \"open('/workspace/submission/predictions.csv','w').write('target,prediction\\\\nfx_target,0.42\\\\n')\"\r"]
+[40.2, "o", "root@fx:/workspace# "]

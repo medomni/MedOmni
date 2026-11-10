@@ -1,0 +1,5 @@
+{"version": 2, "width": 160, "height": 40, "timestamp": 1790000000}
+[18.0, "i", "curl -s -X POST ... | python3 -m json.tool\r"]
+[20.6, "o", "{\"encoder_id\": \"ecg-1lead-200hz-uv__ecgfounder\", \"outputs\": [{\"kind\": \"labels\", \"items\": [{\"label\": \"ABNORMAL ECG\", \"value\": 0.8312}, {\"label\": \"NORMAL ECG\", \"value\": 0.1204}, {\"label\": \"ATRIAL FIBRILLATION\", \"value\": 0.0413}]}]}\r\n"]
+[40.0, "i", "python3 -c \"open('/workspace/submission/predictions.csv','w').write('target,prediction\\\\nfx_target,0.42\\\\n')\"\r"]
+[40.2, "o", "root@fx:/workspace# "]

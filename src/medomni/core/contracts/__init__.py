@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, TypeAdapter
 
 from .base import Contract, ContractError, IntelligenceRef, load, load_data, load_lines, read
+from .built import BuiltContent, BuiltManifest
 from .dataset import DatasetConfig, DatasetPolicy, Event, EventTable
 from .family import AliasFile, FamilyFile
 from .perception import ContainerRequest, ContainerResponse, EncodeRequest, Evidence, ModelCard
@@ -27,7 +28,7 @@ class Schema:
     model: object  # a model class, or a type for TypeAdapter (ResultRecord)
 
 
-# The 17 contracts, and the schema file of each model in them
+# The 18 contracts, and the schema file of each model in them
 SCHEMAS = (
     Schema("family registry", "family", FamilyFile),
     Schema("family registry", "aliases", AliasFile),
@@ -53,6 +54,8 @@ SCHEMAS = (
     Schema("result record", "result-record", ResultRecord),
     Schema("prediction record", "prediction-record", PredictionRecord),
     Schema("workspace config", "workspace-config", WorkspaceConfig),
+    Schema("built task", "built-content", BuiltContent),
+    Schema("built task", "built-manifest", BuiltManifest),
 )
 
 CONTRACTS = tuple(dict.fromkeys(s.contract for s in SCHEMAS))

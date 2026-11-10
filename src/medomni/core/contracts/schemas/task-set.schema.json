@@ -45,6 +45,11 @@
       "default": null,
       "title": "Description"
     },
+    "builder": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Builder",
+      "type": "string"
+    },
     "arms": {
       "items": {
         "pattern": "^[a-z0-9][a-z0-9-]*$",
@@ -65,6 +70,7 @@
   },
   "required": [
     "name",
+    "builder",
     "arms",
     "tasks"
   ],

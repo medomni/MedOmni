@@ -42,7 +42,7 @@ def test_agents_convert_and_match_committed(repo):
         c.load_data(data, c.AgentConfig, rel)
         assert (repo / rel).read_text(encoding="utf-8") == convert.dump(data), f"{rel} differs from the converter"
     assert outputs["bench/agents/terminus-2-replay.yaml"]["route"] == "local"
-    assert outputs["bench/agents/terminus-2-astra.yaml"]["model_served"] == "gpt-6-astra"
+    assert outputs["bench/agents/terminus-2-astra.yaml"]["settings"]["model_served"] == "gpt-6-astra"
     assert sum(n["route"] == "cloud" for n in notes.values()) == 8
 
 

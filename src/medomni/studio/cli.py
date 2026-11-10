@@ -1,4 +1,5 @@
-"""`medomni studio`: every tool's command, found through `tools.found()`, plus `check <tool>`."""
+"""`medomni studio`: `task` and `data` (building tasks, R-142), every tool's command, found through `tools.found()`, and
+`check <tool>`."""
 from __future__ import annotations
 
 import argparse
@@ -6,9 +7,26 @@ import sys
 
 
 def _parser(loaded: dict) -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(prog="medomni studio", description="The tools around Bench and Perception: survey, "
+    ap = argparse.ArgumentParser(prog="medomni studio", description="Build tasks, and the tools around them: survey, "
                                  "propose, review, preview, report, assets.")
     sub = ap.add_subparsers(dest="cmd", metavar="<command>")
+    task = sub.add_parser("task", help="write, build and check tasks")
+    tsub = task.add_subparsers(dest="sub", metavar="<task command>", required=True)
+    n = tsub.add_parser("new", help="write a task template and an n20 cohort to fill in")
+    n.add_argument("template")
+    n.add_argument("--dataset", required=True)
+    b = tsub.add_parser("build", help="build a pair, or rebuild a published set with the builder it names")
+    b.add_argument("pair", nargs="?", help="<template>@<cohort>")
+    b.add_argument("--set", help="<benchmark>/<set>")
+    b.add_argument("--arm", action="append", help="an arm the set lists (default: every arm it lists)")
+    k = tsub.add_parser("check", help="check a pair, every pair a set pins, or every pinned pair for a release")
+    k.add_argument("pair", nargs="?", help="<template>@<cohort>")
+    k.add_argument("--set", help="<benchmark>/<set>")
+    k.add_argument("--release", action="store_true", help="every pinned pair in every set (MedOmni releases)")
+    data = sub.add_parser("data", help="check your copy of a dataset against its package; write a new dataset package")
+    dsub = data.add_subparsers(dest="sub", metavar="<data command>", required=True)
+    dsub.add_parser("check", help="check your copy against its dataset package").add_argument("dataset")
+    dsub.add_parser("new", help="write a dataset package to fill in").add_argument("dataset")
     for name, tool in sorted(loaded.items()):
         p = sub.add_parser(name, help=tool.summary, description=tool.summary)
         if tool.target:
@@ -44,6 +62,15 @@ def group(argv: list[str]) -> int:
         return 0
     if a.cmd == "check":
         return _check(a.tool, found, loaded, errors)
+    if a.cmd == "task":
+        from . import task
+
+        return {"new": lambda: task.new(a.template, a.dataset), "build": lambda: task.build(a.pair, a.set, a.arm),
+                "check": lambda: task.check(a.pair, a.set, a.release)}[a.sub]()
+    if a.cmd == "data":
+        from . import data
+
+        return {"check": lambda: data.check(a.dataset), "new": lambda: data.new(a.dataset)}[a.sub]()
     for e in errors:
         print(f"medomni studio: {e}", file=sys.stderr)
     try:

@@ -37,7 +37,7 @@ LEAK_TESTS = {"no answer in the evidence": "test_no_answer_in_the_evidence", "el
 
 def _bench_results(scope, sink, pair: str, arm_names=None) -> None:
     """`bench task check` on one pair: its problems become items of the checks they speak to."""
-    from medomni.bench.build import run_checks
+    from medomni.studio.build import run_checks
 
     problems = run_checks(pair, ws=scope.ws, arm_names=arm_names)
     if any("nothing built" in p for p in problems):
@@ -61,7 +61,7 @@ def _bench_results(scope, sink, pair: str, arm_names=None) -> None:
 
 
 def _atom_gates(scope, sink, pair_id: str, atoms: list, meta: dict) -> None:
-    from medomni.bench.build.render import CANARY
+    from medomni.studio.build.render import CANARY
 
     pair = common.load_pair(pair_id)
     env = pair.template.agent.environment
@@ -184,18 +184,18 @@ def _vectors(sink) -> None:
     from medomni.core import plugins
 
     repo = plugins.find_repo()
-    test_file = repo / "tests/bench/test_checks.py" if repo else None
-    if test_file is None or not test_file.is_file():
+    files = [repo / "tests/bench/test_checks.py", repo / "tests/core/test_built_tasks.py"] if repo else []  # the builder's, Core's
+    if not files or not all(f.is_file() for f in files):
         sink.add("T-ISOL.2", "M", "*", NONE, "no repository test file to read", "vectors")
         return
-    names = set(re.findall(r"def (test_\w+)", test_file.read_text(encoding="utf-8")))
+    names = {n for f in files for n in re.findall(r"def (test_\w+)", f.read_text(encoding="utf-8"))}
     for rule, test in LEAK_TESTS.items():
         sink.add("T-ISOL.2", "M", f"rule:{rule}", PASS if test in names else FAIL,
                  f"test case {test}" if test in names else f"no test case for the rule ({test})", "vectors")
 
 
 def run(scope, sink) -> None:
-    from medomni.bench.build import config_hashes
+    from medomni.studio.build import _arm, config_hashes
     from medomni.core.recipes import check_package
 
     packages: set = set()
@@ -231,7 +231,7 @@ def run(scope, sink) -> None:
         staged[pair.dataset] = staged.get(pair.dataset, set()) | _staged_families(atoms)
         expected_by_dataset[pair.dataset] = declared_families(pair.package)
         keys = {arm.split("/")[0] for arm in man["config_hash"]}
-        expected = config_hashes(pair, [arms[k].load() for k in sorted(keys) if k in arms])
+        expected = config_hashes(pair, [_arm(k) for k in sorted(keys) if k in arms])
         same = {k: man["config_hash"].get(k) == v for k, v in expected.items()}
         ok = all(same.values()) and len(same) == len(man["config_hash"])
         sink.add("T-CONF.2", "M", pair_id, PASS if ok else FAIL,

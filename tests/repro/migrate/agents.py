@@ -54,18 +54,16 @@ def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
             served, served_from = sorted(from_expect[name]), EXPERIMENTS
         else:
             raise ValueError(f"{name}: no single served model name in {MODELS} or {EXPERIMENTS}")
-        data = {
-            "name": name,
-            "scaffold": agent["name"],
-            "model": agent["model_name"],
-            "route": "local" if local else "cloud",
-            "model_served": served[0] if len(served) == 1 else served,
-            "env": dict(agent.get("env") or {}),
-        }
+        settings = {"scaffold": agent["name"], "model_served": served[0] if len(served) == 1 else served,
+                    "env": dict(agent.get("env") or {})}
         if max_turns is not None:
-            data["max_turns"] = max_turns
+            settings["max_turns"] = max_turns
         if api_base is not None:
-            data["api_base"] = api_base
+            settings["api_base"] = api_base
+        data = {"kind": "agent", "name": name, "model": agent["model_name"], "route": "local" if local else "cloud"}
+        if agent["model_name"] == "openai/replay":  # v0.2's replay check: no model behind it (R-145)
+            data["runner"] = "replay"
+        data["settings"] = settings
         outputs[f"{DEST}/{name}.yaml"] = data
         notes[name] = {"route": data["route"], "model_served_from": served_from}
     return outputs, notes

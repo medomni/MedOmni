@@ -49,8 +49,7 @@ mae = "medomni.bench.metrics:mae"
 # Family converters from plug-in packages (R-19). A dataset package names its own in dataset.yaml (R-145).
 [project.entry-points."medomni.converters"]
 
-# The four built-in arms (R-84, R-85). Names are read from this metadata without importing; the arms are built in
-# Stage 3 part 3 (build side) and part 5 (run side).
+# The four built-in arms' run side (R-84, R-85, R-143). Names are read from this metadata without importing.
 [project.entry-points."medomni.arms"]
 encoders = "medomni.bench.arms:encoders"
 no-perception = "medomni.bench.arms:no_perception"
@@ -77,6 +76,17 @@ diagrams = "medomni.studio.report.diagrams_tool:Diagrams"
 encoder-demo = "medomni.studio.assets.encoder_demo:EncoderDemo"
 testdata = "medomni.studio.assets.testdata:Testdata"
 family-samples = "medomni.studio.assets.family_samples:FamilySamples"
+
+# Task builders (R-142): MedOmni's v1 builder
+[project.entry-points."medomni.builders"]
+medomni-v1 = "medomni.studio.build:builder"
+
+# The arms' build side for MedOmni's v1 builder, named <builder>:<arm> (R-143, R-144)
+[project.entry-points."medomni.arm_builds"]
+"medomni-v1:encoders" = "medomni.studio.build.arms:encoders"
+"medomni-v1:no-perception" = "medomni.studio.build.arms:no_perception"
+"medomni-v1:encoders-required" = "medomni.studio.build.arms:encoders_required"
+"medomni-v1:modality-ladder" = "medomni.studio.build.arms:modality_ladder"
 
 # Each project's content kinds: where its files live and their contracts (R-145)
 [project.entry-points."medomni.content"]

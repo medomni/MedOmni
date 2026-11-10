@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "built-manifest.schema.json",
+  "x-contract": "built task",
+  "additionalProperties": true,
+  "description": "`_content/<task>/manifest.json`.",
+  "properties": {
+    "config_hash": {
+      "additionalProperties": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Config Hash",
+      "type": "object"
+    },
+    "builder": {
+      "minLength": 1,
+      "title": "Builder",
+      "type": "string"
+    }
+  },
+  "required": [
+    "config_hash",
+    "builder"
+  ],
+  "title": "BuiltManifest",
+  "type": "object"
+}

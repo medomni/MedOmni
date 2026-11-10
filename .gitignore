@@ -1,5 +1,5 @@
 build/
-!src/medomni/bench/build/
+!src/medomni/studio/build/
 __pycache__/
 *.pyc
 .env

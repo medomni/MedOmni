@@ -1,7 +1,9 @@
+kind: agent
 name: terminus-2-mimo
-scaffold: terminus-2
 model: xiaomi_mimo/mimo-v2.6-pro
 route: cloud
-model_served: [xiaomi_mimo/mimo-v2.6-pro, mimo-v2.6-pro]
-env: {XIAOMI_MIMO_API_KEY: '${MIMO_API_KEY}'}
-max_turns: 300
+settings:
+  scaffold: terminus-2
+  model_served: [xiaomi_mimo/mimo-v2.6-pro, mimo-v2.6-pro]
+  env: {XIAOMI_MIMO_API_KEY: '${MIMO_API_KEY}'}
+  max_turns: 300

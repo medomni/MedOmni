@@ -6,32 +6,21 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, Field, model_validator
 
-from .base import (ArmName, ConfigHash, Contract, IntelligenceRef, MetricName, NonEmpty, Sha256, Slug,
-                   TaskSetRef, Version)
+from .base import (ArmName, ConfigHash, Contract, IntelligenceKind, IntelligenceRef, MetricName, NonEmpty, Sha256,
+                   Slug, TaskSetRef, Version)
 from .task import Pair
 
 
 class AgentConfig(Contract):
-    """`bench/agents/<name>.yaml` (Run your agent guide): the config of an intelligence of kind `agent` (R-76)."""
+    """An agent config (Run your agent guide): an intelligence of kind `agent` (R-76). What the runner needs beyond the
+    model is in `settings`, which that runner owns and checks (R-145); Core reads none of it."""
 
+    kind: IntelligenceKind = "agent"
     name: Slug
-    scaffold: NonEmpty  # a Harbor agent, such as terminus-2
     model: NonEmpty
-    route: Literal["local", "cloud"]
-    model_served: NonEmpty | tuple[NonEmpty, ...]  # what the provider reports back; some report two spellings
-    env: dict[str, str] = {}
-    max_turns: int | None = Field(default=None, ge=1)
-    api_base: str | None = None
-
-    @model_validator(mode="after")
-    def _keys_by_reference(self):
-        if self.route == "cloud":
-            import re
-
-            bad = [k for k, v in self.env.items() if not re.match(r"^\$\{[A-Z][A-Z0-9_]*\}$", v)]
-            if bad:
-                raise ValueError(f"a cloud agent names keys only as ${{VARNAME}}; literal values in {bad}")
-        return self
+    route: Literal["local", "cloud"]  # checked against the dataset policies' routes
+    runner: Slug | None = None  # a runner other than the kind's own, such as a replay with no model
+    settings: dict[str, Any] = {}
 
 
 class CacheInput(Contract):

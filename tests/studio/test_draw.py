@@ -4,7 +4,7 @@ from types import SimpleNamespace as NS
 
 import pytest
 
-from medomni.bench.build.pool import BuildError, Patient, Pool, draw
+from medomni.studio.build.pool import BuildError, Patient, Pool, draw
 
 
 def _pool(n, seed):

@@ -9,9 +9,38 @@ import subprocess
 from importlib.resources import files
 from pathlib import Path
 
+import re
+
 import yaml
+from pydantic import Field, model_validator
+
+from medomni.core.contracts import Contract, load_data
+from medomni.core.contracts.base import NonEmpty
 
 from . import write_records
+
+
+class HarborSettings(Contract):
+    """An agent config's `settings` for this runner (R-145): Harbor's agent block."""
+
+    scaffold: NonEmpty  # a Harbor agent, such as terminus-2
+    model_served: NonEmpty | tuple[NonEmpty, ...]  # what the provider reports back; some report two spellings
+    env: dict[str, str] = {}
+    max_turns: int | None = Field(default=None, ge=1)
+    api_base: str | None = None
+    route: str = "local"  # copied from the agent config to check keys; not written
+
+    @model_validator(mode="after")
+    def _keys_by_reference(self):
+        if self.route == "cloud":
+            bad = [k for k, v in self.env.items() if not re.match(r"^\$\{[A-Z][A-Z0-9_]*\}$", v)]
+            if bad:
+                raise ValueError(f"a cloud agent names keys only as ${{VARNAME}}; literal values in {bad}")
+        return self
+
+
+def settings_of(agent) -> HarborSettings:
+    return load_data({**agent.settings, "route": agent.route}, HarborSettings, f"agent {agent.name}: settings")
 
 AGENT_FAILURES = {"VerifierOutputParseError", "AgentTimeoutError", "RewardFileNotFoundError", "RewardFileEmptyError", "VerifierTimeoutError"}
 
@@ -25,22 +54,23 @@ def classify_error(err) -> str | None:
 
 
 def agent_block(agent) -> dict:
-    block = {"name": agent.scaffold, "model_name": agent.model}
+    h = settings_of(agent)
+    block = {"name": h.scaffold, "model_name": agent.model}
     kwargs = {}
-    if agent.max_turns:
-        kwargs["max_turns"] = agent.max_turns
-    if agent.api_base:
-        kwargs["api_base"] = agent.api_base
+    if h.max_turns:
+        kwargs["max_turns"] = h.max_turns
+    if h.api_base:
+        kwargs["api_base"] = h.api_base
     if kwargs:
         block["kwargs"] = kwargs
-    if agent.env:
-        block["env"] = dict(agent.env)
+    if h.env:
+        block["env"] = dict(h.env)
     return block
 
 
 def job_config(job) -> dict:
     """Harbor's job file: the base settings, this agent, and exactly this job's atom folders."""
-    base = yaml.safe_load(files("medomni.bench.build").joinpath("assets/harbor/base.yaml").read_text(encoding="utf-8"))
+    base = yaml.safe_load(files("medomni.bench.runs").joinpath("assets/harbor/base.yaml").read_text(encoding="utf-8"))
     return {**base, "job_name": job.name, "jobs_dir": str(job.folder.parent), "agents": [agent_block(job.agent)],
             "tasks": [{"path": str(d)} for _, _, d in job.atoms()]}
 
@@ -65,6 +95,7 @@ def served_model(trial: Path):
 
 class Harness:
     name = "agent"
+    settings = HarborSettings  # what an agent config's `settings` holds for this runner
 
     def prepare(self, job) -> None:
         job.folder.mkdir(parents=True, exist_ok=True)
@@ -84,7 +115,7 @@ class Harness:
                 continue
             result = json.loads((trial / "result.json").read_text(encoding="utf-8"))
             served = served_model(trial)
-            declared = job.agent.model_served
+            declared = settings_of(job.agent).model_served
             allowed = (declared,) if isinstance(declared, str) else declared
             mismatch = served is not None and served not in allowed
             error = "infra" if mismatch else classify_error(result.get("exception_info"))

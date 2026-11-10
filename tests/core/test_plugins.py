@@ -118,8 +118,8 @@ def test_groups():
 
 # ---------------------------------------------------------------- content folders (R-69)
 
-AGENT = "name: {n}\nscaffold: terminus-2\nmodel: m\nroute: local\nmodel_served: m\n"
-BAD_AGENT = "name: bad\nscaffold: terminus-2\nmodel: m\nroute: cloud\nmodel_served: m\nenv: {KEY: sk-literal}\n"
+AGENT = "name: {n}\nmodel: m\nroute: local\nsettings: {{scaffold: terminus-2, model_served: m}}\n"
+BAD_AGENT = "name: bad\nmodel: m\nroute: cloud\nsettings: {scaffold: terminus-2, model_served: m, env: {KEY: sk-literal}}\n"
 DATASET = yaml.safe_dump(EXAMPLES["dataset-config"][0], sort_keys=False)
 
 

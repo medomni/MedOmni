@@ -3,16 +3,17 @@
   "$id": "agent-config.schema.json",
   "x-contract": "agent config",
   "additionalProperties": false,
-  "description": "`bench/agents/<name>.yaml` (Run your agent guide): the config of an intelligence of kind `agent` (R-76).",
+  "description": "An agent config (Run your agent guide): an intelligence of kind `agent` (R-76). What the runner needs beyond the\nmodel is in `settings`, which that runner owns and checks (R-145); Core reads none of it.",
   "properties": {
+    "kind": {
+      "const": "agent",
+      "default": "agent",
+      "title": "Kind",
+      "type": "string"
+    },
     "name": {
       "pattern": "^[a-z0-9][a-z0-9-]*$",
       "title": "Name",
-      "type": "string"
-    },
-    "scaffold": {
-      "minLength": 1,
-      "title": "Scaffold",
       "type": "string"
     },
     "model": {
@@ -28,62 +29,30 @@
       "title": "Route",
       "type": "string"
     },
-    "model_served": {
+    "runner": {
       "anyOf": [
         {
-          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
           "type": "string"
         },
         {
-          "items": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "type": "array"
+          "type": "null"
         }
       ],
-      "title": "Model Served"
+      "default": null,
+      "title": "Runner"
     },
-    "env": {
-      "additionalProperties": {
-        "type": "string"
-      },
+    "settings": {
+      "additionalProperties": true,
       "default": {},
-      "title": "Env",
+      "title": "Settings",
       "type": "object"
-    },
-    "max_turns": {
-      "anyOf": [
-        {
-          "minimum": 1,
-          "type": "integer"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Max Turns"
-    },
-    "api_base": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Api Base"
     }
   },
   "required": [
     "name",
-    "scaffold",
     "model",
-    "route",
-    "model_served"
+    "route"
   ],
   "title": "AgentConfig",
   "type": "object"

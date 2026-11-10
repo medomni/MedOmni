@@ -6,8 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from medomni.bench import data
-from medomni.bench.build.labels import anchor, label
+from medomni.bench import data as connect_data
+from medomni.studio import data
+from medomni.studio.build.labels import anchor, label
 from medomni.core.contracts import Cohort, LabelLibrary, TaskTemplate, load as load_contract
 from medomni.core.families.dummy.datasets import make_dataset
 from medomni.core.loading import load
@@ -49,7 +50,7 @@ hf_cache: {tmp_path}/hf
 
 
 def _connect(name, root):
-    assert data.connect(name, str(root)) == 0
+    assert connect_data.connect(name, str(root)) == 0
 
 
 @pytest.mark.parametrize("name", PACKAGES)
@@ -136,13 +137,13 @@ def test_connect_keeps_the_file_and_replaces_an_entry(workspace, tmp_path):
     b.mkdir()
     cfg = workspace / "workspace.yaml"
     cfg.write_text("# my note\n" + cfg.read_text())
-    assert data.connect("aireadi", str(a)) == 0 and data.connect("aireadi", str(b)) == 0
+    assert connect_data.connect("aireadi", str(a)) == 0 and connect_data.connect("aireadi", str(b)) == 0
     text = cfg.read_text()
     assert "# my note" in text and str(a) + "}" not in text and str(b) in text
 
 
 def test_connect_refuses_a_relative_path(workspace, capsys):
-    assert data.connect("aireadi", "some/where") == 1
+    assert connect_data.connect("aireadi", "some/where") == 1
 
 
 def test_new_writes_a_package_that_checks(tmp_path, monkeypatch, capsys):

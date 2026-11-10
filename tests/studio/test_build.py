@@ -4,14 +4,14 @@ from pathlib import Path
 
 import pytest
 
-from medomni.bench import build as b
+from medomni.studio import build as b
 import importlib
 
-from medomni.bench.build import checks
+from medomni.studio.build import checks
 from medomni.core import workspace
 from medomni.core.families.dummy.datasets import make_dataset
 
-pool_mod = importlib.import_module("medomni.bench.build.pool")
+pool_mod = importlib.import_module("medomni.studio.build.pool")
 REPO = Path(__file__).resolve().parents[2]
 PAIR = "aireadi_crp-white-cell-count@n20"
 LADDER = "aireadi_crp-white-cell-count@ladder"

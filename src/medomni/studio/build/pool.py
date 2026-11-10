@@ -14,13 +14,14 @@ from pathlib import Path
 from medomni.core.contracts import Cohort, DatasetConfig, EvidenceRules, LabelLibrary, TaskTemplate
 from medomni.core.contracts import load as load_contract
 from medomni.core.contracts.recipe import Any_, Converts, Definition, Files, HasLabel, None_
+from medomni.core.tasks import TaskError
 
 from .labels import Context, anchor, label, window
 
 MIN_PER_CLASS = 5  # used by the feasibility check
 
 
-class BuildError(RuntimeError):
+class BuildError(TaskError):
     """Build refuses: the message names the step and the target or patient."""
 
 

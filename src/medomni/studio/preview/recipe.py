@@ -20,8 +20,8 @@ class RecipePreview(Preview):
         p.add_argument("--no-file-check", action="store_true", help="skip the conversions of a `converts` requirement")
 
     def make(self, target, a, ctx) -> Result:
-        from medomni.bench.build import BuildError, content
-        from medomni.bench.build.pool import cell_of, draw, event_subjects, file_checker, pool, read_events, source_ids
+        from medomni.studio.build import BuildError, content
+        from medomni.studio.build.pool import cell_of, draw, event_subjects, file_checker, pool, read_events, source_ids
         from medomni.core import workspace
         from medomni.core.cache import Cache
         from medomni.core.loading import build

@@ -42,7 +42,7 @@ def test_audit_runs_and_writes_the_report(built, capsys):
 
 def test_task_isolation_reads_benchs_task_check(built, monkeypatch):
     ws, pair = built
-    import medomni.bench.build as b
+    import medomni.studio.build as b
 
     monkeypatch.setattr(b, "run_checks", lambda p, ws=None, arm_names=None: [f"no answer in the evidence: {pair}: table labs holds a guarded code"])
     main(["studio", "audit", "--only", "tasks"])

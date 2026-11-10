@@ -1,7 +1,7 @@
 """The label evaluator (Recipes reference page): each rule kind on planted events. No data."""
 import pytest
 
-from medomni.bench.build.labels import anchor, label, match, window
+from medomni.studio.build.labels import anchor, label, match, window
 from medomni.core.contracts.recipe import Anchor, Label
 
 

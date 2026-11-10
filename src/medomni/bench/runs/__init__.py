@@ -10,12 +10,21 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from medomni import __version__
-from medomni.bench.build import _arm, _atom_dir, _tree
-from medomni.bench.build.content import atom_name as _atom_name
-from medomni.bench.build.pool import BuildError
-from medomni.bench.build.sets import load_set, task_set_hash
 from medomni.core import plugins, workspace
 from medomni.core.contracts import AgentConfig, load
+from medomni.core.tasks import TaskError, layout
+from medomni.core.tasks.checks import task_checks
+from medomni.core.tasks.sets import load_set, task_set_hash
+
+RunError = TaskError
+
+
+def _arm(name: str):
+    """An arm's run side, from `medomni.arms`."""
+    pieces = plugins.resolve(plugins.ARMS).pieces
+    if name not in pieces:
+        raise RunError(f"unknown arm '{name}' (registered: {', '.join(sorted(pieces))})")
+    return pieces[name].load()
 
 
 @runtime_checkable
@@ -36,7 +45,7 @@ class Job:
         self.ws, self.set_name, self.agent, self.arm, self.variant, self.rep = ws, set_name, agent, arm, variant, rep
         self.stamp = stamp or dt.datetime.now().strftime("%Y%m%d-%H%M%S")
         self.task_set, _ = load_set(set_name)
-        self.tree = _tree(ws)
+        self.tree = layout.tree(ws)
         condition = f"{arm.name}.{variant}" if variant else arm.name
         self.name = "--".join([set_name.replace("/", "."), agent.name, condition, f"r{rep}", self.stamp])
         self.folder = Path(ws.runs) / self.name
@@ -47,9 +56,9 @@ class Job:
         for e in self.task_set.tasks:
             meta = json.loads((self.tree / "_content" / e.task / "content.json").read_text(encoding="utf-8"))
             for a in meta["atoms"]:
-                d = _atom_dir(self.tree, self.arm, self.variant, a["atom"])
+                d = layout.atom_dir(self.tree, self.arm.name, self.variant, a["atom"])
                 if not d.is_dir():
-                    raise BuildError(f"{a['atom']}: not built under {self.arm.name}; run `medomni bench task build --set {self.set_name}`")
+                    raise RunError(f"{a['atom']}: not built under {self.arm.name}; build the set first (`medomni studio task build --set {self.set_name}`)")
                 out.append((e.task, a["atom"], d))
         return out
 
@@ -128,16 +137,26 @@ replay = Replay()
 
 
 def load_agent(name: str) -> AgentConfig:
-    path = plugins.find_repo() / "bench/agents" / f"{name}.yaml"
-    if not path.is_file():
-        raise BuildError(f"no agent {name} at {path}")
-    return load(path, AgentConfig)
+    agents = plugins.content(plugins.roots(plugins.find_repo())[0])["agents"].pieces
+    if name not in agents:
+        raise RunError(f"no agent config {name} (found: {', '.join(sorted(agents))})")
+    return load(agents[name].path, AgentConfig)
 
 
 def runner_for(agent: AgentConfig) -> Runner:
-    """The replay agent runs with no Harbor; every other agent runs under the Harbor harness."""
+    """The runner the agent config names, else the one registered for its kind (R-77, R-145)."""
     pieces = plugins.resolve(plugins.RUNNERS).pieces
-    return pieces["replay" if agent.model == "openai/replay" else "agent"].load()
+    name = agent.runner or agent.kind
+    if name not in pieces:
+        raise RunError(f"no runner '{name}' (registered: {', '.join(sorted(pieces))})")
+    return pieces[name].load()
+
+
+def preflight(tree: Path, task_set, arms: list[str]) -> None:
+    """Core's checks over built output, on every task of the set under these arms, before anything runs (R-143 a)."""
+    problems = [p for e in task_set.tasks for p in task_checks(tree, e.task, arms)]
+    if problems:
+        raise RunError(f"{len(problems)} problem(s) in the built tasks; nothing ran:\n  " + "\n  ".join(problems[:20]))
 
 
 def run(set_name: str, agent_name: str, arms: list[str] | None = None, ws=None, stream=None) -> list[Path]:
@@ -148,11 +167,13 @@ def run(set_name: str, agent_name: str, arms: list[str] | None = None, ws=None, 
     names = arms or list(task_set.arms)
     bad = sorted(set(names) - set(task_set.arms))
     if bad:
-        raise BuildError(f"{set_name} does not list arm {bad}")
+        raise RunError(f"{set_name} does not list arm {bad}")
+    tree = layout.tree(ws)
+    preflight(tree, task_set, names)
     out = []
     runner = runner_for(agent)
     for arm in [_arm(a) for a in names]:
-        for variant in arm.variants(_Any()):
+        for variant in sorted({v for e in task_set.tasks for v in layout.variants(tree, e.task, arm.name)}, key=lambda v: v or ""):
             job = Job(ws, set_name, agent, arm, variant)
             runner.prepare(job)
             runner.run(job)
@@ -160,10 +181,6 @@ def run(set_name: str, agent_name: str, arms: list[str] | None = None, ws=None, 
             print(f"{job.name}: done", file=stream)
             out.append(job.folder)
     return out
-
-
-class _Any:
-    """An arm's variants don't depend on the pair for the arms that ship; a pair is only needed for its definition file."""
 
 
 def score(set_name: str, ws=None, stream=None) -> int:
@@ -179,7 +196,7 @@ def score(set_name: str, ws=None, stream=None) -> int:
         return 1
     n = 0
     for job in jobs:
-        rows = score_run(job, _tree(ws) / "_content", h, Path(ws.results))
+        rows = score_run(job, layout.tree(ws) / layout.CONTENT, h, Path(ws.results))
         n += len(rows)
     print(f"{set_name}: {n} score rows written to {ws.results}", file=stream)
     return 0

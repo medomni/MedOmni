@@ -15,7 +15,7 @@ from ..tools import Preview, Result, ToolError
 
 def source_rows(config, raw: Path) -> dict[str, dict]:
     """The source population's patients and each one's latest index row, by the dataset's hash rule."""
-    from medomni.bench.build.pool import in_fraction
+    from medomni.studio.build.pool import in_fraction
     from medomni.core.loading.options import options
     from medomni.core.loading.readers import csv_
 

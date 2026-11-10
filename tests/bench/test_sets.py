@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from medomni.bench import task
-from medomni.bench.build import sets
+from medomni.studio import task
+from medomni.studio.build import sets
 from medomni.core.contracts import TaskSet, load, load_data
 
 REPO = Path(__file__).resolve().parents[2]
@@ -15,7 +15,7 @@ BENCH = REPO / "bench/benchmarks/medomni-bench"
 
 
 def set_of(pairs, arms=("encoders",)):
-    return load_data({"name": "x", "arms": list(arms), "tasks": [{"task": p, "version": v} for p, v in pairs]}, TaskSet, "x")
+    return load_data({"name": "x", "builder": "medomni-v1", "arms": list(arms), "tasks": [{"task": p, "version": v} for p, v in pairs]}, TaskSet, "x")
 
 
 def test_every_shipped_set_loads_and_its_pins_match_the_cohorts():
@@ -29,9 +29,11 @@ def test_every_shipped_set_loads_and_its_pins_match_the_cohorts():
 
 
 def test_an_unknown_set_is_refused():
-    with pytest.raises(sets.BuildError):
+    from medomni.core.tasks import TaskError
+
+    with pytest.raises(TaskError):
         sets.load_set("medomni-bench/nope")
-    with pytest.raises(sets.BuildError):
+    with pytest.raises(TaskError):
         sets.load_set("nope")
 
 
@@ -91,7 +93,7 @@ def test_a_second_benchmark_with_its_own_v1_loads_beside_it(tmp_path, monkeypatc
     other = tmp_path / "bench/benchmarks/other"
     (other / "sets").mkdir(parents=True)
     (other / "benchmark.yaml").write_text("name: other\nversion: '1'\nowner: x\nlicense: MIT\naccepts: [agent]\n")
-    (other / "sets/v1.yaml").write_text("name: v1\narms: [encoders]\ntasks: [{task: aireadi_x@n20, version: 1}]\n")
+    (other / "sets/v1.yaml").write_text("name: v1\nbuilder: medomni-v1\narms: [encoders]\ntasks: [{task: aireadi_x@n20, version: 1}]\n")
     real = plugins.roots
     monkeypatch.setattr(plugins, "roots", lambda repo: ([*real(repo)[0], ("other", tmp_path)], []))
     assert sets.load_set("other/v1")[0].tasks[0].task == "aireadi_x@n20"

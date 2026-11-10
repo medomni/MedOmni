@@ -16,7 +16,7 @@ DIRECT_ID = re.compile(r"(^|_)(name|mrn|ssn|address|phone|email|zip)(_|$)", re.I
 
 
 def run(scope, sink) -> None:
-    from medomni.bench import data as bench_data
+    from medomni.studio import data as bench_data
     from medomni.core import workspace
     from medomni.core.contracts import ContractError, DatasetConfig, DatasetPolicy, load
     from medomni.core.loading import find_package
@@ -43,7 +43,7 @@ def run(scope, sink) -> None:
         sink.add("D-COMP.3", "M", ds, PASS if any(events.glob("*/CACHE.json")) else NONE,
                  "event table in the cache" if events.is_dir() else "no event table cached; run `medomni cache build`", "cache")
         stream = io.StringIO()
-        code = bench_data.check(ds, stream)  # Bench's own check of the package and the copy (R-125)
+        code = bench_data.check(ds, stream)  # the v1 builder's check of the package and the copy (R-125)
         problems = [ln.strip() for ln in stream.getvalue().splitlines() if ln.startswith("  ")]
         for p in (problems or ["`bench data check` failed without naming a problem"]) if code else ():
             sink.add("D-CONF.1", "M", ds, FAIL, p, "bench data check")

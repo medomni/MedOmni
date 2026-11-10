@@ -1,6 +1,5 @@
-"""Benchmarks' task sets (R-83, R-108, R-111): read a set, its `task_set_hash`, and the release check.
-
-A set entry pins a pair and its version N, nothing else. The release check compares config files only, never data.
+"""The v1 builder's checks on task sets (R-108): each pin's N against its cohort file, and the release check. Reading
+sets and `task_set_hash` are Core's (`medomni.core.tasks.sets`). The release check compares config files only, never data.
 """
 from __future__ import annotations
 
@@ -10,34 +9,12 @@ from pathlib import Path
 
 import yaml
 
-from medomni.core import plugins
-from medomni.core.contracts import BenchmarkCard, TaskSet, load
+from medomni.core.contracts import TaskSet
 
 from .pool import BuildError, parse
 
 
-def benchmark_folders() -> dict[str, Path]:
-    """{benchmark name: folder}, the repository's and every plug-in's."""
-    found = plugins.content(plugins.roots(plugins.find_repo())[0])
-    return {name: piece.path for name, piece in found["benchmarks"].pieces.items()}
-
-
-def load_set(name: str) -> tuple[TaskSet, Path]:
-    bench, _, sname = name.partition("/")
-    folders = benchmark_folders()
-    if not sname or bench not in folders:
-        raise BuildError(f"no benchmark for '{name}' (write <benchmark>/<set>; found: {', '.join(sorted(folders))})")
-    path = folders[bench] / "sets" / f"{sname}.yaml"
-    if not path.is_file():
-        raise BuildError(f"no task set {name} at {path}")
-    load(folders[bench] / "benchmark.yaml", BenchmarkCard)
-    return load(path, TaskSet), path
-
-
-def task_set_hash(task_set: TaskSet) -> str:
-    """sha256 over the set's pins in order of pair: the pairs and their N, nothing else."""
-    lines = sorted(f"{e.task}\t{e.version}" for e in task_set.tasks)
-    return hashlib.sha256("\n".join(lines).encode()).hexdigest()
+from medomni.core.tasks.sets import all_sets, benchmark_folders, load_set, task_set_hash  # noqa: F401  (Core, R-143 b)
 
 
 def pin_problems(task_set: TaskSet, read_cohort) -> list[str]:
@@ -117,11 +94,3 @@ def package_of(pair: str):
 
     template_id, _, cohort = parse(pair)
     return find_package(template_id.split("_", 1)[0]), template_id, cohort
-
-
-def all_sets() -> list[tuple[str, TaskSet]]:
-    out = []
-    for bench, folder in sorted(benchmark_folders().items()):
-        for p in sorted((folder / "sets").glob("*.yaml")):
-            out.append((f"{bench}/{p.stem}", load(p, TaskSet)))
-    return out

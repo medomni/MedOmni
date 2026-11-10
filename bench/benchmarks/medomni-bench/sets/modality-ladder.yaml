@@ -1,5 +1,6 @@
 name: modality-ladder
 description: The 5 ladder templates at their ladder cohort.
+builder: medomni-v1
 arms: [modality-ladder]
 tasks:
 - {task: aireadi_crp-white-cell-count@ladder, version: 1}

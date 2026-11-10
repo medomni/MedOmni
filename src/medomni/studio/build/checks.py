@@ -1,7 +1,6 @@
-"""The task-correctness checks (R-119, R-121, R-125): Build refuses a task that fails one, and `bench task check` runs them.
-
-Content checks read the drawn patients and their records; atom checks read a rendered atom folder. Each returns a list
-of problems; every problem names the check and the target or atom, never a patient's values.
+"""The v1 builder's refusals (R-119, R-121, R-125, R-143 a): the checks that read the recipe or the source data. Build
+refuses a task that fails one, and `studio task check` runs them. The checks over built output alone are Core's
+(`medomni.core.tasks.checks`). Each returns a list of problems naming the check and the target, never a patient's values.
 """
 from __future__ import annotations
 
@@ -13,7 +12,6 @@ import yaml
 from . import evidence as ev
 from .labels import when, window
 from .pool import MIN_PER_CLASS, Pool, meets, _event_requirements
-from .render import companions
 
 
 # ---- content checks
@@ -100,52 +98,3 @@ def enough_patients(result: Pool, drawn: list[str]) -> tuple[list[str], dict]:
 def answers_vary(stats: dict) -> list[str]:
     """A target with one answer across the pool refuses the whole task (R-121)."""
     return [f"answers that vary: target {t} has one answer across the pool" for t, s in stats.items() if len(s["counts"]) <= 1]
-
-
-# ---- atom checks
-def image_times(atom: Path, prediction_time) -> list[str]:
-    refs = atom / "data/references.jsonl"
-    if not refs.exists():
-        return []
-    out = []
-    for line in refs.read_text(encoding="utf-8").splitlines():
-        r = json.loads(line)
-        if r["path"].startswith("/"):
-            out.append(f"nothing after the prediction time: {atom.name}: an absolute path in references.jsonl")
-        elif prediction_time and r.get("t_start") and not ev.before_or_at(r["t_start"], prediction_time):
-            out.append(f"nothing after the prediction time: {atom.name}: {r['path']} is dated after it")
-    return out
-
-
-def recordings(atom: Path) -> list[str]:
-    rm = atom / "environment/refs.map.json"
-    if not rm.exists():
-        return []
-    mapping = json.loads(rm.read_text(encoding="utf-8"))
-    staged, out = set(mapping.values()), []
-    for rel, ab in mapping.items():
-        if not rel.endswith(".hea"):
-            continue
-        try:
-            missing = [c.name for c in companions(Path(ab)) if str(c) not in staged]
-        except RuntimeError as e:
-            missing = [str(e)]
-        if missing:
-            out.append(f"complete recordings: {atom.name}: {rel} misses {missing}")
-    return out
-
-
-def network(atom: Path) -> list[str]:
-    doc = yaml.safe_load((atom / "environment/docker-compose.yaml").read_text(encoding="utf-8"))
-    nets = doc.get("networks") or {}
-    out = []
-    if len(nets) != 1 or not all((n or {}).get("internal") for n in nets.values()):
-        out.append(f"closed network: {atom.name}: not one internal network")
-    for name, s in doc["services"].items():
-        if s.get("networks") != list(nets):
-            out.append(f"closed network: {atom.name}: service {name} is not on the one internal network")
-    return out
-
-
-def atom_checks(atom: Path, prediction_time) -> list[str]:
-    return image_times(atom, prediction_time) + recordings(atom) + network(atom)

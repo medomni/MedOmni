@@ -6,13 +6,14 @@ from pathlib import Path
 import pytest
 import yaml
 
-from medomni.bench import build as b, metrics, runs as runs_mod, scoring
-from medomni.bench.build import checks
+from medomni.bench import metrics, runs as runs_mod, scoring
+from medomni.studio import build as b
+from medomni.studio.build import checks
 from medomni.core import workspace
 from medomni.core.contracts import RunRecord, ScoreRecord, TaskSet, load_data, load_lines
 from medomni.core.families.dummy.datasets import make_dataset
 
-pool_mod = importlib.import_module("medomni.bench.build.pool")
+pool_mod = importlib.import_module("medomni.studio.build.pool")
 REPO = Path(__file__).resolve().parents[2]
 PAIR = "aireadi_crp-white-cell-count@n20"
 SET = "medomni-bench/smoke-dummy"
@@ -62,7 +63,7 @@ def built(tmp_path_factory):
                    f"results: {root}/results.jsonl\nkeys_file: {root}/keys.env\nhf_cache: {root}/hf\n")
     ws = workspace.load(cfg)
     b.build([PAIR], ["encoders"], ws=ws, draw_with=lambda r: sorted(r.patients)[:12])
-    task_set = load_data({"name": "smoke-dummy", "arms": ["encoders"], "tasks": [{"task": PAIR, "version": 1}]}, TaskSet, "x")
+    task_set = load_data({"name": "smoke-dummy", "builder": "medomni-v1", "arms": ["encoders"], "tasks": [{"task": PAIR, "version": 1}]}, TaskSet, "x")
     mp.setattr(runs_mod, "load_set", lambda name: (task_set, None))
     yield ws
     mp.undo()
@@ -108,7 +109,7 @@ def test_mixed_config_hashes_are_flagged_in_a_table():
 def test_harbor_job_file_and_collect(built, tmp_path):
     h = importlib.import_module("medomni.bench.runs.harbor")
     agent = runs_mod.load_agent("terminus-2-luna")
-    from medomni.bench.build import _arm
+    from medomni.studio.build import _arm
 
     ws = built.model_copy(update={"runs": str(tmp_path)})
     job = runs_mod.Job(ws, SET, agent, _arm("encoders"), None, stamp="20261109-000000")
@@ -137,18 +138,22 @@ def test_error_classes():
 
 
 def test_an_arm_from_outside_builds_and_runs_with_no_core_or_bench_change(built, tmp_path, monkeypatch):
-    """Check 6, R-85: an arm is found by its registered name; nothing lists arm names."""
+    """Check 6, R-85, R-143: an arm is one registered name; its run side is in medomni.arms, and its build side for the
+    v1 builder in medomni.arm_builds. Nothing lists arm names."""
     from medomni.bench.arms import Arm
     from medomni.core import plugins
+    from medomni.studio.build.arms import ArmBuild
 
-    outside = Arm("outside-arm", "Registered by an outside package.", perception="off", max_calls=None, tools_block="tools.noenc.md")
+    outside = Arm("outside-arm", "Registered by an outside package.", perception="off", max_calls=None)
+    outside_build = ArmBuild("outside-arm", tools_block="tools.noenc.md")
     real = plugins.resolve
 
     def resolve(group):
         out = real(group)
-        if group == plugins.ARMS:
-            piece = type("P", (), {"load": staticmethod(lambda: outside)})()
-            return type(out)(**{**out.__dict__, "pieces": {**out.pieces, "outside-arm": piece}})
+        add = {plugins.ARMS: ("outside-arm", outside), plugins.ARM_BUILDS: ("medomni-v1:outside-arm", outside_build)}.get(group)
+        if add:
+            piece = type("P", (), {"load": staticmethod(lambda obj=add[1]: obj)})()
+            return type(out)(**{**out.__dict__, "pieces": {**out.pieces, add[0]: piece}})
         return out
 
     monkeypatch.setattr(plugins, "resolve", resolve)
@@ -157,7 +162,7 @@ def test_an_arm_from_outside_builds_and_runs_with_no_core_or_bench_change(built,
     ws = built.model_copy(update={"runs": str(tmp_path / "runs")})
     b.build([PAIR], ["encoders", "outside-arm"], ws=ws, draw_with=lambda r: sorted(r.patients)[:12])
     assert sorted(p.name for p in (Path(ws.tasks) / "atomtasks/outside-arm").iterdir())
-    task_set = TaskSet.model_construct(name="s", arms=("encoders", "outside-arm"), tasks=runs_mod.load_set(SET)[0].tasks)
+    task_set = TaskSet.model_construct(name="s", builder="medomni-v1", arms=("encoders", "outside-arm"), tasks=runs_mod.load_set(SET)[0].tasks)
     monkeypatch.setattr(runs_mod, "load_set", lambda name: (task_set, None))
     job = runs_mod.run(SET, "terminus-2-replay", arms=["outside-arm"], ws=ws)[0]
     assert (job / "predictions.jsonl").read_text()

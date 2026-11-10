@@ -1,7 +1,9 @@
+kind: agent
 name: terminus-2-sol
-scaffold: terminus-2
 model: openai/gpt-6-sol
 route: cloud
-model_served: gpt-6-sol
-env: {OPENAI_API_KEY: '${OPENAI_API_KEY}'}
-max_turns: 300
+settings:
+  scaffold: terminus-2
+  model_served: gpt-6-sol
+  env: {OPENAI_API_KEY: '${OPENAI_API_KEY}'}
+  max_turns: 300

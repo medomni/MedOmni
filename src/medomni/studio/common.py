@@ -16,8 +16,8 @@ def pairs_of(target: str) -> list[str]:
     """The pairs a command names: one `<template>@<cohort>`, or a set `<benchmark>/<set>`."""
     if "@" in target:
         return [target]
-    from medomni.bench.build import BuildError
-    from medomni.bench.build.sets import load_set
+    from medomni.studio.build import BuildError
+    from medomni.studio.build.sets import load_set
 
     try:
         task_set, _ = load_set(target)
@@ -42,8 +42,8 @@ def manifest(ws, pair: str) -> dict | None:
 
 
 def load_pair(pair: str):
-    from medomni.bench.build import BuildError
-    from medomni.bench.build.pool import load_pair as bench_load
+    from medomni.studio.build import BuildError
+    from medomni.studio.build.pool import load_pair as bench_load
 
     try:
         return bench_load(pair)
@@ -52,12 +52,16 @@ def load_pair(pair: str):
 
 
 def arms(pair) -> list[tuple[object, str | None]]:
-    """(arm, variant) for every arm registered in `medomni.arms` and each of its variants for this pair."""
+    """(arm, variant) for every arm registered in `medomni.arms` that the v1 builder builds, and each of its variants."""
     from medomni.core import plugins
+    from medomni.studio.build import BuildError, _arm
 
     out = []
     for name in sorted(plugins.resolve(plugins.ARMS).pieces):
-        arm = plugins.resolve(plugins.ARMS).pieces[name].load()
+        try:
+            arm = _arm(name)
+        except BuildError:  # an arm this builder has no build side for
+            continue
         for variant in arm.variants(pair) if _has_variants(arm, pair) else (None,):
             out.append((arm, variant))
     return out

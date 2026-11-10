@@ -14,8 +14,8 @@ from .contract_examples import EXAMPLES, SCORE_RECORD
 BY_FILE = {s.file: s for s in c.SCHEMAS}
 
 
-def test_seventeen_contracts():
-    assert len(c.CONTRACTS) == 17  # the fingerprint left (R-111); the benchmark came (R-83)
+def test_eighteen_contracts():
+    assert len(c.CONTRACTS) == 18  # the fingerprint left (R-111); the benchmark came (R-83); the built task (R-143)
     assert "benchmark" in c.CONTRACTS and "fingerprint" not in c.CONTRACTS
     assert set(BY_FILE) == set(EXAMPLES)
 
@@ -32,8 +32,9 @@ def test_valid_instance_loads_frozen(name):
             setattr(root, field, None)
 
 
-# A label library's top-level keys are label names, so it has no unknown top-level field
-@pytest.mark.parametrize("name", sorted(k for k in EXAMPLES if k != "recipe-labels"))
+# A label library's top-level keys are label names, so it has no unknown top-level field; built-task files are open,
+# since a builder may write its own fields beside the contract's (R-143)
+@pytest.mark.parametrize("name", sorted(k for k in EXAMPLES if k != "recipe-labels" and not k.startswith("built-")))
 def test_unknown_field_is_named(name):
     data = copy.deepcopy(EXAMPLES[name][0])
     data["not_a_field"] = 1
@@ -81,7 +82,7 @@ def test_score_record_is_a_result_record():
 
 
 def test_load_reads_yaml_and_json(tmp_path):
-    (tmp_path / "a.yaml").write_text("name: x\nscaffold: s\nmodel: m\nroute: local\nmodel_served: m\n")
+    (tmp_path / "a.yaml").write_text("name: x\nmodel: m\nroute: local\n")
     (tmp_path / "a.json").write_text(json.dumps(EXAMPLES["agent-config"][0]))
     (tmp_path / "bad.yaml").write_text("name: [unclosed\n")
     assert c.load(tmp_path / "a.yaml", c.AgentConfig).route == "local"
@@ -101,7 +102,6 @@ def test_rules_inside_contracts():
     refused("family", lambda d: d["protocol"].update(range=[100, 0]), "min < max")
     refused("family", lambda d: d["protocol"].update(dtype="int64"), "dtype")
     refused("aliases", lambda d: d["families"]["ecg-1lead-200hz-uv"]["accepts"].append("missing"), "unknown vocab")
-    refused("agent-config", lambda d: d["env"].update(OPENAI_API_KEY="sk-literal"), "only as")
     refused("task-template", lambda d: d.update(template_id="other_aki"), "does not start with its dataset")
     refused("task-template", lambda d: d.update(evidence=["full"]), "includes default")
     refused("task-template", lambda d: d["targets"][0].update(metric="f1"), "metric")
@@ -125,9 +125,11 @@ def test_rules_inside_contracts():
     refused("workspace-config", lambda d: d.update(cache="relative/cache"), "absolute")
 
 
-def test_local_agent_may_hold_a_placeholder():
-    data = copy.deepcopy(EXAMPLES["agent-config"][0]) | {"route": "local", "env": {"OPENAI_API_KEY": "no-key"}}
-    assert c.load_data(data, c.AgentConfig).route == "local"
+def test_core_reads_no_runner_settings():
+    """R-145: Core's agent config holds kind, name, model and route; `settings` are the runner's, unread here."""
+    data = copy.deepcopy(EXAMPLES["agent-config"][0])
+    data["settings"]["anything"] = {"a runner": "decides"}
+    assert c.load_data(data, c.AgentConfig).settings["anything"]
 
 
 def test_imported_v02_record_carries_a_stand_in():

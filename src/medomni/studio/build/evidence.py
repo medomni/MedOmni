@@ -15,26 +15,7 @@ from medomni.core.contracts.recipe import TableRule
 
 from .labels import Context, match
 
-F = "%Y-%m-%d %H:%M:%S"
-
-
-def _t(s) -> dt.datetime | None:
-    if not s:
-        return None
-    s = str(s).strip().replace("T", " ")
-    try:
-        return dt.datetime.strptime(s[:19], F) if len(s) > 10 else \
-            dt.datetime.strptime(s[:10], "%Y-%m-%d") + dt.timedelta(hours=23, minutes=59, seconds=59)
-    except ValueError:
-        return None
-
-
-def _is_number(s) -> bool:
-    try:
-        float(s)
-    except (TypeError, ValueError):
-        return False
-    return True
+from medomni.core.tasks.times import F, _is_number, before_or_at, parse as _t  # noqa: F401
 
 
 def boundary(ctx: Context) -> str | None:
@@ -42,16 +23,6 @@ def boundary(ctx: Context) -> str | None:
     if isinstance(ctx.anchor, dt.datetime):
         return ctx.anchor.strftime(F)
     return None if ctx.anchor is None else str(ctx.anchor)  # seconds from the start
-
-
-def before_or_at(ts, b: str | None) -> bool:
-    """A timestamp coarser than the boundary is compared conservatively: a date counts as the end of that day."""
-    if not b or ts in (None, ""):
-        return True
-    if _is_number(b):  # a dataset timed in seconds from the start
-        return not _is_number(ts) or float(ts) <= float(b)
-    t, limit = _t(ts), _t(b)
-    return t is None or t <= limit
 
 
 # ---- the raw rows of the tables evidence names

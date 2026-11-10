@@ -1,7 +1,9 @@
-"""Build: one pipeline per `<template>@<cohort>`: draw -> gold -> content -> render -> check (Build page).
+"""MedOmni's v1 builder (R-142): one pipeline per `<template>@<cohort>`: select -> gold -> content -> render -> check.
 
-The draw and answers are made once per pair however many arms a set lists; arms differ only in rendering (R-107).
+The selection and answers are made once per pair however many arms a set lists; arms differ only in rendering (R-107).
 Build stops, naming the step and the target or patient, when a correctness check fails, and writes no task that fails.
+Its input format (dataset packages, templates, cohorts, labels, evidence) is its own; its output is Core's built-task
+contract (`medomni.core.tasks`), checked with Core's checks over built output as well as its own refusals.
 """
 from __future__ import annotations
 
@@ -12,31 +14,47 @@ from collections import defaultdict
 from pathlib import Path
 
 from medomni import __version__
-from medomni.core import hashing, workspace
+from medomni.core import hashing, plugins, workspace
+from medomni.core.builders import TaskBuilder, arm_build
 from medomni.core.cache import Cache
 from medomni.core.loading import build as load_dataset
+from medomni.core.tasks import checks as built_checks
+from medomni.core.tasks import layout
 
 from . import checks, content, evidence, render
 from .pool import BuildError, Pool, draw, event_subjects, file_checker, load_pair, pool, read_events, source_ids
 
-__all__ = ["BuildError", "build", "run_checks"]
+__all__ = ["BUILDER", "BuildError", "MedOmniV1", "build", "run_checks"]
+
+BUILDER, VERSION = "medomni-v1", "1"
 
 
-def _arm(name: str):
-    from medomni.core import plugins
+class _Arm:
+    """An arm as this builder renders it: its build side (`medomni.arm_builds`), then its run side (`medomni.arms`)."""
 
+    def __init__(self, run, build):
+        self.run, self.build = run, build
+
+    def __getattr__(self, key):
+        return getattr(self.build, key) if hasattr(self.build, key) else getattr(self.run, key)
+
+
+def _arm(name: str) -> _Arm:
     pieces = plugins.resolve(plugins.ARMS).pieces
     if name not in pieces:
         raise BuildError(f"unknown arm '{name}' (registered: {', '.join(sorted(pieces))})")
-    return pieces[name].load()
+    side = arm_build(BUILDER, name)
+    if side is None:
+        raise BuildError(f"{BUILDER} has no build side for arm '{name}' (register {BUILDER}:{name} in medomni.arm_builds)")
+    return _Arm(pieces[name].load(), side)
 
 
 def _tree(ws) -> Path:
-    return Path(ws.tasks) / "atomtasks"
+    return layout.tree(ws)
 
 
 def _atom_dir(tree: Path, arm, variant, name: str) -> Path:
-    return tree / arm.name / variant / name if variant else tree / arm.name / name
+    return layout.atom_dir(tree, arm.name, variant, name)
 
 
 def _dataset_events(pair, ws, cache) -> tuple[Path, Path]:
@@ -57,7 +75,7 @@ def config_hashes(pair, arms: list) -> dict[str, str]:
     out = {}
     for arm in arms:
         for variant in arm.variants(pair):
-            files = {**pair.config_files(), **arm.definition(pair, variant)}
+            files = {**pair.config_files(), **arm.definition(pair, variant), "builder": f"{BUILDER}/{VERSION}".encode()}
             key = f"{arm.name}/{variant}" if variant else arm.name
             out[key] = hashing.config_hash(files, dataset_release=pair.config.description.version, medomni_release=release)
     return out
@@ -123,23 +141,24 @@ def _finish(result: Pool, drawn: list[str], raw: Path, tables, tree: Path, arms:
                 d = _atom_dir(tree, arm, variant, name)
                 rec = arm.mask(recs[s], variant, pair) if variant else recs[s]
                 inv = render.atom(pair, arm, variant, rec, d, raw, cache, hook, params, repo, crop=not reproduction)
-                bad = arm.check(pair, variant, inv, s) + checks.atom_checks(d, rec["prediction_time"])
+                bad = arm.check(pair, variant, inv, s) + built_checks.atom_checks(d)
                 if bad:
                     shutil.rmtree(d, ignore_errors=True)
                     raise BuildError(f"{pair.id}: " + "; ".join(bad[:5]))
     (folder / "manifest.json").write_text(json.dumps({"pair": pair.id, "config_hash": config_hashes(pair, arms),
-                                                     "counts": result.counts, "release": __version__}, indent=1) + "\n", encoding="utf-8")
+                                                     "builder": f"{BUILDER}/{VERSION}", "counts": result.counts,
+                                                     "release": __version__}, indent=1) + "\n", encoding="utf-8")
     print(f"{pair.id}: built {len(drawn)} atoms under {', '.join(a.name for a in arms)}", file=stream)
     return folder
 
 
 def run_checks(pair_id: str, ws=None, arm_names=None) -> list[str]:
-    """`bench task check <pair>`: the 8 checks on what Build wrote."""
+    """`studio task check <pair>`: this builder's refusals on what it wrote, then Core's checks over built output."""
     ws = ws or workspace.load()
     pair, tree, cache = load_pair(pair_id), _tree(ws), Cache(Path(ws.cache))
-    folder = tree / "_content" / pair_id
+    folder = layout.content_dir(tree, pair_id)
     if not (folder / "content.json").is_file():
-        return [f"{pair_id}: nothing built yet; run `medomni bench task build {pair_id}`"]
+        return [f"{pair_id}: nothing built yet; run `medomni studio task build {pair_id}`"]
     meta = json.loads((folder / "content.json").read_text(encoding="utf-8"))
     drawn = [a["subject"] for a in meta["atoms"]]
     _, events_path = _dataset_events(pair, ws, cache)
@@ -147,17 +166,26 @@ def run_checks(pair_id: str, ws=None, arm_names=None) -> list[str]:
     recs = {a["subject"]: json.loads((folder / a["atom"] / "record.json").read_text(encoding="utf-8")) for a in meta["atoms"]}
     out = (checks.leak(pair, recs, content.table_specs(pair)) + checks.eligible(result, drawn)
            + checks.events_ahead(result, drawn) + checks.enough_patients(result, drawn)[0] + checks.answers_vary(meta["pool_stats"]))
-    for arm in [_arm(a) for a in (arm_names or sorted({*(_built_arms(tree, meta))}))]:
-        for variant in arm.variants(pair):
-            for a in meta["atoms"]:
-                d = _atom_dir(tree, arm, variant, a["atom"])
-                if d.is_dir():
-                    out += checks.atom_checks(d, a["prediction_time"])
-    return out
+    return out + built_checks.task_checks(tree, pair_id, arm_names or _built_arms(tree, meta))
 
 
 def _built_arms(tree: Path, meta: dict) -> list[str]:
-    from medomni.core import plugins
+    """The arms a task was built under, from its manifest's config hashes."""
+    keys = layout.read_json(tree, meta["pair"], "manifest.json")["config_hash"]
+    return sorted({k.split("/", 1)[0] for k in keys})
 
-    names = plugins.resolve(plugins.ARMS).pieces
-    return [n for n in names if (tree / n).is_dir()]
+
+class MedOmniV1(TaskBuilder):
+    """MedOmni's v1 builder, registered in `medomni.builders` (R-142)."""
+
+    name, version = BUILDER, VERSION
+
+    def config_files(self, task: str, arm: str, variant: str | None) -> dict[str, Path | bytes]:
+        pair, a = load_pair(task), _arm(arm)
+        return {**pair.config_files(), **a.definition(pair, variant), "builder": f"{BUILDER}/{VERSION}".encode()}
+
+    def build(self, tasks: list[str], arms: list[str], workspace_=None) -> list[Path]:
+        return build(tasks, arms, ws=workspace_)
+
+
+builder = MedOmniV1()

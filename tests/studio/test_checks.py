@@ -6,9 +6,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from medomni.bench.build import checks, content
-from medomni.bench.build.labels import anchor
-from medomni.bench.build.pool import Patient, Pool, load_pair
+from medomni.studio.build import checks, content
+from medomni.studio.build.labels import anchor
+from medomni.studio.build.pool import Patient, Pool, load_pair
 
 FIX = Path(__file__).parent / "fixtures/checks"
 EXPECT = yaml.safe_load((FIX / "EXPECTATIONS.yaml").read_text())
@@ -93,41 +93,3 @@ def test_a_short_target_is_marked_and_a_short_drawn_target_is_refused():
         {"in_hospital_death": int(i < 2), "readmit_30d": i % 2, "prolonged_stay_gt7d": i % 2, "ed_revisit_30d": i % 2} for i in range(20)])
     problems, _ = checks.enough_patients(result, [str(i) for i in range(20)])
     assert any("in_hospital_death" in p for p in problems)
-
-
-def _atom(tmp_path, compose=None, refs=None, mapping=None):
-    a = tmp_path / "atom"
-    (a / "environment").mkdir(parents=True)
-    (a / "data").mkdir()
-    (a / "environment/docker-compose.yaml").write_text(yaml.safe_dump(compose or {
-        "services": {"main": {"networks": ["n"]}, "bootstrap": {"networks": ["n"]}}, "networks": {"n": {"internal": True}}}))
-    if refs:
-        (a / "data/references.jsonl").write_text("".join(json.dumps(r) + "\n" for r in refs))
-    if mapping:
-        (a / "environment/refs.map.json").write_text(json.dumps(mapping))
-    return a
-
-
-def test_closed_network(tmp_path):
-    assert checks.network(_atom(tmp_path)) == []
-    a = _atom(tmp_path / "b", {"services": {"main": {"networks": ["n"]}}, "networks": {"n": {}}})
-    assert checks.network(a)
-    a = _atom(tmp_path / "c", {"services": {"main": {"networks": ["n"]}, "x": {}}, "networks": {"n": {"internal": True}}})
-    assert checks.network(a)
-
-
-def test_nothing_after_the_prediction_time(tmp_path):
-    late = _atom(tmp_path, refs=[{"path": "refs/f/x.jpg", "t_start": "2150-01-02 00:00:00"}])
-    assert checks.image_times(late, "2150-01-01 00:00:00")
-    ok = _atom(tmp_path / "b", refs=[{"path": "refs/f/x.jpg", "t_start": "2150-01-01 00:00:00"}])
-    assert checks.image_times(ok, "2150-01-01 00:00:00") == []
-
-
-def test_complete_recordings(tmp_path):
-    raw = tmp_path / "raw"
-    raw.mkdir()
-    (raw / "r.hea").write_text("r 1 500 100\nr.dat 16 200 12 0 0 0 0 I\n")
-    (raw / "r.dat").write_bytes(b"\0\0")
-    whole = _atom(tmp_path / "a", mapping={"refs/f/r.hea": str(raw / "r.hea"), "refs/f/r.dat": str(raw / "r.dat")})
-    part = _atom(tmp_path / "b", mapping={"refs/f/r.hea": str(raw / "r.hea")})
-    assert checks.recordings(whole) == [] and checks.recordings(part)

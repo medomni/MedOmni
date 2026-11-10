@@ -113,6 +113,7 @@ class TaskSet(Contract):
 
     name: Slug
     description: str | None = None
+    builder: Slug  # the builder that builds its tasks, registered in medomni.builders (R-142)
     arms: tuple[ArmName, ...] = Field(min_length=1)
     tasks: tuple[SetEntry, ...] = Field(min_length=1)
 

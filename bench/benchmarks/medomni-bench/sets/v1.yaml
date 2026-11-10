@@ -1,5 +1,6 @@
 name: v1
 description: The 30 credentialed templates at n20.
+builder: medomni-v1
 arms: [encoders, no-perception]
 tasks:
 - {task: aireadi_cancer-history-metabolic@n20, version: 1}

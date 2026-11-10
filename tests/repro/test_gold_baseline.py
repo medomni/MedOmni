@@ -29,7 +29,7 @@ def _same(ours, gold: str) -> bool:
 def test_labels_equal_v02_gold(dataset):
     import pyarrow.parquet as pq
 
-    from medomni.bench.build.labels import anchor, label
+    from medomni.studio.build.labels import anchor, label
     from medomni.core import workspace
     from medomni.core.contracts import Cohort, LabelLibrary, TaskTemplate, load as load_contract
     from medomni.core.contracts.convert.templates import NAME_MAP

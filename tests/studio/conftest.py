@@ -75,7 +75,7 @@ def package(t1_guard):
 @pytest.fixture(scope="session")
 def built(t1_guard, package):
     """(workspace config, built pair): the dummy dataset built under encoders and no-perception, with one run."""
-    from medomni.bench import build
+    from medomni.studio import build
     from medomni.core import workspace
 
     root = t1_guard / "studio"

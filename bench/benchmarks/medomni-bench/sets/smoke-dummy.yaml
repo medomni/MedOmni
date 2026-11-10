@@ -1,5 +1,6 @@
 name: smoke-dummy
 description: One pair per template, on generated data.
+builder: medomni-v1
 arms: [encoders]
 tasks:
 - {task: aireadi_cancer-history-metabolic@n20, version: 1}

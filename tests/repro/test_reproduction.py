@@ -57,7 +57,7 @@ def v02_draw(result) -> list[str]:
     classes = sorted(set(gold.values()))
     if pair.cohort_name == "ladder":
         if pair.dataset == "mimic-iv":  # v0.2's ladder pool knew a chest film by its day only: a same-day film counts as late
-            from medomni.bench.build.evidence import before_or_at, boundary
+            from medomni.studio.build.evidence import before_or_at, boundary
 
             def early(p):
                 return any(e["code"] == "FILE//cxr-radiograph-2d" and before_or_at(str(e["time"])[:10], boundary(p.ctx)) for e in p.ctx.events)
@@ -193,7 +193,7 @@ def ws():
 
 @pytest.mark.parametrize("cohort", ["n20", "ladder"])
 def test_build_reproduces_v02(cohort, ws):
-    from medomni.bench.build import build
+    from medomni.studio.build import build
     from medomni.core import workspace
 
     only = os.environ.get("MEDOMNI_REPRO_ONLY")

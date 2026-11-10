@@ -207,7 +207,12 @@ def content_kinds() -> tuple[tuple[Kind, ...], tuple[Files, ...]]:
     """Every project's content kinds and contract files, from `medomni.content` (imports those modules)."""
     kinds, files = [], []
     for name, piece in sorted(resolve(CONTENT).pieces.items()):
-        for x in piece.load():
+        try:
+            found = piece.load()
+        except PluginError as e:  # a project that is absent or broken: its content is left out, the rest still works
+            warn(f"content kinds of {piece.full_name} left out: {e}")
+            continue
+        for x in found:
             (kinds if isinstance(x, Kind) else files).append(x)
     return tuple(kinds), tuple(files)
 

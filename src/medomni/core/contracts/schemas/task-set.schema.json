@@ -26,7 +26,7 @@
     }
   },
   "additionalProperties": false,
-  "description": "`bench/benchmarks/<benchmark>/sets/<name>.yaml`: grow-only pins of pairs at a version, and the arms Build\nbuilds them under (R-83, R-84, R-108).",
+  "description": "A benchmark's `sets/<name>.yaml`: grow-only pins of pairs at a version, the builder that builds them, and the\narms they are built under (R-83, R-84, R-108).",
   "properties": {
     "name": {
       "pattern": "^[a-z0-9][a-z0-9-]*$",

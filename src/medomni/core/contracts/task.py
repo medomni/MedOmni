@@ -96,7 +96,7 @@ class SetEntry(Contract):
 
 
 class BenchmarkCard(Contract):
-    """`bench/benchmarks/<name>/benchmark.yaml`: who publishes a benchmark and what it accepts. Its task sets are in
+    """A benchmark's `benchmark.yaml`: who publishes a benchmark and what it accepts. Its task sets are in
     `sets/` beside it; records name a set `<benchmark>/<set>` (R-77, R-83)."""
 
     name: Slug
@@ -108,8 +108,8 @@ class BenchmarkCard(Contract):
 
 
 class TaskSet(Contract):
-    """`bench/benchmarks/<benchmark>/sets/<name>.yaml`: grow-only pins of pairs at a version, and the arms Build
-    builds them under (R-83, R-84, R-108)."""
+    """A benchmark's `sets/<name>.yaml`: grow-only pins of pairs at a version, the builder that builds them, and the
+    arms they are built under (R-83, R-84, R-108)."""
 
     name: Slug
     description: str | None = None

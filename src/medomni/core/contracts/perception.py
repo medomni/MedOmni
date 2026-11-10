@@ -1,6 +1,6 @@
 """Model card, Container API and Gateway API (Encoders and Gateway API reference pages; R-61).
 
-The gateway's request and status models are moved here from v0.2's `perception/gateway/schemas.py`, field for field.
+The gateway's request and status models are moved here from v0.2's gateway schemas, field for field.
 """
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ class Runtime(Contract):
 
 
 class ModelCard(Contract):
-    """`perception/encoders/<family>/<encoder>/card.yaml`."""
+    """An encoder's `card.yaml`."""
 
     id: EncoderId
     family: Slug

@@ -1,4 +1,4 @@
-"""python -m medomni.core.contracts.convert families|agents|cards|templates --repo <v0.2 root> --out <dir>
+"""python -m tests.repro.migrate families|agents|cards|templates --repo <v0.2 root> --out <dir>
 
 The kinds in PENDING are slots that Stage 3 parts fill; until then they exit 2 naming the part."""
 from __future__ import annotations
@@ -12,7 +12,7 @@ from . import agents, cards, families, templates
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(prog="python -m medomni.core.contracts.convert")
+    ap = argparse.ArgumentParser(prog="python -m tests.repro.migrate")
     ap.add_argument("kind", choices=["families", "agents", "cards", "templates", *PENDING])
     ap.add_argument("--repo", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)

@@ -58,7 +58,7 @@ class ConvertsRule(Contract):
 
 
 class Converts(Contract):
-    """At least `min_families` of the patient's files convert and match their family (S1's BDSP recipes). Checked in
+    """At least `min_families` of the patient's files convert and match their family (S1's recipes). Checked in
     draw order, and a patient who fails is replaced by the next (Build page, file check)."""
 
     converts: ConvertsRule

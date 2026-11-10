@@ -5,8 +5,8 @@ import yaml
 
 from medomni.core import contracts as c
 from medomni.core import families
-from medomni.core.contracts import convert
-from medomni.core.contracts.convert import families as fconv
+from tests.repro import migrate as convert
+from tests.repro.migrate import families as fconv
 
 FULL_SCALE = {d: (np.iinfo(d).min, np.iinfo(d).max) for d in ("int16", "uint8", "uint16")}
 

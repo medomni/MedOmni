@@ -15,9 +15,9 @@ from pathlib import Path
 
 from medomni import __version__
 from medomni.core.contracts import IntelligenceRef, PredictionRecord, RunRecord, load_data
-from medomni.core.contracts.convert.templates import NAME_MAP
+from tests.repro.migrate.templates import NAME_MAP
 
-from .harbor import classify_error, served_model
+from medomni.bench.runs.harbor import classify_error, served_model
 
 RELEASE_COMMIT = "aa45b68"
 ARMS = {"enc": "encoders", "noenc": "no-perception", "enc-forced": "encoders-required", "ladder": "modality-ladder"}

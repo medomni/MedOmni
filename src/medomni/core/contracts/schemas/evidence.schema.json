@@ -258,7 +258,7 @@
     },
     "ModelCard": {
       "additionalProperties": false,
-      "description": "`perception/encoders/<family>/<encoder>/card.yaml`.",
+      "description": "An encoder's `card.yaml`.",
       "properties": {
         "id": {
           "pattern": "^[a-z0-9-]+__[a-z0-9-]+$",

@@ -45,7 +45,7 @@ S1_RECIPES = "internal_docs/roadmaps/v0.3.0/roadmaps/probes/s1/p16_recipes.yaml"
 DEST = "studio/datasets"
 TIERS = ("n20", "ladder")
 COHORT_VERSION = "1.0"  # R-106
-HEADER = "# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).\n"
+HEADER = "# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).\n"  # as written in Stage 3 part 2
 
 DATASETS = {"mimic": "mimic-iv", "aireadi": "aireadi", "bdsp": "bdsp"}  # v0.2 dataset -> package
 NAME_MAP = {  # v0.2 template id -> v0.3 template id (R-94)

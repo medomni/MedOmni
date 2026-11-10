@@ -2,8 +2,8 @@
 import pytest
 
 from medomni.core import contracts as c
-from medomni.core.contracts import convert
-from medomni.core.contracts.convert import agents, cards, families
+from tests.repro import migrate as convert
+from tests.repro.migrate import agents, cards, families
 
 
 @pytest.fixture(scope="module")

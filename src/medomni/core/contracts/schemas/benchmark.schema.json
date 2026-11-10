@@ -3,7 +3,7 @@
   "$id": "benchmark.schema.json",
   "x-contract": "benchmark",
   "additionalProperties": false,
-  "description": "`bench/benchmarks/<name>/benchmark.yaml`: who publishes a benchmark and what it accepts. Its task sets are in\n`sets/` beside it; records name a set `<benchmark>/<set>` (R-77, R-83).",
+  "description": "A benchmark's `benchmark.yaml`: who publishes a benchmark and what it accepts. Its task sets are in\n`sets/` beside it; records name a set `<benchmark>/<set>` (R-77, R-83).",
   "properties": {
     "name": {
       "pattern": "^[a-z0-9][a-z0-9-]*$",

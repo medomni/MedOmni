@@ -41,5 +41,5 @@ class BuiltManifest(_Open):
 
 ANSWERS = ("subject_id", "target", "value", "metric")  # answers.csv's header
 ATOM_FILES = ("task.toml", "instruction.md", "tests/expected.json", "tests/format_check.py", "tests/test.sh",
-              "environment/docker-compose.yaml", "environment/Dockerfile")  # what Harbor and the scorer read
+              "environment/docker-compose.yaml", "environment/Dockerfile")  # what the agent runner and the scorer read
 GOLD_NAMES = ("answers.csv", "gold.csv", "content.json", "record.json")  # never inside an atom

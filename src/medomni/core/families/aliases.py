@@ -2,7 +2,7 @@
 
 `resolve(family_id)` expands the family's `accepts` list from `core/families/aliases.yaml` into flat maps. A missing
 alias file is an error, never an empty result; a family with no entry accepts nothing beyond its own protocol.
-It gives the same result as v0.2's generated file (`perception/runtime/family_alias.generated.yaml`).
+It gives the same result as v0.2's generated alias file.
 """
 from __future__ import annotations
 

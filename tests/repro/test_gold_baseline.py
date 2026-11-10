@@ -32,7 +32,7 @@ def test_labels_equal_v02_gold(dataset):
     from medomni.studio.build.labels import anchor, label
     from medomni.core import workspace
     from medomni.core.contracts import Cohort, LabelLibrary, TaskTemplate, load as load_contract
-    from medomni.core.contracts.convert.templates import NAME_MAP
+    from tests.repro.migrate.templates import NAME_MAP
     from medomni.core.loading import load
 
     package = REPO / "studio/datasets" / dataset

@@ -9,7 +9,7 @@ ENCODERS = REPO / "perception" / "encoders"
 @cache
 def shipped():
     """The 44 encoders v0.3.0 ships (R-63). The other 22 v0.2 folders stay in the tree until part 8 deletes them."""
-    from medomni.core.contracts.convert import cards
+    from tests.repro.migrate import cards
 
     return tuple(cards.shipped(REPO))
 

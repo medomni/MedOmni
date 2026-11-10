@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 
 from medomni.core import contracts as c
-from medomni.core.contracts import convert
-from medomni.core.contracts.convert import templates
+from tests.repro import migrate as convert
+from tests.repro.migrate import templates
 
 SCORED = {  # v0.2's n20 trees: template -> {target: metric} (atomtasks/_parents/*__n20/parent.json)
     'aireadi_cancer-history-metabolic': {'cancer_history': 'auc'},

@@ -16,7 +16,7 @@ import pytest
 import yaml
 
 from medomni.core.contracts import ModelCard, load
-from medomni.core.contracts.convert.cards import shipped
+from tests.repro.migrate.cards import shipped
 
 REPO = Path(__file__).resolve().parents[2]
 ENCODERS = REPO / "perception/encoders"

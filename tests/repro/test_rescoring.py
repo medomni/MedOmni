@@ -95,7 +95,7 @@ def test_the_baselines_scores_come_back_from_predictions():
 def test_v02s_runs_convert_to_records(tmp_path):
     if not (RUNS / "experiments/mid/jobs").is_dir():
         pytest.skip("needs v0.2.1's runs")
-    from medomni.bench.runs.imported import import_all
+    from tests.repro.migrate.runs import import_all
 
     got = import_all(V02, tmp_path)
     print(dict(got))

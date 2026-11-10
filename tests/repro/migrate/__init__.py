@@ -1,10 +1,10 @@
 """One-time converters from v0.2 content files to v0.3 contracts (R-58).
 
 Each converter reads v0.2's files from a repository root and returns {path in v0.3 layout: data}. Nothing is
-written until `write()` is called. The converted files are committed as content; the converters are deleted once
-Stage 3 has used them.
+written until `write()` is called. The converted files are committed as content. These converters ship with nothing:
+they live with the reproduction tests, frozen after v0.3 (R-145).
 
-    python -m medomni.core.contracts.convert families|agents|cards|templates --repo <v0.2 root> --out <dir>
+    python -m tests.repro.migrate families|agents|cards|templates --repo <v0.2 root> --out <dir>
 
 Task templates and their cohorts are converted in Stage 3 part 2, into their dataset packages (`templates`, R-68);
 imported v0.2 result records in Stage 3 part 5. Task sets are not converted: they are rebuilt (U2.1). v0.2's fingerprints have no v0.3

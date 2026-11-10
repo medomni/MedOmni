@@ -191,7 +191,7 @@
     }
   },
   "additionalProperties": false,
-  "description": "`bench/datasets/<dataset>/tasks/<template>/template.yaml`.",
+  "description": "A dataset package's `tasks/<template>/template.yaml`.",
   "properties": {
     "template_id": {
       "pattern": "^[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*$",

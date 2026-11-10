@@ -46,10 +46,8 @@ auc = "medomni.bench.metrics:auc"
 qwk = "medomni.bench.metrics:qwk"
 mae = "medomni.bench.metrics:mae"
 
-# Core's family converters (R-19): v0.2's bridge as h5-to-edf (R-105)
+# Family converters from plug-in packages (R-19). A dataset package names its own in dataset.yaml (R-145).
 [project.entry-points."medomni.converters"]
-h5-to-edf = "medomni.core.families.h5_to_edf:CONVERTER"
-vital-to-wfdb = "medomni.core.families.vital_to_wfdb:CONVERTER"
 
 # The four built-in arms (R-84, R-85). Names are read from this metadata without importing; the arms are built in
 # Stage 3 part 3 (build side) and part 5 (run side).
@@ -79,6 +77,12 @@ diagrams = "medomni.studio.report.diagrams_tool:Diagrams"
 encoder-demo = "medomni.studio.assets.encoder_demo:EncoderDemo"
 testdata = "medomni.studio.assets.testdata:Testdata"
 family-samples = "medomni.studio.assets.family_samples:FamilySamples"
+
+# Each project's content kinds: where its files live and their contracts (R-145)
+[project.entry-points."medomni.content"]
+bench = "medomni.bench.content:CONTENT"
+perception = "medomni.perception.content:CONTENT"
+studio = "medomni.studio.content:CONTENT"
 
 [project.entry-points."medomni.runners"]
 agent = "medomni.bench.runs.harbor:harness"

@@ -162,7 +162,7 @@ class Label(Window):
 
 
 class LabelLibrary(RootModel[dict[NonEmpty, Label]]):
-    """`bench/datasets/<dataset>/labels.yaml`: label name -> rule. Templates name `<dataset>:<label>`."""
+    """A dataset package's `labels.yaml`: label name -> rule. Templates name `<dataset>:<label>`."""
 
     model_config = ConfigDict(frozen=True, strict=True)
 
@@ -209,7 +209,7 @@ class Static(Contract):
 
 
 class EvidenceRules(Contract):
-    """`bench/datasets/<dataset>/evidence.yaml`."""
+    """A dataset package's `evidence.yaml`."""
 
     tables: dict[NonEmpty, TableRule] = {}
     static: Static = Static()

@@ -406,6 +406,28 @@
       "default": {},
       "title": "Definitions",
       "type": "object"
+    },
+    "converters": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Converters",
+      "type": "array"
+    },
+    "storage_mb": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Storage Mb"
     }
   },
   "required": [

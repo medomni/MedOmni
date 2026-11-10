@@ -3,6 +3,8 @@
 description: {unit: patient, time: datetime, version: "3.0"}
 units: {table: psg_metadata, column: BDSPPatientID}
 source: {salt: medomni-v0.3, fraction: 0.10}  # the 10% hash rule (R-41)
+converters: [converters/h5_to_edf.py]  # h5 nights into EDF families (R-105, R-145)
+storage_mb: 65536  # a night materialises as several GB of EDF at run time
 read:
 - reader: csv
   options:

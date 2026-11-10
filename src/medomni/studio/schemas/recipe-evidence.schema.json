@@ -229,7 +229,7 @@
     }
   },
   "additionalProperties": false,
-  "description": "`bench/datasets/<dataset>/evidence.yaml`.",
+  "description": "A dataset package's `evidence.yaml`.",
   "properties": {
     "tables": {
       "additionalProperties": {

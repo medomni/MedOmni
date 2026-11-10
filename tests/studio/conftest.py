@@ -19,7 +19,7 @@ RUN = "run-1"
 
 
 def _copy_package(root: Path) -> Path:
-    pkg = root / "bench/datasets/dummy-mimic"
+    pkg = root / "studio/datasets/dummy-mimic"
     shutil.copytree(DATASETS / "dummy-mimic", pkg)
     labels = yaml.safe_load((pkg / "labels.yaml").read_text())
     for rule in labels.values():

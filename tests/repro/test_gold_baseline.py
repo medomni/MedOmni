@@ -35,7 +35,7 @@ def test_labels_equal_v02_gold(dataset):
     from medomni.core.contracts.convert.templates import NAME_MAP
     from medomni.core.loading import load
 
-    package = REPO / "bench/datasets" / dataset
+    package = REPO / "studio/datasets" / dataset
     out = WORKSPACE.parent / "scratch-p2" / dataset
     if not (out / "events.parquet").exists():
         load(package, Path(workspace.dataset_path(workspace.load(WORKSPACE), dataset)), out)

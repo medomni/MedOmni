@@ -17,7 +17,7 @@ PACKAGES = ("aireadi", "bdsp", "mimic-iv")
 
 
 def package(name):
-    return REPO / "bench/datasets" / name
+    return REPO / "studio/datasets" / name
 
 
 def hook(name, module):
@@ -152,7 +152,7 @@ def test_new_writes_a_package_that_checks(tmp_path, monkeypatch, capsys):
         m.setattr(plugins, "find_repo", lambda: tmp_path)
         assert data.new("my-data") == 0
         assert data.new("my-data") == 1  # refuses to overwrite
-    assert data._package_problems(tmp_path / "bench/datasets/my-data") == []
+    assert data._package_problems(tmp_path / "studio/datasets/my-data") == []
 
 
 # ---- hooks

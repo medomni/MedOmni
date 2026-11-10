@@ -101,7 +101,7 @@ def test_download_list_bdsp_hook(t1_guard, tmp_path, monkeypatch, capsys):
     from medomni.core.families.dummy.datasets import make_dataset
 
     ws_dir = workspace.home()
-    copy = make_dataset(REPO / "bench/datasets/bdsp", tmp_path / "bdsp", subjects=80)
+    copy = make_dataset(REPO / "studio/datasets/bdsp", tmp_path / "bdsp", subjects=80)
     cfg = workspace.load()
     text = (ws_dir / "workspace.yaml").read_text() if (ws_dir / "workspace.yaml").exists() else ""
     assert cfg is not None

@@ -20,7 +20,7 @@ LADDER = "aireadi_crp-white-cell-count@ladder"
 @pytest.fixture(scope="module")
 def ws(tmp_path_factory):
     root = tmp_path_factory.mktemp("build")
-    copy = make_dataset(REPO / "bench/datasets/aireadi", root / "aireadi", subjects=30)
+    copy = make_dataset(REPO / "studio/datasets/aireadi", root / "aireadi", subjects=30)
     cfg = root / "workspace.yaml"
     cfg.write_text(f"datasets: {{aireadi: {{path: {copy.root}}}}}\ncache: {root}/cache\ntasks: {root}/tasks\nruns: {root}/runs\n"
                    f"results: {root}/results.jsonl\nkeys_file: {root}/keys.env\nhf_cache: {root}/hf\n")

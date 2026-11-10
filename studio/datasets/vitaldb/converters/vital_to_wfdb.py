@@ -15,7 +15,7 @@ import numpy as np
 
 from medomni.core import families
 
-from .converters import ConvertFacts
+from medomni.core.families.converters import ConvertFacts
 
 # family -> ((track, channel name, source rate, target rate, scale), ...)
 TRACKS = {

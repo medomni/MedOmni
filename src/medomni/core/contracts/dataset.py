@@ -46,6 +46,8 @@ class DatasetConfig(Contract):
     verify: dict[str, Any] = {}
     rules: dict[str, Any] = {}
     definitions: dict[str, Requirement] = {}  # named requirements cohorts refer to (R-89)
+    converters: tuple[NonEmpty, ...] = ()  # files in the package, each exposing CONVERTER: its own family converters (R-145)
+    storage_mb: int | None = Field(default=None, ge=1)  # disk an atom task's container may use; the builder's default when absent (R-145)
 
 
 Permission = Literal["allow", "conditional", "deny"]

@@ -2,7 +2,9 @@
 
 Content pieces (agents, datasets with their `hooks/`, tasks, encoder cards, benchmarks with their task sets) are files. A plug-in package ships them in
 one folder laid out like the repository and registers that folder with one entry point in `medomni.plugins`. The
-folder is found with `importlib.util.find_spec`, which runs none of the package's code.
+folder is found with `importlib.util.find_spec`, which runs none of the package's code. Where each kind of content
+lives, and which contract its files follow, each project says in `medomni.content`; Core names no project's folder
+(R-145).
 
 Python pieces (commands, checks, family converters, Studio tools, runners, metrics, arms) register one entry point each, in the group for their
 kind. Bench, Perception and Studio register their commands in the same groups. Finding Python pieces reads
@@ -30,11 +32,14 @@ COMMANDS = "medomni.commands"  # top-level commands: Bench, Perception, Studio, 
 CHECKS = "medomni.checks"  # checks the testing kit runs
 CONVERTERS = "medomni.converters"  # family converters
 TOOLS = "medomni.tools"  # Studio tools
-RUNNERS = "medomni.runners"  # one runner per intelligence kind; the Harbor harness is the agent runner (R-77)
+RUNNERS = "medomni.runners"  # one runner per intelligence kind (R-77)
 METRICS = "medomni.metrics"  # metrics a target may name; contributing metrics stays closed in v0.3 (R-77)
 ARMS = "medomni.arms"  # arms a task set may list; new arms come from plug-in packages (R-85)
+CONTENT = "medomni.content"  # each project's content kinds: where its files live and their contracts (R-145)
+BUILDERS = "medomni.builders"  # task builders (R-142)
+ARM_BUILDS = "medomni.arm_builds"  # an arm's build side for one builder, named `<builder>:<arm>` (R-143, R-144)
 
-GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS)  # groups of Python pieces
+GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS, CONTENT, BUILDERS, ARM_BUILDS)  # groups of Python pieces
 
 # Commands that Core itself provides. They are not entry points, and no plug-in can replace them.
 CORE_COMMANDS = ("plugins", "contracts", "cache")
@@ -170,23 +175,41 @@ def folders() -> list[Folder]:
     return sorted(found.values(), key=lambda f: (f.package, f.name))
 
 
+REPO, PLUGIN_FOLDERS, BOTH = "repo", "plugins", "both"
+
+
 @dataclass(frozen=True)
 class Kind:
+    """One kind of content piece, as a project registers it in `medomni.content`."""
+
     name: str
     marker: str  # glob, under a content root, for the file that marks one piece
     depth: int  # how far up from the marker the piece's root is (0: the marker itself)
+    name_parts: int = 1  # how many trailing path parts name a piece, joined by `__`
 
     def piece_name(self, root: Path) -> str:
-        return f"{root.parent.name}__{root.name}" if self.name == "encoders" else root.stem
+        return "__".join(root.parts[-self.name_parts:]) if self.name_parts > 1 else root.stem
 
 
-KINDS = (
-    Kind("agents", "bench/agents/*.yaml", 0),
-    Kind("datasets", "bench/datasets/*/dataset.yaml", 1),
-    Kind("tasks", "bench/datasets/*/tasks/*/template.yaml", 1),
-    Kind("encoders", "perception/encoders/*/*/card.yaml", 1),
-    Kind("benchmarks", "bench/benchmarks/*/benchmark.yaml", 1),  # a card and its task sets in sets/ (R-83)
-)
+@dataclass(frozen=True)
+class Files:
+    """Files that follow one contract, as a project registers them in `medomni.content` (`medomni contracts check`)."""
+
+    contract: str  # the contract's name, as `medomni contracts check` prints it
+    alias: str  # its short name on the command line
+    pattern: str  # glob under a content root
+    model: type
+    exclude: tuple[str, ...] = ()
+    where: str = BOTH  # which roots the pattern is read in: REPO, PLUGIN_FOLDERS or BOTH
+
+
+def content_kinds() -> tuple[tuple[Kind, ...], tuple[Files, ...]]:
+    """Every project's content kinds and contract files, from `medomni.content` (imports those modules)."""
+    kinds, files = [], []
+    for name, piece in sorted(resolve(CONTENT).pieces.items()):
+        for x in piece.load():
+            (kinds if isinstance(x, Kind) else files).append(x)
+    return tuple(kinds), tuple(files)
 
 
 @dataclass(frozen=True)
@@ -224,7 +247,7 @@ def roots(repo: Path | None) -> tuple[list[tuple[str, Path]], list[Folder]]:
 def content(roots: list[tuple[str, Path]]) -> dict[str, Resolved]:
     """Every content piece under the roots, by kind, after name clashes are settled."""
     out = {}
-    for kind in KINDS:
+    for kind in content_kinds()[0]:
         found = []
         for package, root in roots:
             for marker in sorted(root.glob(kind.marker)):

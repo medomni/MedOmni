@@ -56,7 +56,7 @@ def built(tmp_path_factory):
     mp = pytest.MonkeyPatch()
     mp.setattr(checks, "MIN_PER_CLASS", 1)
     mp.setattr(pool_mod, "label", lambda rule, ctx, hooks=None: int(ctx.events[0]["subject_id"][-1]) % 2)
-    copy = make_dataset(REPO / "bench/datasets/aireadi", root / "aireadi", subjects=30)
+    copy = make_dataset(REPO / "studio/datasets/aireadi", root / "aireadi", subjects=30)
     cfg = root / "workspace.yaml"
     cfg.write_text(f"datasets: {{aireadi: {{path: {copy.root}}}}}\ncache: {root}/cache\ntasks: {root}/tasks\nruns: {root}/runs\n"
                    f"results: {root}/results.jsonl\nkeys_file: {root}/keys.env\nhf_cache: {root}/hf\n")

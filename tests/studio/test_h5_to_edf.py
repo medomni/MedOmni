@@ -6,7 +6,11 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from medomni.core.families import converters, h5_to_edf
+from medomni.core.families import converters
+from medomni.core.loading import find_package
+from medomni.core.loading.hooks import file_module
+
+h5_to_edf = file_module(find_package("bdsp"), "converters/h5_to_edf.py", "converter")  # BDSP's own (R-145)
 
 REPO = Path(__file__).resolve().parents[2]
 V02_BRIDGE = REPO / "data_task/familybridge/bridge.py"
@@ -39,7 +43,7 @@ def _edf(path):
 
 
 def test_registered_and_found():
-    found = converters.load()
+    found = converters.load(find_package("bdsp"))
     assert "h5-to-edf" in found.found and not found.errors
     assert converters.for_family("eog-2ch-200hz-uv", "h5", found).name == "h5-to-edf"
 

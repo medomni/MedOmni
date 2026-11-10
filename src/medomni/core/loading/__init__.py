@@ -231,18 +231,32 @@ def load(package: str | Path, raw_root: str | Path, out: str | Path, *, tables: 
 STEP = "events"  # the loading step's name in the cache; its version is cache.CORE_STEPS["events"]
 
 
-def find_package(name: str | Path) -> Path:
-    """A dataset package: a folder holding dataset.yaml, or a name looked up in the repository's `bench/datasets/`,
-    the plug-in folders, then Core's dummy packages."""
+def dataset_packages() -> list[Path]:
+    """Every dataset package, where the projects' `datasets` content kind says (R-145): the repository first, then the
+    plug-in folders, then Core's dummy packages."""
     from medomni.core import plugins
     from medomni.core.testing import DATASETS
 
+    roots, _ = plugins.roots(plugins.find_repo())
+    out = []
+    for kind in (k for k in plugins.content_kinds()[0] if k.name == "datasets"):
+        for _, root in roots:
+            for marker in sorted(root.glob(kind.marker)):
+                d = marker
+                for _ in range(kind.depth):
+                    d = d.parent
+                out.append(d)
+    return out + sorted(p.parent for p in DATASETS.glob("*/dataset.yaml"))
+
+
+def find_package(name: str | Path) -> Path:
+    """A dataset package: a folder holding dataset.yaml, or a name looked up where a project's `datasets` content kind
+    says (`medomni.content`, R-145), in the repository and then the plug-in folders, then Core's dummy packages."""
     p = Path(name)
     if (p / "dataset.yaml").is_file():
         return p
-    roots, _ = plugins.roots(plugins.find_repo())
-    for d in [root / "bench" / "datasets" / str(name) for _, root in roots] + [DATASETS / str(name)]:
-        if (d / "dataset.yaml").is_file():
+    for d in dataset_packages():
+        if d.name == str(name):
             return d
     raise FileNotFoundError(f"no dataset package '{name}' (give a folder holding dataset.yaml, or a dataset name)")
 

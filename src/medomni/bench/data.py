@@ -195,14 +195,14 @@ sources: [<where the policy was read from>]
 
 
 def new(dataset: str, stream=None) -> int:
-    """Write a package to fill in, at `bench/datasets/<dataset>/` under the current repository."""
+    """Write a package to fill in, at `studio/datasets/<dataset>/` under the current repository."""
     from medomni.core import plugins
 
     stream = stream or sys.stdout
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", dataset):
         print(f"'{dataset}' is not a dataset id (lower case, digits, hyphens)", file=stream)
         return 1
-    package = plugins.find_repo() / "bench/datasets" / dataset
+    package = plugins.find_repo() / "studio/datasets" / dataset
     if package.exists():
         print(f"{package} already exists", file=stream)
         return 1

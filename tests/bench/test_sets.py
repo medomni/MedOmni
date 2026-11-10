@@ -43,7 +43,7 @@ def test_the_set_hash_covers_only_the_pairs_and_their_n():
 
 @pytest.fixture
 def package(tmp_path):
-    p = tmp_path / "bench/datasets/d"
+    p = tmp_path / "studio/datasets/d"
     t = p / "tasks/d_t"
     (t / "cohorts").mkdir(parents=True)
     (t / "cohorts/n20.yaml").write_text("version: '1.0'\nanchor: {event: A}\nselect: {n: 20, seed: 7}\n")
@@ -105,7 +105,7 @@ def test_task_check_needs_something_named(capsys):
 def test_task_new_writes_files_that_parse(tmp_path, monkeypatch):
     import medomni.core.loading as loading
 
-    p = tmp_path / "bench/datasets/d"
+    p = tmp_path / "studio/datasets/d"
     p.mkdir(parents=True)
     monkeypatch.setattr(loading, "find_package", lambda name: p)
     assert task.new("my-task", "d") == 0

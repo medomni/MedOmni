@@ -294,7 +294,7 @@
   "additionalProperties": {
     "$ref": "#/$defs/Label"
   },
-  "description": "`bench/datasets/<dataset>/labels.yaml`: label name -> rule. Templates name `<dataset>:<label>`.",
+  "description": "A dataset package's `labels.yaml`: label name -> rule. Templates name `<dataset>:<label>`.",
   "propertyNames": {
     "minLength": 1
   },

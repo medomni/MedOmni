@@ -70,7 +70,7 @@ def test_ids_paths_and_mimic_renames(converted):
     by_ds = {}
     for rel, d in outputs.items():
         if rel.endswith("/template.yaml"):
-            assert rel == f"bench/datasets/{d['dataset']}/tasks/{d['template_id']}/template.yaml"
+            assert rel == f"studio/datasets/{d['dataset']}/tasks/{d['template_id']}/template.yaml"
             assert d["template_id"].startswith(f"{d['dataset']}_")
             assert all(t["label"].startswith(f"{d['dataset']}:") for t in d["targets"])
             by_ds[d["dataset"]] = by_ds.get(d["dataset"], 0) + 1
@@ -105,8 +105,8 @@ def test_u29_placement(converted):
 
 def test_committed_tree_is_the_converter_output(repo, converted):
     outputs, _ = converted
-    committed = {p.relative_to(repo).as_posix() for p in (repo / "bench/datasets").glob("*/tasks/*/**/*.yaml")
-                 if p.relative_to(repo / "bench/datasets").parts[0] != "vitaldb"}  # written for v0.3, not converted
+    committed = {p.relative_to(repo).as_posix() for p in (repo / "studio/datasets").glob("*/tasks/*/**/*.yaml")
+                 if p.relative_to(repo / "studio/datasets").parts[0] != "vitaldb"}  # written for v0.3, not converted
     assert committed == set(outputs)
     for rel, data in outputs.items():
         assert (repo / rel).read_text(encoding="utf-8") == templates.HEADER + convert.dump(data), rel

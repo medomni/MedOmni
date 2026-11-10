@@ -3,6 +3,7 @@
 description: {unit: surgery case, time: seconds-from-start, version: "1.0.0"}
 units: {table: clinical_info, column: caseid}
 source: all
+converters: [converters/vital_to_wfdb.py]  # .vital cases into WFDB and EDF families (R-145)
 verify:
   unit_files: cases/{unit}.vital
 read:

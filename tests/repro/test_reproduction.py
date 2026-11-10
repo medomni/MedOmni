@@ -172,7 +172,7 @@ def _pairs(only):
     from medomni.core.contracts import TaskTemplate, load
 
     out = {"n20": [], "ladder": []}
-    for tpl in sorted((plugins.find_repo() / "bench/datasets").glob("*/tasks/*/template.yaml")):
+    for tpl in sorted((plugins.find_repo() / "studio/datasets").glob("*/tasks/*/template.yaml")):
         t = load(tpl, TaskTemplate)
         if t.dataset not in DATASET or (only and t.dataset != only):  # a dataset new in v0.3 has nothing to compare with
             continue

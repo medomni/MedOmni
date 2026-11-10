@@ -3,7 +3,11 @@ import numpy as np
 import pytest
 
 from medomni.core import families
-from medomni.core.families import check, vital_to_wfdb as v
+from medomni.core.families import check
+from medomni.core.loading import find_package
+from medomni.core.loading.hooks import file_module
+
+v = file_module(find_package("vitaldb"), "converters/vital_to_wfdb.py", "converter")  # VitalDB's own (R-145)
 
 
 @pytest.fixture(scope="module")

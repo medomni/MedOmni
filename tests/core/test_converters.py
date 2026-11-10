@@ -10,7 +10,7 @@ from medomni.core.families import converters
 
 from .test_plugins import make_dist
 
-BUILTIN = {"h5-to-edf", "vital-to-wfdb"}
+BUILTIN = set()  # MedOmni registers none: BDSP's and VitalDB's live in their dataset packages (R-145)
 
 DUMMY = '''
 import hashlib
@@ -112,3 +112,18 @@ def test_not_a_converter(site):
     make_dist(site, "medomni-one", "fake_one", {plugins.CONVERTERS: {"x": "fake_one:OBJ"}})
     found = converters.load()
     assert set(found.found) == BUILTIN and "not a family converter" in found.errors[0]
+
+
+def test_a_package_names_its_own_converters(tmp_path):
+    """A dataset package lists converter files in dataset.yaml; Core loads them by path, beside the installed ones (R-145)."""
+    pkg = tmp_path / "pkg"
+    (pkg / "converters").mkdir(parents=True)
+    (pkg / "dataset.yaml").write_text("converters: [converters/npy.py]\n")
+    (pkg / "converters/npy.py").write_text(DUMMY + "\nCONVERTER = NpyToEdf()\n")
+    found = converters.load(pkg)
+    assert "npy-to-edf" in found.found and not found.errors
+    assert "npy-to-edf" not in converters.load().found  # only with its package
+    (pkg / "dataset.yaml").write_text("converters: [converters/npy.py, converters/npy2.py]\n")
+    (pkg / "converters/npy2.py").write_text(DUMMY + "\nCONVERTER = NpyToEdf()\n")
+    twice = converters.load(pkg)
+    assert "npy-to-edf" not in twice.found and any("already registered" in e for e in twice.errors)

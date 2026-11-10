@@ -25,8 +25,8 @@ from pathlib import Path
 
 import yaml
 
-from . import ALIASES, folder
-from .converters import ConvertFacts
+from medomni.core.families import ALIASES, folder
+from medomni.core.families.converters import ConvertFacts
 
 FIXED_START = datetime(1985, 1, 1)  # EDF's earliest date; only for a night that names no start time
 
@@ -101,7 +101,7 @@ def available(signals, family_id: str, root: Path | None = None) -> bool:
 def rate_accepted(signals, family_id: str, root: Path | None = None) -> bool:
     """Whether each channel of a family on this night is at a rate the family accepts (its own, or a listed one). The
     converter copies samples and never resamples, so a family at any other rate must not be requested."""
-    from .aliases import resolve
+    from medomni.core.families.aliases import resolve
 
     protocols, alias = _raw(folder(root).resolve())
     ok = {float(protocols[family_id]["rate_hz"])} if protocols[family_id].get("rate_hz") else set()

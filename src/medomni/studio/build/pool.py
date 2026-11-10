@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 from collections import defaultdict
+from functools import lru_cache
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -181,28 +182,34 @@ def pool(pair: Pair, events: dict[str, list[dict]], source: set[str], hooks=None
 
 
 def _convert_one(args):
-    cache_root, converter_name, dataset, raw_root, rel, family, raw_hash = args
+    cache_root, package, converter_name, dataset, raw_root, rel, family, raw_hash = args
     from medomni.core.cache import Cache
     from medomni.core.families import converters
 
     try:
-        converters.cached(Cache(Path(cache_root)), converters.load().found[converter_name], dataset, Path(raw_root), rel,
-                          family, raw_hash)
+        converters.cached(Cache(Path(cache_root)), converters.load(Path(package)).found[converter_name], dataset,
+                          Path(raw_root), rel, family, raw_hash)
         return True
     except Exception:  # a night this family can't be made from
         return False
 
 
-def needs_converting(path: str) -> bool:
-    """A file whose format a converter reads, rather than one a family accepts as it is."""
+@lru_cache(maxsize=None)
+def _source_formats(package: str) -> frozenset[str]:
     from medomni.core.families import converters
 
-    return Path(path).suffix[1:] in {c.source_format for c in converters.load().found.values()}
+    return frozenset(c.source_format for c in converters.load(Path(package)).found.values())
 
 
-def converted_files(p: Patient) -> list[tuple[str, str]]:
+def needs_converting(path: str, package: Path) -> bool:
+    """A file whose format a converter reads (one installed, or the package's own), rather than one a family accepts as it is."""
+    return Path(path).suffix[1:] in _source_formats(str(package))
+
+
+def converted_files(p: Patient, package: Path) -> list[tuple[str, str]]:
     """(family, raw path) of each file this patient's atom needs converted (Families page)."""
-    return [(e["code"][6:], e["path"]) for e in p.ctx.events if e["code"].startswith("FILE//") and needs_converting(e["path"] or "")]
+    return [(e["code"][6:], e["path"]) for e in p.ctx.events
+            if e["code"].startswith("FILE//") and needs_converting(e["path"] or "", package)]
 
 
 def file_checker(pair: Pair, raw_root: Path, cache, workers: int = 6):
@@ -215,21 +222,22 @@ def file_checker(pair: Pair, raw_root: Path, cache, workers: int = 6):
     rule = next((q.converts for q in pair.cohort.require if isinstance(q, Converts)), None)
     if rule is None:
         return None
-    found = converters.load()
+    found = converters.load(pair.package)
 
     def check(patients: list[Patient]) -> set[str]:
         jobs, hashes = [], {}
         for p in patients:
-            for family, rel in converted_files(p):
+            for family, rel in converted_files(p, pair.package):
                 raw_hash = hashes.setdefault(rel, hashing.quick_id(Path(raw_root) / rel))
-                jobs.append((str(cache.root), converters.for_family(family, Path(rel).suffix[1:], found).name, pair.dataset,
-                             str(raw_root), rel, family, raw_hash))
+                jobs.append((str(cache.root), str(pair.package), converters.for_family(family, Path(rel).suffix[1:], found).name,
+                             pair.dataset, str(raw_root), rel, family, raw_hash))
         made = defaultdict(int)
         if jobs:
             with get_context("spawn").Pool(min(workers, len(jobs))) as ex:
                 for job, ok in zip(jobs, ex.map(_convert_one, jobs, chunksize=1)):
-                    made[job[4]] += ok  # per night
-        return {p.id for p in patients if sum(made[rel] for rel in {r for _, r in converted_files(p)}) >= rule.min_families}
+                    made[job[5]] += ok  # per night
+        return {p.id for p in patients
+                if sum(made[rel] for rel in {r for _, r in converted_files(p, pair.package)}) >= rule.min_families}
 
     return check
 

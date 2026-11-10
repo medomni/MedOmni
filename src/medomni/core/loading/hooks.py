@@ -19,11 +19,28 @@ Every code a hook emits is listed in `codes.csv` with `source_table` `hook:<name
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 from .readers import LoadError
 
 COLUMNS = ("subject_id", "time", "code", "numeric_value", "text_value", "visit_id", "path", "sha256", "native_id")
+
+
+def file_module(package: Path, rel: str, kind: str = "file"):
+    """A Python file of a dataset package, loaded by path: the package is a folder, not an installed module (R-145)."""
+    path = Path(package) / rel
+    if not path.is_file():
+        raise LoadError(f"{kind} {rel}: no {path.relative_to(Path(package).parent)}")
+    name = f"medomni_{kind}_{Path(package).name.replace('-', '_')}_{path.stem}"
+    mod = sys.modules.get(name)
+    if mod is not None and Path(getattr(mod, "__file__", "")) == path:  # one module per file, so its classes are one
+        return mod
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def module(package: Path, name: str, derives: bool = True):

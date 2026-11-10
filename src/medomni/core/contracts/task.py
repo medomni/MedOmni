@@ -61,7 +61,7 @@ class FullEvidence(Contract):
 
 
 class TaskTemplate(Contract):
-    """`bench/datasets/<dataset>/tasks/<template>/template.yaml`."""
+    """A dataset package's `tasks/<template>/template.yaml`."""
 
     template_id: TemplateId
     dataset: Slug

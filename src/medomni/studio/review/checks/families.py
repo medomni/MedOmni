@@ -67,7 +67,7 @@ def _target_names() -> set[str]:
     repo = plugins.find_repo()
     if repo is None:
         return out
-    for tp in (repo / "bench/datasets").glob("*/tasks/*/template.yaml"):
+    for tp in (repo / "studio/datasets").glob("*/tasks/*/template.yaml"):
         for t in (yaml.safe_load(tp.read_text(encoding="utf-8")) or {}).get("targets", []):
             if len(str(t.get("name", ""))) > 3:
                 out.add(str(t["name"]).lower())

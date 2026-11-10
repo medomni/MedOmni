@@ -111,7 +111,8 @@ def test_clash_between_plugin_commands_loads_neither(site):
 
 def test_groups():
     assert plugins.GROUPS == ("medomni.commands", "medomni.checks", "medomni.converters", "medomni.tools",
-                              "medomni.runners", "medomni.metrics", "medomni.arms")
+                              "medomni.runners", "medomni.metrics", "medomni.arms", "medomni.content",
+                              "medomni.builders", "medomni.arm_builds")
     assert plugins.PLUGINS == "medomni.plugins"
 
 
@@ -172,8 +173,8 @@ def test_zip_install_is_refused(tmp_path, monkeypatch):
 def test_pieces_by_kind(site, repo):
     make_plugin(site, "medomni-one", "fake_one", {
         "bench/agents/a.yaml": AGENT.format(n="a"),
-        "bench/datasets/demo/dataset.yaml": DATASET,
-        "bench/datasets/demo/hooks/labels.py": "raise RuntimeError('hook ran')\n",
+        "studio/datasets/demo/dataset.yaml": DATASET,
+        "studio/datasets/demo/hooks/labels.py": "raise RuntimeError('hook ran')\n",
         "perception/encoders/fam-x/enc-y/card.yaml": "id: fam-x__enc-y\n"})
     roots, bad = plugins.roots(repo)
     assert roots[0] == (plugins.BUILTIN, repo) and not bad
@@ -189,14 +190,14 @@ def test_plugin_content_is_checked_like_the_repository(site, repo, monkeypatch, 
     make_plugin(site, "medomni-one", "fake_one", {
         "bench/agents/good.yaml": AGENT.format(n="good"),
         "bench/agents/bad.yaml": BAD_AGENT,
-        "bench/datasets/demo/dataset.yaml": DATASET,
-        "bench/datasets/demo/hooks/labels.py": "raise RuntimeError('hook ran')\n",
+        "studio/datasets/demo/dataset.yaml": DATASET,
+        "studio/datasets/demo/hooks/labels.py": "raise RuntimeError('hook ran')\n",
         "perception/encoders/cxr-radiograph-2d/demo/card.yaml": card,
         "core/families/x.yaml": "not: checked\n",  # families come from the repository only
     })
     counts, failed = check(repo, only=None, out=io.StringIO())
     assert failed == 1
-    shipped = len(list((repo / "bench/datasets").glob("*/dataset.yaml")))  # the repository's own packages (part 2)
+    shipped = len(list((repo / "studio/datasets").glob("*/dataset.yaml")))  # the repository's own packages (part 2)
     assert counts["model card"] == [44 + 1, 0] and counts["dataset config"] == [shipped + 1, 0]  # and the plug-in's
     monkeypatch.chdir(repo)
     assert main(["plugins"]) == 1

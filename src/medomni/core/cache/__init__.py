@@ -174,7 +174,7 @@ def current_steps() -> dict[str, str]:
     from medomni.core.families import converters
 
     steps = dict(CORE_STEPS)
-    steps.update({f"convert-{c.name}": c.version for c in converters.load().found.values()})
+    steps.update({f"convert-{c.name}": c.version for c in converters.load_all().found.values()})
     return steps
 
 

@@ -92,7 +92,7 @@ class FamilySamples(Assets):
         if not rows:
             return Result(f"{a.dataset} has no file of family {target}", code=1)
         rows.sort(key=lambda r: hashlib.sha256(f"{target}|{r['subject_id']}|{r['path']}".encode()).hexdigest())
-        found = converters.load()
+        found = converters.load(package)
         files, provenance, seen = {}, {}, set()
         with tempfile.TemporaryDirectory(prefix="medomni-samples-") as tmp:
             for r in rows:

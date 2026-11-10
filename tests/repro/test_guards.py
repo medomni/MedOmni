@@ -33,7 +33,7 @@ def banned():
 
 @pytest.mark.parametrize("dataset", ["mimic-iv", "aireadi", "bdsp"])
 def test_guards_match_v02(dataset, banned):
-    lib = yaml.safe_load((REPO / "bench/datasets" / dataset / "labels.yaml").read_text())
+    lib = yaml.safe_load((REPO / "studio/datasets" / dataset / "labels.yaml").read_text())
     for name, rule in lib.items():
         if name == "derived:cxr-before-anchor":
             continue  # balance only: never a target

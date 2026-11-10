@@ -31,6 +31,6 @@ def measurements(tables: dict[str, list[dict]], raw_root: Path, params: dict) ->
 
 
 def dummy_unit(path: Path, rng) -> None:
-    from medomni.core.families.vital_to_wfdb import write_dummy
+    from medomni.core.loading.hooks import file_module
 
-    write_dummy(path, 6, rng)
+    file_module(Path(__file__).resolve().parent.parent, "converters/vital_to_wfdb.py", "converter").write_dummy(path, 6, rng)

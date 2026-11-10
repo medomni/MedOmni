@@ -119,6 +119,13 @@ def unclassified(raw_root: Path, params: dict, found: dict | None = None) -> lis
     return sorted(bad)
 
 
+def converter():
+    """This package's h5-to-edf converter module, loaded by path (R-145)."""
+    from medomni.core.loading.hooks import file_module
+
+    return file_module(HERE.parent, "converters/h5_to_edf.py", "converter")
+
+
 def _start(m: dict) -> str:
     return m["StartDateTime"][:19]
 
@@ -126,8 +133,7 @@ def _start(m: dict) -> str:
 def derive(rows, raw_root: Path, params: dict) -> list[dict]:
     from datetime import datetime, timedelta
 
-    from medomni.core.families import h5_to_edf
-
+    h5_to_edf = converter()
     found = nights(raw_root, params)
     bad = unclassified(raw_root, params, found)
     if bad:

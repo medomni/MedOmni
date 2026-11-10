@@ -1,7 +1,7 @@
 """v0.2 task specs -> v0.3 task templates and cohorts (R-68), written into each dataset package's `tasks/`.
 
-    bench/datasets/<dataset>/tasks/<template_id>/template.yaml
-    bench/datasets/<dataset>/tasks/<template_id>/cohorts/{n20,ladder}.yaml
+    studio/datasets/<dataset>/tasks/<template_id>/template.yaml
+    studio/datasets/<dataset>/tasks/<template_id>/cohorts/{n20,ladder}.yaml
 
 Sources, all in this repository until Stage 3 part 8:
 
@@ -42,7 +42,7 @@ LADDER = "data_task/taskbuilder/ladder.yaml"
 ICD_CODE = "^DIAGNOSIS//ICD//({})"
 FIXTURES = "tests/core/fixtures/recipes"
 S1_RECIPES = "internal_docs/roadmaps/v0.3.0/roadmaps/probes/s1/p16_recipes.yaml"
-DEST = "bench/datasets"
+DEST = "studio/datasets"
 TIERS = ("n20", "ladder")
 COHORT_VERSION = "1.0"  # R-106
 HEADER = "# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).\n"

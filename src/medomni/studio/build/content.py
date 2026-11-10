@@ -86,7 +86,7 @@ def write(result: Pool, drawn: list[str], recs: dict[str, dict], out: Path) -> P
     root.mkdir(parents=True, exist_ok=True)
     (root / "content.json").write_text(json.dumps({
         "pair": pair.id, "template": pair.template.template_id, "cohort": pair.cohort_name,
-        "version": pair.cohort.version, "dataset": pair.dataset,
+        "version": pair.cohort.version, "dataset": pair.dataset, "datasets": [pair.dataset],
         "targets": [t.model_dump(mode="json", exclude_none=True) for t in pair.template.targets],
         "atoms": [{"atom": atom_name(pair, s), "subject": s, "prediction_time": recs[s]["prediction_time"]} for s in drawn],
         "pool_stats": pool_stats(result), "counts": result.counts}, indent=1) + "\n", encoding="utf-8")

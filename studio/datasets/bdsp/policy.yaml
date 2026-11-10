@@ -15,7 +15,9 @@ publish:
   samples: deny
 routes:
   local: allow
-  cloud: deny  # unless BDSP approves otherwise in writing
+  cloud: conditional
+route_conditions:
+  cloud: BDSP's written approval for cloud models (Bosong, 2026-11-10)
 use:
   commercial: false
   restriction: research use under the BDSP data use agreement; no record-level derivatives to third parties

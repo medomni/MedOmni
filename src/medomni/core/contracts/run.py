@@ -17,7 +17,7 @@ class AgentConfig(Contract):
     kind: IntelligenceKind = "agent"
     name: Slug
     model: NonEmpty
-    route: Literal["local", "cloud"]  # where the model runs; dataset policies list the routes they allow (no run checks it yet)
+    route: Literal["local", "cloud"]  # where the model runs; Bench checks it against each dataset policy's routes before a run
     runner: Slug | None = None  # a runner other than the kind's own, such as a replay with no model
     settings: dict[str, Any] = {}
 

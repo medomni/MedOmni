@@ -18,9 +18,15 @@ from medomni.core.tasks.sets import all_sets, benchmark_folders, load_set, task_
 
 
 def pin_problems(task_set: TaskSet, read_cohort) -> list[str]:
-    """Each entry's N equals its cohort file's major version. `read_cohort(pair)` gives the cohort's text, or None."""
+    """Each entry is a v1 task id (R-147), and its N equals its cohort file's major version. `read_cohort(pair)` gives
+    the cohort's text, or None."""
+    from .contracts.template import _PAIR
+
     out = []
     for e in task_set.tasks:
+        if not _PAIR.match(e.task):
+            out.append(f"{e.task}: not <template>@<cohort> or <template>:<evidence>@<cohort>")
+            continue
         if e.version == 0:  # imported v0.2 sets
             continue
         text = read_cohort(e.task)

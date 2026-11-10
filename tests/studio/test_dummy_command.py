@@ -1,8 +1,8 @@
-"""`medomni studio dummy` (part 5, R-70): the same folder as Core's make_dataset."""
+"""`medomni studio dummy` (part 5, R-70): the same folder as Core's make_dataset with the package's labels planted."""
 from medomni.core import hashing
 from medomni.core.cli import main
-from medomni.core.families.dummy.datasets import make_dataset
-from medomni.core.testing import DATASETS
+from medomni.studio.dummy import make as make_dataset
+from medomni.studio.testing import DATASETS
 
 
 def test_command_writes_what_make_dataset_writes(tmp_path, capsys):

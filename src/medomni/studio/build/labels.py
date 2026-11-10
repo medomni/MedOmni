@@ -141,7 +141,7 @@ def _plain(rule, ctx: Context):
 
 
 def _case(when_: dict, ctx: Context):
-    from medomni.core.contracts.recipe import Label
+    from .contracts.recipe import Label
 
     return _plain(Label.model_validate({"from": "any", "to": "any", **when_}), ctx)
 

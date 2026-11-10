@@ -192,7 +192,9 @@ def test_pulse_rate_follows_the_heart(made):
 
 
 def test_table_values_in_published_ranges(tmp_path):
-    d = make_dataset(DATASETS / "dummy-mimic", tmp_path / "m")
+    from .test_dummy import PLANTS
+
+    d = make_dataset(DATASETS / "dummy-mimic", tmp_path / "m", plant=PLANTS["dummy-mimic"])
     import csv
 
     rows = list(csv.DictReader(open(d.root / "hosp/labevents.csv")))

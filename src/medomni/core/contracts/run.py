@@ -7,8 +7,7 @@ from typing import Annotated, Any, Literal
 from pydantic import AfterValidator, Field, model_validator
 
 from .base import (ArmName, ConfigHash, Contract, IntelligenceKind, IntelligenceRef, MetricName, NonEmpty, Sha256,
-                   Slug, TaskSetRef, Version)
-from .task import Pair
+                   Slug, TaskId, TaskSetRef, Version)
 
 
 class AgentConfig(Contract):
@@ -62,7 +61,7 @@ class RunRecord(Contract):
     run_id: NonEmpty
     release: NonEmpty
     task_set: TaskSetRef
-    task: Pair
+    task: TaskId
     task_version: Version
     config_hash: ConfigHash  # from the build manifest (R-111)
     intelligence: IntelligenceRef

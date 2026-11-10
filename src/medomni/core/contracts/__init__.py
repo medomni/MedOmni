@@ -11,14 +11,13 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, TypeAdapter
 
-from .base import Contract, ContractError, IntelligenceRef, load, load_data, load_lines, read
+from .base import Author, Contract, ContractError, IntelligenceRef, TaskId, load, load_data, load_lines, read
 from .built import BuiltContent, BuiltManifest
 from .dataset import DatasetConfig, DatasetPolicy, Event, EventTable
 from .family import AliasFile, FamilyFile
 from .perception import ContainerRequest, ContainerResponse, EncodeRequest, Evidence, ModelCard
-from .recipe import Cohort, CohortTests, EvidenceRules, LabelLibrary
 from .run import AgentConfig, CacheEntry, PredictionRecord, ResultRecord, RunRecord, ScoreRecord, WorkspaceConfig
-from .task import BenchmarkCard, TaskProposal, TaskSet, TaskTemplate
+from .task import BenchmarkCard, TaskSet
 
 
 @dataclass(frozen=True)
@@ -28,7 +27,7 @@ class Schema:
     model: object  # a model class, or a type for TypeAdapter (ResultRecord)
 
 
-# The 18 contracts, and the schema file of each model in them
+# Core's contracts, and the schema file of each model in them; Studio lists its own (R-147)
 SCHEMAS = (
     Schema("family registry", "family", FamilyFile),
     Schema("family registry", "aliases", AliasFile),
@@ -36,16 +35,10 @@ SCHEMAS = (
     Schema("event table", "event-table", EventTable),
     Schema("event table", "event", Event),
     Schema("dataset policy", "dataset-policy", DatasetPolicy),
-    Schema("recipe", "recipe", Cohort),
-    Schema("recipe", "recipe-tests", CohortTests),
-    Schema("recipe", "recipe-labels", LabelLibrary),
-    Schema("recipe", "recipe-evidence", EvidenceRules),
-    Schema("task template", "task-template", TaskTemplate),
     Schema("benchmark", "benchmark", BenchmarkCard),
     Schema("task set", "task-set", TaskSet),
     Schema("cache entry", "cache-entry", CacheEntry),
     Schema("agent config", "agent-config", AgentConfig),
-    Schema("task proposal", "task-proposal", TaskProposal),
     Schema("model card", "model-card", ModelCard),
     Schema("container API", "container-request", ContainerRequest),
     Schema("container API", "container-response", ContainerResponse),
@@ -68,10 +61,9 @@ def json_schema(model) -> dict:
 
 
 __all__ = [
-    "AgentConfig", "AliasFile", "BenchmarkCard", "CacheEntry", "Cohort", "CohortTests", "ContainerRequest", "ContainerResponse",
-    "Contract", "ContractError", "CONTRACTS", "DatasetConfig", "DatasetPolicy", "EncodeRequest", "Event",
-    "EventTable", "Evidence", "EvidenceRules", "FamilyFile", "IntelligenceRef", "LabelLibrary",
-    "ModelCard", "PredictionRecord", "ResultRecord", "RunRecord", "SCHEMAS", "ScoreRecord", "TaskProposal",
-    "TaskSet", "TaskTemplate", "WorkspaceConfig", "json_schema", "load", "load_data", "load_lines",
-    "read",
+    "AgentConfig", "AliasFile", "Author", "BenchmarkCard", "BuiltContent", "BuiltManifest", "CacheEntry", "ContainerRequest",
+    "ContainerResponse", "Contract", "ContractError", "CONTRACTS", "DatasetConfig", "DatasetPolicy", "EncodeRequest",
+    "Event", "EventTable", "Evidence", "FamilyFile", "IntelligenceRef", "ModelCard", "PredictionRecord", "ResultRecord",
+    "RunRecord", "SCHEMAS", "Schema", "ScoreRecord", "TaskId", "TaskSet", "WorkspaceConfig", "json_schema", "load",
+    "load_data", "load_lines", "read",
 ]

@@ -130,7 +130,8 @@ class Relevance(Propose):
         p.add_argument("--proposals", type=Path, help="the proposals .csv (default: use the template's input block)")
 
     def make(self, target, a, ctx) -> Result:
-        from medomni.core.contracts import TaskTemplate, load
+        from medomni.core.contracts import load
+        from medomni.studio.build.contracts import TaskTemplate
         from medomni.core.loading import find_package
 
         template = target.split("@")[0].split(":")[0]

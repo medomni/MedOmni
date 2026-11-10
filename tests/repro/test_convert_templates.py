@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from medomni.core import contracts as c
+from medomni.studio.build import contracts as v1
 from tests.repro import migrate as convert
 from tests.repro.migrate import templates
 
@@ -57,7 +58,7 @@ def test_every_file_validates(converted):
     for rel, data in outputs.items():
         if "/arms/" in rel:
             continue
-        model = c.TaskTemplate if rel.endswith("/template.yaml") else c.Cohort
+        model = v1.TaskTemplate if rel.endswith("/template.yaml") else v1.Cohort
         c.load_data(data, model, rel)
     assert sum("/arms/" in r for r in outputs) == 5
     assert sum(r.endswith("/template.yaml") for r in outputs) == 30

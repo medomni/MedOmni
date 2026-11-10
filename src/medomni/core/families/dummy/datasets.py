@@ -1,13 +1,14 @@
-"""Dummy datasets from a dataset package (R-71): `make_dataset(package, out)` writes a raw folder the package's own
-`dataset.yaml` can load, with labels and canaries planted by the package's `labels.yaml`.
+"""Dummy datasets from a dataset package (R-71): `make_dataset(package, out, plant=...)` writes a raw folder the
+package's own `dataset.yaml` can load, with labels and canaries planted as the caller's `Plant` specs say.
 
-What it reads: `dataset.yaml` (the reader options name every table, column, code template and file pattern),
-`codes.csv` (every code, with its source table) and `labels.yaml`. Nothing else: no dataset, no network.
+What it reads: `dataset.yaml` (the reader options name every table, column, code template and file pattern) and
+`codes.csv` (every code, with its source table). Nothing else: no dataset, no network. What to plant comes from the
+caller; a builder derives it from its own label format (R-147: Core reads no recipe).
 
 - **Subjects.** String ids are `DUMMY-<n>`; integer ids start at 9,900,000,001, a range no real dataset uses (R-74).
 - **Timeline.** Subject n starts at `t0` (an invented date in 2150, 37 days apart). Its anchor is `t0 + 24 hours`.
   History rows and files fall between `t0` and the anchor.
-- **Labels.** For each `exists` or `value` label, about half the subjects are positive. A positive gets a row whose
+- **Labels.** For each `exists` or `value` plant, about half the subjects are positive. A positive gets a row whose
   code the rule matches, inside the label's window; for a value label, negatives get a value on the other side.
   These planted rows sit after the anchor: they are the **canaries** a leakage check must keep out of an atom.
   `planted.json`, written beside the raw folder, lists every planted row.
@@ -43,6 +44,20 @@ class DummyError(ValueError):
 
 
 @dataclass(frozen=True)
+class Plant:
+    """One label to plant (R-147). `exists` is a code pattern a positive gets a row of; `value` is a code whose row
+    holds a number on the positive side of `op x` for positives and the other side for negatives. The row falls inside
+    the window `from_` to `to`: `anchor`, `anchor.event`, their offsets (`anchor + 24 hours`), or `any`."""
+
+    exists: str | None = None
+    value: str | None = None
+    from_: str | None = None
+    to: str | None = None
+    op: str | None = None
+    x: float | None = None
+
+
+@dataclass(frozen=True)
 class DummyDataset:
     root: Path  # the raw folder: the data root `dataset.yaml` reads
     planted: dict  # the contents of planted.json
@@ -50,7 +65,7 @@ class DummyDataset:
 
 
 def _read_package(package: Path):
-    from medomni.core.contracts import DatasetConfig, LabelLibrary, load
+    from medomni.core.contracts import DatasetConfig, load
     from medomni.core.loading.options import options
 
     config = load(package / "dataset.yaml", DatasetConfig)
@@ -58,9 +73,8 @@ def _read_package(package: Path):
         codes = list(csv.DictReader(f))
     if not codes or set(codes[0]) != {"code", "description", "source_table"}:
         raise DummyError(f"{package / 'codes.csv'}: columns must be code, description, source_table")
-    labels = load(package / "labels.yaml", LabelLibrary).root if (package / "labels.yaml").is_file() else {}
     readers = [(r.reader, options(r)) for r in config.read]
-    return config, codes, labels, readers
+    return config, codes, readers
 
 
 def _offset(expr: str | None, t0: datetime, default: datetime) -> datetime:
@@ -89,12 +103,14 @@ def _templated(spec) -> bool:
 
 
 def make_dataset(package: str | Path, out: str | Path, subjects: int = 10, seed: int = 0,
-                 level: str = DEFAULT_LEVEL) -> DummyDataset:
-    """Write `<out>/raw/` (the data root) and `<out>/planted.json` from a dataset package."""
+                 level: str = DEFAULT_LEVEL, plant: dict[str, Plant] | None = None) -> DummyDataset:
+    """Write `<out>/raw/` (the data root) and `<out>/planted.json` from a dataset package, planting `plant` (label
+    name -> spec; none when omitted)."""
     if level not in LEVELS:
         raise ValueError(f"level must be one of {LEVELS}, not '{level}'")
     package, out = Path(package), Path(out)
-    config, codes, labels, readers = _read_package(package)
+    config, codes, readers = _read_package(package)
+    labels = dict(plant or {})
     tables = {n: s for kind, o in readers if kind == "csv" for n, s in o.tables.items()}
     files = {n: s for kind, o in readers if kind == "tree" for n, s in o.files.items()}
     if config.units.table not in tables:

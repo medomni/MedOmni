@@ -138,7 +138,8 @@ class Intake(Propose):
         return self._freeze(path) if path.suffix in (".yaml", ".yml") else self._intake(path)
 
     def _intake(self, path: Path) -> Result:
-        from medomni.core.contracts import TaskProposal, load_data
+        from medomni.core.contracts import load_data
+        from medomni.studio.propose.contracts import TaskProposal
 
         taken: set[str] = set()
         files, rows = {}, []
@@ -155,7 +156,9 @@ class Intake(Propose):
         return Result(f"{len(rows)} draft proposal(s) from {path.name}", files)
 
     def _freeze(self, path: Path) -> Result:
-        from medomni.core.contracts import Cohort, TaskProposal, TaskTemplate, load, load_data
+        from medomni.core.contracts import load, load_data
+        from medomni.studio.build.contracts import Cohort, TaskTemplate
+        from medomni.studio.propose.contracts import TaskProposal
 
         p = load(path, TaskProposal)
         if p.state != "signed-off":

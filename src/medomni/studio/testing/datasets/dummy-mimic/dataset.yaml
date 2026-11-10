@@ -1,0 +1,53 @@
+description: {unit: patient, time: datetime, version: "1"}
+units: {table: patients, column: subject_id}
+source: {salt: dummy-mimic, fraction: 1.0}
+read:
+- reader: csv
+  options:
+    tables:
+      patients:
+        file: hosp/patients.csv
+        subject: subject_id
+        subject_type: int
+        events:
+        - code: "GENDER//{gender}"
+        - {code: AGE, value: anchor_age}
+      admissions:
+        file: hosp/admissions.csv
+        subject: subject_id
+        subject_type: int
+        time: admittime
+        visit: hadm_id
+        events:
+        - code: ADMISSION
+        - {code: DISCHARGE, time: dischtime}
+      diagnoses_icd:
+        file: hosp/diagnoses_icd.csv
+        subject: subject_id
+        subject_type: int
+        visit: hadm_id
+        time_from: {table: admissions, key: hadm_id, column: dischtime}
+        events:
+        - code: "DIAGNOSIS//ICD//{icd_code}"
+      labevents:
+        file: hosp/labevents.csv
+        subject: subject_id
+        subject_type: int
+        time: charttime
+        visit: hadm_id
+        events:
+        - {code: "LAB//{itemid}", value: valuenum}
+      chartevents:
+        file: icu/chartevents.csv
+        subject: subject_id
+        subject_type: int
+        time: charttime
+        visit: hadm_id
+        events:
+        - {code: "VITAL//{itemid}", value: valuenum}
+- reader: tree
+  options:
+    files:
+      ecg-12lead-500hz-mv: {pattern: "ecg/{subject}/{record}.hea"}
+      abp-waveform-125hz-mmhg: {pattern: "waveforms/{subject}/{record}.hea"}
+      cxr-radiograph-2d: {pattern: "cxr/{subject}/{record}.png"}

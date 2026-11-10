@@ -8,8 +8,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field, StringConstraints, model_validator
 
-from .base import Contract, NonEmpty, Sha256, Slug
-from .task import Author
+from .base import Author, Contract, NonEmpty, Sha256, Slug
 
 EncoderId = Annotated[str, StringConstraints(pattern=r"^[a-z0-9-]+__[a-z0-9-]+$")]
 Kind = Literal["labels", "events", "text", "embedding"]

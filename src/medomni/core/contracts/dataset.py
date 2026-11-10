@@ -10,7 +10,6 @@ from typing import Annotated, Any, Literal
 from pydantic import Field
 
 from .base import Contract, NonEmpty, Sha256, Slug
-from .recipe import Requirement
 
 
 class Description(Contract):
@@ -45,7 +44,7 @@ class DatasetConfig(Contract):
     read: tuple[Reader, ...] = Field(min_length=1)
     verify: dict[str, Any] = {}
     rules: dict[str, Any] = {}
-    definitions: dict[str, Requirement] = {}  # named requirements cohorts refer to (R-89)
+    definitions: dict[str, Any] = {}  # named requirements cohorts refer to (R-89); their form is the builder's (R-147)
     converters: tuple[NonEmpty, ...] = ()  # files in the package, each exposing CONVERTER: its own family converters (R-145)
     storage_mb: int | None = Field(default=None, ge=1)  # disk an atom task's container may use; the builder's default when absent (R-145)
 

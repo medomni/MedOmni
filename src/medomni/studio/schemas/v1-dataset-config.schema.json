@@ -1,0 +1,442 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "v1-dataset-config.schema.json",
+  "x-contract": "dataset config",
+  "$defs": {
+    "Any_": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "any": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Any",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "any"
+      ],
+      "title": "Any_",
+      "type": "object"
+    },
+    "Converts": {
+      "additionalProperties": false,
+      "description": "At least `min_families` of the patient's files convert and match their family (S1's recipes). Checked in\ndraw order, and a patient who fails is replaced by the next (Build page, file check).",
+      "properties": {
+        "converts": {
+          "$ref": "#/$defs/ConvertsRule"
+        },
+        "when": {
+          "const": "select",
+          "default": "select",
+          "title": "When",
+          "type": "string"
+        }
+      },
+      "required": [
+        "converts"
+      ],
+      "title": "Converts",
+      "type": "object"
+    },
+    "ConvertsRule": {
+      "additionalProperties": false,
+      "properties": {
+        "min_families": {
+          "minimum": 1,
+          "title": "Min Families",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "min_families"
+      ],
+      "title": "ConvertsRule",
+      "type": "object"
+    },
+    "Definition": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "minLength": 1,
+          "title": "Definition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition"
+      ],
+      "title": "Definition",
+      "type": "object"
+    },
+    "Description": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "time": {
+          "enum": [
+            "datetime",
+            "visit-dates",
+            "seconds-from-start"
+          ],
+          "title": "Time",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit",
+        "time",
+        "version"
+      ],
+      "title": "Description",
+      "type": "object"
+    },
+    "Files": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "files": {
+          "items": {
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Files",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "files"
+      ],
+      "title": "Files",
+      "type": "object"
+    },
+    "HasLabel": {
+      "additionalProperties": false,
+      "properties": {
+        "has_label": {
+          "minLength": 1,
+          "title": "Has Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "has_label"
+      ],
+      "title": "HasLabel",
+      "type": "object"
+    },
+    "HashRule": {
+      "additionalProperties": false,
+      "description": "Keep a subject when sha256(salt|id), as a fraction, is below `fraction` (R-32, R-41).",
+      "properties": {
+        "salt": {
+          "minLength": 1,
+          "title": "Salt",
+          "type": "string"
+        },
+        "fraction": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Fraction",
+          "type": "number"
+        }
+      },
+      "required": [
+        "salt",
+        "fraction"
+      ],
+      "title": "HashRule",
+      "type": "object"
+    },
+    "None_": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "none": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "None",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "none"
+      ],
+      "title": "None_",
+      "type": "object"
+    },
+    "Reader": {
+      "additionalProperties": false,
+      "description": "One format reader and what it reads. The reader's own options are checked by the reader (part 6).",
+      "properties": {
+        "reader": {
+          "minLength": 1,
+          "title": "Reader",
+          "type": "string"
+        },
+        "options": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Options",
+          "type": "object"
+        }
+      },
+      "required": [
+        "reader"
+      ],
+      "title": "Reader",
+      "type": "object"
+    },
+    "Units": {
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "minLength": 1,
+          "title": "Table",
+          "type": "string"
+        },
+        "column": {
+          "minLength": 1,
+          "title": "Column",
+          "type": "string"
+        }
+      },
+      "required": [
+        "table",
+        "column"
+      ],
+      "title": "Units",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`dataset.yaml` as the v1 builder reads it: each definition is a recipe requirement (R-89, R-147).",
+  "properties": {
+    "description": {
+      "$ref": "#/$defs/Description"
+    },
+    "units": {
+      "$ref": "#/$defs/Units"
+    },
+    "source": {
+      "anyOf": [
+        {
+          "const": "all",
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/HashRule"
+        }
+      ],
+      "title": "Source"
+    },
+    "read": {
+      "items": {
+        "$ref": "#/$defs/Reader"
+      },
+      "minItems": 1,
+      "title": "Read",
+      "type": "array"
+    },
+    "verify": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Verify",
+      "type": "object"
+    },
+    "rules": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Rules",
+      "type": "object"
+    },
+    "definitions": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Any_"
+          },
+          {
+            "$ref": "#/$defs/None_"
+          },
+          {
+            "$ref": "#/$defs/Files"
+          },
+          {
+            "$ref": "#/$defs/HasLabel"
+          },
+          {
+            "$ref": "#/$defs/Definition"
+          },
+          {
+            "$ref": "#/$defs/Converts"
+          }
+        ]
+      },
+      "default": {},
+      "title": "Definitions",
+      "type": "object"
+    },
+    "converters": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Converters",
+      "type": "array"
+    },
+    "storage_mb": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Storage Mb"
+    }
+  },
+  "required": [
+    "description",
+    "units",
+    "source",
+    "read"
+  ],
+  "title": "V1DatasetConfig",
+  "type": "object"
+}

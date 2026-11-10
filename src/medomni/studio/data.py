@@ -2,7 +2,7 @@
 
 `check` names each problem and exits 1 (Connect your data guide):
 
-- the package: every file against its contract, and the checks across files (`core.recipes`);
+- the package: every file against its contract, and the checks across files (`studio.build.recipes`);
 - its dummy data: a dummy copy is written and loaded;
 - your copy: its version, the files the package lists, the columns the readers need, and each hook's own problems,
   such as a raw label the label vocabulary does not classify (R-119, R-125).
@@ -23,12 +23,12 @@ CODES_COLUMNS = ["code", "description", "source_table"]
 
 
 def _package_problems(package: Path) -> list[str]:
-    from medomni.core.contracts import (Cohort, ContractError, DatasetConfig, DatasetPolicy, EvidenceRules,
-                                        LabelLibrary, TaskTemplate, load)
-    from medomni.core.recipes import check_package
+    from medomni.core.contracts import ContractError, DatasetPolicy, load
+    from medomni.studio.build.contracts import Cohort, EvidenceRules, LabelLibrary, TaskTemplate, V1DatasetConfig
+    from medomni.studio.build.recipes import check_package
 
     out = []
-    files = [("dataset.yaml", DatasetConfig), ("policy.yaml", DatasetPolicy), ("labels.yaml", LabelLibrary),
+    files = [("dataset.yaml", V1DatasetConfig), ("policy.yaml", DatasetPolicy), ("labels.yaml", LabelLibrary),
              ("evidence.yaml", EvidenceRules)]
     for name, model in files:
         if not (package / name).is_file():
@@ -56,7 +56,8 @@ def _package_problems(package: Path) -> list[str]:
 
 
 def _dummy_problems(package: Path) -> list[str]:
-    from medomni.core.families.dummy.datasets import DummyError, make_dataset
+    from medomni.core.families.dummy.datasets import DummyError
+    from medomni.studio.dummy import make as make_dataset
     from medomni.core.loading import LoadError, load
 
     with tempfile.TemporaryDirectory(prefix="medomni-data-check-") as tmp:

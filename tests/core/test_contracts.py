@@ -14,9 +14,11 @@ from .contract_examples import EXAMPLES, SCORE_RECORD
 BY_FILE = {s.file: s for s in c.SCHEMAS}
 
 
-def test_eighteen_contracts():
-    assert len(c.CONTRACTS) == 18  # the fingerprint left (R-111); the benchmark came (R-83); the built task (R-143)
-    assert "benchmark" in c.CONTRACTS and "fingerprint" not in c.CONTRACTS
+def test_fifteen_contracts():
+    # the fingerprint left (R-111); the benchmark came (R-83); the built task (R-143); recipe, task template and task
+    # proposal went to Studio (R-147)
+    assert len(c.CONTRACTS) == 15
+    assert "benchmark" in c.CONTRACTS and not {"fingerprint", "recipe", "task template", "task proposal"} & set(c.CONTRACTS)
     assert set(BY_FILE) == set(EXAMPLES)
 
 
@@ -32,9 +34,8 @@ def test_valid_instance_loads_frozen(name):
             setattr(root, field, None)
 
 
-# A label library's top-level keys are label names, so it has no unknown top-level field; built-task files are open,
-# since a builder may write its own fields beside the contract's (R-143)
-@pytest.mark.parametrize("name", sorted(k for k in EXAMPLES if k != "recipe-labels" and not k.startswith("built-")))
+# Built-task files are open, since a builder may write its own fields beside the contract's (R-143)
+@pytest.mark.parametrize("name", sorted(k for k in EXAMPLES if not k.startswith("built-")))
 def test_unknown_field_is_named(name):
     data = copy.deepcopy(EXAMPLES[name][0])
     data["not_a_field"] = 1
@@ -102,25 +103,18 @@ def test_rules_inside_contracts():
     refused("family", lambda d: d["protocol"].update(range=[100, 0]), "min < max")
     refused("family", lambda d: d["protocol"].update(dtype="int64"), "dtype")
     refused("aliases", lambda d: d["families"]["ecg-1lead-200hz-uv"]["accepts"].append("missing"), "unknown vocab")
-    refused("task-template", lambda d: d.update(template_id="other_aki"), "does not start with its dataset")
-    refused("task-template", lambda d: d.update(evidence=["full"]), "includes default")
-    refused("task-template", lambda d: d["targets"][0].update(metric="f1"), "metric")
     refused("task-set", lambda d: d["tasks"].append(d["tasks"][0]), "twice")
-    refused("task-set", lambda d: d["tasks"][0].update(task="dummy_aki"), "template>@<cohort")
+    refused("task-set", lambda d: d["tasks"][0].update(task="dummy aki"), "tasks.0.task")  # any id but no whitespace (R-147)
+    refused("task-set", lambda d: d["tasks"][0].update(task=""), "tasks.0.task")
     refused("task-set", lambda d: d["tasks"][0].update(fingerprint="fp1:" + "0" * 64), "fingerprint")  # R-111
     refused("task-set", lambda d: d["tasks"][0].update(version=-1), "version")
     refused("task-set", lambda d: d.update(arms=["encoders", "encoders"]), "arm appears twice")
     refused("task-set", lambda d: d.update(arms=["my-arm"]), "unknown arm")
     refused("task-set", lambda d: d.update(arms=[]), "arms")
-    refused("recipe", lambda d: d.update(version=1.0), "version")  # a YAML float would turn 1.10 into 1.1
-    refused("recipe", lambda d: d.update(version="1"), "version")
     refused("result-record", lambda d: d.update(config_hash="v0.2:" + "0" * 64), "v0.2:")
     refused("result-record", lambda d: d.update(task_version="0.0"), "v0.2:")
     refused("result-record", lambda d: d.update(task_set="smoke-dummy"), "task_set")
     refused("result-record", lambda d: d["agent"].update(arm="enc"), "unknown arm")
-    refused("recipe", lambda d: d["require"][0].update({"from": "yesterday"}), "not a time")
-    refused("recipe-labels", lambda d: d["aki"].pop("to"), "from and to")
-    refused("recipe-labels", lambda d: d["aki"].update(value="LAB//x"), "exactly one")
     refused("model-card", lambda d: d.update(family="other-family"), "does not start with its family")
     refused("workspace-config", lambda d: d.update(cache="relative/cache"), "absolute")
 
@@ -142,3 +136,17 @@ def test_arm_variant_is_its_own_field():
     data["agent"] |= {"arm": "modality-ladder", "arm_variant": "r3"}
     run = c.load_data(data, c.RunRecord)
     assert (run.agent.arm, run.agent.arm_variant) == ("modality-ladder", "r3")
+
+
+def test_any_task_id_core_accepts():
+    """R-147: a task id's form is its builder's; Core takes the v1 form and any other."""
+    data = copy.deepcopy(EXAMPLES["task-set"][0])
+    for task in ("dummy_aki@n20", "outside:risk/v2", "dummy_aki"):
+        data["tasks"][0]["task"] = task
+        assert c.load_data(data, c.TaskSet).tasks[0].task == task
+
+
+def test_definitions_are_the_builders():
+    """R-147 fix 1: Core stores a dataset's definitions untyped; the v1 builder checks them."""
+    data = copy.deepcopy(EXAMPLES["dataset-config"][0]) | {"definitions": {"adult": {"any_form": "a builder's"}}}
+    assert c.load_data(data, c.DatasetConfig).definitions["adult"] == {"any_form": "a builder's"}

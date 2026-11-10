@@ -65,8 +65,8 @@ def test_intake_and_freeze(tmp_path, capsys):
     assert studio("intake", str(out / f"{tid}.yaml")) == 2  # a draft is refused
     p["state"] = "signed-off"
     p["draft"].pop("unresolved")
-    p["draft"]["template"] = yaml.safe_load((REPO / "src/medomni/core/testing/datasets/dummy-mimic/tasks/dummy-mimic_aki/template.yaml").read_text())
-    p["draft"]["cohort"] = yaml.safe_load((REPO / "src/medomni/core/testing/datasets/dummy-mimic/tasks/dummy-mimic_aki/cohorts/n4.yaml").read_text())
+    p["draft"]["template"] = yaml.safe_load((REPO / "src/medomni/studio/testing/datasets/dummy-mimic/tasks/dummy-mimic_aki/template.yaml").read_text())
+    p["draft"]["cohort"] = yaml.safe_load((REPO / "src/medomni/studio/testing/datasets/dummy-mimic/tasks/dummy-mimic_aki/cohorts/n4.yaml").read_text())
     signed = tmp_path / "signed.yaml"
     signed.write_text(yaml.safe_dump(p, sort_keys=False))
     assert studio("intake", str(signed)) == 0
@@ -98,7 +98,7 @@ def test_preview_and_download_list(built, capsys):
 
 
 def test_download_list_bdsp_hook(t1_guard, tmp_path, monkeypatch, capsys):
-    from medomni.core.families.dummy.datasets import make_dataset
+    from medomni.studio.dummy import make as make_dataset
 
     ws_dir = workspace.home()
     copy = make_dataset(REPO / "studio/datasets/bdsp", tmp_path / "bdsp", subjects=80)

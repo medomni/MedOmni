@@ -9,7 +9,8 @@ import pytest
 from medomni.bench import data as connect_data
 from medomni.studio import data
 from medomni.studio.build.labels import anchor, label
-from medomni.core.contracts import Cohort, LabelLibrary, TaskTemplate, load as load_contract
+from medomni.core.contracts import load as load_contract
+from medomni.studio.build.contracts import Cohort, LabelLibrary, TaskTemplate
 from medomni.core.families.dummy.datasets import make_dataset
 from medomni.core.loading import load
 

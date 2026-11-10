@@ -169,7 +169,8 @@ def gold_rows(old: Path, new: Path, name_of=lambda x: x) -> tuple[int, int]:
 
 def _pairs(only):
     from medomni.core import plugins
-    from medomni.core.contracts import TaskTemplate, load
+    from medomni.core.contracts import load
+    from medomni.studio.build.contracts import TaskTemplate
 
     out = {"n20": [], "ladder": []}
     for tpl in sorted((plugins.find_repo() / "studio/datasets").glob("*/tasks/*/template.yaml")):

@@ -32,8 +32,9 @@ def declared_families(package: Path) -> set[str]:
 
 
 def _cohorts(package: Path) -> list:
-    from medomni.core.contracts import Cohort, TaskTemplate, load
-    from medomni.core.contracts.recipe import Files
+    from medomni.core.contracts import load
+    from medomni.studio.build.contracts import Cohort, TaskTemplate
+    from medomni.studio.build.contracts.recipe import Files
 
     rows = []
     for tdir in sorted((package / "tasks").glob("*/")):

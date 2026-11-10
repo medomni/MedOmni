@@ -9,7 +9,7 @@ import importlib
 
 from medomni.studio.build import checks
 from medomni.core import workspace
-from medomni.core.families.dummy.datasets import make_dataset
+from medomni.studio.dummy import make as make_dataset
 
 pool_mod = importlib.import_module("medomni.studio.build.pool")
 REPO = Path(__file__).resolve().parents[2]

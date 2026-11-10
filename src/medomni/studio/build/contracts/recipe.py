@@ -1,7 +1,7 @@
 """Recipe: the cohort file, the label library and the evidence file (Recipes reference page; R-26 to R-28, R-42, R-47).
 
-These models check each file's fields. Checks across files (a cohort naming an unknown label) are in
-`medomni.core.recipes` (Stage 2, part 6). Running a recipe is Build's job, in Bench.
+The v1 builder's own format (R-142, R-147). These models check each file's fields; checks across files (a cohort
+naming an unknown label) are in `medomni.studio.build.recipes`.
 """
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, ConfigDict, Field, RootModel, model_validator
 
-from .base import Contract, NonEmpty, Slug, Version
+from medomni.core.contracts.base import Contract, NonEmpty, Slug, Version
 
 _OFFSET = r"(anchor|anchor\.event|visit:[^\s]+)(\s*[+-]\s*\d+(\.\d+)?\s*(minutes|hours|days))?"
 _TIME = re.compile(rf"^({_OFFSET}|any)$")

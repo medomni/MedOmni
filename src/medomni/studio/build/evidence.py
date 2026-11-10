@@ -11,7 +11,7 @@ import gzip
 import io
 from pathlib import Path
 
-from medomni.core.contracts.recipe import TableRule
+from .contracts.recipe import TableRule
 
 from .labels import Context, match
 

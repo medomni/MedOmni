@@ -11,9 +11,9 @@ from functools import lru_cache
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from medomni.core.contracts import Cohort, DatasetConfig, EvidenceRules, LabelLibrary, TaskTemplate
+from .contracts import Cohort, EvidenceRules, LabelLibrary, TaskTemplate, V1DatasetConfig
 from medomni.core.contracts import load as load_contract
-from medomni.core.contracts.recipe import Any_, Converts, Definition, Files, HasLabel, None_
+from .contracts.recipe import Any_, Converts, Definition, Files, HasLabel, None_
 from medomni.core.tasks import TaskError
 
 from .labels import Context, anchor, label, window
@@ -35,7 +35,7 @@ class Pair:
     cohort: Cohort
     cohort_name: str
     labels: LabelLibrary
-    config: DatasetConfig
+    config: V1DatasetConfig
     evidence: EvidenceRules
 
     @property
@@ -58,12 +58,14 @@ class Pair:
 
 
 def parse(pair: str) -> tuple[str, str, str]:
-    """(template, evidence, cohort) of `<template>[:<evidence>]@<cohort>`."""
-    head, _, cohort = pair.partition("@")
-    template, _, evidence = head.partition(":")
-    if not cohort or "_" not in template:
-        raise BuildError(f"'{pair}' is not <template>@<cohort>")
-    return template, evidence or "default", cohort
+    """(template, evidence, cohort) of `<template>[:<evidence>]@<cohort>`, the v1 builder's task id; Core accepts any
+    id (R-147), so the form is checked here."""
+    from .contracts.template import _PAIR
+
+    m = _PAIR.match(pair)
+    if not m:
+        raise BuildError(f"'{pair}' is not <template>@<cohort> or <template>:<evidence>@<cohort>")
+    return m["template"], m["evidence"] or "default", m["cohort"]
 
 
 def load_pair(pair: str) -> Pair:
@@ -80,7 +82,7 @@ def load_pair(pair: str) -> Pair:
         raise BuildError(f"{pair}: no cohort {cohort}")
     return Pair(pair, package, load_contract(folder / "template.yaml", TaskTemplate),
                 load_contract(folder / "cohorts" / f"{cohort}.yaml", Cohort), cohort,
-                load_contract(package / "labels.yaml", LabelLibrary), load_contract(package / "dataset.yaml", DatasetConfig),
+                load_contract(package / "labels.yaml", LabelLibrary), load_contract(package / "dataset.yaml", V1DatasetConfig),
                 load_contract(package / "evidence.yaml", EvidenceRules))
 
 

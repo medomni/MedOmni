@@ -1,9 +1,11 @@
 """Check 7 (R-67): every Core piece on a dummy dataset, in order, for two users in fresh workspaces.
 
-workspace -> `medomni cache build` (loading into the cache) -> recipes -> toy build (atoms) -> family checks and a
-converter -> folder hashes and the config hash -> predictions; then the second user, `cache verify`, `cache gc`.
+workspace -> `medomni cache build` (loading into the cache) -> a toy builder writes Core's built-task contract (atoms)
+-> Core's task checks, family checks and a converter -> folder hashes and the config hash -> predictions; then the
+second user, `cache verify`, `cache gc`.
 
-The toy build is test code standing in for Bench's Build (Stage 3), so nothing here is imported from a project.
+The toy builder is test code standing in for any builder (R-142): its rules are code, so Core reads no recipe,
+template or cohort (R-147), and nothing here is imported from a project.
 """
 import csv
 import hashlib
@@ -20,21 +22,23 @@ import yaml
 from medomni.core import cache as cache_mod
 from medomni.core import contracts as c
 from medomni.core import families, hashing, plugins
+from medomni.core.builders import TaskBuilder
 from medomni.core.cache import Cache, verify
 from medomni.core.cli import main
 from medomni.core.families.check import conforms
 from medomni.core.families.converters import load as load_converters
 from medomni.core.families.dummy.datasets import make_dataset
-from medomni.core.recipes import check_package
+from medomni.core.tasks import asset, layout
+from medomni.core.tasks.checks import task_checks
 from medomni.core.testing import DATASETS
 
 from .test_converters import DUMMY
+from .test_dummy import PLANTS
 from .test_plugins import make_dist
 
 DATASET = "dummy-mimic"
-PKG = DATASETS / DATASET
-TASK = PKG / "tasks/dummy-mimic_aki"
-PAIR = "dummy-mimic_aki@n4"
+PKG = DATASETS / DATASET  # Core's loader-only package
+TASK, ARM = "toy-aki", "toy"
 REPO = Path(__file__).resolve().parents[2]
 
 
@@ -53,86 +57,125 @@ def site(tmp_path, monkeypatch):
         del sys.modules[m]
 
 
-# ---------------------------------------------------------------- the toy build (stands in for Bench's Build)
+# ---------------------------------------------------------------- the toy builder (stands in for any builder)
+
+RULES = {"anchor": "ADMISSION", "plus_hours": 24, "needs_file": "cxr-radiograph-2d", "n": 4, "seed": 7,
+         "targets": {"aki": "auc", "creat_high": "auc"}}  # its whole config: the labels are the plants below
+LABELS = PLANTS[DATASET]
+GUARD = ("^DIAGNOSIS//ICD//N17", "^LAB//90001$")  # codes that would give a target away
+
+
+class ToyBuilder(TaskBuilder):
+    name, version = "toy", "1"
+
+    def config_files(self, task, arm, variant):
+        return {"rules": json.dumps(RULES, sort_keys=True).encode()}
+
+    def build(self, tasks, arms, workspace):
+        raise NotImplementedError("the test calls toy_build with its events and converter")
+
 
 def _t(s):
     return datetime.fromisoformat(s) if s else None
 
 
-def _offset(text):
-    n, unit = text.split()
-    return timedelta(**{unit if unit.endswith("s") else unit + "s": float(n)})
+def _window(text, anchor):
+    if text in (None, "any"):
+        return None
+    m = re.match(r"^anchor(?:\s*\+\s*(\d+) days)?$", text)
+    return anchor + timedelta(days=int(m.group(1) or 0))
 
 
 def _label(lab, events, anchor):
-    lo = anchor if lab.from_ == "anchor" else None
-    hi = anchor + _offset(lab.to.split("+")[1].strip()) if "+" in (lab.to or "") else None
+    lo, hi = _window(lab.from_, anchor), _window(lab.to, anchor)
     inside = [e for e in events if e["time"] and (lo is None or _t(e["time"]) >= lo) and (hi is None or _t(e["time"]) <= hi)]
     if lab.exists:
         return int(any(re.search(lab.exists, e["code"]) for e in inside))
     vals = [e["numeric_value"] for e in inside if e["code"] == lab.value and e["numeric_value"] is not None]
-    return (max(vals) >= lab.x) * 1 if vals else None
+    return int(max(vals) >= lab.x) if vals else None
 
 
-def toy_build(events_path, raw_root, tasks_root, convert):
+def _contract_files(atom: Path, anchor: datetime) -> None:
+    for sub in ("environment", "tests"):
+        (atom / sub).mkdir(parents=True, exist_ok=True)
+    (atom / "task.toml").write_text(f'version = "1.0"\n\n[atom]\nprediction_time = "{anchor.isoformat(sep=" ")}"\n')
+    (atom / "environment/Dockerfile").write_text(asset("environment", "Dockerfile"))
+    (atom / "environment/docker-compose.yaml").write_text(yaml.safe_dump(
+        {"services": {"main": {"networks": ["n"]}}, "networks": {"n": {"internal": True}}}))
+    (atom / "tests/format_check.py").write_text(asset("formatcheck", "format_check.py"))
+    (atom / "tests/test.sh").write_text(asset("formatcheck", "test.sh"))
+    (atom / "tests/expected.json").write_text(json.dumps({"targets": sorted(RULES["targets"])}))
+
+
+def toy_build(events_path, raw_root, tree, convert):
+    """Select, stage and write the task in Core's built-task contract (R-143). Returns the arm's atom folder."""
     import pyarrow.parquet as pq
 
-    template = c.load(TASK / "template.yaml", c.TaskTemplate)
-    cohort = c.load(TASK / "cohorts/n4.yaml", c.Cohort)
-    labels = c.load(PKG / "labels.yaml", c.LabelLibrary).root
-    targets = {t.name: labels[t.label.split(":", 1)[1]] for t in template.targets}
-    guard = [g for lab in targets.values() for g in lab.guard.codes]
     by_subject = {}
     for e in pq.read_table(events_path).to_pylist():
         by_subject.setdefault(e["subject_id"], []).append(e)
     pool = []
     for s, ev in sorted(by_subject.items()):
-        adm = sorted(_t(e["time"]) for e in ev if e["code"] == cohort.anchor.event)
+        adm = sorted(_t(e["time"]) for e in ev if e["code"] == RULES["anchor"])
         if not adm:
             continue
-        anchor = adm[0] + _offset(cohort.anchor.plus)
+        anchor = adm[0] + timedelta(hours=RULES["plus_hours"])
         before = [e for e in ev if e["time"] is None or _t(e["time"]) <= anchor]
-        if not any(e["code"].startswith("FILE//cxr-radiograph-2d") for e in before):
+        if not any(e["code"] == "FILE//" + RULES["needs_file"] for e in before):
             continue
-        values = {n: _label(lab, ev, anchor) for n, lab in targets.items()}
+        values = {n: _label(LABELS[n], ev, anchor) for n in RULES["targets"]}
         if values["aki"] is None:
             continue
         pool.append((s, anchor, values, before))
-    k = cohort.select.n // 2  # balanced over the two classes of select.by
+    k = RULES["n"] // 2  # balanced over aki's two classes
     drawn = []
     for cls in (0, 1):
-        ranked = sorted((p for p in pool if p[2][cohort.select.by[0]] == cls),
-                        key=lambda p: hashlib.sha256(f"{cohort.select.seed}|{p[0]}|{p[1].isoformat()}".encode()).hexdigest())
+        ranked = sorted((p for p in pool if p[2]["aki"] == cls),
+                        key=lambda p: hashlib.sha256(f"{RULES['seed']}|{p[0]}|{p[1].isoformat()}".encode()).hexdigest())
         drawn += ranked[:k]
-    pair_dir = tasks_root / "agent" / PAIR
-    answers = []
+    toy = ToyBuilder()
+    atoms, answers = [], []
     for s, anchor, values, before in sorted(drawn):
-        atom = pair_dir / s
+        name = str(s)  # one task per tree here, so the subject names its atom
+        atom = layout.atom_dir(tree, ARM, None, name)
         (atom / "data" / "files").mkdir(parents=True)
-        (atom / "task.toml").write_text(f'template = "{template.template_id}"\ncohort = "n4"\npatient = "{s}"\n')
-        (atom / "instruction.md").write_text(template.agent.instruction.replace("{{ targets }}", ", ".join(targets)) + "\n")
-        kept = [e for e in before if not e["code"].startswith("FILE//") and not any(re.search(g, e["code"]) for g in guard)]
+        _contract_files(atom, anchor)
+        (atom / "instruction.md").write_text(f"Predict {', '.join(RULES['targets'])} for this patient from the record up "
+                                             "to the prediction time.\n")
+        kept = [e for e in before if not e["code"].startswith("FILE//") and not any(re.search(g, e["code"]) for g in GUARD)]
         with open(atom / "data" / "events.csv", "w", newline="") as f:
             w = csv.DictWriter(f, fieldnames=list(c.dataset.EVENT_COLUMNS), extrasaction="ignore", lineterminator="\n")
             w.writeheader()
             w.writerows(kept)
+        refs = []
         for e in (e for e in before if e["code"].startswith("FILE//")):
             src = raw_root / e["path"]
             for part in (sorted(src.parent.glob(src.stem + ".*")) if src.suffix == ".hea" else [src]):
                 shutil.copyfile(part, atom / "data" / "files" / part.name)  # copied, never linked
+            refs.append({"path": f"data/files/{src.name}", "t_start": e["time"]})
+        (atom / "data" / "references.jsonl").write_text("".join(json.dumps(r) + "\n" for r in refs))
         convert(s, atom / "data" / "files")
-        answers.append({"atom": f"{PAIR}/{s}", **values})
-    parent = tasks_root / "_parents" / PAIR  # answers never sit in an atom
-    parent.mkdir(parents=True)
-    (parent / "answers.json").write_text(json.dumps(answers, indent=1, sort_keys=True) + "\n")
-    return pair_dir
+        atoms.append({"atom": name, "subject": str(s), "prediction_time": anchor.isoformat(sep=" ")})
+        answers += [(str(s), t, values[t], RULES["targets"][t]) for t in RULES["targets"] if values[t] is not None]
+    content = layout.content_dir(tree, TASK)  # answers never sit in an atom
+    content.mkdir(parents=True)
+    (content / "content.json").write_text(json.dumps({"version": "1.0", "atoms": atoms, "targets": [
+        {"name": t, "metric": m} for t, m in RULES["targets"].items()]}, indent=1, sort_keys=True) + "\n")
+    with open(content / "answers.csv", "w", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(c.built.ANSWERS)
+        w.writerows(answers)
+    release = c.load(PKG / "dataset.yaml", c.DatasetConfig).description.version
+    cfg = hashing.config_hash(toy.config_files(TASK, ARM, None), dataset_release=release, medomni_release="0.3.0")
+    (content / "manifest.json").write_text(json.dumps({"config_hash": {ARM: cfg}, "builder": toy.label}) + "\n")
+    return tree / ARM
 
 
 # ---------------------------------------------------------------- one user, steps 1-6
 
 def user(tmp_path, name, monkeypatch):
     home = tmp_path / name
-    data = make_dataset(PKG, home / "data", subjects=10, seed=0)  # each user's own copy of the same dataset version
+    data = make_dataset(PKG, home / "data", subjects=10, seed=0, plant=LABELS)  # each user's own copy of the same dataset version
     cfg = {"datasets": {DATASET: {"path": str(data.root)}}, "cache": str(home / "cache"),
            "tasks": str(home / "atomtasks"), "runs": str(home / "runs"), "results": str(home / "results.jsonl"),
            "keys_file": str(home / "keys.env")}
@@ -146,8 +189,6 @@ def user(tmp_path, name, monkeypatch):
     cache = Cache(Path(ws.cache))
     (entry,) = [e for e in cache.entries() if e.meta.step == "events"]
     assert verify(entry) == [] and entry.meta.rows["events"] > 0
-
-    assert check_package(PKG) == []  # step 3: recipes load through their models and cross-references resolve
 
     conv = load_converters().found["npy-to-edf"]  # the test's dummy converter, beside Core's h5-to-edf
     fam = families.get("spo2-series-10hz-pct", REPO)
@@ -164,9 +205,13 @@ def user(tmp_path, name, monkeypatch):
         shutil.copyfile(e.path / "spo2.edf", out_dir / "spo2.edf")
         converted[subject] = e
 
-    pair_dir = toy_build(entry.path / "events.parquet", data.root, Path(ws.tasks), convert)  # step 4
+    tree = layout.tree(ws)
+    pair_dir = toy_build(entry.path / "events.parquet", data.root, tree, convert)  # step 3: the built-task contract
     atoms = sorted(p for p in pair_dir.iterdir() if p.is_dir())
     assert len(atoms) == 4
+    assert task_checks(tree, TASK, [ARM]) == []  # step 4: Core's checks over built output alone (R-143)
+    content = c.load(layout.content_dir(tree, TASK) / "content.json", c.BuiltContent)
+    assert sorted(a.atom for a in content.atoms) == [a.name for a in atoms]
 
     for atom in atoms:  # step 5: every staged family file passes its family's checks
         for f in (atom / "data/files").iterdir():
@@ -190,7 +235,7 @@ def user(tmp_path, name, monkeypatch):
     with open(run / "predictions.jsonl", "w") as f:  # the handoff to the scorer (R-77)
         for a in atoms:
             for t in ("aki", "creat_high"):
-                f.write(json.dumps({"run_id": "toy-run", "atom": f"{PAIR}/{a.name}", "target": t, "value": 0.5,
+                f.write(json.dumps({"run_id": "toy-run", "atom": f"{TASK}/{a.name}", "target": t, "value": 0.5,
                                     "intelligence": {"kind": "agent", "name": "toy"}}) + "\n")
     assert len(c.load_lines(run / "predictions.jsonl", c.PredictionRecord)) == 8
     return {"home": home, "cache": cache, "entry": entry, "data": data, "pair": pair_dir, "convert": convert,
@@ -205,12 +250,10 @@ def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
     b = user(tmp_path, "bob", monkeypatch)  # step 7: a second user, a fresh workspace
     assert b["keys"] == a["keys"]  # same cache keys and content hashes (R-39)
     assert b["atoms"] == a["atoms"] and b["set"] == a["set"]  # the same built files
-    from medomni.core.contracts import DatasetConfig, load
-
-    release = load(PKG / "dataset.yaml", DatasetConfig).description.version
-    configs = {p.relative_to(REPO).as_posix(): p for p in (TASK / "template.yaml", TASK / "cohorts/n4.yaml", PKG / "labels.yaml")}
-    cfg = hashing.config_hash(configs, dataset_release=release, medomni_release="0.3.0")
-    assert cfg.startswith("cfg1:")  # the config hash depends on config files and releases only (R-111), not the workspace
+    manifests = [c.load(layout.content_dir(layout.tree(c.load(u["home"] / "workspace.yaml", c.WorkspaceConfig)), TASK)
+                        / "manifest.json", c.BuiltManifest) for u in (a, b)]
+    assert manifests[0] == manifests[1] and manifests[0].config_hash[ARM].startswith("cfg1:")  # config and releases only
+    assert manifests[0].builder == "toy/1"  # (R-111), not the workspace
 
     monkeypatch.setenv("MEDOMNI_HOME", str(a["home"]))  # step 8: verify catches one changed value
     capsys.readouterr()
@@ -227,7 +270,7 @@ def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
                    use_dictionary=False, write_statistics=False)
     assert main(["cache", "verify"]) == 1
     assert f"FAIL  {a['entry'].name}" in capsys.readouterr().out
-    rebuilt = toy_build(events, a["data"].root, a["home"] / "rebuilt", a["convert"])
+    rebuilt = toy_build(events, a["data"].root, a["home"] / "rebuilt" / "atomtasks", a["convert"])
     changed = {p.name for p in rebuilt.iterdir() if p.is_dir() and hashing.dir_hash(p) != a["atoms"].get(p.name)}
     assert changed == {rows[i]["subject_id"]}
 

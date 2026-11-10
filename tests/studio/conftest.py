@@ -11,8 +11,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from medomni.core.families.dummy.datasets import make_dataset
-from medomni.core.testing import DATASETS
+from medomni.studio.dummy import make as make_dataset
+from medomni.studio.testing import DATASETS
 
 PAIR = "dummy-mimic_aki@n10"
 RUN = "run-1"

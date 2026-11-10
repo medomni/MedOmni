@@ -2,7 +2,7 @@
 import pytest
 
 from medomni.studio.build.labels import anchor, label, match, window
-from medomni.core.contracts.recipe import Anchor, Label
+from medomni.studio.build.contracts.recipe import Anchor, Label
 
 
 def ev(t, code, value=None, visit=None):

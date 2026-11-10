@@ -1,17 +1,39 @@
 """`medomni studio dummy <dataset>`: a dummy raw folder for a dataset package, from its own `dataset.yaml` (R-70, R-71).
 
 A thin wrapper over Core's generator (`medomni.core.families.dummy.datasets.make_dataset`), so anyone adding a dataset
-package can make dummy data for it, and anyone can reproduce ours from the seed.
+package can make dummy data for it, and anyone can reproduce ours from the seed. What to plant comes from the
+package's `labels.yaml`, the v1 builder's label format (R-147).
 """
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
+
 def find_package(name: str) -> Path:
     from medomni.core.loading import find_package as core_find
 
     return core_find(name)
+
+
+def plants(package: str | Path) -> dict:
+    """Core's planting specs from a package's `labels.yaml`: one per `exists` or `value` label; none without the file."""
+    from medomni.core.contracts import load
+    from medomni.core.families.dummy.datasets import Plant
+    from medomni.studio.build.contracts import LabelLibrary
+
+    path = Path(package) / "labels.yaml"
+    if not path.is_file():
+        return {}
+    return {name: Plant(exists=lab.exists, value=lab.value, from_=lab.from_, to=lab.to, op=lab.op, x=lab.x)
+            for name, lab in load(path, LabelLibrary).root.items() if lab.exists or lab.value}
+
+
+def make(package: str | Path, out: str | Path, **kw):
+    """Core's `make_dataset`, with the package's labels planted."""
+    from medomni.core.families.dummy.datasets import make_dataset
+
+    return make_dataset(package, out, plant=plants(package), **kw)
 
 
 def add_parser(sub) -> None:
@@ -29,10 +51,10 @@ def add_parser(sub) -> None:
 
 def run(a) -> int:
     from medomni.core.contracts import ContractError
-    from medomni.core.families.dummy.datasets import DummyError, make_dataset
+    from medomni.core.families.dummy.datasets import DummyError
 
     try:
-        d = make_dataset(find_package(a.dataset), a.out, subjects=a.subjects, seed=a.seed, level=a.level)
+        d = make(find_package(a.dataset), a.out, subjects=a.subjects, seed=a.seed, level=a.level)
     except (FileNotFoundError, ContractError, DummyError, ValueError) as e:
         print(f"medomni studio dummy: {e}", file=sys.stderr)
         return 2

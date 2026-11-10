@@ -308,7 +308,7 @@ timeout_sec = {float(env.verifier_timeout_sec)}
 timeout_sec = {float(env.agent_timeout_sec)}
 
 [environment]
-allow_internet = false
+allow_internet = {str(env.allow_internet).lower()}
 cpus = {env.cpus}
 memory_mb = {env.memory_mb}
 gpus = 0

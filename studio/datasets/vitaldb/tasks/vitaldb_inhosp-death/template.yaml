@@ -12,5 +12,5 @@ agent:
 
     The prediction is made at the moment this operation ends. Every record, test and signal you are given was taken at or
     before that moment; surgical times are in seconds from the start of the case.'
-  environment: {cpus: 4, memory_mb: 8192, allow_internet: false, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
   submission_path: /workspace/submission/predictions.csv

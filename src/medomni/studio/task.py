@@ -101,7 +101,7 @@ input: {{note: <what the proposal says the agent needs>}}
 agent:
   statement: <the question, in one sentence>
   instruction: <what the prediction time means for this task>
-  environment: {{cpus: 4, memory_mb: 8192, allow_internet: false, agent_timeout_sec: 1200, verifier_timeout_sec: 300}}
+  environment: {{cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}}
   submission_path: /workspace/submission/predictions.csv
 """
 COHORT = """\

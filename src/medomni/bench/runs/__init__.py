@@ -152,9 +152,22 @@ def runner_for(agent: AgentConfig) -> Runner:
     return pieces[name].load()
 
 
-def preflight(tree: Path, task_set, arms: list[str]) -> None:
-    """Core's checks over built output, on every task of the set under these arms, before anything runs (R-143 a)."""
-    problems = [p for e in task_set.tasks for p in task_checks(tree, e.task, arms)]
+def preflight(tree: Path, task_set, arms: list[str], route: str | None = None, stream=None) -> None:
+    """Before anything runs: Core's checks over built output, on every task of the set under these arms (R-143 a), the
+    stand-in agents on each task that passes them (R-54), and the agent's route against each dataset's policy."""
+    from medomni.bench.scoring import standins
+
+    from . import routes
+
+    problems = []
+    for e in task_set.tasks:
+        found = task_checks(tree, e.task, arms)
+        problems += found or standins.problems(tree, e.task)
+    if route is not None and not problems:
+        refused, conditions = routes.check(tree, [e.task for e in task_set.tasks], route)
+        problems += refused
+        for c in conditions:
+            print(f"condition: {c}", file=stream or sys.stdout)
     if problems:
         raise RunError(f"{len(problems)} problem(s) in the built tasks; nothing ran:\n  " + "\n  ".join(problems[:20]))
 
@@ -169,7 +182,7 @@ def run(set_name: str, agent_name: str, arms: list[str] | None = None, ws=None, 
     if bad:
         raise RunError(f"{set_name} does not list arm {bad}")
     tree = layout.tree(ws)
-    preflight(tree, task_set, names)
+    preflight(tree, task_set, names, agent.route, stream)
     out = []
     runner = runner_for(agent)
     for arm in [_arm(a) for a in names]:

@@ -123,6 +123,7 @@
           "type": "string"
         },
         "task": {
+          "pattern": "^\\S+$",
           "title": "Task",
           "type": "string"
         },

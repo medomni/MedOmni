@@ -11,7 +11,6 @@ from .contract_examples import EXAMPLES, SCORE_RECORD
 from .test_plugins import make_dist, make_plugin, site  # noqa: F401 - fixture
 
 RUN = EXAMPLES["result-record"][0]
-TEMPLATE = EXAMPLES["task-template"][0]
 PRED = EXAMPLES["prediction-record"][0]
 
 
@@ -38,19 +37,9 @@ def test_only_the_agent_kind_ships():
     _bad(RUN | {"intelligence": {"kind": "llm", "name": "x"}}, c.RunRecord, "kind")
 
 
-def test_template_keeps_agent_parts_in_its_agent_block():
-    t = c.load_data(TEMPLATE, c.TaskTemplate)
-    assert t.agent.submission_path.endswith("predictions.csv") and t.agent.environment.cpus == 2
-    for moved in ("instruction", "environment", "submission_path"):
-        _bad(TEMPLATE | {moved: TEMPLATE["agent"][moved]}, c.TaskTemplate, moved)
-    _bad({k: v for k, v in TEMPLATE.items() if k != "agent"}, c.TaskTemplate, "agent")
-
-
 def test_metric_names_come_from_the_registry():
     assert plugins.metric_names() == {"auc", "qwk", "mae"}
-    bad = dict(TEMPLATE, targets=[{"name": "aki", "label": "dummy:aki", "metric": "brier"}])
-    _bad(bad, c.TaskTemplate, "unknown metric 'brier'.*auc, mae, qwk")
-    _bad(SCORE_RECORD | {"metric": "brier"}, c.ScoreRecord, "unknown metric")
+    _bad(SCORE_RECORD | {"metric": "brier"}, c.ScoreRecord, "unknown metric 'brier'.*auc, mae, qwk")
 
 
 def test_a_registered_metric_is_accepted(site):  # noqa: F811

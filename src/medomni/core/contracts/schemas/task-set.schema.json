@@ -5,9 +5,10 @@
   "$defs": {
     "SetEntry": {
       "additionalProperties": false,
-      "description": "One pin: a pair, with its evidence variant, at version N, and nothing else (R-108, R-111). Entries never\nchange; a new N enters only a new set. Imported v0.2 sets pin version 0.",
+      "description": "One pin: a task id at version N, and nothing else (R-108, R-111). Entries never change; a new N enters only\na new set. Imported v0.2 sets pin version 0.",
       "properties": {
         "task": {
+          "pattern": "^\\S+$",
           "title": "Task",
           "type": "string"
         },
@@ -26,7 +27,7 @@
     }
   },
   "additionalProperties": false,
-  "description": "A benchmark's `sets/<name>.yaml`: grow-only pins of pairs at a version, the builder that builds them, and the\narms they are built under (R-83, R-84, R-108).",
+  "description": "A benchmark's `sets/<name>.yaml`: grow-only pins of task ids at a version, the builder that builds them, and the\narms they are built under (R-83, R-84, R-108).",
   "properties": {
     "name": {
       "pattern": "^[a-z0-9][a-z0-9-]*$",

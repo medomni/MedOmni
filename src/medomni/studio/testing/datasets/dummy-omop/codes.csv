@@ -1,0 +1,13 @@
+code,description,source_table
+GENDER//F,Female,person
+GENDER//M,Male,person
+YEAR_OF_BIRTH,Year of birth,person
+VISIT,Study visit,visit_occurrence
+MEASUREMENT//hba1c,HbA1c (%),measurement
+MEASUREMENT//bmi,Body mass index,measurement
+MEASUREMENT//sbp,Systolic blood pressure,measurement
+CONDITION//E11.9,Type 2 diabetes without complications,condition_occurrence
+CONDITION//H35.0,Background retinopathy,condition_occurrence
+CONDITION//I10,Essential hypertension,condition_occurrence
+OBSERVATION//smoking,Smoking status,observation
+OBSERVATION//diet,Diet survey answer,observation

@@ -196,7 +196,7 @@ def _vectors(sink) -> None:
 
 def run(scope, sink) -> None:
     from medomni.studio.build import _arm, config_hashes
-    from medomni.core.recipes import check_package
+    from medomni.studio.build.recipes import check_package
 
     packages: set = set()
     staged: dict[str, set[str]] = {}
@@ -215,7 +215,7 @@ def run(scope, sink) -> None:
         if pair.package not in packages:
             packages.add(pair.package)
             problems = check_package(pair.package)
-            sink.add("T-CONF.1", "M", pair.dataset, FAIL if problems else PASS, "; ".join(problems)[:400] or "the package's checks across files pass", "core.recipes")
+            sink.add("T-CONF.1", "M", pair.dataset, FAIL if problems else PASS, "; ".join(problems)[:400] or "the package's checks across files pass", "studio.build.recipes")
         meta = common.content(scope.ws, pair_id)
         if meta is None:
             sink.add("T-COMP.2", "M", pair_id, NONE, "not built", "content")

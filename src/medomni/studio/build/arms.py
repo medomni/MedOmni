@@ -90,7 +90,7 @@ class LadderBuild(ArmBuild):
 
     def check(self, pair, variant, inv: dict, subject: str) -> list[str]:
         """A rung must carry every complete-case family it allows."""
-        from medomni.core.contracts.recipe import Files
+        from .contracts.recipe import Files
 
         a = self.allowed(self.spec(pair), variant)
         complete = {f for q in pair.cohort.require if isinstance(q, Files) for f in q.files}

@@ -6,9 +6,9 @@ folder is found with `importlib.util.find_spec`, which runs none of the package'
 lives, and which contract its files follow, each project says in `medomni.content`; Core names no project's folder
 (R-145).
 
-Python pieces (commands, checks, family converters, Studio tools, runners, metrics, arms) register one entry point each, in the group for their
-kind. Bench, Perception and Studio register their commands in the same groups. Finding Python pieces reads
-entry-point metadata only; a piece is imported the first time it is used.
+Python pieces (commands, checks, family converters, Studio tools, runners, metrics, arms, services) register one
+entry point each, in the group for their kind. Bench, Perception and Studio register their commands in the same groups.
+Finding Python pieces reads entry-point metadata only; a piece is imported the first time it is used.
 
 Every piece is named `<package>:<name>`; built-in pieces use the package `medomni`, and built-in content is the
 repository. Name clashes (R-65):
@@ -38,8 +38,9 @@ ARMS = "medomni.arms"  # arms a task set may list; new arms come from plug-in pa
 CONTENT = "medomni.content"  # each project's content kinds: where its files live and their contracts (R-145)
 BUILDERS = "medomni.builders"  # task builders (R-142)
 ARM_BUILDS = "medomni.arm_builds"  # an arm's build side for one builder, named `<builder>:<arm>` (R-143, R-144)
+SERVICES = "medomni.services"  # services a run starts beside the agent, each one image (R-147)
 
-GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS, CONTENT, BUILDERS, ARM_BUILDS)  # groups of Python pieces
+GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS, CONTENT, BUILDERS, ARM_BUILDS, SERVICES)  # groups of Python pieces
 
 # Commands that Core itself provides. They are not entry points, and no plug-in can replace them.
 CORE_COMMANDS = ("plugins", "contracts", "cache")

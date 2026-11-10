@@ -31,17 +31,21 @@ must see the same filesystem, and a file must not change while it is being read.
 """
 
 
-def create_app(deployment, catalog=None, pool=None, encoders_dir=None):
-    catalog = catalog or Catalog.load(encoders_dir, ids=tuple(deployment.encoders))
-    pool = pool or Pool(DockerRunner(deployment), deployment)
+def create_app(deployment, catalog=None, pool=None, encoders_dir=None, service_type=Service):
+    """The app. `service_type` builds the Service from its fields; the perception service passes one with its guard.
+
+    An empty `catalog` is used as given: a task that lists no encoders is served none, not every card on disk.
+    """
+    catalog = catalog if catalog is not None else Catalog.load(encoders_dir, ids=tuple(deployment.encoders))
+    pool = pool if pool is not None else Pool(DockerRunner(deployment), deployment)
     unknown = set(deployment.encoders) - {e.id for e in catalog.all()}
     if unknown:
         raise ValueError("the workspace deployment names encoders that do not exist: "
                          + ", ".join(sorted(unknown)))
 
-    service = Service(deployment=deployment, catalog=catalog, pool=pool,
-                      cache=Cache(deployment.cache_bytes),
-                      calls=CallLog(deployment.call_log, deployment.log_paths))
+    service = service_type(deployment=deployment, catalog=catalog, pool=pool,
+                           cache=Cache(deployment.cache_bytes),
+                           calls=CallLog(deployment.call_log, deployment.log_paths))
 
     @asynccontextmanager
     async def lifespan(_app):

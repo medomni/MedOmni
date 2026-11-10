@@ -6,6 +6,13 @@
 !data_task/families
 !data_task/family_alias.yaml
 !harness/perception-image
+# the v0.3 perception service (src/medomni/perception/sidecar/Dockerfile; BuildKit reads its own
+# Dockerfile.dockerignore, the legacy builder reads this file)
+!pyproject.toml
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception
+!core/families
 # inside the allowed trees: never ship runtime state
 perception/var
 **/__pycache__

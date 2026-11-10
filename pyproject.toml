@@ -94,6 +94,10 @@ bench = "medomni.bench.content:CONTENT"
 perception = "medomni.perception.content:CONTENT"
 studio = "medomni.studio.content:CONTENT"
 
+# Services a run starts beside the agent (R-147): Perception owns the perception service; Bench looks it up by name
+[project.entry-points."medomni.services"]
+perception = "medomni.perception.sidecar:SERVICE"
+
 [project.entry-points."medomni.runners"]
 agent = "medomni.bench.runs.harbor:harness"
 replay = "medomni.bench.runs:replay"

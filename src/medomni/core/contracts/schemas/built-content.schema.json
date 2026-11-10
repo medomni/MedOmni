@@ -66,6 +66,15 @@
       "title": "Version",
       "type": "string"
     },
+    "datasets": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Datasets",
+      "type": "array"
+    },
     "targets": {
       "items": {
         "$ref": "#/$defs/BuiltTarget"

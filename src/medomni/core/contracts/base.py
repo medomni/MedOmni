@@ -99,6 +99,8 @@ Version = Annotated[str, StringConstraints(pattern=r"^(0|[1-9][0-9]*)\.(0|[1-9][
 TaskSetRef = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9.-]*$")]
 EnvRef = Annotated[str, StringConstraints(pattern=r"^\$\{[A-Z][A-Z0-9_]*\}$")]
 NonEmpty = Annotated[str, StringConstraints(min_length=1)]
+# A task id as a builder names it: Core asks only that it is non-empty with no whitespace; its form is the builder's (R-147)
+TaskId = Annotated[str, StringConstraints(pattern=r"^\S+$")]
 
 
 def _metric(v: str) -> str:
@@ -135,3 +137,8 @@ class IntelligenceRef(Contract):
 
     kind: IntelligenceKind
     name: Slug
+
+
+class Author(Contract):
+    name: NonEmpty
+    github: Annotated[str, StringConstraints(pattern=r"^[A-Za-z0-9-]+$")] | None = None  # required by the release check

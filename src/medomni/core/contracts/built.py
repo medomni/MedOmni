@@ -28,6 +28,7 @@ class BuiltContent(_Open):
     """`_content/<task>/content.json`."""
 
     version: NonEmpty  # the task's version N.X (R-106)
+    datasets: tuple[NonEmpty, ...] = ()  # the datasets its atoms hold data from; Bench checks their policies' routes
     targets: tuple[BuiltTarget, ...] = Field(min_length=1)
     atoms: tuple[BuiltAtom, ...] = Field(min_length=1)
 

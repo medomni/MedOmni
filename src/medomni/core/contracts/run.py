@@ -7,8 +7,7 @@ from typing import Annotated, Any, Literal
 from pydantic import AfterValidator, Field, model_validator
 
 from .base import (ArmName, ConfigHash, Contract, IntelligenceKind, IntelligenceRef, MetricName, NonEmpty, Sha256,
-                   Slug, TaskSetRef, Version)
-from .task import Pair
+                   Slug, TaskId, TaskSetRef, Version)
 
 
 class AgentConfig(Contract):
@@ -18,7 +17,7 @@ class AgentConfig(Contract):
     kind: IntelligenceKind = "agent"
     name: Slug
     model: NonEmpty
-    route: Literal["local", "cloud"]  # where the model runs; dataset policies list the routes they allow (no run checks it yet)
+    route: Literal["local", "cloud"]  # where the model runs; Bench checks it against each dataset policy's routes before a run
     runner: Slug | None = None  # a runner other than the kind's own, such as a replay with no model
     settings: dict[str, Any] = {}
 
@@ -62,7 +61,7 @@ class RunRecord(Contract):
     run_id: NonEmpty
     release: NonEmpty
     task_set: TaskSetRef
-    task: Pair
+    task: TaskId
     task_version: Version
     config_hash: ConfigHash  # from the build manifest (R-111)
     intelligence: IntelligenceRef

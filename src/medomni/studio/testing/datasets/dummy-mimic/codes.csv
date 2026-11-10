@@ -1,0 +1,15 @@
+code,description,source_table
+GENDER//F,Female,patients
+GENDER//M,Male,patients
+AGE,Age at the anchor year,patients
+ADMISSION,Hospital admission,admissions
+DISCHARGE,Hospital discharge,admissions
+DIAGNOSIS//ICD//N17.9,"Acute kidney failure, unspecified",diagnoses_icd
+DIAGNOSIS//ICD//I10,Essential hypertension,diagnoses_icd
+DIAGNOSIS//ICD//E11.9,Type 2 diabetes without complications,diagnoses_icd
+DIAGNOSIS//ICD//J18.9,"Pneumonia, unspecified organism",diagnoses_icd
+LAB//90001,Creatinine (invented item id),labevents
+LAB//90002,Potassium (invented item id),labevents
+LAB//90003,Haemoglobin (invented item id),labevents
+VITAL//91001,Heart rate (invented item id),chartevents
+VITAL//91002,SpO2 (invented item id),chartevents

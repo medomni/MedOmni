@@ -12,7 +12,7 @@ import yaml
 from medomni.core import families, hashing
 from medomni.core.families.check import conforms
 from medomni.core.families.dummy import make_dummy, signal
-from medomni.core.families.dummy.datasets import INT_BASE, DummyError, make_dataset
+from medomni.core.families.dummy.datasets import INT_BASE, DummyError, Plant, make_dataset
 from medomni.core.testing import DATASETS
 
 REPO = Path(__file__).resolve().parents[2]
@@ -90,10 +90,20 @@ def test_bridge_round_trip(tmp_path):
         assert conforms(fam, out) == [], fam.id
 
 
+# What to plant: the caller's (R-147). These match the labels of Studio's dummy packages (tests/studio/test_dummy_plants.py).
+PLANTS = {
+    "dummy-mimic": {"aki": Plant(exists="^DIAGNOSIS//ICD//N17", from_="anchor", to="anchor + 7 days"),
+                    "creat_high": Plant(value="LAB//90001", op=">=", x=1.5, from_="anchor", to="anchor + 2 days")},
+    "dummy-omop": {"hba1c_high": Plant(value="MEASUREMENT//hba1c", op=">=", x=6.5, from_="anchor", to="anchor + 2 days"),
+                   "retinopathy": Plant(exists="^CONDITION//H35", from_="anchor", to="anchor + 30 days")},
+    "dummy-bdsp": {"osa": Plant(value="AHI", op=">=", x=15, from_="any", to="any")},
+}
+
+
 @pytest.fixture(scope="module")
 def made(tmp_path_factory):
     out = tmp_path_factory.mktemp("datasets")
-    return {s: make_dataset(DATASETS / s, out / s) for s in SHAPES}
+    return {s: make_dataset(DATASETS / s, out / s, plant=PLANTS[s]) for s in SHAPES}
 
 
 def _codes(package: Path) -> set[str]:
@@ -146,13 +156,12 @@ def test_dataset_is_reproducible(made, shape, tmp_path):
 
 @pytest.mark.parametrize("shape", SHAPES)
 def test_planted_labels_and_canaries(made, shape):
-    from medomni.core.contracts import LabelLibrary, load
+    from medomni.core.contracts import DatasetConfig, load
     from medomni.core.loading.options import options
-    from medomni.core.contracts import DatasetConfig
 
     d = made[shape]
     assert json.loads((d.root.parent / "planted.json").read_text()) == d.planted
-    labels = load(DATASETS / shape / "labels.yaml", LabelLibrary).root
+    labels = PLANTS[shape]
     cfg = load(DATASETS / shape / "dataset.yaml", DatasetConfig)
     tables = {n: s for r in cfg.read if r.reader == "csv" for n, s in options(r).tables.items()}
     assert set(d.planted["labels"]) == set(labels)
@@ -203,6 +212,6 @@ def test_a_new_table_needs_no_generator_change(tmp_path):
 def test_a_label_that_cannot_be_planted_is_refused(tmp_path):
     pkg = tmp_path / "dummy-bad"
     shutil.copytree(DATASETS / "dummy-mimic", pkg)
-    (pkg / "labels.yaml").write_text('sepsis: {exists: "^DIAGNOSIS//ICD//A41", from: anchor, to: anchor + 2 days}\n')
+    sepsis = Plant(exists="^DIAGNOSIS//ICD//A41", from_="anchor", to="anchor + 2 days")
     with pytest.raises(DummyError, match="sepsis"):
-        make_dataset(pkg, tmp_path / "out")
+        make_dataset(pkg, tmp_path / "out", plant={"sepsis": sepsis})

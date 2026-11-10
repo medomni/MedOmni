@@ -57,10 +57,18 @@ def _atom_dir(tree: Path, arm, variant, name: str) -> Path:
     return layout.atom_dir(tree, arm.name, variant, name)
 
 
+_EVENTS: dict[tuple[str, str, str], Path] = {}  # (package, data root, cache root) -> events entry, once per process
+
+
 def _dataset_events(pair, ws, cache) -> tuple[Path, Path]:
+    """The dataset's events entry. Its cache key covers every data file, so it is worked out once per process and
+    reused by every pair of the dataset (a build, then each pair's check)."""
     raw = workspace.dataset_path(ws, pair.dataset)
-    entry, _ = load_dataset(pair.package, raw, cache)
-    return raw, entry.path / "events.parquet"
+    k = (str(pair.package), str(raw), str(cache.root))
+    if k not in _EVENTS:
+        entry, _ = load_dataset(pair.package, raw, cache)
+        _EVENTS[k] = entry.path
+    return raw, _EVENTS[k] / "events.parquet"
 
 
 def _tables_for(pairs: list, raw: Path, subjects: set[str]) -> dict:

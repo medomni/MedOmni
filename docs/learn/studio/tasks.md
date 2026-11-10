@@ -11,11 +11,12 @@ task template + cohort ──Build──▶ content of <template>@<cohort>, with
 
 A YAML file, `template.yaml`, that states:
 
-- **targets**: one or more, each naming a label from the dataset's library and its metric
-- **input**: the tables and families the agent may see
-- **evidence**: the evidence variants to build, `default` and optionally `full`
+- **targets**: one or more, each naming a label from the dataset's library and its metric, and optionally its own question
+- **input**: the tables and families the proposal named, kept as a record; the evidence is the patient's whole record minus the targets' guards
+- **evidence**: the evidence variants; v0.3.0 builds `default` only
 - **agent**: what an agent needs to run the task:
-    - **instruction**: the template for the agent's instruction
+    - **statement**: the clinical question, which opens every atom task's instruction
+    - **instruction**: the template's own paragraph on the prediction time
     - **environment**: CPUs, memory, timeouts, no internet
     - **submission path**: where the agent writes its answer
 
@@ -25,7 +26,7 @@ A template is frozen once its proposal is signed off in [Studio](../studio/overv
 
 A cohort is a [recipe](recipes.md) in its own file next to the template: who is included, at which prediction time, and how many per class. One template can have several cohorts, such as `n20` and `n50`; the patients of `n20` are the first ones of `n50`.
 
-The pair is written `<template>@<cohort>`, such as `mimic-iv_ckd-staging@n20`, and `<template>:full@<cohort>` for the full evidence variant. Each pair, with its evidence variant, is one task.
+The pair is written `<template>@<cohort>`, such as `mimic-iv_ckd-staging@n20`. Each pair is one task.
 
 ## Version
 

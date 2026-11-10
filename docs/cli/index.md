@@ -19,11 +19,11 @@ Shared commands are at the top level; each project's commands are under its name
 | Command | Does |
 |---|---|
 | `medomni bench data connect <dataset> --path <dir>` | Records where your copy of a dataset is, in the workspace configuration. |
-| `medomni bench data check <dataset>` | Checks your copy against the dataset package (version, listed files, needed tables), loads its data sample and dummy data, validates the policy, and checks that every raw value a label reads is classified ([dataset check](../learn/bench/build.md#correctness-checks)). |
+| `medomni bench data check <dataset>` | Checks the package's files and policy, writes and loads its dummy data, and checks your copy: version, listed files, the columns the readers need, each hook's problems, and that every raw value a label reads is classified ([dataset check](../learn/bench/build.md#correctness-checks)). It never loads your copy; `medomni cache build` does. |
 | `medomni bench agent new <name>` | Writes an agent config to fill in. |
 | `medomni bench data new <dataset>` | Writes a dataset package to fill in, in `bench/datasets/<dataset>/`. |
 | `medomni bench task new <template> --dataset <dataset>` | Writes a task template and an `n20` cohort to fill in. |
-| `medomni bench task build --set <set>` or `<template>@<cohort>` | Runs [Build](../learn/bench/build.md): atom tasks in the workspace, for every arm the set lists and every evidence variant. Dummy data for `medomni-bench/smoke-dummy` is generated on the fly. |
+| `medomni bench task build --set <set>` or `<template>@<cohort>` | Runs [Build](../learn/bench/build.md): atom tasks in the workspace, for every arm the set lists. Dummy data for `medomni-bench/smoke-dummy` is generated on the fly. |
 | `medomni bench task check <template>@<cohort>` | Checks a template, its cohort and the build: fields, metrics, labels, test patients, families, the [correctness checks](../learn/bench/build.md#correctness-checks), and the two [stand-in agents](../learn/bench/scoring.md#checks-before-any-run). |
 | `medomni bench task check --set <set>` | Runs the checks of `task check <template>@<cohort>` on every pair the set pins. |
 | `medomni bench task check --release` | For MedOmni's releases: checks every pinned pair in every task set, and fails when a pair's cohort, labels, targets, scoring or dataset release changed since the last release and its [version](../learn/bench/tasks.md#version) N has not risen. It compares config files, never data. Builds and runs never use it. |
@@ -43,13 +43,19 @@ Shared commands are at the top level; each project's commands are under its name
 
 | Command | Does |
 |---|---|
-| `medomni studio preview <template>@<cohort>` | Runs the cohort on your copy up to the draw and prints the patients left after each step and per class. Builds nothing. |
-| `medomni studio download-list <dataset>` | For a dataset downloaded in parts, lists the files its source population needs. |
+| `medomni studio survey <dataset>` | Reports what a dataset has: codes, families, time spans and counts, from its event table. |
+| `medomni studio census <set>` | For each built pair and arm of a set: the families staged and the spread of the answers. |
+| `medomni studio intake <file>` | Turns the rows of an intake form into draft proposals, or a signed-off proposal into a task template. |
+| `medomni studio review-form <template>@<cohort>` | Writes the task's clinical review form. `--submit <file>` records a filled-in form as the task's review. |
+| `medomni studio preview <template>@<cohort>` | Runs the cohort on your copy up to cohort selection and prints the patients left after each step and per class. Builds nothing. |
+| `medomni studio download-list <dataset>` | Lists what to download for a dataset: one tab-separated line per entry, with its source, its path in your copy and how to fetch it (`file`, `folder` or `gunzip`). Without the index tables on disk, it prints those first. |
 | `medomni studio dummy <dataset> [--subjects N] [--seed S] [--out DIR]` | Writes dummy data shaped like the dataset, from its `dataset.yaml` and `codes.csv`, with the [dummy-data generator](../learn/core/families.md#how-the-registry-is-used). |
 | `medomni studio audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. `--only` limits it to some assets. |
 | `medomni studio progress <run>` | Shows a run's progress live, per atom task. Run it beside `medomni bench run`. |
 | `medomni studio build-sheet <set>` | Writes a sheet of what a set's build made, per task, to the workspace. |
 | `medomni studio bench-health <run>` | Reports each encoder's health from a finished run's call log. |
+| `medomni studio tables` | Writes the results table of the scored runs. `--set <set>` limits it to one task set. |
+| `medomni studio diagrams <description>` | Draws the architecture diagrams from one YAML description, as SVG files that also open in draw.io. |
 | `medomni studio relevance <template>` | Writes the relevance table that scoring reads for a template. |
 | `medomni studio encoder-status` | Lists which encoders are built and which are planned. |
 | `medomni studio encoder-demo <encoder>` | Runs an encoder on one sample and prints its evidence. |

@@ -50,7 +50,7 @@ Every dataset becomes one event table, kept in the [cache](../core/cache.md). It
 | `visit` | The visit the event belongs to |
 
 - Column names follow [MEDS](https://github.com/Medical-Event-Data-Standard/meds), so MEDS tools can read the table.
-- Raw files are `FILE//<family>` rows, with a path relative to your copy, and optionally a sha256 and the file's own id (a DICOM UID, a WFDB record).
+- Raw files are `FILE//<family>` rows, with a path relative to your copy, and optionally the file's own id (a DICOM UID, a WFDB record). Loading does not hash them; the cache keys each by a [quick identity](../core/cache.md#layout).
 - Annotations read from recordings, such as sleep stages, are events too.
 - A few codes are shared by every dataset; the rest are the dataset's own. See [Shared codes](../../reference/recipes.md#shared-codes).
 
@@ -70,9 +70,11 @@ One policy per dataset, read from its license and data use agreement. It records
 
 | Kind | Examples | What you need |
 |---|---|---|
-| Credentialed | MIMIC-IV, AI-READI, BDSP | Your own access. MedOmni publishes recipes and config hashes, never data. |
-| Open | VitalDB | Nothing. Task samples are on Hugging Face. |
+| Credentialed | MIMIC-IV, AI-READI, BDSP | Your own access, then your own download. |
+| Open | VitalDB | Your own download; no access request. |
 | Dummy | Generated | Nothing. Made from the dataset package and each family's declared format, never from a real record. |
+
+MedOmni hosts no dataset, open or credentialed: you download every dataset yourself, with the list `medomni studio download-list <dataset>` writes, and the licenses differ only in each package's policy. MedOmni publishes recipes and config hashes, and, where a policy allows samples, a small data sample on Hugging Face. Build never reads a sample.
 
 Dummy data lets every command run with no credentials. Its scores only show that the pipeline works.
 

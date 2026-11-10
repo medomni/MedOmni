@@ -54,7 +54,7 @@ For agent evaluators. You score your own agent on a MedOmni task set, with and w
 
 ## Results file
 
-Every run and every score is one result record, one line in `results.jsonl` in your workspace. You need it only to analyse results beyond the table. [Scoring](../learn/bench/scoring.md#results-file) explains how it is written.
+Every run and every score is one result record. Run records are lines of `runs.jsonl` in each [run folder](../learn/bench/runs.md#run-folders); score records are lines of `results.jsonl` in your workspace. You need them only to analyse results beyond the table. [Scoring](../learn/bench/scoring.md#results-file) explains how it is written.
 
 Contract: result record, `src/medomni/core/contracts/schemas/result-record.schema.json`.
 
@@ -63,8 +63,8 @@ Contract: result record, `src/medomni/core/contracts/schemas/result-record.schem
 | Run (`kind: run`) | agent run on one atom task | `run_id`, `task_set` (`<benchmark>/<set>`), `task` (`<template>@<cohort>`), `task_version` (`N.X`), `intelligence` (`kind: agent` and its name), `config_hash`, `model_served`, `error_kind`, `api_cost`; in its `agent` block: `arm`, `arm_variant` (the ladder's rung, `r1` to `r6`), `encoders_served`, `encoder_calls`, `files_opened` |
 | Score (`kind: score`) | task × target × agent × arm × repetition | `run_id`, `task_set`, `task_set_hash`, `target`, `config_hash`, `task_version`, `intelligence`, `arm` and `arm_variant` when the runs had them, `n_atoms`, `n_failed`, `metric`, `value`, `flags`, `encoder_use` |
 
-!!! warning "The results file is patient data"
-    Run ids name the patients they ran on, so the file falls under each dataset's data use agreement. Keep it in the workspace.
+!!! warning "Result records are patient data"
+    Run ids name the patients they ran on, so the run folders and the results file fall under each dataset's data use agreement. Keep them in the workspace.
 
 ## Where next
 

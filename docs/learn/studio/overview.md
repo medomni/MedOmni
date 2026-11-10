@@ -25,7 +25,7 @@ Every Studio tool is one of six kinds. Each kind has one interface, so a new too
 | **survey** | Reports what a dataset has: codes, families, time spans, counts. Reads the event table. | The dataset survey, the target census |
 | **propose** | Makes content for a pull request: task proposals from clinicians, and the files people write by hand. | Intake form and task catalogue, the relevance table scoring reads |
 | **review** | Review forms and sign-off, status views, and the [audit](audit.md). | Review forms, the audit, encoder status (which are built and which are planned) |
-| **preview** | Shows what something does without building it. | Cohort preview up to the draw, the files a source population needs, dummy data |
+| **preview** | Shows what something does without building it. | Cohort preview up to cohort selection, the files a source population needs, dummy data |
 | **assets** | Works with the files encoders and families are checked on. | An encoder demo on one sample, encoder test data, family samples |
 | **report** | Tables, figures and views of builds and runs. | Result tables, build sheets, a run's live progress, encoder health from a finished run, the architecture diagrams |
 
@@ -43,13 +43,18 @@ A change to a frozen template is a new proposal, and raises the [version](../ben
 ## Commands in v0.3.0
 
 ```bash
+medomni studio survey mimic-iv                     # codes, families, time spans and counts
+medomni studio census medomni-bench/v1            # families staged and answers' spread, per pair and arm
+medomni studio intake <file>                       # intake rows to drafts, or a signed-off proposal to a template
+medomni studio review-form <template>@<cohort>     # a task's clinical review form
 medomni studio preview mimic-iv_ckd-staging@n20   # patients left after each step and per class
-medomni studio download-list bdsp                  # files the source population needs
+medomni studio download-list bdsp                  # what to download: source, path in your copy, how
 medomni studio dummy vitaldb --out ~/dummy         # VitalDB-shaped dummy data, in a folder
 medomni studio audit                               # the audit report, in your workspace
 medomni studio progress <run>                      # a live view of a run, beside medomni bench run
 medomni studio build-sheet medomni-bench/v1        # what a set's build made, per task
 medomni studio bench-health <run>                  # encoder health from a finished run
+medomni studio tables                              # the results table of the scored runs
 medomni studio relevance <template>                # write the relevance table for a template
 medomni studio encoder-status                      # which encoders are built and which are planned
 medomni studio encoder-demo <encoder>              # run an encoder on one sample
@@ -60,7 +65,7 @@ medomni studio family-samples <family>             # write samples of a family
 The architecture diagrams are drawn from one description, `docs/assets/diagrams.yaml`. After a change, regenerate them; each SVG also opens in draw.io:
 
 ```bash
-uv run python src/medomni/studio/report/diagrams.py docs/assets/diagrams.yaml docs/assets/
+medomni studio diagrams docs/assets/diagrams.yaml --out docs/assets/
 ```
 
 ## Add a tool

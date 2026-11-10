@@ -32,7 +32,7 @@ One root, in your workspace:
 ```
 
 - **Step:** the named step that made the entry, such as `events` or `convert-psg-edf`.
-- **Key:** a hash of the step name, the step's version, its parameters and the hashes of its inputs. Inputs are raw files or other entries.
+- **Key:** a hash of the step name, the step's version, its parameters and the hashes of its inputs. Inputs are raw files or other entries. A raw file is hashed by a quick identity, its size and its first and last MiB, so a large recording is not read in full on each build.
 - **`CACHE.json`:** the step, version, parameters, every input with its hash, row counts, and the content hash of the entry.
 
 ## Rules

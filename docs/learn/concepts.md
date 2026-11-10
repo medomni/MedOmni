@@ -39,7 +39,7 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 ## Evaluation
 
 **Task template**
-:   A clinical question with its targets, input and evidence variants, and an `agent` block with the agent's instruction and environment. A frozen template is the end of Make. See [Tasks](bench/tasks.md).
+:   A clinical question with its targets, and an `agent` block with the agent's instruction and environment. A frozen template is the end of Make. See [Tasks](bench/tasks.md).
 
 **Cohort**
 :   A recipe next to a template: who is included, at which prediction time, and how many per class. A template and a cohort are written `<template>@<cohort>`, and are one task with a version `N.X`. See [Recipes](bench/recipes.md).

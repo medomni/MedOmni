@@ -1,5 +1,5 @@
 # The architecture diagrams on Learn › Architecture, as data. Regenerate after any change:
-#   uv run python src/medomni/studio/report/diagrams.py docs/assets/diagrams.yaml docs/assets/
+#   medomni studio diagrams docs/assets/diagrams.yaml --out docs/assets/
 # Boxes: kind internal (filled), person, system, external (white), data (tint). Positions in pixels.
 # Arrow ends: from_side / to_side as top | bottom | left | right, or [side, fraction]; default: facing sides.
 
@@ -103,7 +103,7 @@ diagrams:
       - {id: families, part: core, x: 330, y: 340, w: 250, h: 80, title: Families, tag: medomni.core.families, desc: [registry · converters · dummy data]}
       - {id: cache, part: core, x: 330, y: 450, w: 250, h: 80, title: Cache, tag: medomni.core.cache, desc: [keys · entries · commands]}
       - {id: scorer, part: bench, x: 640, y: 120, w: 190, h: 80, title: Scorer, tag: medomni.bench.scoring, desc: [metrics · behaviour]}
-      - {id: harness, part: bench, x: 850, y: 120, w: 190, h: 80, title: Harness, tag: medomni.bench.harness, desc: [Harbor jobs · run records]}
+      - {id: harness, part: bench, x: 850, y: 120, w: 190, h: 80, title: Harness, tag: medomni.bench.runs, desc: [Harbor jobs · run records]}
       - {id: build, part: bench, x: 640, y: 230, w: 190, h: 80, title: Build, tag: medomni.bench.build, desc: [steps · draw · fingerprint]}
       - {id: service, part: bench, x: 850, y: 230, w: 190, h: 80, title: Perception service, tag: medomni.bench.service, desc: [budget · filter · call log]}
       - {id: registry, part: perception, x: 1120, y: 120, w: 430, h: 80, title: Registry, tag: medomni.perception.registry, desc: [catalogue · image pulls · encoder check]}

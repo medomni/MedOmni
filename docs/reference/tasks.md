@@ -9,9 +9,8 @@ Contract: task template, `src/medomni/core/contracts/schemas/task-template.schem
 One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
 
 - 30 templates on credentialed data: 15 on AI-READI, 9 on MIMIC-IV, 6 on BDSP
-- the VitalDB templates on open data
-- an `n20` cohort for every template, and a `ladder` cohort for the 5 templates of the modality ladder
-- a `full` evidence variant for most templates: the whole record minus the targets' guards
+- 3 templates on VitalDB, on open data
+- an `n20` cohort for every template, and a `ladder` cohort for the 5 templates of the modality ladder, whose rungs are in each template's `arms/modality-ladder.yaml`
 
 ## Task template
 
@@ -22,12 +21,13 @@ One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
 | `template_id` | yes | `<dataset>_<name>`; equals the folder name. |
 | `dataset` | yes | The dataset the template binds to. |
 | `authors` | yes | Who wrote the template: name and GitHub handle for each. |
-| `targets` | yes | One or more. Each has a `name`, a `label` from the dataset's library, and its `metric`: `auc`, `qwk` or `mae`. |
-| `input` | yes | The tables and families the default evidence variant stages. |
-| `evidence` | no | The evidence variants: `[default]` (default), or `[default, full]`. Each variant is a task of its own. |
-| `exclude` | no | Codes or fields to remove beyond the targets' guards. |
-| `agent` | yes | What an agent needs to run the task: the three fields below. |
-| `agent.instruction` | yes | The template that renders the agent's instruction. |
+| `targets` | yes | One or more. Each has a `name`, a `label` from the dataset's library, and its `metric`: `auc`, `qwk` or `mae`. An optional `question` replaces the label's. |
+| `input` | yes | The tables and families the proposal named. A record only: the evidence is the patient's whole record minus the targets' guards. |
+| `evidence` | no | The evidence variants: `[default]` (default). v0.3.0 builds only `default` and refuses `<template>:full@<cohort>`. |
+| `exclude` | no | Codes or fields the proposal asked to remove. A record only, like `input`. |
+| `agent` | yes | What an agent needs to run the task: the four fields below. |
+| `agent.statement` | yes | The clinical question alone. Every atom task's instruction opens with it. |
+| `agent.instruction` | yes | The template's own paragraph on the prediction time. Build adds the rest of the instruction. |
 | `agent.environment` | yes | CPUs, memory, internet access, agent and verifier timeouts. |
 | `agent.submission_path` | yes | Where the agent writes its answer. |
 
@@ -55,7 +55,7 @@ An atom task is what an agent runs, rendered under `atomtasks/<arm>/<atom>/`, or
 | Path | Holds |
 |---|---|
 | `task.toml` | Task metadata, arm, resources, the `<template>@<cohort>` and the patient. |
-| `instruction.md` | The question, the patient's record and the targets to predict. |
+| `instruction.md` | The clinical question, the prediction time, the patient's record, and each target with its question. |
 | `environment/` | The closed-network containers, with the perception service when the arm attaches it. |
 | `tests/` | A format check on the answer. It never scores. |
 | `data/` | The patient's staged files, minus anything that leaks a target. |
@@ -73,7 +73,7 @@ Build writes it to the build manifest, beside the step counts. Run and score rec
 
 `medomni bench task check --release` checks every pinned pair in every task set of the workspace's benchmarks. It fails when a pair's cohort, labels, targets, scoring or dataset release differs from the last release and its N has not risen. It compares config files only. MedOmni runs it before a release; your builds and runs never do.
 
-Result records imported from v0.2 runs are version 0 and carry a `v0.2:` config hash instead, over the v0.2 template's config files. Only imported records may carry one. They name the sets `medomni-bench/v0.2-n20`, `v0.2-noenc`, `v0.2-ladder`, `v0.2-forced` and `v0.2-mid`, one per v0.2 task tree.
+Result records imported from v0.2 runs are version 0 and carry a `v0.2:` config hash instead, over the v0.2 template's config files. Only imported records may carry one. They name the sets `medomni-bench/v0.2-ladder`, `v0.2-forced` and `v0.2-mid`, one per v0.2 task tree with runs.
 
 ## Benchmarks and task sets
 
@@ -105,7 +105,7 @@ Contract: task set, `src/medomni/core/contracts/schemas/task-set.schema.json`.
 | Task set | Data | Arms | Holds |
 |---|---|---|---|
 | `medomni-bench/smoke-dummy` | Dummy data | `encoders` | One pair per template, on generated data. |
-| `medomni-bench/vitaldb` | VitalDB | `encoders`, `no-perception` | The VitalDB templates. |
+| `medomni-bench/vitaldb` | VitalDB | `encoders`, `no-perception` | The 3 VitalDB templates at `n20`. |
 | `medomni-bench/v1` | AI-READI, MIMIC-IV, BDSP | `encoders`, `no-perception` | The 30 credentialed templates at `n20`. |
 | `medomni-bench/modality-ladder` | AI-READI, MIMIC-IV, BDSP | `modality-ladder` | The 5 ladder templates at their `ladder` cohort. |
 

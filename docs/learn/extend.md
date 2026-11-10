@@ -31,7 +31,7 @@ What you can add to MedOmni, how, and what checks it.
 | Your own agent | An agent config file on your machine | [Run your agent](../guides/run-your-agent.md) |
 | Your own data copy | `medomni bench data connect` | [Connect your data](../guides/connect-your-data.md) |
 | The encoders from your own code | The Gateway API | [Use the encoders](../guides/use-the-encoders.md) |
-| Results in your own analysis | The result records in `results.jsonl` | [Run your agent](../guides/run-your-agent.md#results-file) |
+| Results in your own analysis | The result records in the run folders and `results.jsonl` | [Run your agent](../guides/run-your-agent.md#results-file) |
 
 ## What you ask the MedOmni team for
 

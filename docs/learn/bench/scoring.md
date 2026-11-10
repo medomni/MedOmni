@@ -56,15 +56,15 @@ Next to the score, each run record holds how the agent worked:
 
 ## Results file
 
-`results.jsonl` in your workspace holds every result record: one line per run (`kind: run`) and per score (`kind: score`).
+`results.jsonl` in your workspace holds the score records (`kind: score`). The run records (`kind: run`) stay in each [run folder](runs.md#run-folders)'s `runs.jsonl`.
 
-- Only `medomni bench run` and `medomni bench score` write it.
+- Only `medomni bench score` writes it.
 - Lines are never edited; for a repeated `run_id`, the latest line wins.
 
 ## Where it lives
 
 - `src/medomni/bench/scoring/`: the scorer and the behaviour metrics
-- `src/medomni/bench/metrics/`: `auc`, `qwk` and `mae`
+- `src/medomni/bench/metrics.py`: `auc`, `qwk` and `mae`
 - your workspace: `results.jsonl`
 
 ## Where next

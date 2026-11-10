@@ -1,11 +1,11 @@
 # Runs
 
-A run is one agent on one atom task, once. The harness turns a task set into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run in the results file and its answers as prediction records.
+A run is one agent on one atom task, once. The harness turns a task set into Harbor jobs, Harbor runs each atom task in Docker, and the harness records each run and its answers in the job's run folder.
 
 ```text
 agent config + task set ──harness──▶ Harbor jobs ──▶ one run per atom task × arm × repetition
-                                                     ├──▶ results file
-                                                     └──▶ prediction records ──▶ scorer
+                                                     ├──▶ run records, in the run folder
+                                                     └──▶ prediction records ──▶ scorer ──▶ results file
 ```
 
 ## Agent
@@ -57,6 +57,16 @@ Arms register in `medomni.arms`, so a [plug-in package](../core/plugins.md) can 
 
 Running it again resumes: atom tasks that already have a run are skipped.
 
+## Run folders
+
+Each Harbor job is one folder under the workspace's `runs` folder, named `<set>--<agent>--<arm>[.<variant>]--r<rep>--<stamp>`, with the `/` of the set's name written as `.`, such as `medomni-bench.v1--my-agent--encoders--r1--20261109-142000/`. It holds:
+
+- `runs.jsonl`: one run record per atom task
+- `predictions.jsonl`: the prediction records
+- one folder per trial, as Harbor writes it
+
+Harbor sets file permissions in the job folder, so `runs` must be on a file system that supports them, not exFAT. Set it in the workspace's `workspace.yaml`.
+
 The harness is Bench's runner for agents, registered in `medomni.runners`. Every runner has the same three steps: prepare the tasks, run them, and collect the predictions and run records.
 
 ## Prediction records
@@ -65,12 +75,12 @@ A prediction record is one answer for one target of one atom task: `run_id`, `at
 
 ## Where it lives
 
-- `src/medomni/bench/harness/`: the agent runner: Harbor jobs, the route check, run and prediction records
+- `src/medomni/bench/runs/`: the runner interface, the agent runner on Harbor, the replay agent, the import of v0.2 runs, and run and prediction records
 - `src/medomni/bench/arms/`: the arm interface and the four built-in arms
-- `src/medomni/bench/replay/`: the replay agent
+<!-- pending: the perception service's module is not settled; S3 has not rebuilt it -->
 - `src/medomni/bench/service/`: the perception service and its call budget, family filter and call log
 - `bench/agents/`: contributed agent configs
-- your workspace: runs with their `predictions.jsonl`, and the results file
+- your workspace: the run folders and the results file
 
 ## Where next
 

@@ -13,7 +13,8 @@ perception/encoders/<family>/<encoder>/ ──build──▶ image on ghcr.io/me
 perception/encoders/<family>/<encoder>/
 ├── adapter.py      load() once, then encode(sample, options)
 ├── card.yaml       the model card
-├── Dockerfile      pinned base image, dependencies, source revision, weight hashes
+├── Dockerfile      pinned base image, dependencies, source revision
+├── assets.json     weights and other files the image build fetches, each with its source and sha256 (if any)
 └── testdata/
     ├── input.*         synthetic or openly licensed, written by medomni studio testdata
     ├── expected.json   the recorded responses, written by --freeze
@@ -22,7 +23,7 @@ perception/encoders/<family>/<encoder>/
 
 The runtime in `src/medomni/perception/runtime/` is built into every image. It declares the encoder interface, `load` and `encode`, and serves it through the container API. It reads each family's files with one decoder per family, and uses Core's families module for aliases, labels and format checks.
 
-An encoder author writes only `load` and `encode`; the check fails an adapter that does not implement them. Everything else is shared by every encoder: asset preparation, which the image build runs; the encoder tests in `tests/perception/`; and two [Studio](../studio/overview.md) tools, `medomni studio encoder-demo` and `medomni studio testdata`.
+An encoder author writes only `load` and `encode`; the check fails an adapter that does not implement them. Everything else is shared by every encoder: asset preparation from `assets.json`, which the image build runs (five encoders instead fetch their weights with their own `fetch_assets.py` during the build); the encoder tests in `tests/perception/`; and two [Studio](../studio/overview.md) tools, `medomni studio encoder-demo` and `medomni studio testdata`.
 
 ## Model card
 

@@ -25,13 +25,12 @@ MedOmni/
 │   │   ├── cache/            cache keys, entries, cache commands
 │   │   └── testing/          runs the checks each project registers
 │   ├── bench/                medomni.bench
-│   │   ├── build/            Build: task steps, draw, checks, task sets, config hashes
-│   │   ├── harness/          Harbor jobs, route check, run and prediction records
+│   │   ├── build/            Build: task steps, cohort selection, checks, task sets, config hashes
+│   │   ├── runs/             runner interface, Harbor runner, replay, v0.2 import; run and prediction records
 │   │   ├── arms/             the arm interface and the four built-in arms
-│   │   ├── replay/           the replay agent
 │   │   ├── service/          the perception service in each atom task
 │   │   ├── scoring/          scorer, behaviour metrics
-│   │   └── metrics/          auc, qwk, mae
+│   │   └── metrics.py        auc, qwk, mae
 │   ├── perception/           medomni.perception
 │   │   ├── registry/         catalogue, image builds and pulls
 │   │   ├── runtime/          serving code built into every encoder image
@@ -81,7 +80,7 @@ MedOmni/
 | Container | Project | Does |
 |---|---|---|
 | `medomni` command | Core | The entrance: finds the projects through entry points and the plug-in packages' content folders and entry points, then hands each subcommand to its project. |
-| Workspace | Core | Configuration, the cache, built atom tasks, runs and the results file, on your machine. Never committed. |
+| Workspace | Core | Configuration, the cache, built atom tasks, the run folders and the results file, on your machine. Never committed. |
 | Bench library | Bench | Builds atom tasks from your data, turns a task set into Harbor jobs, records runs and scores them. |
 | Perception service | Bench | Runs inside each atom task with encoders: Perception's gateway, with Bench's call budget, family filter and call log. |
 | Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
@@ -106,7 +105,7 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Core | Families | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
 | Core | Cache | `medomni.core.cache` | Cache keys and entries, and the cache commands. See [Cache](core/cache.md). |
 | Bench | Build | `medomni.bench.build` | Runs recipes into atom tasks; task sets and config hashes. See [Build](bench/build.md). |
-| Bench | Harness | `medomni.bench.harness` | The agent runner: turns a task set into Harbor jobs, checks the route against each dataset policy, and records runs and prediction records. |
+| Bench | Harness | `medomni.bench.runs` | The agent runner: turns a task set into Harbor jobs, checks the route against each dataset policy, and records runs and prediction records. |
 | Bench | Arms | `medomni.bench.arms` | The four built-in arms. Build and the harness look up any arm by its registered name. |
 | Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks from their prediction records, one score record per target. The only thing that writes scores. |
 | Bench | Perception service | `medomni.bench.service` | Runs the gateway inside each atom task, with the call budget, family filter and call log. |

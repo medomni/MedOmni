@@ -43,7 +43,7 @@ medomni bench task build --set medomni-bench/smoke-dummy
 medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 ```
 
-`medomni bench run` pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run in the results file.
+`medomni bench run` pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run in its run folder.
 
 ## 4. Score
 
@@ -55,8 +55,10 @@ It prints one row per task, target, agent and arm: the score, the number of pati
 
 ## 5. Run on real data
 
-- **VitalDB** is openly licensed. Build and run the `medomni-bench/vitaldb` task set as above.
-- **MIMIC-IV, AI-READI and BDSP** need your own access. Connect your copy as in [Connect your data](guides/connect-your-data.md), then build the `medomni-bench/v1` task set as in [Rebuild a task set](guides/rebuild-a-task-set.md).
+MedOmni hosts no dataset. Download and connect each dataset as in [Connect your data](guides/connect-your-data.md), then build its task set as in [Rebuild a task set](guides/rebuild-a-task-set.md):
+
+- **VitalDB** is open and needs no access request: `medomni-bench/vitaldb`.
+- **MIMIC-IV, AI-READI and BDSP** need your own access: `medomni-bench/v1`.
 
 ## Where next
 

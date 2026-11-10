@@ -12,10 +12,9 @@ The `medomni` package has one subpackage per project. The command calls these mo
 | `medomni.core.recipes` | The recipe format: cohorts, labels, evidence. |
 | `medomni.core.families` | The family registry, the family converters and the dummy-data generator (`medomni.core.families.dummy`). |
 | `medomni.core.cache` | Cache keys, entries and the cache commands. |
-| `medomni.bench.build` | Build: the task steps, the draw, the checks, task sets and config hashes. |
-| `medomni.bench.harness` | The agent runner: Harbor jobs, the route check, run and prediction records. |
+| `medomni.bench.build` | Build: the task steps, cohort selection, the checks, task sets and config hashes. |
+| `medomni.bench.runs` | The runner interface, the agent runner on Harbor, the replay agent (which repeats recorded runs with no model calls) and the import of v0.2 runs; run and prediction records. |
 | `medomni.bench.arms` | The arm interface and the four built-in arms. |
-| `medomni.bench.replay` | The replay agent, which repeats recorded runs with no model calls. |
 | `medomni.bench.service` | The perception service inside each atom task: the gateway behind the call budget, family filter and call log. |
 | `medomni.bench.scoring` | The scorer and the behaviour metrics. |
 | `medomni.bench.metrics` | The metrics `auc`, `qwk` and `mae`. |

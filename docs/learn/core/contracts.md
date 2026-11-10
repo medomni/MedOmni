@@ -11,7 +11,7 @@ A contract is a fixed format plus the validator that checks it. Every file or me
 | Event table | The table every dataset becomes, with its `FILE` rows | Bench | Bench, Studio |
 | Dataset policy | What a dataset's license allows | Contributors | Bench |
 | Recipe | A cohort with its task version, a label library and evidence rules | Contributors | Bench, Studio |
-| Task template | One task: targets, input, evidence variants, and an `agent` block (instruction, environment, submission path) | Contributors | Bench |
+| Task template | One task: targets, input, and an `agent` block (statement, instruction, environment, submission path) | Contributors | Bench |
 | Benchmark card | One benchmark: name, version, owner, license, the intelligence kinds it accepts | MedOmni team, plug-in packages | Bench, you |
 | Task set | `<template>@<cohort>` pairs pinned at version N, and the arms to build them under | MedOmni team, plug-in packages | Bench, you |
 | Config hash | The hash of a task's config files under one arm | Bench | Bench, you |

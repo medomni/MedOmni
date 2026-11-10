@@ -60,10 +60,10 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add datasets o
     medomni studio dummy my-dataset --subjects 20 --out ~/dummy/my-dataset
     ```
 
-7. Upload a small data sample to the MedOmni task-samples repository on Hugging Face.
+7. Optional, when the dataset's policy allows samples: upload a small data sample to the MedOmni task-samples repository on Hugging Face. Nothing in Build reads it.
 8. Add at least one template and cohort, as below, and open a pull request.
 
-Python goes only in `hooks/`, for a label no rule can express. A file format no format reader knows needs a new format reader in Core: open an issue first.
+Python goes only in `hooks/`: for a label no rule can express, and `download.py`, which tells `medomni studio download-list` where the dataset's files come from. See [Hooks](../reference/datasets.md#hooks). A file format no format reader knows needs a new format reader in Core: open an issue first.
 
 ### Check
 
@@ -71,7 +71,7 @@ Python goes only in `hooks/`, for a label no rule can express. A file format no 
 medomni bench data check my-dataset
 ```
 
-It loads the data sample and dummy data, checks that every code is in `codes.csv`, and validates the policy.
+It checks the package's files and policy, writes and loads its dummy data, and checks that every code is in `codes.csv`.
 
 ## Add a template and a cohort (Bench)
 
@@ -85,8 +85,8 @@ For a task on a supported dataset, using labels and families MedOmni already has
     medomni bench task new vitaldb_my-task --dataset vitaldb
     ```
 
-2. Fill in `template.yaml`: the targets with each one's label and metric, the input, the evidence variants, and the `agent` block with the instruction, environment and submission path. The labels' guards remove leaking evidence; do not list it again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
-3. Write a cohort in `cohorts/`: source population, prediction time, requirements and draw. Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
+2. Fill in `template.yaml`: the targets with each one's label and metric, the input, and the `agent` block with the statement, the prediction-time paragraph, environment and submission path. Give each label a `question`, or give the target its own. The agent sees the patient's whole record minus the labels' guards, so do not list leaking evidence again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
+3. Write a cohort in `cohorts/`: source population, prediction time, requirements and cohort selection (`select`). Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
 4. Preview the counts on your copy, adjust the cohort, then build.
 
     ```bash
@@ -135,12 +135,14 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
     ├── adapter.py
     ├── card.yaml
     ├── Dockerfile
+    ├── assets.json
     └── testdata/       empty, filled in step 4
     ```
 
 2. Implement the adapter and pin the image:
     - `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`
-    - base image, dependencies, source revision and weight hashes pinned in the Dockerfile
+    - base image, dependencies and source revision pinned in the Dockerfile
+    - weights and other files in `assets.json`, each with its source (a URL or a Hugging Face file) and sha256; the image build fetches and checks them
 3. Write the model card: the family, outputs, options, license and source. See [Encoders](../reference/encoders.md).
 4. Write the test data, its inputs and `PROVENANCE.md`:
 

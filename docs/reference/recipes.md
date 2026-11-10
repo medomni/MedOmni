@@ -25,7 +25,7 @@ Windows are written relative to the prediction time or an event:
 | `source` | yes | The source population: `all`, or `{fraction: f}` for the hash rule with the dataset's salt. Omitting `fraction` uses the dataset's default. |
 | `anchor` | yes | The prediction time: `event` (a code), `pick` (`first` or `last`; default `first`), `plus` (an offset). |
 | `require` | no | A list of requirements, all of which must hold. |
-| `draw` | yes | `n` (patients in all), `by` (target names that define the classes; empty for a continuous target), `seed` (a number or text). |
+| `select` | yes | How cohort selection picks patients: `n` (patients in all), `by` (target names that define the classes; empty for a continuous target), `balance` (labels from the library that split each class into groups; never scored or shown), `seed` (a number or text). |
 
 A requirement is one of:
 
@@ -36,7 +36,7 @@ A requirement is one of:
 | `files: [families]` | the patient has a file in each family in the window |
 | `has_label: <target>` | the target's label has a value |
 | `definition: <name>` | the dataset's named definition holds |
-| `converts: {min_families: n}` | at least n of the patient's files convert and match their family; checked before the draw, so the pool does not depend on the seed |
+| `converts: {min_families: n}` | at least n of the patient's files convert and match their family; checked during cohort selection, going down the ranking, and a patient who fails is replaced by the next one |
 
 `any`, `none` and `files` take `from`, `to` and `same_visit: true` (only events in the anchor's visit count). Codes may be patterns: `^DIAGNOSIS//ICD//(N17|584)`.
 
@@ -60,6 +60,7 @@ Test patients: `cohorts/<cohort>.tests.yaml`, a list of patients, each with `eve
 | `same_visit`, `other_visit` | Count only events in the anchor's visit, or only events in other visits, such as for a readmission. They exclude each other. |
 | `hook` | A Python function in the package's `hooks/`, for a label no rule can express. |
 | `guard` | What would reveal the answer: `codes` (patterns) and `fields` (table columns). Removed from the evidence. |
+| `question` | The sentence that tells the agent exactly what the target asks. A template's target may replace it. Each target needs one, here or in the template. |
 
 Each label has exactly one rule: `exists`, `none`, `value`, `cases` or `hook`.
 
@@ -67,7 +68,7 @@ Named definitions are in the package's `dataset.yaml`, under `definitions`, each
 
 ## Evidence file
 
-`bench/datasets/<dataset>/evidence.yaml`: `tables`, `static` and `files`.
+`bench/datasets/<dataset>/evidence.yaml`: `tables`, `static`, `files`, `views` and `reading_note`.
 
 Per table:
 
@@ -82,7 +83,16 @@ Per table:
 | `keep_if_kept` | Keep a row only when its key is in another table's kept rows: `{table, key}`. |
 | `write_empty` | Write the table, header only, when the patient has no rows. |
 
-`static`: the patient's static facts. `blank` names the fields to blank, or `guard.fields`; `aliases` maps a static field to the column, or columns, that hold it. `files`: files are kept when their time is at or before the prediction time; an untimed file is kept.
+`static`: the patient's static facts. `blank` names the fields to blank, or `guard.fields`; `aliases` maps a static field to the column, or columns, that hold it.
+
+`files`: files are kept when their time is at or before the prediction time; an untimed file is kept. `crop` lists families whose files have no time of their own but hold rows from after it, such as one table of a whole stay: each such file is cut at the prediction time by the `views` hook's `crop_file`, and staged as a copy.
+
+The rest of the file:
+
+| Field | Meaning |
+|---|---|
+| `views` | A hook in the package's `hooks/` that gives the forms the agent reads. Its functions are optional: `demographics` (the patient's static facts), `measurements` (the kept rows as one long table, read by the `clinical-measurement-irregular` family), `file_meta` (details of a file, such as an image's size), `crop_file` (for `files.crop`). |
+| `reading_note` | A fact about reading this dataset's files, told to the agent in every arm. |
 
 ## Template fields that use the recipe
 
@@ -90,10 +100,8 @@ In `template.yaml`:
 
 | Field | Meaning |
 |---|---|
-| `targets` | Each with `name`, `label` (a library entry) and `metric` (`auc`, `qwk` or `mae`). |
-| `input` | The tables and families the default evidence variant stages. |
-| `evidence` | The evidence variants built: `default`, and `full` for every table and family. |
-| `exclude` | Codes or fields to remove beyond the targets' guards. |
+| `targets` | Each with `name`, `label` (a library entry), `metric` (`auc`, `qwk` or `mae`), and an optional `question` that replaces the label's. |
+| `input`, `exclude` | What the proposal named to show and to remove. A record only: the evidence is the whole record minus the targets' guards. |
 
 The other template fields are in [Tasks reference](tasks.md#task-template).
 
@@ -120,7 +128,6 @@ targets:
 input:
   tables: [admissions, labevents, ed_vitalsign]
   families: [cxr-radiograph-2d, ecg-12lead-500hz-mv]
-evidence: [default, full]
 ```
 
 `labels.yaml` (entry):
@@ -131,6 +138,7 @@ coagulation-hemorrhagic:
   from: visit:ADMISSION
   to: visit:DISCHARGE
   guard: {codes: ['^DIAGNOSIS//ICD//(D65|D66|D67|D68|D69|286|287)']}
+  question: Your prediction is the probability that the patient's record carries a coded diagnosis of a coagulation or hemorrhagic disorder.
 ```
 
 `cohorts/n20.yaml`:
@@ -146,26 +154,27 @@ require:
     from: anchor.event
     to: anchor
     same_visit: true
-draw: {n: 20, by: [coagulation_hemorrhagic], seed: 7}
+select: {n: 20, by: [coagulation_hemorrhagic], seed: 7}
 ```
 
-Built as `mimic-iv_coag-hemorrhagic@n20`, and `mimic-iv_coag-hemorrhagic:full@n20` for the full variant.
+Built as `mimic-iv_coag-hemorrhagic@n20`.
 
 ## Example: VitalDB, creatinine after surgery
 
 `labels.yaml` (entry):
 
 ```yaml
-cr-max-7d:
+cr_max_7d:
   value: LAB//cr
   pick: max
   from: anchor
   include_from: false
   to: anchor + 7 days
-  guard: {codes: [LAB//cr]}
+  guard: {codes: [LAB//cr], fields: [preop_cr]}
+  question: Your prediction is the numeric value of the highest blood creatinine (mg/dL) in the 7 days after the end of this operation.
 ```
 
-`cohorts/opend.yaml`:
+`cohorts/n20.yaml`:
 
 ```yaml
 version: "1.0"
@@ -175,10 +184,10 @@ require:
   - any: [LAB//cr]                    # a creatinine before the end of surgery
     to: anchor
   - has_label: cr_max_7d
-draw: {n: 20, by: [cr_max_7d], seed: 7}
+select: {n: 20, by: [], seed: 7}          # a numeric target: no classes
 ```
 
-The guard removes every creatinine row from the evidence, including those before the end of surgery. The requirement still uses them to choose patients.
+The guard removes every creatinine row and the pre-operative creatinine field from the evidence, including values from before the end of surgery. The requirement still uses them to choose patients.
 
 ## Where next
 

@@ -35,11 +35,12 @@ A new family is added by the MedOmni team. Family files are content; only their 
 
 ## Family converters
 
-Some datasets store recordings in a format no family accepts, such as BDSP's HDF5 files or VitalDB's `.vital` files. A family converter turns one raw format into exactly one family; a family can have several converters.
+Some datasets store recordings in a format no family accepts, such as BDSP's HDF5 files or VitalDB's `.vital` files. A family converter turns a file in one raw format into a file of one family. It may serve several families, one conversion each, and a family can have several converters.
 
-- Each recording is converted once and kept in the [cache](cache.md), under a key that covers the source file, the family, the converter's version, and the parts of the family's declaration and aliases the conversion reads: channels, roles and channel prefixes. A change to any of them converts again. A change to a family's rate, units, type or range does not.
+- Each recording is converted once and kept in the [cache](cache.md), under a key that covers the source file's quick identity (its size and its first and last MiB), the family, the converter's version, and the parts of the family's declaration and aliases the conversion reads: channels, roles and channel prefixes. A change to any of them converts again. A change to a family's rate, units, type or range does not.
 - Converters are shared code in Core, so any dataset with the same raw format uses the same one.
-- The `.vital` converter reads with the `vitaldb` package and resamples VitalDB's 500 Hz arterial and ECG tracks to their families' rates.
+- The `h5-to-edf` converter turns a BDSP night into one family's EDF.
+- The `vital-to-wfdb` converter reads a VitalDB `.vital` case with the `vitaldb` package. It writes WFDB for arterial pressure, the monitor ECG and central venous pressure, and EDF for the pleth and capnography, the families whose first format is EDF. Each track is resampled to its family's rate, and the recording is cut at the end of the operation.
 - A converter is deterministic: the same input gives the same bytes. It writes no wall-clock time into a file header, so one cache key never has two content hashes.
 
 ## Where it lives

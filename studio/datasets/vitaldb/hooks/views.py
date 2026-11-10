@@ -1,12 +1,15 @@
 """What Build shows of a VitalDB case beyond the raw rows (evidence rules name this hook as `views`).
 
 Why a hook: the case table's columns are demographics except the ones only known after surgery, and the lab rows become
-the long table the `clinical-measurement-irregular` family reads. `dummy_unit` writes a `.vital` file for dummy data.
+the long table the `clinical-measurement-irregular` family reads, with ISO times counted from a fixed case start. `dummy_unit` writes a `.vital` file for dummy data.
 """
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 from pathlib import Path
 
+CASE_START = datetime(2000, 1, 1)  # the lab table's times as dates from a fixed case start, as the family needs ISO times;
+# the EDF recordings start at the same moment
 HIDDEN = {"subjectid", "casestart", "caseend", "dis", "death_inhosp", "icu_days", "los_postop", "los_icu"}
 
 
@@ -25,7 +28,11 @@ def measurements(tables: dict[str, list[dict]], raw_root: Path, params: dict) ->
             v = float(r["result"])
         except (TypeError, ValueError):
             continue
-        rows.append({"t": float(r["dt"]), "measurement": r["name"], "value": v, "unit": None, "_from": "labs"})
+        try:
+            t = CASE_START + timedelta(seconds=float(r["dt"]))
+        except (TypeError, ValueError):
+            continue
+        rows.append({"t": t.isoformat(sep=" ", timespec="seconds"), "measurement": r["name"], "value": v, "unit": None, "_from": "labs"})
     rows.sort(key=lambda x: (x["t"], x["measurement"]))
     return rows
 

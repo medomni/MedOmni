@@ -3,7 +3,7 @@
 Each family's tracks are written as one record `<family>.hea`/`.dat` or `<family>.edf`, resampled to the family's rate. The recording is cut
 at the end of the operation, which is every VitalDB cohort's prediction time, so no signal from after it reaches a task.
 Read with the `vitaldb` package. NaN gaps stay gaps (WFDB's missing-sample value); resampling is by taking every k-th
-sample, so no gap spreads, and capnography is interpolated from 62.5 to 20 Hz.
+sample, so no gap spreads; capnography (62.5 to 20 Hz) and ECG (500 to 200 Hz) are interpolated.
 """
 from __future__ import annotations
 
@@ -20,12 +20,13 @@ from medomni.core.families.converters import ConvertFacts
 # family -> ((track, channel name, source rate, target rate, scale), ...)
 TRACKS = {
     "abp-waveform-125hz-mmhg": (("SNUADC/ART", "ART", 500, 125, 1.0), ("SNUADC/FEM", "FAP", 500, 125, 1.0)),
-    "ecg-monitor-3to5lead-250hz-continuous": (("SNUADC/ECG_II", "ii", 500, 250, 1.0), ("SNUADC/ECG_V5", "v", 500, 250, 1.0)),
+    # lead II alone: VitalDB records one or two leads, never the 3 to 5 the monitor family needs (Bosong, 2026-11-11)
+    "ecg-1lead-200hz-uv": (("SNUADC/ECG_II", "ecg", 500, 200, 1000.0),),  # mV to uV
     "ppg-waveform-uncal": (("SNUADC/PLETH", "pleth", 500, 100, 1.0),),
     "capnography-mmhg": (("Primus/CO2", "etco2-waveform", 62.5, 20, 1.0),),
     "pressure-nonarterial-125hz-mmhg": (("SNUADC/CVP", "CVP", 500, 125, 0.735559),),  # cmH2O to mmHg
 }
-UNITS = {"abp-waveform-125hz-mmhg": "mmHg", "ecg-monitor-3to5lead-250hz-continuous": "mV", "ppg-waveform-uncal": "pleth",
+UNITS = {"abp-waveform-125hz-mmhg": "mmHg", "ecg-1lead-200hz-uv": "uV", "ppg-waveform-uncal": "pleth",
          "capnography-mmhg": "mmHg", "pressure-nonarterial-125hz-mmhg": "mmHg"}
 MAX_DIGITAL = 32000
 

@@ -21,7 +21,7 @@ EXAMPLES = {
                        "targets": [{"name": "aki", "label": "dummy:aki", "metric": "auc"}],
                        "input": {"tables": ["labevents"]}, "evidence": ["default", "full"],
                        "agent": {"statement": "Predict acute kidney injury.", "instruction": "Predict {{ targets }}.",
-                                 "environment": {"cpus": 2, "memory_mb": 4096, "allow_internet": False,
+                                 "environment": {"cpus": 2, "memory_mb": 4096, "allow_internet": True,
                                                  "agent_timeout_sec": 1200, "verifier_timeout_sec": 300},
                                  "submission_path": "/workspace/submission/predictions.csv"}}, "targets"),
     "task-proposal": ({"title": "Early AKI", "by": "A. Clinician", "at": "2026-09-06", "mode": "targeted",

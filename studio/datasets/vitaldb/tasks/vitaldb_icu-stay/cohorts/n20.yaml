@@ -2,7 +2,7 @@ version: '1.0'
 source: all
 anchor: {event: OP//END}
 require:
-- files: [ecg-monitor-3to5lead-250hz-continuous]
+- files: [ecg-1lead-200hz-uv]
   to: anchor
 select:
   n: 20

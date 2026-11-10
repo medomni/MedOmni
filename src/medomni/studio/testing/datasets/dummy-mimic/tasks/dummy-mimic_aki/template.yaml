@@ -9,5 +9,5 @@ evidence: [default, full]
 agent:
   statement: "Predict whether this patient develops acute kidney injury during the admission."
   instruction: "Predict {{ targets }} for this patient from the record up to the prediction time."
-  environment: {cpus: 1, memory_mb: 2048, allow_internet: false, agent_timeout_sec: 600, verifier_timeout_sec: 120}
+  environment: {cpus: 1, memory_mb: 2048, allow_internet: true, agent_timeout_sec: 600, verifier_timeout_sec: 120}
   submission_path: /workspace/submission/predictions.csv

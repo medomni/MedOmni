@@ -35,7 +35,7 @@ read:
         subject: caseid
         events:
         - {code: FILE//abp-waveform-125hz-mmhg, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/ART", "SNUADC/FEM"]}}
-        - {code: FILE//ecg-monitor-3to5lead-250hz-continuous, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/ECG_II", "SNUADC/ECG_V5"]}}
+        - {code: FILE//ecg-1lead-200hz-uv, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/ECG_II"]}}
         - {code: FILE//ppg-waveform-uncal, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/PLETH"]}}
         - {code: FILE//capnography-mmhg, path: "cases/{caseid}.vital", equals: {tname: ["Primus/CO2"]}}
         - {code: FILE//pressure-nonarterial-125hz-mmhg, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/CVP"]}}

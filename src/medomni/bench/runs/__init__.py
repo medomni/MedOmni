@@ -153,8 +153,14 @@ def runner_for(agent: AgentConfig) -> Runner:
 
 
 def preflight(tree: Path, task_set, arms: list[str]) -> None:
-    """Core's checks over built output, on every task of the set under these arms, before anything runs (R-143 a)."""
-    problems = [p for e in task_set.tasks for p in task_checks(tree, e.task, arms)]
+    """Before anything runs: Core's checks over built output, on every task of the set under these arms (R-143 a), then
+    the stand-in agents on each task that passes them (R-54)."""
+    from medomni.bench.scoring import standins
+
+    problems = []
+    for e in task_set.tasks:
+        found = task_checks(tree, e.task, arms)
+        problems += found or standins.problems(tree, e.task)
     if problems:
         raise RunError(f"{len(problems)} problem(s) in the built tasks; nothing ran:\n  " + "\n  ".join(problems[:20]))
 

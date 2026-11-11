@@ -25,8 +25,8 @@ def shipped(repo: Path) -> list[str]:
     return sorted(set(re.findall(r"`([a-z0-9-]+__[a-z0-9-]+)`", section)))
 
 
-def git_authors(repo: Path, rel: str) -> list[str]:
-    out = subprocess.run(["git", "-C", str(repo), "log", "--reverse", "--format=%aN", "--", rel],
+def git_authors(repo: Path, rel: str, rev: str = "HEAD") -> list[str]:
+    out = subprocess.run(["git", "-C", str(repo), "log", "--reverse", "--format=%aN", rev, "--", rel],
                          capture_output=True, text=True, check=True).stdout.split("\n")
     return list(dict.fromkeys(n.strip() for n in out if n.strip()))
 

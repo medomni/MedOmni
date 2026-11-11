@@ -1,5 +1,5 @@
 """The template and cohort converter (R-68): every converted file validates, matches the committed tree and v0.2's
-scored targets, and a second run changes nothing. Reads only this repository's v0.2 specs and fixtures."""
+scored targets, and a second run changes nothing. Reads v0.2.1's specs from git history and this repository's fixtures."""
 from pathlib import Path
 
 import pytest
@@ -45,8 +45,8 @@ BALANCE = {}  # S1's inline balance rule is `draw.balance`, not a target (Bosong
 
 
 @pytest.fixture(scope="module")
-def converted(repo):
-    return templates.convert(repo)
+def converted(repo, v02_root):
+    return templates.convert(repo, v02_root)
 
 
 def _templates(outputs):
@@ -113,7 +113,7 @@ def test_committed_tree_is_the_converter_output(repo, converted):
         assert (repo / rel).read_text(encoding="utf-8") == templates.HEADER + convert.dump(data), rel
 
 
-def test_conversion_is_stable(repo, tmp_path):
-    a = convert.write(templates.convert(repo)[0], tmp_path / "a", templates.HEADER)
-    b = convert.write(templates.convert(repo)[0], tmp_path / "b", templates.HEADER)
+def test_conversion_is_stable(repo, v02_root, tmp_path):
+    a = convert.write(templates.convert(repo, v02_root)[0], tmp_path / "a", templates.HEADER)
+    b = convert.write(templates.convert(repo, v02_root)[0], tmp_path / "b", templates.HEADER)
     assert [p.read_bytes() for p in a] == [p.read_bytes() for p in b]

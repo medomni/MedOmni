@@ -74,17 +74,17 @@ def test_the_check_catches_values_outside_the_range(tmp_path):
     assert any("outside the family's range" in x for x in conforms(fam, p))
 
 
-def test_bridge_round_trip(tmp_path):
+def test_bridge_round_trip(tmp_path, v02_root):
     """The dummy h5 night goes through v0.2's bridge, and each family EDF it makes conforms (bridge.py read-only)."""
-    spec = importlib.util.spec_from_file_location("v02_bridge", REPO / "data_task/familybridge/bridge.py")
+    spec = importlib.util.spec_from_file_location("v02_bridge", v02_root / "data_task/familybridge/bridge.py")
     bridge = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bridge)
-    alias = yaml.safe_load((REPO / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
+    alias = yaml.safe_load((v02_root / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
     fams = [families.get(f, REPO) for f in BRIDGED]
     h5 = tmp_path / "night.h5"
     signal.write_h5(fams, 1, h5, subject="DUMMY-1", start=__import__("datetime").datetime(2150, 1, 1))
     for fam in fams:
-        proto = yaml.safe_load((REPO / f"data_task/families/{fam.id}.yaml").read_text(encoding="utf-8"))["protocol"]
+        proto = yaml.safe_load((v02_root / f"data_task/families/{fam.id}.yaml").read_text(encoding="utf-8"))["protocol"]
         out = tmp_path / f"{fam.id}.edf"
         bridge.h5_to_family_edf(h5, out, fam.id, proto, alias)
         assert conforms(fam, out) == [], fam.id

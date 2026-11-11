@@ -6,7 +6,7 @@ Verified locally on Linux arm64 with Docker networking disabled.
 - Rejected inputs: `input-flat.hea`.
 - All output labels match the card. All numeric outputs are finite.
 
-Run from the repository root after the asset preparation and build commands in `demo.py`:
+v0.2.1's commands, run from its repository root after the asset preparation and build commands in `demo.py`:
 
 ```sh
 uv run --with jsonschema perception/registry.py validate abp-waveform-125hz-mmhg__pyvital-hpi

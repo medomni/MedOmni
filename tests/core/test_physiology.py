@@ -214,10 +214,10 @@ def test_every_range_cites_a_source():
     assert all(r.source and r.low < r.high for r in ranges.RANGES)
 
 
-def test_runtime_readers_read_the_dummies(tmp_path):
+def test_runtime_readers_read_the_dummies(tmp_path, v02_root):
     """v0.2's runtime readers (the code inside the encoder images) read every dummy, except FLIO, whose reader
     needs the full 256x256x1024 grid (128 MiB); R-73 keeps dummy images under 1 MiB. Read-only import."""
-    spec = importlib.util.spec_from_file_location("v02_contract", REPO / "perception/runtime/contract.py")
+    spec = importlib.util.spec_from_file_location("v02_contract", v02_root / "perception/runtime/contract.py")
     rt = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rt)
     failed = {}

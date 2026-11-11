@@ -50,8 +50,8 @@ STAGE3_EDITS = {
 }
 
 
-def test_committed_files_equal_the_converter(repo):
-    outputs, _ = fconv.convert(repo)
+def test_committed_files_equal_the_converter(repo, v02_root):
+    outputs, _ = fconv.convert(v02_root)
     edited = set()
     for rel, data in outputs.items():
         fid = rel.rsplit("/", 1)[-1].removesuffix(".yaml")

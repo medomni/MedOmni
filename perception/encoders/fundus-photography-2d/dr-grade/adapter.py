@@ -13,7 +13,7 @@ reported as it comes, and the nearest whole grade is reported beside it. The
 response carries no class probabilities, because the model produces none, and
 inventing them from one number would be inventing confidence.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import os
 

@@ -7,8 +7,8 @@ from tests.repro.migrate import agents, cards, families
 
 
 @pytest.fixture(scope="module")
-def fam(repo):
-    return families.convert(repo)
+def fam(v02_root):
+    return families.convert(v02_root)
 
 
 def test_families_convert_and_validate(fam):
@@ -29,14 +29,14 @@ def test_families_dtype_spelling(fam):
     assert outputs["core/families/retinal-heightmap-surfaces-f32.yaml"]["protocol"]["dtype"] == "float32"
 
 
-def test_conversion_is_stable(repo, tmp_path):
-    a = convert.write(families.convert(repo)[0], tmp_path / "a")
-    b = convert.write(families.convert(repo)[0], tmp_path / "b")
+def test_conversion_is_stable(v02_root, tmp_path):
+    a = convert.write(families.convert(v02_root)[0], tmp_path / "a")
+    b = convert.write(families.convert(v02_root)[0], tmp_path / "b")
     assert [p.read_bytes() for p in a] == [p.read_bytes() for p in b]
 
 
-def test_agents_convert_and_match_committed(repo):
-    outputs, notes = agents.convert(repo)
+def test_agents_convert_and_match_committed(repo, v02_root):
+    outputs, notes = agents.convert(v02_root)
     assert len(outputs) == 9
     for rel, data in outputs.items():
         c.load_data(data, c.AgentConfig, rel)
@@ -46,9 +46,9 @@ def test_agents_convert_and_match_committed(repo):
     assert sum(n["route"] == "cloud" for n in notes.values()) == 8
 
 
-def test_committed_agents_are_all_converted(repo):
+def test_committed_agents_are_all_converted(repo, v02_root):
     committed = {p.relative_to(repo).as_posix() for p in (repo / "bench/agents").glob("*.yaml")}
-    assert committed == set(agents.convert(repo)[0])
+    assert committed == set(agents.convert(v02_root)[0])
 
 
 def test_cards_convert_and_validate(repo):

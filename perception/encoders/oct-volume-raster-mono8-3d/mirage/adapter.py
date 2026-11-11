@@ -16,7 +16,7 @@ neither comes from the paper:
     the B-scan modality is supplied. The architecture accepts that, and the
     result is the OCT half of a model that was trained to see both.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import contextlib
 import os

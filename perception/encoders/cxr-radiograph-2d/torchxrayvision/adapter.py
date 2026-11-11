@@ -5,7 +5,7 @@ no probe. The adapter owns only what is specific to this model — the intensity
 range it was trained on, the center crop, and the resize to 224. Reading the
 file is family work and happens upstream, in medomni.perception.runtime.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import os
 

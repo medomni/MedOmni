@@ -4,8 +4,7 @@ Build from the repository root after your account has access to
 ```sh
 uvx --from huggingface_hub hf auth login
 uv run perception/encoders/fundus-photography-2d/retfound/prepare_assets.py
-uv run --with pyyaml perception/registry.py build fundus-photography-2d__retfound
-uv run --with pyyaml perception/registry.py test fundus-photography-2d__retfound --docker
+medomni perception check perception/encoders/fundus-photography-2d/retfound
 ```
 
 The preparation step checks the official checkpoint and source hashes.
@@ -21,5 +20,5 @@ Verification status: the pinned checkpoint loaded successfully. The colour fixtu
 The monochrome fixture produced an unhealthy response as required. The frozen responses are in `testdata/expected.json`.
 
 ```sh
-uv run --with pyyaml perception/registry.py test fundus-photography-2d__retfound --docker
+medomni perception check perception/encoders/fundus-photography-2d/retfound
 ```

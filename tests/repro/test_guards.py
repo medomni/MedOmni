@@ -1,4 +1,4 @@
-"""Every label's guard equals what v0.2's one leakage truth bans (R-47). Reads v0.2's source until part 8; no data."""
+"""Every label's guard equals what v0.2's one leakage truth bans (R-47). Reads v0.2.1's source from git history; no data."""
 import ast
 import importlib.util
 import sys
@@ -9,13 +9,11 @@ import pytest
 import yaml
 
 REPO = Path(__file__).resolve().parents[2]
-V = REPO / "data_task/taskbuilder"
 
 
 @pytest.fixture(scope="module")
-def banned():
-    if not V.is_dir():
-        pytest.skip("v0.2's leakage registry is gone")
+def banned(v02_root):
+    V = v02_root / "data_task/taskbuilder"
     named = next(ast.literal_eval(n.value) for n in ast.parse((V / "registry/derivations/__init__.py").read_text()).body
                  if isinstance(n, (ast.Assign, ast.AnnAssign))
                  and getattr((n.targets[0] if isinstance(n, ast.Assign) else n.target), "id", "") == "NAMED")

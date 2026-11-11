@@ -9,7 +9,7 @@ the ten-second window, and the normalization it was trained with. Reading the
 record and naming its leads is family work and happens upstream, in
 medomni.perception.runtime.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import os
 import sys

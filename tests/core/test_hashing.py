@@ -1,6 +1,6 @@
 """Core's hash functions (part 4): same values as v0.2 where stored values depend on them; the cfg1: config hash (R-111).
 
-v0.2's helpers are imported from their old files (code, not data). These imports go when the code moves in Stage 3.
+v0.2's helpers are imported from v0.2.1's files, read out of git history (code, not data).
 """
 import hashlib
 import importlib.util
@@ -23,9 +23,9 @@ def _v02(repo, rel, name):
 
 
 @pytest.fixture(scope="module")
-def v02(repo):
-    return (_v02(repo, "data_task/manifestbuilder/__init__.py", "v02_manifestbuilder"),
-            _v02(repo, "data_task/familybridge/bridge.py", "v02_bridge"))
+def v02(v02_root):
+    return (_v02(v02_root, "data_task/manifestbuilder/__init__.py", "v02_manifestbuilder"),
+            _v02(v02_root, "data_task/familybridge/bridge.py", "v02_bridge"))
 
 
 def _bytes(n: int) -> bytes:

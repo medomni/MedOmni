@@ -11,7 +11,7 @@ normalization. Reading the DICOM, and collapsing a three-plane colour container
 to the one plane this family declares, is family work and already happens in
 medomni.perception.runtime.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import os
 

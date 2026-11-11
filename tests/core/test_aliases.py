@@ -13,8 +13,8 @@ STAGE3_RATES = {"resp-flow": [10, 50, 100, 200], "capnography-mmhg": [2, 10], "s
 
 
 @pytest.fixture(scope="module")
-def v02(repo):
-    return yaml.safe_load((repo / GENERATED).read_text(encoding="utf-8"))["families"]
+def v02(v02_root):
+    return yaml.safe_load((v02_root / GENERATED).read_text(encoding="utf-8"))["families"]
 
 
 def test_resolver_equals_v02_generated(repo, v02):
@@ -36,10 +36,10 @@ def test_families_without_aliases_resolve_empty(repo, v02):
         assert aliases.resolve(fid, repo) == aliases.ResolvedAliases(rates=rates)
 
 
-def test_accepts_keep_v02_order_and_spelling(repo):
+def test_accepts_keep_v02_order_and_spelling(repo, v02_root):
     """U2.2: v0.2's accepts lists, in order and spelling, plus only the rates Stage 3 added (R-87)."""
     new = yaml.safe_load((repo / "core/families/aliases.yaml").read_text(encoding="utf-8"))
-    old = yaml.safe_load((repo / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
+    old = yaml.safe_load((v02_root / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
     assert new["families"]["resp-flow"]["accepts"][0].pop("rates") == STAGE3_RATES["resp-flow"]
     for fid in ("capnography-mmhg", "snore-acoustic"):
         assert new["families"].pop(fid) == {"accepts": [{"rates": STAGE3_RATES[fid]}]}

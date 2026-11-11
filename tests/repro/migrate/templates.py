@@ -3,7 +3,7 @@
     studio/datasets/<dataset>/tasks/<template_id>/template.yaml
     studio/datasets/<dataset>/tasks/<template_id>/cohorts/{n20,ladder}.yaml
 
-Sources, all in this repository until Stage 3 part 8:
+Sources (v0.2's from the v0.2.1 tree, `v02`; the fixtures and S1's recipes from this repository):
 
 - the 30 base specs in `data_task/taskbuilder/specs/`; a `-full` twin adds the `full` evidence variant (R-34, R-109)
   and, when it overrides them, the variant's own `input` and `exclude` (`full:`); a `-mini` twin is the n20 tier;
@@ -33,6 +33,7 @@ from pathlib import Path
 
 import yaml
 
+from . import V02_COMMIT
 from .cards import git_authors
 
 SPECS = "data_task/taskbuilder/specs"
@@ -153,7 +154,7 @@ def _definitions(repo: Path, spec: dict) -> str:
 
 def _authors(repo: Path, spec: dict, name: str) -> list[dict]:
     by = (spec.get("proposal") or {}).get("by")
-    names = [by] if by else git_authors(repo, f"{SPECS}/{name}.yaml")  # R-62
+    names = [by] if by else git_authors(repo, f"{SPECS}/{name}.yaml", V02_COMMIT)  # R-62
     names = list(dict.fromkeys(AUTHOR_ALIASES.get(n, n) for n in names))
     if not names:
         raise ValueError(f"{name}: no author in the spec or its git history")
@@ -187,22 +188,23 @@ def _label(ds: str, ref: str) -> str:
     return f"{ds}:{label}"
 
 
-def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
-    """{path: data} for every template and cohort, and per-template notes."""
+def convert(repo: Path, v02: Path | None = None) -> tuple[dict[str, dict], dict[str, dict]]:
+    """{path: data} for every template and cohort, and per-template notes. `v02`: the v0.2.1 tree (default `repo`)."""
     repo = Path(repo)
+    v02 = Path(v02 or repo)
     fixtures = _fixtures(repo)
-    extra = census(repo)
+    extra = census(v02)
     outputs, notes = {}, {}
-    bases = sorted(p.stem for p in (repo / SPECS).glob("*.yaml") if not p.stem.endswith(("-full", "-mini")))
+    bases = sorted(p.stem for p in (v02 / SPECS).glob("*.yaml") if not p.stem.endswith(("-full", "-mini")))
     for old_id in bases:
-        spec = _spec(repo, old_id)
+        spec = _spec(v02, old_id)
         if spec["task_id"] != old_id:
             raise ValueError(f"{old_id}.yaml: task_id {spec['task_id']}")
         ds = DATASETS[spec["dataset"]]
         tid = NAME_MAP.get(old_id, old_id)
         if not tid.startswith(f"{ds}_"):
             raise ValueError(f"{old_id}: no v0.3 id under {ds}")
-        full = _spec(repo, f"{old_id}-full")
+        full = _spec(v02, f"{old_id}-full")
 
         cohorts = {}
         for tier in TIERS:
@@ -247,13 +249,13 @@ def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
                 template["full"]["exclude"] = _exclude(_merge(spec.get("excluded_from_inputs") or {},
                                                               full["excluded_from_inputs"]))
         env = spec["environment"]
-        template["agent"] = {"statement": spec["statement"], "instruction": _definitions(repo, spec),
+        template["agent"] = {"statement": spec["statement"], "instruction": _definitions(v02, spec),
                              "environment": {k: env[k] for k in ENVIRONMENT},
                              "submission_path": spec["submission_path"]}
 
         base = f"{DEST}/{ds}/tasks/{tid}"
         outputs[f"{base}/template.yaml"] = _plain(template)  # no shared objects, so no YAML aliases
-        ladder = _ladder(repo, old_id, spec["dataset"])
+        ladder = _ladder(v02, old_id, spec["dataset"])
         if ladder:
             outputs[f"{base}/arms/modality-ladder.yaml"] = _plain(ladder)
         for tier, c in cohorts.items():

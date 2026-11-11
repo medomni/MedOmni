@@ -1,1 +1,1 @@
-"""MedOmni Perception. Empty until Stage 3 of the v0.3.0 refactor."""
+"""MedOmni Perception: encoder folders, their images and checks, and the gateway."""

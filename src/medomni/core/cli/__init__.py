@@ -15,8 +15,8 @@ USAGE = "usage: medomni [--help] [--version] <command> [<args>]"
 HELP = {
     "plugins": "List the installed plug-in packages and what each adds.",
     "contracts": "Validate the contract files.",
-    "cache": "Build, list, verify and clean the cache.",
-    "bench": "Build tasks, run agents and score them.",
+    "cache": "Build, list and clean the cache.",
+    "bench": "Run agents on built task sets and score them.",
     "perception": "Pull and run encoders; the gateway.",
     "studio": "Make tasks: survey, propose, review, preview, report.",
 }

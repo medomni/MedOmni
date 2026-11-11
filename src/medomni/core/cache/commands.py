@@ -1,23 +1,21 @@
-"""`medomni cache build|status|verify|gc`."""
+"""`medomni cache build|status|gc`, on the workspace's cache backend."""
 from __future__ import annotations
 
 import argparse
-import shutil
 import sys
-from pathlib import Path
 
-from . import TMP, Cache, current_steps, in_use, size, verify
-
-
-
-def _cache() -> Cache:
-    from medomni.core import workspace
-
-    return Cache(Path(workspace.load().cache))
+from . import CacheError, of
 
 
 def _mib(n: int) -> str:
     return f"{n / (1 << 20):.1f} MiB"
+
+
+def _feature(cache, name: str):
+    f = getattr(cache, name, None)
+    if f is None:
+        raise CacheError(f"the '{cache.name}' cache backend has no `{name}`")
+    return f
 
 
 def cmd_build(a) -> int:
@@ -26,73 +24,47 @@ def cmd_build(a) -> int:
     cfg = workspace.load()
     package = loading.find_package(a.dataset)
     raw = workspace.dataset_path(cfg, package.name)
-    entry, created = loading.build(package, raw, Cache(Path(cfg.cache)))
+    result, created = loading.build(package, raw, of(cfg))
     state = "built" if created else "already in the cache"
-    print(f"{entry.name}: {state}; {entry.meta.rows.get('events', 0)} events, content hash {entry.meta.content_hash}")
+    print(f"{result.name}: {state}; {result.rows.get('events', 0)} events")
     return 0
 
 
 def cmd_status(a) -> int:
-    cache, steps = _cache(), current_steps()
-    rows: dict[tuple[str, str], list] = {}
-    tmp = 0
-    for d in cache.folders():
-        if TMP in d.name:
-            tmp += 1
-            continue
-        e = cache.read(d)
-        r = rows.setdefault((e.meta.dataset, e.meta.step), [0, 0, 0])
-        r[0] += 1
-        r[1] += size(d)
-        r[2] += in_use(e, steps)
-    print(f"cache: {cache.root}")
-    if not rows and not tmp:
-        print("no entries")
+    from medomni.core import workspace
+
+    cache = of(workspace.load())
+    s = _feature(cache, "status")()
+    print(f"cache: {cache.name} at {s['where']}")
+    if not s["rows"] and not s["unfinished"]:
+        print("no results")
         return 0
-    print(f"  {'dataset':<16} {'step':<24} {'entries':>7} {'size':>12} {'in use':>7}")
-    for (dataset, step), (n, b, used) in sorted(rows.items()):
+    print(f"  {'dataset':<16} {'step':<24} {'results':>7} {'size':>12} {'in use':>7}")
+    for dataset, step, n, b, used in s["rows"]:
         print(f"  {dataset:<16} {step:<24} {n:>7} {_mib(b):>12} {used:>7}")
-    if tmp:
-        print(f"  {tmp} unfinished {TMP} folder(s); `medomni cache gc` removes them")
+    if s["unfinished"]:
+        print(f"  {s['unfinished']} unfinished folder(s); `medomni cache gc` removes them")
     return 0
 
 
-def cmd_verify(a) -> int:
-    cache = _cache()
-    bad = n = 0
-    for e in cache.entries():
-        n += 1
-        for problem in verify(e):
-            bad += 1
-            print(f"FAIL  {e.name}: {problem}")
-    print(f"{n} entries checked, {bad} problem(s)")
-    return 1 if bad else 0
-
-
 def cmd_gc(a) -> int:
-    cache, steps = _cache(), current_steps()
-    doomed = []
-    for d in cache.folders():
-        if TMP in d.name:
-            doomed.append((d, "unfinished"))
-        elif not in_use(cache.read(d), steps):
-            doomed.append((d, "no current step uses it"))
+    from medomni.core import workspace
+
+    cache = of(workspace.load())
+    doomed = _feature(cache, "gc")(dry_run=a.dry_run)
     for d, why in doomed:
-        print(f"{'would remove' if a.dry_run else 'removed'}  {d.relative_to(cache.root)}  ({why})")
-        if not a.dry_run:
-            shutil.rmtree(d)
+        print(f"{'would remove' if a.dry_run else 'removed'}  {d}  ({why})")
     print(f"{len(doomed)} folder(s) {'to remove' if a.dry_run else 'removed'}")
     return 0
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(prog="medomni cache", description="Build, list, verify and clean the cache.")
+    ap = argparse.ArgumentParser(prog="medomni cache", description="Build, list and clean the cache.")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    b = sub.add_parser("build", help="load a dataset into the cache (file conversions come with Bench's Build, Stage 3)")
+    b = sub.add_parser("build", help="load a dataset's event table into the cache")
     b.add_argument("dataset")
-    sub.add_parser("status", help="entries per dataset and step, with size and whether a current step uses them")
-    sub.add_parser("verify", help="recompute every content hash; no cache hash is published (R-113)")
-    g = sub.add_parser("gc", help="remove entries no current step uses, and unfinished folders")
+    sub.add_parser("status", help="results per dataset and step, with size and whether a current step uses them")
+    g = sub.add_parser("gc", help="remove results no current step uses, and unfinished folders")
     g.add_argument("--dry-run", action="store_true")
     try:
         a = ap.parse_args(argv)
@@ -102,9 +74,9 @@ def main(argv: list[str]) -> int:
     from medomni.core.loading import LoadError
     from medomni.core.workspace import WorkspaceError
 
-    except_types = (WorkspaceError, ContractError, FileNotFoundError, LoadError)
+    except_types = (WorkspaceError, ContractError, FileNotFoundError, LoadError, CacheError)
     try:
-        return {"build": cmd_build, "status": cmd_status, "verify": cmd_verify, "gc": cmd_gc}[a.cmd](a)
+        return {"build": cmd_build, "status": cmd_status, "gc": cmd_gc}[a.cmd](a)
     except except_types as e:
         print(f"medomni cache {a.cmd}: {e}", file=sys.stderr)
         return 2

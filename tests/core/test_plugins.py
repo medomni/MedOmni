@@ -112,7 +112,7 @@ def test_clash_between_plugin_commands_loads_neither(site):
 def test_groups():
     assert plugins.GROUPS == ("medomni.commands", "medomni.checks", "medomni.converters", "medomni.tools",
                               "medomni.runners", "medomni.metrics", "medomni.arms", "medomni.content",
-                              "medomni.builders", "medomni.arm_builds", "medomni.services")
+                              "medomni.builders", "medomni.arm_builds", "medomni.services", "medomni.caches")
     assert plugins.PLUGINS == "medomni.plugins"
 
 

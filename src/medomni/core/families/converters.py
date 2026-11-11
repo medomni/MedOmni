@@ -4,7 +4,8 @@ A converter is a Python piece in the `medomni.converters` entry-point group, who
 file a dataset package names in its `dataset.yaml` (`converters:`), exposing `CONVERTER` (R-145).
 `version` goes into cache keys (part 7), so a changed converter never reuses an old conversion.
 A converter must be deterministic: the same input gives the same bytes (no wall-clock header times, no random ids),
-so two users' cache entries have the same content hash (R-39). Check 7 found the first one that wasn't.
+so two users build the same atoms, and a build with the cache equals one without it (R-155). Check 7 found the first
+one that wasn't.
 Two converters with one name are both refused (R-65).
 """
 from __future__ import annotations
@@ -111,7 +112,7 @@ def for_family(family_id: str, source_format: str, converters: Converters | None
 
 def cached(cache, converter: FamilyConverter, dataset: str, raw_root: Path, rel: str, family_id: str,
            raw_hash: str | None = None):
-    """The cache entry holding `rel` (a raw file under `raw_root`) converted into `family_id`: `(entry, created)`.
+    """The cache result holding `rel` (a raw file under `raw_root`) converted into `family_id`: `(entry, created)`.
 
     The step is `convert-<name>` at the converter's version; the params are the converter's `params(family_id)`
     when it has one (h5-to-edf hashes only what the conversion reads, R-86), else just the family; the input is the
@@ -127,4 +128,4 @@ def cached(cache, converter: FamilyConverter, dataset: str, raw_root: Path, rel:
         converter.convert(src, family_id, folder / f"{family_id}.edf")
         return {"files": 1}
 
-    return cache.create(dataset, f"convert-{converter.name}", converter.version, params, [(rel, digest)], write)
+    return cache.run(dataset, f"convert-{converter.name}", converter.version, params, [(rel, digest)], write)

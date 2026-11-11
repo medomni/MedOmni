@@ -185,16 +185,20 @@ def pool(pair: Pair, events: dict[str, list[dict]], source: set[str], hooks=None
 
 
 def _convert_one(args):
-    cache_root, package, converter_name, dataset, raw_root, rel, family, raw_hash = args
-    from medomni.core.cache import Cache
+    spec, package, converter_name, dataset, raw_root, rel, family, raw_hash = args
+    from medomni.core.cache import open_cache
     from medomni.core.families import converters
 
+    cache = open_cache(spec)  # the workspace's backend, opened again in this worker process
     try:
-        converters.cached(Cache(Path(cache_root)), converters.load(Path(package)).found[converter_name], dataset,
+        converters.cached(cache, converters.load(Path(package)).found[converter_name], dataset,
                           Path(raw_root), rel, family, raw_hash)
         return True
     except Exception:  # a night this family can't be made from
         return False
+    finally:
+        if hasattr(cache, "close"):
+            cache.close()
 
 
 @lru_cache(maxsize=None)
@@ -232,7 +236,7 @@ def file_checker(pair: Pair, raw_root: Path, cache, workers: int = 6):
         for p in patients:
             for family, rel in converted_files(p, pair.package):
                 raw_hash = hashes.setdefault(rel, hashing.quick_id(Path(raw_root) / rel))
-                jobs.append((str(cache.root), str(pair.package), converters.for_family(family, Path(rel).suffix[1:], found).name,
+                jobs.append((cache.spec, str(pair.package), converters.for_family(family, Path(rel).suffix[1:], found).name,
                              pair.dataset, str(raw_root), rel, family, raw_hash))
         made = defaultdict(int)
         if jobs:

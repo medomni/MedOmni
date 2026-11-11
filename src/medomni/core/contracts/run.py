@@ -1,4 +1,4 @@
-"""Agent config, cache entry, result record, prediction record and workspace config."""
+"""Agent config, result record, prediction record and workspace config."""
 from __future__ import annotations
 
 from pathlib import PurePosixPath
@@ -20,25 +20,6 @@ class AgentConfig(Contract):
     route: Literal["local", "cloud"]  # where the model runs; Bench checks it against each dataset policy's routes before a run
     runner: Slug | None = None  # a runner other than the kind's own, such as a replay with no model
     settings: dict[str, Any] = {}
-
-
-class CacheInput(Contract):
-    name: NonEmpty  # a raw file (relative to the data root) or another entry (<dataset>/<step>/<key>)
-    hash: Sha256
-
-
-class CacheEntry(Contract):
-    """`<workspace>/cache/<dataset>/<step>/<key>/CACHE.json`."""
-
-    dataset: Slug
-    step: Slug
-    version: NonEmpty
-    key: Sha256
-    params: dict[str, Any] = {}
-    inputs: tuple[CacheInput, ...] = ()
-    rows: dict[str, int] = {}
-    content_hash: Sha256
-    release: NonEmpty  # the MedOmni release that wrote it
 
 
 class EncoderServed(Contract):
@@ -139,11 +120,20 @@ class DatasetPath(Contract):
     path: AbsPath
 
 
+class CacheSetting(Contract):
+    """Which cache backend a workspace uses (Cache page, R-155): Core's `folder` or `none`, or one from a plug-in
+    package (`medomni.caches`). `path` and `options` are the backend's; the folder backend needs `path`."""
+
+    backend: Slug = "folder"
+    path: AbsPath | None = None
+    options: dict[str, Any] = {}
+
+
 class WorkspaceConfig(Contract):
     """`<workspace>/workspace.yaml`: where your copies, cache, built tasks, runs and results are (U2.7, R-60)."""
 
     datasets: dict[Slug, DatasetPath] = {}
-    cache: AbsPath
+    cache: AbsPath | CacheSetting  # a path is the folder backend there
     tasks: AbsPath
     runs: AbsPath
     results: AbsPath

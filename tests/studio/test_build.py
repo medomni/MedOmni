@@ -134,3 +134,22 @@ def test_draw_is_nested_and_stable():
     big_pair = type(pair)(**{**pair.__dict__, "cohort": pair.cohort.model_copy(update={"select": pair.cohort.select.model_copy(update={"n": 50})})})
     big = pool_mod.draw(pool_mod.Pool(big_pair, dict(patients), {}))
     assert set(small) <= set(big)
+
+
+def test_a_build_with_no_cache_equals_one_with_the_cache(ws, built, tmp_path):
+    """Rule 1 of the Cache page (R-155): the `none` backend builds the same tasks as the default `folder` backend."""
+    from medomni.core import hashing
+
+    root = tmp_path / "nocache"
+    cfg = root / "workspace.yaml"
+    root.mkdir()
+    cfg.write_text(f"datasets: {{aireadi: {{path: {ws.datasets['aireadi'].path}}}}}\ncache: {{backend: none}}\n"
+                   f"tasks: {root}/tasks\nruns: {root}/runs\nresults: {root}/results.jsonl\nkeys_file: {root}/keys.env\n")
+    other = workspace.load(cfg)
+    b.build([PAIR], ["encoders", "no-perception"], ws=other, draw_with=pick)
+    _, tree = built
+    mine = Path(other.tasks) / "atomtasks"
+    for arm in ("encoders", "no-perception"):
+        assert [p.name for p in atoms(mine, arm)] == [p.name for p in atoms(tree, arm)]
+        assert {p.name: hashing.dir_hash(p) for p in atoms(mine, arm)} == {p.name: hashing.dir_hash(p) for p in atoms(tree, arm)}
+    assert not (root / "cache").exists()

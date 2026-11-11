@@ -1,29 +1,28 @@
-"""The cache (Cache page; R-39, R-48): results of slow steps, kept once per key.
+"""The cache (Cache page; research/cache-design.md, R-155): results of slow steps, kept so a later build can skip them.
 
-    <workspace>/cache/<dataset>/<step>/<key>/
-        CACHE.json      the step, version, parameters, inputs with their hashes, row counts, content hash
-        ...             the entry's files
-
-- The key is sha256 over canonical JSON of the step name, step version, parameters and the inputs' hashes. Raw-file
-  inputs are hashed with `sha256_file`; entry inputs by their content hash.
-- An entry is never changed. Creating an existing key does nothing and says so.
-- An entry is written into `<key>.tmp-<pid>/` and then renamed, so a crash leaves only a `.tmp-` folder,
-  which `gc` removes. No links and no permission changes: it works on exFAT.
-- The content hash is `dir_hash` of the entry without `CACHE.json`; `verify` recomputes it.
+- It only saves time. Deleting it loses nothing but time; nothing checks, compares or publishes what it holds (R-111).
+- A step is a function of its arguments: dataset, step name, step version, parameters and inputs, where each input
+  is a (name, identity) pair, such as a raw file and its quick fingerprint (R-130). The key is built from those
+  arguments alone (`key`).
+- A backend has one call, `run(dataset, step, version, params, inputs, make) -> (Result, created)`. `make(folder)`
+  writes the step's files into an empty folder and may return row counts; `run` returns a folder holding those
+  files, made now or kept from before. Callers read only that folder.
+- `workspace.yaml`'s `cache` names the backend: a path (the `folder` backend there), or
+  `{backend: <name>, path: …, options: {…}}`. Core ships `folder` (the default) and `none`; a plug-in package adds
+  one in the `medomni.caches` entry-point group, with no change to Core.
+- Optional backend features: `status()` and `gc(dry_run)`, for `medomni cache status|gc`; `has(dataset, step)`,
+  for the audit; `close()`.
 """
 from __future__ import annotations
 
+import hashlib
 import json
-import os
-import shutil
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Iterator
+from typing import Any, Callable, Protocol
 
 from medomni.core import hashing
-
-META = "CACHE.json"
-TMP = ".tmp-"
+from medomni.core.plugins import CACHES as GROUP
 
 
 class CacheError(RuntimeError):
@@ -35,10 +34,8 @@ def canonical(value: Any) -> str:
 
 
 def key(step: str, version: str, params: dict, inputs: list[tuple[str, str]]) -> str:
-    """The key of an entry: inputs are (name, hash) pairs; their order does not count."""
+    """The key of a step's result: inputs are (name, identity) pairs; their order does not count."""
     doc = {"step": step, "version": version, "params": params, "inputs": sorted([n, h] for n, h in inputs)}
-    import hashlib
-
     return hashlib.sha256(canonical(doc).encode("utf-8")).hexdigest()
 
 
@@ -48,124 +45,100 @@ def file_input(path: Path, name: str) -> tuple[str, str]:
 
 
 @dataclass(frozen=True)
-class Entry:
+class Result:
+    """A step's result: the folder holding its files, and the arguments it was made from."""
+
     path: Path
-    meta: Any  # CacheEntry
+    dataset: str
+    step: str
+    version: str
+    key: str
+    params: dict = field(default_factory=dict)
+    inputs: tuple[str, ...] = ()  # the input names
+    rows: dict = field(default_factory=dict)
 
     @property
     def name(self) -> str:
-        return f"{self.meta.dataset}/{self.meta.step}/{self.meta.key}"
-
-    def as_input(self) -> tuple[str, str]:
-        return self.name, self.meta.content_hash
+        return f"{self.dataset}/{self.step}/{self.key}"
 
 
-def _release() -> str:
-    from medomni import __version__
-
-    return __version__
+Make = Callable[[Path], "dict[str, int] | None"]
 
 
-class Cache:
-    def __init__(self, root: Path):
-        root = Path(root)
-        if not root.is_absolute():
-            raise CacheError(f"cache root must be absolute: {root}")
-        self.root = root
+class Backend(Protocol):
+    name: str
+    spec: dict  # what `open_cache` needs to open the same cache again, in another process
 
-    def folder(self, dataset: str, step: str, k: str) -> Path:
-        return self.root / dataset / step / k
-
-    def get(self, dataset: str, step: str, k: str) -> Entry | None:
-        d = self.folder(dataset, step, k)
-        return self.read(d) if (d / META).is_file() else None
-
-    @staticmethod
-    def read(d: Path) -> Entry:
-        from medomni.core.contracts import CacheEntry, load
-
-        return Entry(d, load(d / META, CacheEntry))
-
-    def create(self, dataset: str, step: str, version: str, params: dict, inputs: list[tuple[str, str]],
-               write: Callable[[Path], dict[str, int]]) -> tuple[Entry, bool]:
-        """(entry, created). `write(folder)` writes the entry's files and returns its row counts."""
-        from medomni.core.contracts import CacheEntry, load_data
-
-        k = key(step, version, params, inputs)
-        final = self.folder(dataset, step, k)
-        if (final / META).is_file():
-            return self.read(final), False
-        final.parent.mkdir(parents=True, exist_ok=True)
-        tmp = final.parent / f"{k}{TMP}{os.getpid()}"
-        if tmp.exists():
-            shutil.rmtree(tmp)
-        tmp.mkdir()
-        try:
-            rows = write(tmp) or {}
-            if (tmp / META).exists():
-                raise CacheError(f"step {step} wrote its own {META}")
-            meta = load_data({"dataset": dataset, "step": step, "version": version, "key": k, "params": params,
-                              "inputs": [{"name": n, "hash": h} for n, h in sorted(inputs)], "rows": rows,
-                              "content_hash": hashing.dir_hash(tmp), "release": _release()}, CacheEntry, str(final))
-            (tmp / META).write_text(json.dumps(meta.model_dump(mode="json", by_alias=True), indent=1) + "\n",
-                                    encoding="utf-8")
-            try:
-                os.rename(tmp, final)
-            except OSError:
-                if not (final / META).is_file():
-                    raise
-                shutil.rmtree(tmp)  # another process made the same entry first
-                return self.read(final), False
-        except BaseException:
-            shutil.rmtree(tmp, ignore_errors=True)
-            raise
-        return self.read(final), True
-
-    def folders(self) -> Iterator[Path]:
-        """Every entry folder and every `.tmp-` folder, sorted."""
-        if not self.root.is_dir():
-            return
-        for d in sorted(self.root.glob("*/*/*")):
-            if d.is_dir():
-                yield d
-
-    def entries(self) -> Iterator[Entry]:
-        for d in self.folders():
-            if TMP not in d.name:
-                yield self.read(d)
-
-    def find(self, k: str) -> Entry | None:
-        for d in self.root.glob(f"*/*/{k}"):
-            if (d / META).is_file():
-                return self.read(d)
-        return None
+    def run(self, dataset: str, step: str, version: str, params: dict, inputs: list[tuple[str, str]],
+            make: Make) -> tuple[Result, bool]: ...
 
 
-def verify(entry: Entry) -> list[str]:
-    """Problems with one entry: an empty list when it is sound."""
-    m = entry.meta
-    problems = []
-    if entry.path.name != m.key or entry.path.parent.name != m.step or entry.path.parent.parent.name != m.dataset:
-        problems.append(f"filed under {entry.path.parent.parent.name}/{entry.path.parent.name}/{entry.path.name}, "
-                        f"but {META} says {entry.name}")
-    if key(m.step, m.version, m.params, [(i.name, i.hash) for i in m.inputs]) != m.key:
-        problems.append(f"{META}'s step, version, parameters and inputs do not give its key")
-    try:
-        actual = hashing.dir_hash(entry.path, exclude=(META,))
-    except hashing.HashError as e:
-        problems.append(str(e))
-    else:
-        if actual != m.content_hash:
-            problems.append(f"content hash {actual[:12]}… differs from {META}'s {m.content_hash[:12]}…: "
-                            "a file was changed, added or removed")
-    return problems
+def check_rows(rows) -> dict[str, int]:
+    rows = rows or {}
+    if not isinstance(rows, dict) or not all(isinstance(k, str) and isinstance(v, int) for k, v in rows.items()):
+        raise CacheError(f"a step returns row counts as {{name: int}}, not {rows!r}")
+    return rows
 
 
-def size(d: Path) -> int:
-    return sum(p.stat().st_size for p in d.rglob("*") if p.is_file())
+def refuse_links(folder: Path) -> None:
+    """A result holds real files only: no links, so it works on exFAT and a copy is a copy."""
+    for p in folder.rglob("*"):
+        if p.is_symlink():
+            raise CacheError(f"a step wrote a link, {p.relative_to(folder)}; write real files")
 
 
-# Core's own cache steps and their versions. Raising a version gives new keys; `gc` removes the old entries.
+# ---------------------------------------------------------------- choosing a backend
+
+DEFAULT = "folder"
+
+
+def _builtin(name: str):
+    if name == "folder":
+        from .folder import FolderCache
+        return FolderCache
+    if name == "none":
+        from .none import NoCache
+        return NoCache
+    return None
+
+
+def spec_of(setting) -> dict:
+    """`workspace.yaml`'s `cache` value as {backend, path, options}: a bare path is the `folder` backend there."""
+    if setting is None:
+        raise CacheError("the workspace config has no `cache`")
+    if isinstance(setting, (str, Path)):
+        return {"backend": DEFAULT, "path": str(setting), "options": {}}
+    if hasattr(setting, "model_dump"):
+        setting = setting.model_dump()
+    return {"backend": setting.get("backend") or DEFAULT, "path": setting.get("path"),
+            "options": dict(setting.get("options") or {})}
+
+
+def open_cache(setting) -> Backend:
+    """The backend `setting` names: Core's `folder` or `none`, or one from a plug-in package (`medomni.caches`)."""
+    spec = spec_of(setting)
+    name = spec["backend"]
+    cls = _builtin(name)
+    if cls is None:
+        from medomni.core import plugins
+
+        found = plugins.resolve(GROUP)
+        piece = found.pieces.get(name)
+        if piece is None:
+            known = sorted({"folder", "none", *found.pieces})
+            raise CacheError(f"no cache backend '{name}'; known: {', '.join(known)}")
+        cls = piece.load()
+    return cls(path=spec["path"], **spec["options"])
+
+
+def of(ws) -> Backend:
+    """The workspace's cache backend."""
+    return open_cache(ws.cache)
+
+
+# ---------------------------------------------------------------- steps the installed code runs
+
+# Core's own cache steps and their versions. Raising a version gives new keys; `gc` removes the old results.
 CORE_STEPS: dict[str, str] = {"events": "1"}  # loading a dataset into its event table (part 6)
 
 
@@ -178,5 +151,5 @@ def current_steps() -> dict[str, str]:
     return steps
 
 
-def in_use(entry: Entry, steps: dict[str, str]) -> bool:
-    return steps.get(entry.meta.step) == entry.meta.version
+def size(d: Path) -> int:
+    return sum(p.stat().st_size for p in d.rglob("*") if p.is_file())

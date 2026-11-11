@@ -294,9 +294,9 @@ def inputs(package: Path, raw_root: Path) -> list[tuple[str, str]]:
 
 
 def build(package: str | Path, raw_root: str | Path, cache, dataset: str | None = None):
-    """Load a dataset into the cache as the `events` entry. Returns (entry, created)."""
+    """Load a dataset into the cache as the `events` result. Returns (result, created)."""
     from medomni.core.cache import CORE_STEPS
 
     package = Path(package)
-    return cache.create(dataset or package.name, STEP, CORE_STEPS[STEP], {}, inputs(package, Path(raw_root)),
+    return cache.run(dataset or package.name, STEP, CORE_STEPS[STEP], {}, inputs(package, Path(raw_root)),
                         lambda d: {"events": load(package, raw_root, d).rows})

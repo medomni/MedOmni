@@ -16,7 +16,7 @@ from pathlib import Path
 from medomni import __version__
 from medomni.core import hashing, plugins, workspace
 from medomni.core.builders import TaskBuilder, arm_build
-from medomni.core.cache import Cache
+from medomni.core import cache as cache_mod
 from medomni.core.loading import build as load_dataset
 from medomni.core.tasks import checks as built_checks
 from medomni.core.tasks import layout
@@ -57,14 +57,14 @@ def _atom_dir(tree: Path, arm, variant, name: str) -> Path:
     return layout.atom_dir(tree, arm.name, variant, name)
 
 
-_EVENTS: dict[tuple[str, str, str], Path] = {}  # (package, data root, cache root) -> events entry, once per process
+_EVENTS: dict[tuple[str, str, str], Path] = {}  # (package, data root, cache) -> events result's folder, once per process
 
 
 def _dataset_events(pair, ws, cache) -> tuple[Path, Path]:
-    """The dataset's events entry. Its cache key covers every data file, so it is worked out once per process and
+    """The dataset's events result. Its cache key covers every data file, so it is worked out once per process and
     reused by every pair of the dataset (a build, then each pair's check)."""
     raw = workspace.dataset_path(ws, pair.dataset)
-    k = (str(pair.package), str(raw), str(cache.root))
+    k = (str(pair.package), str(raw), cache_mod.canonical(cache.spec))
     if k not in _EVENTS:
         entry, _ = load_dataset(pair.package, raw, cache)
         _EVENTS[k] = entry.path
@@ -98,7 +98,7 @@ def build(pair_ids: list[str], arm_names: list[str], ws=None, source_with=None, 
     reproduction test only (R-118)."""
     stream = stream or sys.stdout
     ws = ws or workspace.load()
-    cache = Cache(Path(ws.cache))
+    cache = cache_mod.of(ws)
     tree = _tree(ws)
     arms = [_arm(a) for a in arm_names]
     pairs = [load_pair(p) for p in pair_ids]
@@ -166,7 +166,7 @@ def _finish(result: Pool, drawn: list[str], raw: Path, tables, tree: Path, arms:
 def run_checks(pair_id: str, ws=None, arm_names=None) -> list[str]:
     """`studio task check <pair>`: this builder's refusals on what it wrote, then Core's checks over built output."""
     ws = ws or workspace.load()
-    pair, tree, cache = load_pair(pair_id), _tree(ws), Cache(Path(ws.cache))
+    pair, tree, cache = load_pair(pair_id), _tree(ws), cache_mod.of(ws)
     folder = layout.content_dir(tree, pair_id)
     if not (folder / "content.json").is_file():
         return [f"{pair_id}: nothing built yet; run `medomni studio task build {pair_id}`"]

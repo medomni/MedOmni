@@ -59,7 +59,7 @@ class DatasetSurvey(Survey):
         import pyarrow.parquet as pq
 
         from medomni.core import workspace
-        from medomni.core.cache import Cache
+        from medomni.core import cache as cache_mod
         from medomni.core.contracts import DatasetConfig, load
         from medomni.core.loading import build, find_package
 
@@ -69,7 +69,7 @@ class DatasetSurvey(Survey):
             raise ToolError(str(e)) from None
         config = load(package / "dataset.yaml", DatasetConfig)
         raw = workspace.dataset_path(ctx.ws, target)
-        entry, _ = build(package, raw, Cache(Path(ctx.ws.cache)), target)
+        entry, _ = build(package, raw, cache_mod.of(ctx.ws), target)
         t = pq.read_table(entry.path / "events.parquet", columns=["subject_id", "time", "code"])
         subjects = len(pc.unique(t["subject_id"]))
         counts: dict[str, dict] = {}
@@ -85,7 +85,7 @@ class DatasetSurvey(Survey):
             "time_span": [min(times), max(times)] if times else None, "codes": dict(sorted(counts.items())),
             "families": families, "cohort_floor": floor, "cohorts": cohorts,
             "declared_families": sorted(declared_families(package)),
-            "inputs": {"files": len(entry.meta.inputs)}}
+            "inputs": {"files": len(entry.inputs)}}
         rows = [[f, v["subjects"], v["rows"], "cohort-capable" if v["subjects"] >= floor else "evidence-only"]
                 for f, v in families.items()]
         text = "\n".join([

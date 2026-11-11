@@ -23,11 +23,11 @@ class RecipePreview(Preview):
         from medomni.studio.build import BuildError, content
         from medomni.studio.build.pool import cell_of, draw, event_subjects, file_checker, pool, read_events, source_ids
         from medomni.core import workspace
-        from medomni.core.cache import Cache
+        from medomni.core import cache as cache_mod
         from medomni.core.loading import build
 
         pair = common.load_pair(target)
-        cache = Cache(Path(ctx.ws.cache))
+        cache = cache_mod.of(ctx.ws)
         raw = workspace.dataset_path(ctx.ws, pair.dataset)
         entry, _ = build(pair.package, raw, cache, pair.dataset)
         path = entry.path / "events.parquet"

@@ -77,14 +77,14 @@ class FamilySamples(Assets):
         import pyarrow.parquet as pq
 
         from medomni.core import families, hashing, workspace
-        from medomni.core.cache import Cache
+        from medomni.core import cache as cache_mod
         from medomni.core.families import converters
         from medomni.core.families.check import conforms
         from medomni.core.loading import build, find_package
 
         family = families.get(target)
         package = find_package(a.dataset)
-        cache = Cache(Path(ctx.ws.cache))
+        cache = cache_mod.of(ctx.ws)
         raw = workspace.dataset_path(ctx.ws, a.dataset)
         entry, _ = build(package, raw, cache, a.dataset)
         table = pq.read_table(entry.path / "events.parquet", columns=["subject_id", "code", "path"])

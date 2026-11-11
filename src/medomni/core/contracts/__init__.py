@@ -16,7 +16,7 @@ from .built import BuiltContent, BuiltManifest
 from .dataset import DatasetConfig, DatasetPolicy, Event, EventTable
 from .family import AliasFile, FamilyFile
 from .perception import ContainerRequest, ContainerResponse, EncodeRequest, Evidence, ModelCard
-from .run import AgentConfig, CacheEntry, PredictionRecord, ResultRecord, RunRecord, ScoreRecord, WorkspaceConfig
+from .run import AgentConfig, CacheSetting, PredictionRecord, ResultRecord, RunRecord, ScoreRecord, WorkspaceConfig
 from .task import BenchmarkCard, TaskSet
 
 
@@ -37,7 +37,6 @@ SCHEMAS = (
     Schema("dataset policy", "dataset-policy", DatasetPolicy),
     Schema("benchmark", "benchmark", BenchmarkCard),
     Schema("task set", "task-set", TaskSet),
-    Schema("cache entry", "cache-entry", CacheEntry),
     Schema("agent config", "agent-config", AgentConfig),
     Schema("model card", "model-card", ModelCard),
     Schema("container API", "container-request", ContainerRequest),
@@ -61,7 +60,7 @@ def json_schema(model) -> dict:
 
 
 __all__ = [
-    "AgentConfig", "AliasFile", "Author", "BenchmarkCard", "BuiltContent", "BuiltManifest", "CacheEntry", "ContainerRequest",
+    "AgentConfig", "AliasFile", "Author", "BenchmarkCard", "BuiltContent", "BuiltManifest", "CacheSetting", "ContainerRequest",
     "ContainerResponse", "Contract", "ContractError", "CONTRACTS", "DatasetConfig", "DatasetPolicy", "EncodeRequest",
     "Event", "EventTable", "Evidence", "FamilyFile", "IntelligenceRef", "ModelCard", "PredictionRecord", "ResultRecord",
     "RunRecord", "SCHEMAS", "Schema", "ScoreRecord", "TaskId", "TaskSet", "WorkspaceConfig", "json_schema", "load",

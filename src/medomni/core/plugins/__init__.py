@@ -39,8 +39,9 @@ CONTENT = "medomni.content"  # each project's content kinds: where its files liv
 BUILDERS = "medomni.builders"  # task builders (R-142)
 ARM_BUILDS = "medomni.arm_builds"  # an arm's build side for one builder, named `<builder>:<arm>` (R-143, R-144)
 SERVICES = "medomni.services"  # services a run starts beside the agent, each one image (R-147)
+CACHES = "medomni.caches"  # cache backends beside Core's `folder` and `none` (R-155)
 
-GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS, CONTENT, BUILDERS, ARM_BUILDS, SERVICES)  # groups of Python pieces
+GROUPS = (COMMANDS, CHECKS, CONVERTERS, TOOLS, RUNNERS, METRICS, ARMS, CONTENT, BUILDERS, ARM_BUILDS, SERVICES, CACHES)  # groups of Python pieces
 
 # Commands that Core itself provides. They are not entry points, and no plug-in can replace them.
 CORE_COMMANDS = ("plugins", "contracts", "cache")

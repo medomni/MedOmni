@@ -39,9 +39,7 @@ def run(scope, sink) -> None:
                 sink.add("D-ISOL.2", "M", ds, PASS, "routes and publish rules declared", "policy.yaml")
             except ContractError as e:
                 sink.add("D-COMP.2", "M", ds, FAIL, str(e), "policy.yaml")
-        events = Path(scope.ws.cache) / ds / "events"
-        sink.add("D-COMP.3", "M", ds, PASS if any(events.glob("*/CACHE.json")) else NONE,
-                 "event table in the cache" if events.is_dir() else "no event table cached; run `medomni cache build`", "cache")
+        sink.add(*_event_table(scope.ws, ds))
         stream = io.StringIO()
         code = bench_data.check(ds, stream)  # the v1 builder's check of the package and the copy (R-125)
         problems = [ln.strip() for ln in stream.getvalue().splitlines() if ln.startswith("  ")]
@@ -61,6 +59,22 @@ def run(scope, sink) -> None:
         sink.add("D-COMP.3", "M", ds, PASS if families else WARN, f"{len(families)} families declared", "package")
     for pair in scope.pairs:
         _staged_columns(scope, sink, pair)
+
+
+def _event_table(ws, ds: str) -> tuple:
+    """D-COMP.3 from the cache backend's own status, when it has one; the cache only saves time, so no table is no fault."""
+    from medomni.core import cache
+
+    try:
+        backend = cache.of(ws)
+    except cache.CacheError as e:
+        return "D-COMP.3", "M", ds, NONE, str(e), "cache"
+    has = getattr(backend, "has", None)
+    if has is None:
+        return "D-COMP.3", "M", ds, NONE, f"the '{backend.name}' cache backend lists nothing", "cache"
+    found = has(ds, "events")
+    return ("D-COMP.3", "M", ds, PASS if found else NONE,
+            "event table in the cache" if found else "no event table cached; run `medomni cache build`", "cache")
 
 
 def _staged_columns(scope, sink, pair: str) -> None:

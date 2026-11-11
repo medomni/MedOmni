@@ -15,7 +15,7 @@ def test_events_entry_is_looked_up_once(tmp_path, monkeypatch):
     monkeypatch.setattr(build, "load_dataset", fake_load)
     monkeypatch.setattr(build, "_EVENTS", {})
     monkeypatch.setattr(build.workspace, "dataset_path", lambda ws, d: tmp_path / d)
-    cache = SimpleNamespace(root=tmp_path / "cache")
+    cache = SimpleNamespace(spec={"backend": "folder", "path": str(tmp_path / "cache"), "options": {}})
     pair = SimpleNamespace(package=Path("pkg-a"), dataset="a")
     for _ in range(3):
         assert build._dataset_events(pair, None, cache) == (tmp_path / "a", tmp_path / "entry/events.parquet")

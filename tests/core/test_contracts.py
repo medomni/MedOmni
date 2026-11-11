@@ -17,7 +17,7 @@ BY_FILE = {s.file: s for s in c.SCHEMAS}
 def test_fifteen_contracts():
     # the fingerprint left (R-111); the benchmark came (R-83); the built task (R-143); recipe, task template and task
     # proposal went to Studio (R-147)
-    assert len(c.CONTRACTS) == 15
+    assert len(c.CONTRACTS) == 14
     assert "benchmark" in c.CONTRACTS and not {"fingerprint", "recipe", "task template", "task proposal"} & set(c.CONTRACTS)
     assert set(BY_FILE) == set(EXAMPLES)
 

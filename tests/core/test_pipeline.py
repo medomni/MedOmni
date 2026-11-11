@@ -2,7 +2,7 @@
 
 workspace -> `medomni cache build` (loading into the cache) -> a toy builder writes Core's built-task contract (atoms)
 -> Core's task checks, family checks and a converter -> folder hashes and the config hash -> predictions; then the
-second user, `cache verify`, `cache gc`.
+second user, a changed value, `cache gc`, and the same build with no cache (rule 1 of the Cache page, R-155).
 
 The toy builder is test code standing in for any builder (R-142): its rules are code, so Core reads no recipe,
 template or cohort (R-147), and nothing here is imported from a project.
@@ -23,7 +23,7 @@ from medomni.core import cache as cache_mod
 from medomni.core import contracts as c
 from medomni.core import families, hashing, plugins
 from medomni.core.builders import TaskBuilder
-from medomni.core.cache import Cache, verify
+from medomni.core.loading import build as load_dataset
 from medomni.core.cli import main
 from medomni.core.families.check import conforms
 from medomni.core.families.converters import load as load_converters
@@ -173,10 +173,10 @@ def toy_build(events_path, raw_root, tree, convert):
 
 # ---------------------------------------------------------------- one user, steps 1-6
 
-def user(tmp_path, name, monkeypatch):
+def user(tmp_path, name, monkeypatch, cache=None):
     home = tmp_path / name
     data = make_dataset(PKG, home / "data", subjects=10, seed=0, plant=LABELS)  # each user's own copy of the same dataset version
-    cfg = {"datasets": {DATASET: {"path": str(data.root)}}, "cache": str(home / "cache"),
+    cfg = {"datasets": {DATASET: {"path": str(data.root)}}, "cache": cache or str(home / "cache"),
            "tasks": str(home / "atomtasks"), "runs": str(home / "runs"), "results": str(home / "results.jsonl"),
            "keys_file": str(home / "keys.env")}
     (home / "workspace.yaml").write_text(yaml.safe_dump(cfg))
@@ -185,10 +185,10 @@ def user(tmp_path, name, monkeypatch):
     assert ws.datasets[DATASET].path == str(data.root)
 
     assert main(["cache", "build", DATASET]) == 0  # step 2: verify, read, rules, write, check, into the cache
-    assert main(["cache", "build", DATASET]) == 0  # the same inputs: the same entry, left alone
-    cache = Cache(Path(ws.cache))
-    (entry,) = [e for e in cache.entries() if e.meta.step == "events"]
-    assert verify(entry) == [] and entry.meta.rows["events"] > 0
+    assert main(["cache", "build", DATASET]) == 0  # the same inputs: the same result, left alone
+    cache = cache_mod.of(ws)  # the workspace's backend
+    entry, _ = load_dataset(PKG, data.root, cache, DATASET)
+    assert entry.step == "events" and entry.rows["events"] > 0
 
     conv = load_converters().found["npy-to-edf"]  # the test's dummy converter, beside Core's h5-to-edf
     fam = families.get("spo2-series-10hz-pct", REPO)
@@ -199,7 +199,7 @@ def user(tmp_path, name, monkeypatch):
         src.parent.mkdir(parents=True, exist_ok=True)
         rng = np.random.default_rng(int(subject) % 1000)
         np.save(src, (95 + rng.integers(-2, 3, size=(1, 300))).astype(np.int16))
-        e, _ = cache.create(DATASET, f"convert-{conv.name}", conv.version, {"family": fam.id},
+        e, _ = cache.run(DATASET, f"convert-{conv.name}", conv.version, {"family": fam.id},
                             [(f"extra/{subject}.npy", hashing.sha256_file(src))],
                             lambda d: (conv.convert(src, fam, d / "spo2.edf"), {"files": 1})[1])
         shutil.copyfile(e.path / "spo2.edf", out_dir / "spo2.edf")
@@ -240,7 +240,7 @@ def user(tmp_path, name, monkeypatch):
     assert len(c.load_lines(run / "predictions.jsonl", c.PredictionRecord)) == 8
     return {"home": home, "cache": cache, "entry": entry, "data": data, "pair": pair_dir, "convert": convert,
             "atoms": fps, "set": hashing.dir_hash(pair_dir),
-            "keys": sorted((e.meta.step, e.meta.key, e.meta.content_hash) for e in cache.entries())}
+            "keys": sorted([entry.key] + [e.key for e in converted.values()])}
 
 
 def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
@@ -248,16 +248,15 @@ def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
     assert all(len(h) == 64 for h in a["atoms"].values()) and len(a["set"]) == 64
 
     b = user(tmp_path, "bob", monkeypatch)  # step 7: a second user, a fresh workspace
-    assert b["keys"] == a["keys"]  # same cache keys and content hashes (R-39)
+    assert b["keys"] == a["keys"]  # same cache keys: built from the step's arguments alone (R-155)
     assert b["atoms"] == a["atoms"] and b["set"] == a["set"]  # the same built files
     manifests = [c.load(layout.content_dir(layout.tree(c.load(u["home"] / "workspace.yaml", c.WorkspaceConfig)), TASK)
                         / "manifest.json", c.BuiltManifest) for u in (a, b)]
     assert manifests[0] == manifests[1] and manifests[0].config_hash[ARM].startswith("cfg1:")  # config and releases only
     assert manifests[0].builder == "toy/1"  # (R-111), not the workspace
 
-    monkeypatch.setenv("MEDOMNI_HOME", str(a["home"]))  # step 8: verify catches one changed value
+    monkeypatch.setenv("MEDOMNI_HOME", str(a["home"]))  # step 8: one changed value changes that patient's atom only
     capsys.readouterr()
-    assert main(["cache", "verify"]) == 0
     import pyarrow as pa
     import pyarrow.parquet as pq
 
@@ -268,8 +267,6 @@ def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
     rows[i]["numeric_value"] += 1.0
     pq.write_table(pa.Table.from_pylist(rows, schema=pq.read_schema(events)), events, compression="zstd",
                    use_dictionary=False, write_statistics=False)
-    assert main(["cache", "verify"]) == 1
-    assert f"FAIL  {a['entry'].name}" in capsys.readouterr().out
     rebuilt = toy_build(events, a["data"].root, a["home"] / "rebuilt" / "atomtasks", a["convert"])
     changed = {p.name for p in rebuilt.iterdir() if p.is_dir() and hashing.dir_hash(p) != a["atoms"].get(p.name)}
     assert changed == {rows[i]["subject_id"]}
@@ -280,4 +277,9 @@ def test_core_end_to_end(tmp_path, monkeypatch, site, capsys):
     assert a["entry"].name.split("/", 1)[1] in out and "1 folder(s) to remove" in out
     assert main(["cache", "gc"]) == 0
     assert not a["entry"].path.exists()
-    assert {e.meta.step for e in a["cache"].entries()} == {"convert-npy-to-edf"}
+    assert {e.step for e in a["cache"].results()} == {"convert-npy-to-edf"}
+
+    monkeypatch.setattr(cache_mod, "CORE_STEPS", {"events": "1"})
+    n = user(tmp_path, "nora", monkeypatch, cache={"backend": "none"})  # step 10: no cache, the same build (rule 1)
+    assert n["atoms"] == a["atoms"] and n["set"] == a["set"] and n["keys"] == a["keys"]
+    assert not (n["home"] / "cache").exists()

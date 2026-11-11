@@ -302,8 +302,9 @@ def family_samples(edir, samples_root=None, image_tag="dev"):
 
 # ---------------- the command ----------------
 
-def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=True):
-    """Every step of `medomni perception check`; returns 0 when the encoder passes, 1 when a step fails."""
+def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=True, record=False):
+    """Every step of `medomni perception check`; returns 0 when the encoder passes, 1 when a step fails. With `record`,
+    a passing encoder is written into the deployment record (`registry/record.py`)."""
     from . import build as image_build, cards
 
     edir = Path(edir).resolve()
@@ -340,9 +341,22 @@ def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=Tr
     out(f"[{eid}] testdata ok: {len(results)} sample(s)")
     from medomni.core import families
 
+    def recorded(l3_status, l3_detail=None):
+        if not record:
+            return 0
+        from . import record as deployed
+
+        try:
+            entry = deployed.write(edir, f"{len(results)} sample(s)", l3_status, l3_detail)
+        except RegistryError as exc:
+            out(f"[{eid}] not recorded: {exc}")
+            return 1
+        out(f"[{eid}] recorded {entry['image_id'][:19]} in {deployed.RECORD}")
+        return 0
+
     if samples_root is None and families.get(card["family"]).samples is None:
         out(f"[{eid}] real samples: the family publishes none")
-        return 0
+        return recorded("UNVERIFIED-no-supply", "the family publishes no samples")
     try:
         n, failures = family_samples(edir, samples_root)
     except (RegistryError, ImportError, OSError) as exc:
@@ -354,4 +368,4 @@ def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=Tr
             out(f"   - {e}")
         return 1
     out(f"[{eid}] real samples ok: {n}, offline")
-    return 0
+    return recorded("PASS", f"{n} sample(s), offline")

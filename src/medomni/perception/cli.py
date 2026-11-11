@@ -31,6 +31,7 @@ def _parser() -> argparse.ArgumentParser:
     c.add_argument("--samples", type=Path, help="a folder of family samples, one sub-folder per family")
     c.add_argument("--freeze", action="store_true", help="write testdata/expected.json instead of comparing")
     c.add_argument("--tol", type=float, help="number tolerance (default 1e-3)")
+    c.add_argument("--record", action="store_true", help="write a passing encoder into perception/deployed.yaml, the record the perception service starts images from")
     return ap
 
 
@@ -103,7 +104,10 @@ def cmd_new(a) -> int:
 def cmd_check(a) -> int:
     from .registry.check import TOL, check
 
-    return check(a.folder, samples_root=a.samples, do_freeze=a.freeze, tol=a.tol if a.tol is not None else TOL)
+    if a.record and a.freeze:
+        print("--record and --freeze can't be combined: a frozen expected.json is not a check", file=sys.stderr)
+        return 2
+    return check(a.folder, samples_root=a.samples, do_freeze=a.freeze, tol=a.tol if a.tol is not None else TOL, record=a.record)
 
 
 def group(argv: list[str]) -> int:

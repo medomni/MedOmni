@@ -477,7 +477,10 @@ def test_oracle(eid, monkeypatch):
 @pytest.mark.containers
 @pytest.mark.parametrize("eid", SHIPPED)
 def test_image_answers_as_expected(eid):
-    """The :dev image, run on the test data it carries, gives expected.json (runtime fields aside)."""
+    """The :dev image, run on its test data as `perception check` runs it (read-only at /data), gives expected.json:
+    numbers within check's tolerance, everything else exactly (runtime fields aside). The notes name the /data path."""
+    from medomni.perception.registry.check import compare
+
     edir = folder(eid)
     expected_file = edir / "testdata/expected.json"
     if not expected_file.exists():
@@ -485,13 +488,13 @@ def test_image_answers_as_expected(eid):
     expected = json.loads(expected_file.read_text())
     card = yaml.safe_load((edir / "card.yaml").read_text())
     for name, want in expected.items():
-        r = subprocess.run(["docker", "run", "--rm", "--network", "none", f"{GHCR}/{eid}:dev", "python", "-m",
-                            "medomni.perception.runtime.serve", "encode", "--family", card["family"], "--path", name,
-                            "--data-root", "/app/testdata", "--options-json", json.dumps(_options(edir, name))],
+        r = subprocess.run(["docker", "run", "--rm", "--network", "none", "-v", f"{(edir / 'testdata').resolve()}:/data:ro",
+                            f"{GHCR}/{eid}:dev", "python", "-m", "medomni.perception.runtime.serve", "encode",
+                            "--family", card["family"], "--path", name, "--options-json", json.dumps(_options(edir, name))],
                            capture_output=True, text=True, timeout=1800)
         assert r.returncode == 0, r.stderr[-2000:]
         got = json.loads(r.stdout)
         got.pop("runtime", None)
         want = dict(want)
         want.pop("runtime", None)
-        assert got == want, name
+        assert compare(want, got, path=name) == []

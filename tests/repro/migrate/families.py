@@ -7,6 +7,7 @@
 """
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import yaml
@@ -21,7 +22,9 @@ PERCENT = {"%", "pct", "percent"}
 # Tables whose columns are all numeric: the numerics table holds charted values only
 NUMERIC_TABLES = {"numeric-observation"}
 
-ORDER = ("id", "read_by", "protocol", "status", "samples", "retired", "pending", "omh_record")
+ORDER = ("id", "read_by", "protocol", "status", "samples", "samples_access", "retired", "pending", "omh_record")
+# v0.1.1 marked some sample sets access-controlled in a comment on `samples: null`; v0.3 keeps it as a field
+ACCESS_CONTROLLED = re.compile(r"^samples:\s*null\s*#.*access-controlled", re.M)
 PROTOCOL_ORDER = ("format", "channels", "roles", "rate_hz", "units", "ndim", "dtype", "range")
 
 
@@ -64,7 +67,10 @@ def convert_one(src: dict) -> tuple[dict, dict]:
 def convert(repo: Path) -> tuple[dict[str, dict], dict[str, dict]]:
     outputs, notes = {}, {}
     for path in sorted((Path(repo) / SOURCE).glob("*.yaml")):
-        src = yaml.safe_load(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+        src = yaml.safe_load(text)
+        if ACCESS_CONTROLLED.search(text):
+            src["samples_access"] = "controlled"
         data, note = convert_one(src)
         outputs[f"{DEST}/{data['id']}.yaml"] = data
         notes[data["id"]] = note

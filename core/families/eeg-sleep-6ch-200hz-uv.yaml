@@ -10,3 +10,4 @@ protocol:
   range: null
 status: supplied
 samples: null
+samples_access: controlled

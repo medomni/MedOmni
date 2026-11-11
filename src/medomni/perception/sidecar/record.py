@@ -3,7 +3,9 @@ medomni.deployed/1, revised 2026-09-24: no registry — the pin is the LOCAL ima
 Pure python: used by the perception service at run time, and by tests.
 
 The service serves an encoder only if the record says it may: an entry exists, its image_id is
-recorded, and its L2 and L3 stages PASSED at the entry's own build_key. Whether the entry is
+recorded, and its L2 and L3 stages PASSED at the entry's own build_key. For a family whose sample set is
+access-controlled, L3 recorded as UNVERIFIED-access-controlled is accepted: the test data (L2) stands in
+(Bosong, 2026-11-11). Whether the entry is
 STALE against the current source is not checked here — that needs the repo and is the launch
 gate's job.
 """
@@ -14,6 +16,7 @@ from pathlib import Path
 import yaml
 
 SCHEMA = "medomni.deployed/1"
+ACCESS_CONTROLLED = "UNVERIFIED-access-controlled"  # L3 for a family whose samples aren't distributed
 
 
 def load(path) -> dict | None:
@@ -40,7 +43,7 @@ def servable(rec: dict | None, encoder_id: str) -> tuple[bool, str]:
         s = (e.get("stages") or {}).get(stage) or {}
         if s.get("build_key") != e.get("build_key"):
             return False, f"{stage} result is for another build_key"
-        if s.get("status") != "PASS":
+        if s.get("status") != "PASS" and not (stage == "L3" and s.get("status") == ACCESS_CONTROLLED):
             return False, f"{stage} {s.get('status') or 'missing'}"
     return True, "ok"
 

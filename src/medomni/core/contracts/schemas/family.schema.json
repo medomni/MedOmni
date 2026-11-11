@@ -448,6 +448,19 @@
       ],
       "default": null
     },
+    "samples_access": {
+      "anyOf": [
+        {
+          "const": "controlled",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Samples Access"
+    },
     "retired": {
       "anyOf": [
         {

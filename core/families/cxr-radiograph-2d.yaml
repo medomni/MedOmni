@@ -8,3 +8,4 @@ protocol:
   planes: 1
 status: supplied
 samples: null
+samples_access: controlled

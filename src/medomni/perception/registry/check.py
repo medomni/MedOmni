@@ -354,7 +354,11 @@ def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=Tr
         out(f"[{eid}] recorded {entry['image_id'][:19]} in {deployed.RECORD}")
         return 0
 
-    if samples_root is None and families.get(card["family"]).samples is None:
+    fam = families.get(card["family"])
+    if samples_root is None and fam.samples is None:
+        if fam.samples_access == "controlled":
+            out(f"[{eid}] real samples: access-controlled, not distributed; the test data stands in")
+            return recorded("UNVERIFIED-access-controlled", "the family's sample set is access-controlled")
         out(f"[{eid}] real samples: the family publishes none")
         return recorded("UNVERIFIED-no-supply", "the family publishes no samples")
     try:

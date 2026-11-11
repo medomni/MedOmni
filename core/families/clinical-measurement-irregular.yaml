@@ -10,3 +10,4 @@ protocol:
     normalised into this
 status: declared
 samples: null
+samples_access: controlled

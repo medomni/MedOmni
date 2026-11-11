@@ -75,6 +75,7 @@ class FamilyFile(Contract):
     protocol: Protocol
     status: Literal["declared", "supplied", "deprecated"]
     samples: Samples | None = None
+    samples_access: Literal["controlled"] | None = None  # a sample set exists but isn't distributed (v0.1.1)
     retired: Retired | None = None
     pending: Pending | None = None
     omh_record: OmhRecord | None = None

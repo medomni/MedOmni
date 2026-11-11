@@ -49,3 +49,18 @@ def test_refused_for_uncommitted_source_or_a_stale_image(repo, monkeypatch):
     with pytest.raises(RegistryError, match="not built from the current source"):
         record.write(edir, "1", "PASS", repo=root)
     assert (root / record.RECORD).read_text() == before
+
+
+def test_access_controlled_samples_let_test_data_stand_in(repo):
+    root, edir = repo
+    record.write(edir, "4 sample(s)", served.ACCESS_CONTROLLED, "the family's sample set is access-controlled", repo=root)
+    assert served.servable(served.load(root / record.RECORD), "fam-x__enc") == (True, "ok")
+
+
+def test_access_controlled_families_are_marked_in_core():
+    from medomni.core import families
+
+    controlled = {f for f in ("ppg-waveform-uncal", "ecg-12lead-500hz-mv", "cxr-radiograph-2d", "clinical-measurement-irregular",
+                              "eeg-sleep-6ch-200hz-uv") if families.get(f).samples_access == "controlled"}
+    assert len(controlled) == 5
+    assert families.get("capnography-mmhg").samples_access is None  # no sample set at all: still not servable

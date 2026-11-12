@@ -51,7 +51,7 @@ Output blocks:
 
 ## Check
 
-MedOmni's tests check the gateway against this contract on every pull request. Requests and replies are messages, not files in the repository, so `medomni contracts check` does not read them.
+The tests in `tests/perception/` check the gateway against this contract: `test_gateway_api.py` covers the routes, the status codes, the rejected fields and the evidence, against a stand-in pool with no Docker. Requests and replies are messages, not files in the repository, so `medomni contracts check` does not read them.
 
 ## Where next
 

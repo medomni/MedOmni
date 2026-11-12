@@ -17,7 +17,7 @@ except ImportError:                                   # pragma: no cover
 from medomni.perception.gateway import config
 from medomni.perception.gateway.app import create_app
 from medomni.perception.gateway.catalog import Catalog
-from medomni.perception.gateway.pool import PoolError, UpstreamError
+from medomni.perception.gateway.pool import PoolError, StartError, UpstreamError
 
 VITALS = "clinical-measurement-irregular__labs-summary"  # rule-vitals is not shipped (R-63)
 DATA = ENCODERS / VITALS.replace("__", "/", 1) / "testdata"
@@ -158,7 +158,8 @@ class EncodeTests(unittest.TestCase):
         cases = [(FakePool(http_status=400, body={"error": "bad"}), 400),
                  (FakePool(http_status=500, body={"error": "boom"}), 502),
                  (FakePool(raises=UpstreamError("gone")), 502),
-                 (FakePool(raises=PoolError("full")), 503)]
+                 (FakePool(raises=PoolError("full")), 503),
+                 (FakePool(raises=StartError("no image")), 503)]
         for pool, expected in cases:
             with self.subTest(expected=expected):
                 with client(pool) as api:

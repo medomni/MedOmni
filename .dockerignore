@@ -1,13 +1,7 @@
-# ALLOWLIST (fix roadmap F3, 2026-09-24): the sidecar image build context is exactly what
-# harness/perception-image/Dockerfile COPYs — nothing else. A denylist leaked every new tree
-# (runs/ traces are DUA; atomtasks*/ are tens of GB) into docker's small loopback storage.
+# Allowlist: the perception service image (src/medomni/perception/sidecar/Dockerfile) gets exactly what it COPYs.
+# BuildKit reads that Dockerfile's own Dockerfile.dockerignore; the legacy builder reads this file.
 *
 !perception
-!data_task/families
-!data_task/family_alias.yaml
-!harness/perception-image
-# the v0.3 perception service (src/medomni/perception/sidecar/Dockerfile; BuildKit reads its own
-# Dockerfile.dockerignore, the legacy builder reads this file)
 !pyproject.toml
 !src/medomni/__init__.py
 !src/medomni/core

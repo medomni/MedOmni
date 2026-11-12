@@ -1,5 +1,5 @@
-"""`medomni studio encoder-status`: which encoders are built and which are planned (v0.2's `registry.py static` and
-`plan`). Built means the folder has what `medomni perception check` needs and its card passes the contract. Whether an
+"""`medomni studio encoder-status`: which encoders are built and which are planned.
+Built means the folder has what `medomni perception check` needs and its card passes the contract. Whether an
 image exists is read from Docker only with `--images`."""
 from __future__ import annotations
 

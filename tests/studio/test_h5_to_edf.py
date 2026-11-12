@@ -1,6 +1,5 @@
 """The h5-to-edf family converter (v0.2's bridge, R-19, R-105, R-110) on a planted night: no real data."""
 import hashlib
-import importlib.util
 from pathlib import Path
 
 import numpy as np
@@ -11,8 +10,6 @@ from medomni.core.loading import find_package
 from medomni.core.loading.hooks import file_module
 
 h5_to_edf = file_module(find_package("bdsp"), "converters/h5_to_edf.py", "converter")  # BDSP's own (R-145)
-
-REPO = Path(__file__).resolve().parents[2]
 
 
 def _night(path, signals, meas_date="2080-01-01 22:00:00", fs=200, seconds=30):
@@ -80,18 +77,3 @@ def test_key_params_hash_only_what_the_conversion_reads():
     p = h5_to_edf.CONVERTER.params("eog-2ch-200hz-uv")
     assert p["family"] == "eog-2ch-200hz-uv" and len(p["reads"]) == 64
     assert set(h5_to_edf.reads("eog-2ch-200hz-uv")) == {"channels", "roles", "accepts"}  # no rate, units, dtype, range
-
-
-@pytest.mark.parametrize("family,signals", [("eog-2ch-200hz-uv", ["e1", "e2"]), ("emg-limb-200hz-uv", ["leg-left", "arm-right"])])
-def test_same_bytes_as_v02_bridge(tmp_path, v02_root, family, signals):
-    import yaml
-
-    spec = importlib.util.spec_from_file_location("v02_bridge", v02_root / "data_task/familybridge/bridge.py")
-    v02 = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(v02)
-    src = _night(tmp_path / "n.h5", signals)
-    proto = yaml.safe_load((REPO / f"core/families/{family}.yaml").read_text())["protocol"]
-    alias = yaml.safe_load((REPO / "core/families/aliases.yaml").read_text())
-    v02.h5_to_family_edf(src, tmp_path / "v02.edf", family, proto, alias)
-    new = h5_to_edf.CONVERTER.convert(src, family, tmp_path / "v03.edf")
-    assert new.path.read_bytes() == (tmp_path / "v02.edf").read_bytes()

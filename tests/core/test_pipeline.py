@@ -177,8 +177,7 @@ def user(tmp_path, name, monkeypatch, cache=None):
     home = tmp_path / name
     data = make_dataset(PKG, home / "data", subjects=10, seed=0, plant=LABELS)  # each user's own copy of the same dataset version
     cfg = {"datasets": {DATASET: {"path": str(data.root)}}, "cache": cache or str(home / "cache"),
-           "tasks": str(home / "atomtasks"), "runs": str(home / "runs"), "results": str(home / "results.jsonl"),
-           "keys_file": str(home / "keys.env")}
+           "tasks": str(home / "atomtasks"), "runs": str(home / "runs"), "results": str(home / "results.jsonl")}
     (home / "workspace.yaml").write_text(yaml.safe_dump(cfg))
     monkeypatch.setenv("MEDOMNI_HOME", str(home))
     ws = c.load(home / "workspace.yaml", c.WorkspaceConfig)  # step 1

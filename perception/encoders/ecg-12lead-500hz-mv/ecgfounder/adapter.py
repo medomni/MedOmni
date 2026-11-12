@@ -66,7 +66,7 @@ def _read_labels():
     """The head's vocabulary, from the upstream file at the pinned revision.
 
     The card declares the same list. Keeping the two independent is deliberate:
-    registry.py test compares what the adapter emits against what the card
+    `medomni perception check` compares what the adapter emits against what the card
     declares, which only means something while they come from different places.
     """
     names = [line.strip() for line in open(LABEL_FILE, encoding="utf-8")

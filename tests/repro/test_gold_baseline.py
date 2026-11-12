@@ -2,7 +2,7 @@
 
 The event tables are written to `<workspace>/scratch-p2/<dataset>/` on first use, and reused (delete them to reload;
 a load takes 6 to 15 minutes). Needs v0.2.1's checkout, the raw copies and a workspace: T4. Prints counts only.
-    MEDOMNI_STAGE3_WORKSPACE=<workspace.yaml> pytest -m baseline tests/bench/test_gold_baseline.py -s
+    MEDOMNI_V02=<v0.2.1 checkout> MEDOMNI_STAGE3_WORKSPACE=<workspace.yaml> pytest -m baseline tests/repro/test_gold_baseline.py -s
 """
 import csv
 import os
@@ -11,11 +11,12 @@ from pathlib import Path
 
 import pytest
 
-pytestmark = [pytest.mark.baseline, pytest.mark.data]
+from .paths import V02 as V02_ENV, WORKSPACE as WORKSPACE_ENV, env, needs
+
+pytestmark = [pytest.mark.baseline, pytest.mark.data, needs(V02_ENV, WORKSPACE_ENV)]
 
 REPO = Path(__file__).resolve().parents[2]
-V02 = Path(os.environ.get("MEDOMNI_V02", "<v0.2 checkout>"))
-WORKSPACE = Path(os.environ.get("MEDOMNI_STAGE3_WORKSPACE", "<workspace>/workspace.yaml"))
+V02, WORKSPACE = env(V02_ENV), env(WORKSPACE_ENV)
 GOLD_ROWS = {"bdsp": 380, "mimic-iv": 260, "aireadi": 660}
 
 

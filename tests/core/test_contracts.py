@@ -150,3 +150,12 @@ def test_definitions_are_the_builders():
     """R-147 fix 1: Core stores a dataset's definitions untyped; the v1 builder checks them."""
     data = copy.deepcopy(EXAMPLES["dataset-config"][0]) | {"definitions": {"adult": {"any_form": "a builder's"}}}
     assert c.load_data(data, c.DatasetConfig).definitions["adult"] == {"any_form": "a builder's"}
+
+
+@pytest.mark.parametrize("args", [["contracts", "--help"], ["contracts", "check", "--help"], ["contracts", "check", "-h"]])
+def test_check_help_prints_help(args, capsys):
+    """`--help` is help, never a contract name (q03)."""
+    from medomni.core.cli import main
+
+    assert main(args) == 0
+    assert capsys.readouterr().out.startswith("usage: medomni contracts check")

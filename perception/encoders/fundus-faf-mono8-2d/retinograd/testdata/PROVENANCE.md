@@ -14,7 +14,7 @@ grader would call this frame gradable.
 
 `input-colour.dcm` is the same frame in three RGB planes that **disagree**
 (two are shifted copies). Autofluorescence is a single-intensity measurement:
-`family_alias.yaml` declares which colour containers this family accepts, RGB
+`core/families/aliases.yaml` declares which colour containers this family accepts, RGB
 is not one of them, and the family decoder degrades the file rather than
 flattening three different planes into a plausible grey. It is an authored
 rejection case.
@@ -34,7 +34,7 @@ SHA-256:
 
 No fixture derived from real data is committed here: the family's samples come
 from AI-READI, whose agreement keeps them out of Git. Real inference is
-verified by `registry.py family-test`, which runs the five pinned
+verified by `medomni perception check --samples`, which runs the five pinned
 `MedOmni/family-samples` DICOMs — 3288x3680 JPEG-baseline frames that the iCare
 Eidon writes in a YBR_FULL_422 container — through the built image with Docker
 networking disabled. That gate, not this folder, is what shows the encoder

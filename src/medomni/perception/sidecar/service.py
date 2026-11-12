@@ -187,7 +187,8 @@ class GuardedService(Service):
             ans = await super().encode(encoder_id, path, options)
         except ServiceError as exc:
             self.witness.encode_window(path, t0, time.time())
-            kind = "bad_request" if exc.status in (404, 409) else "error"
+            kind = ("bad_request" if exc.status in (404, 409)
+                    else "start_failure" if getattr(exc, "reason", None) == "start_failure" else "error")
             self.log.write({"encoder_id": encoder_id, "path": path, "healthy": False, "status": exc.status,
                             **self.guard.record(encoder_id, path, kind)})
             raise

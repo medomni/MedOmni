@@ -3,9 +3,6 @@
 Never raises: a log that cannot be written must not turn a finished encode into
 a failed request.
 """
-# Changes on assurance/matrix (2026-09-17), for review by Perception:
-#   M5  _append() was called but never defined, so every write failed silently and no call log was ever
-#       written. Added (4 lines); behaviour of write() is otherwise unchanged.
 import asyncio
 import hashlib
 import json

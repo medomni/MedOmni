@@ -1,49 +1,10 @@
-"""One alias resolver (part 3): the same result as v0.2's generated file; never a silent empty result."""
+"""One alias resolver (part 3): never a silent empty result. Its equality with v0.2 is in tests/repro."""
 import shutil
 
 import pytest
-import yaml
 
 from medomni.core import families
 from medomni.core.families import aliases
-
-GENERATED = "perception/runtime/family_alias.generated.yaml"
-# Rates Stage 3 part 1 added (R-87, p13): the only change to v0.2's aliases. Rates are not in the bridge key (R-86).
-STAGE3_RATES = {"resp-flow": [10, 50, 100, 200], "capnography-mmhg": [2, 10], "snore-acoustic": [500]}
-
-
-@pytest.fixture(scope="module")
-def v02(v02_root):
-    return yaml.safe_load((v02_root / GENERATED).read_text(encoding="utf-8"))["families"]
-
-
-def test_resolver_equals_v02_generated(repo, v02):
-    assert len(v02) == 13
-    for fid, want in v02.items():
-        got = aliases.resolve(fid, repo)
-        assert got.labels == want["labels"], fid
-        assert got.components == want["components"], fid
-        assert list(got.rates) == sorted(float(r) for r in want["rates"] + STAGE3_RATES.get(fid, [])), fid
-        assert list(got.prefixes) == want["prefixes"], fid
-        assert list(got.colors) == want["colors"], fid
-
-
-def test_families_without_aliases_resolve_empty(repo, v02):
-    rest = sorted(set(families.load_registry(repo)) - set(v02))
-    assert len(rest) == 29
-    for fid in rest:
-        rates = tuple(sorted(float(r) for r in STAGE3_RATES.get(fid, [])))
-        assert aliases.resolve(fid, repo) == aliases.ResolvedAliases(rates=rates)
-
-
-def test_accepts_keep_v02_order_and_spelling(repo, v02_root):
-    """U2.2: v0.2's accepts lists, in order and spelling, plus only the rates Stage 3 added (R-87)."""
-    new = yaml.safe_load((repo / "core/families/aliases.yaml").read_text(encoding="utf-8"))
-    old = yaml.safe_load((v02_root / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
-    assert new["families"]["resp-flow"]["accepts"][0].pop("rates") == STAGE3_RATES["resp-flow"]
-    for fid in ("capnography-mmhg", "snore-acoustic"):
-        assert new["families"].pop(fid) == {"accepts": [{"rates": STAGE3_RATES[fid]}]}
-    assert new == old
 
 
 def _copy_registry(repo, tmp_path):

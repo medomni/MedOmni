@@ -28,6 +28,10 @@ class PoolError(RuntimeError):
     """No slot could be had, or the container would not start. Worth retrying."""
 
 
+class StartError(PoolError):
+    """The container would not start (e.g. its image is not on this machine): the machine's fault, not the encoder's."""
+
+
 class UpstreamError(RuntimeError):
     """The container failed or vanished mid-call."""
 
@@ -150,7 +154,7 @@ class Pool:
             async with self._cond:
                 self._slots.pop(slot.encoder_id, None)
                 self._cond.notify_all()
-            raise PoolError(f"could not start {slot.encoder_id}: {exc}") from exc
+            raise StartError(f"could not start {slot.encoder_id}: {exc}") from exc
         async with self._cond:
             slot.handle, slot.state = handle, READY
             slot.inflight, slot.started_at = 1, time.time()

@@ -1,7 +1,8 @@
 """Part 3, check 3 (U3.3): Build, fed v0.2's sources and v0.2's draw, gives v0.2's atoms. The only place v0.2's draw lives (R-118).
 
 T4: needs v0.2.1's checkout, the raw copies and a workspace; hours for the whole set. Run one dataset with
-`MEDOMNI_REPRO_ONLY=aireadi pytest -m baseline tests/bench/repro`. Prints counts only.
+`MEDOMNI_REPRO_ONLY=aireadi pytest -m baseline tests/repro/test_reproduction.py`, with MEDOMNI_V02,
+MEDOMNI_STAGE3_WORKSPACE and MEDOMNI_REPRO_TASKS set. Prints counts only.
 """
 from __future__ import annotations
 
@@ -17,11 +18,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-pytestmark = pytest.mark.baseline
+from .paths import REPRO_TASKS, V02 as V02_ENV, WORKSPACE as WORKSPACE_ENV, env, needs
 
-V02 = Path(os.environ.get("MEDOMNI_V02", "<v0.2 checkout>"))
-WORKSPACE = Path(os.environ.get("MEDOMNI_STAGE3_WORKSPACE", "<workspace>/workspace.yaml"))
-TREE = Path(os.environ.get("MEDOMNI_REPRO_TASKS", "<workspace>/repro-tasks"))
+pytestmark = [pytest.mark.baseline, needs(V02_ENV, WORKSPACE_ENV, REPRO_TASKS)]
+
+V02, WORKSPACE, TREE = env(V02_ENV), env(WORKSPACE_ENV), env(REPRO_TASKS)
 ATOMS = {"n20": ("atomtasks", "encoders"), "ladder": ("atomtasks-ladder", "modality-ladder")}
 DATASET = {"mimic-iv": "mimic", "aireadi": "aireadi", "bdsp": "bdsp"}
 

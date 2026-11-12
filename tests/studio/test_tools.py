@@ -199,3 +199,14 @@ def test_family_samples(built, tmp_path, capsys):
     assert len(files) == 2
     assert all(conforms(families.get("cxr-radiograph-2d"), f) == [] for f in files)
     assert len(json.loads((out / "PROVENANCE.json").read_text())) == 2
+
+
+def test_bench_health_does_not_blame_an_encoder_that_never_started():
+    from collections import Counter
+
+    from medomni.studio.report import bench_health as bh
+
+    assert bh.outcome({"outcome": "start_failure", "status": 503}) == "start_failure"
+    assert bh.verdict(Counter(start_failure=3)) == "NOT-STARTED"
+    assert bh.verdict(Counter(start_failure=3, healthy=1)) == "PASS"
+    assert bh.verdict(Counter(start_failure=1, undeclared=1)) == "FAIL"

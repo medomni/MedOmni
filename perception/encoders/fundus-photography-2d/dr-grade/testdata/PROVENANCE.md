@@ -29,7 +29,7 @@ SHA-256:
 
 No fixture derived from real data is committed here: the family's samples come
 from AI-READI, whose agreement keeps them out of Git. Real inference is
-verified by `registry.py family-test`, which runs the five pinned
+verified by `medomni perception check --samples`, which runs the five pinned
 `MedOmni/family-samples` photographs — Topcon Maestro2 480x640 JPEG-2000
 frames — through the built image with Docker networking disabled.
 

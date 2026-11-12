@@ -4,9 +4,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 
-# Changes on assurance/matrix (2026-09-17), for review by Perception:
-#   B3  operator.py is now admin.py: a module named `operator` beside main.py shadows the stdlib one, and
-#       `uv run gateway/main.py` died on `import argparse` in a clean venv (repro in ISSUES-v0 B3).
+# admin.py, not operator.py: a module named `operator` beside main.py shadows the standard library's.
 from . import admin
 from .cache import Cache
 from .calllog import CallLog

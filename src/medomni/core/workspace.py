@@ -2,7 +2,7 @@
 
 It is `$MEDOMNI_HOME/workspace.yaml` when `MEDOMNI_HOME` is set, else `~/.medomni/workspace.yaml` (Get started page).
 Every path in it is absolute. There is no default data path: a dataset is used only once its path is set.
-Keys stay in the file `keys_file` names, never in the config.
+API keys are never in the config: export them in your shell (R-159).
 """
 from __future__ import annotations
 

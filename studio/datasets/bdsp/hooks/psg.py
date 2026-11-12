@@ -1,6 +1,6 @@
 """BDSP sleep studies: each patient's latest night on disk, its sleep metrics and the EHR demographics.
 
-Why a hook (v0.2: `adapters/bdsp.py`, `registry/derivations/bdsp_psg.py`, `manifestbuilder/catalog.py`):
+Why a hook (in v0.2 these rules were spread over its BDSP adapter, PSG derivation and manifest catalog):
 
 - **The night.** A patient's study is the latest session whose h5 night is on disk. "Latest that exists" is a choice
   across rows and files, which no reader option makes. Its rows: `RECORDING//START`, `RECORDING//END` (start plus

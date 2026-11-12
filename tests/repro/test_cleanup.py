@@ -1,4 +1,4 @@
-"""Stage 3 part 8: v0.2's folders are gone, and no copy of Core's hash helpers is left in `src/` (probe p10).
+"""Stage 3 part 8 and s4 part 1: v0.2's folders are gone, and no copy of Core's hash helpers is left in `src/` (probe p10).
 
 v0.2.1 stays whole in git history (tag v0.2.1, commit aa45b68); the equivalence tests read it from there (`v02_root`).
 """
@@ -7,8 +7,7 @@ import re
 import subprocess
 
 V02_FOLDERS = ("assurance", "data_manifest", "data_task", "harness", "release", "tools", "runs", "perception")
-KEPT = re.compile(r"^(perception/encoders/|perception/deployed\.yaml$|perception/deployment\.yaml$"
-                  r"|data_task/data_roots\.yaml$|runs/README\.md$)")  # v0.3 content, or workspace files
+KEPT = re.compile(r"^(perception/encoders/|perception/deployed\.yaml$|perception/deployment\.yaml$)")  # v0.3 content
 CORE_HELPERS = {"sha256", "sha256_file", "sha256_dir", "quick_sha", "dir_hash"}  # medomni.core.hashing's, and v0.2's names
 
 

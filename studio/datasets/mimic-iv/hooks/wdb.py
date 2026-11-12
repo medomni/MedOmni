@@ -1,8 +1,8 @@
 """MIMIC-IV bedside waveforms and numerics: one `FILE//<family>` row per segment and family, one per numerics file.
 
 Why a hook: a record's start time is in its master header, each segment's time is the record start plus the samples
-before it, and a segment's families come from the signals its own header lists. v0.2: `adapters/mimic.py`
-(`mimic_wdb_in_window`, `_WDB_FAM`) and `manifestbuilder/catalog.py`, unchanged in their rules.
+before it, and a segment's families come from the signals its own header lists. The rules are v0.2's
+(its MIMIC adapter's `mimic_wdb_in_window` and `_WDB_FAM`, and its manifest catalog), unchanged.
 """
 from __future__ import annotations
 

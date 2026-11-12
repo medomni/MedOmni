@@ -138,6 +138,5 @@ class WorkspaceConfig(Contract):
     runs: AbsPath
     results: AbsPath
     deployment: dict[str, Any] = {}  # the encoder set (R-60)
-    keys_file: AbsPath
     hf_cache: AbsPath | None = None
     scratch: AbsPath | None = None

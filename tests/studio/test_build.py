@@ -23,7 +23,7 @@ def ws(tmp_path_factory):
     copy = make_dataset(REPO / "studio/datasets/aireadi", root / "aireadi", subjects=30)
     cfg = root / "workspace.yaml"
     cfg.write_text(f"datasets: {{aireadi: {{path: {copy.root}}}}}\ncache: {root}/cache\ntasks: {root}/tasks\nruns: {root}/runs\n"
-                   f"results: {root}/results.jsonl\nkeys_file: {root}/keys.env\nhf_cache: {root}/hf\n")
+                   f"results: {root}/results.jsonl\nhf_cache: {root}/hf\n")
     return workspace.load(cfg)
 
 
@@ -144,7 +144,7 @@ def test_a_build_with_no_cache_equals_one_with_the_cache(ws, built, tmp_path):
     cfg = root / "workspace.yaml"
     root.mkdir()
     cfg.write_text(f"datasets: {{aireadi: {{path: {ws.datasets['aireadi'].path}}}}}\ncache: {{backend: none}}\n"
-                   f"tasks: {root}/tasks\nruns: {root}/runs\nresults: {root}/results.jsonl\nkeys_file: {root}/keys.env\n")
+                   f"tasks: {root}/tasks\nruns: {root}/runs\nresults: {root}/results.jsonl\n")
     other = workspace.load(cfg)
     b.build([PAIR], ["encoders", "no-perception"], ws=other, draw_with=pick)
     _, tree = built

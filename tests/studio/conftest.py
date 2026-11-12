@@ -80,8 +80,7 @@ def built(t1_guard, package):
 
     root = t1_guard / "studio"
     copy = make_dataset(package, root / "raw", subjects=40)
-    fields = {"cache": str(root / "cache"), "tasks": str(root / "tasks"), "runs": str(root / "runs"), "results": str(root / "results.jsonl"),
-              "keys_file": str(root / "keys.env")}
+    fields = {"cache": str(root / "cache"), "tasks": str(root / "tasks"), "runs": str(root / "runs"), "results": str(root / "results.jsonl")}
     text = f"datasets: {{dummy-mimic: {{path: {copy.root}}}}}\n" + "".join(f"{k}: {v}\n" for k, v in fields.items())
     (Path(workspace.home()) / "workspace.yaml").write_text(text)
     ws = workspace.load()

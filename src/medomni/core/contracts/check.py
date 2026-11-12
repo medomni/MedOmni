@@ -80,10 +80,13 @@ def check(repo: Path | None, only: set[str] | None = None, out=None) -> tuple[di
     return counts, failed
 
 
+HELP = ("usage: medomni contracts check [<contract> ...]\n\nValidates every contract file in the repository (when run "
+        "inside one) and in the installed plug-in folders.\nContracts: ")
+
+
 def main(argv: list[str]) -> int:
-    if argv and argv[0] in ("-h", "--help"):
-        print("usage: medomni contracts check [<contract> ...]\n\nValidates every contract file in the repository (when run "
-              "inside one) and in the installed plug-in folders.\nContracts: " + ", ".join(sorted(aliases())))
+    if (argv[:1] or [""])[0] in ("-h", "--help") or (argv[:1] == ["check"] and {"-h", "--help"} & set(argv[1:])):
+        print(HELP + ", ".join(sorted(aliases())))
         return 0
     if not argv or argv[0] != "check":
         print("usage: medomni contracts check [<contract> ...]", file=sys.stderr)

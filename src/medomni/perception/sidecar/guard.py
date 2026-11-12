@@ -7,6 +7,7 @@ Rules (each one has a test in tests/perception/test_sidecar.py):
   breaker  per encoder, more than BREAK_AFTER consecutive UNDECLARED failures -> 503 disabled.
            A healthy answer resets the run. A card-declared refusal neither counts nor resets.
            Bad requests (bad path, unknown encoder, card-only) never count: they are the agent's.
+           A container that would not start (start_failure) neither counts nor resets: the encoder never ran.
   declared a refusal is card-declared ONLY if the FILE's own inventory metadata violates a bound
            in encoder_limits.yaml. The encoder's word is not taken: a "too long" refusal on an
            in-limit file is an undeclared failure. No metadata (meta: null) -> never declared.
@@ -115,9 +116,9 @@ class Guard:
         return None
 
     def record(self, encoder_id: str, path: str, outcome: str) -> dict:
-        """outcome: healthy | unhealthy | error | bad_request. Returns the fields to log."""
+        """outcome: healthy | unhealthy | error | bad_request | start_failure. Returns the fields to log."""
         with self.lock:
-            if outcome == "bad_request":
+            if outcome in ("bad_request", "start_failure"):
                 return {"outcome": outcome}
             if outcome == "healthy":
                 self.run[encoder_id] = 0

@@ -35,6 +35,7 @@ dependencies = [
 
 [dependency-groups]
 dev = ["pytest>=8", "neurokit2>=0.2"]  # neurokit2: encoder adapters tested in-process
+docs = ["mkdocs-material==9.5.39"]  # the docs build: `uv run --group docs mkdocs build --strict`
 
 [project.scripts]
 medomni = "medomni.core.cli:main"

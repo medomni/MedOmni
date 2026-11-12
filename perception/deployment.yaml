@@ -1,5 +1,4 @@
-# What THIS machine does. Environment config, never task content — the way
-# data_task/tasks/data_roots.yaml records data roots.
+# What THIS machine does. Environment config, never task content.
 #
 # Nothing here reaches an agent. The Service API is encode(file, encoder_id),
 # and an agent that could ask for resources would produce Evidence another
@@ -26,8 +25,8 @@ encode_timeout_s: 600      # how long one /encode call may take. Keep it above t
 # container never has to defend itself.
 default_concurrency: 4
 
-# Which images to run. registry.py builds :dev; a published tag goes here once
-# GHCR exists (README phase 5). The image a container actually ran is recorded
+# Which images to run. Local builds are tagged :dev; a published tag goes here
+# once the images are published. The image a container actually ran is recorded
 # in Evidence and is part of the fingerprint, so a rebuild invalidates the cache.
 image_tag: dev
 

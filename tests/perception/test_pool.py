@@ -5,7 +5,7 @@ import unittest
 
 
 from medomni.perception.gateway import config
-from medomni.perception.gateway.pool import Pool, PoolError, READY, UpstreamError
+from medomni.perception.gateway.pool import Pool, PoolError, READY, StartError, UpstreamError
 
 
 class FakeHandle:
@@ -157,7 +157,7 @@ class PoolTests(unittest.IsolatedAsyncioTestCase):
         runner.start = lambda encoder_id: (_ for _ in ()).throw(RuntimeError("no image"))
         pool = Pool(runner, deployment())
 
-        with self.assertRaises(PoolError):
+        with self.assertRaises(StartError):  # a PoolError the service reports as a start failure
             await pool.encode("a", {})
         self.assertEqual([], pool.status())
 

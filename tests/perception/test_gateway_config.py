@@ -43,7 +43,7 @@ class ConfigTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as home:
             cfg = load_data({"cache": f"{home}/cache", "tasks": f"{home}/tasks", "runs": f"{home}/runs",
-                             "results": f"{home}/results.jsonl", "keys_file": f"{home}/keys.env",
+                             "results": f"{home}/results.jsonl",
                              "deployment": {"max_live_containers": 2, "call_log": None}}, WorkspaceConfig)
             self.assertEqual(2, config.from_workspace(cfg).max_live_containers)
 

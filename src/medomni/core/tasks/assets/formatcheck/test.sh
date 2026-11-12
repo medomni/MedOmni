@@ -1,6 +1,5 @@
 #!/bin/bash
-# FORMAT CHECK ONLY — never a score (slipway §Atom verifier). Stamped from
-# harness/formatcheck/ by build.py emit; expected.json sits beside this file.
+# FORMAT CHECK ONLY — never a score. Copied into each built atom's tests/; expected.json sits beside this file.
 # Copies the submission into /logs/verifier/ so post-run scoring can read it.
 D="$(cd "$(dirname "$0")" && pwd)"
 mkdir -p /logs/verifier

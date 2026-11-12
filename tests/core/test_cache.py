@@ -18,7 +18,7 @@ from .test_plugins import make_dist
 
 
 def _ws(home, cache):
-    cfg = {"cache": cache, "tasks": str(home / "tasks"), "runs": str(home / "runs"), "keys_file": str(home / "keys"),
+    cfg = {"cache": cache, "tasks": str(home / "tasks"), "runs": str(home / "runs"),
            "results": str(home / "results.jsonl")}
     (home / "workspace.yaml").write_text(yaml.safe_dump(cfg), encoding="utf-8")
     return load_data(cfg, WorkspaceConfig, "workspace.yaml")

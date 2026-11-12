@@ -43,7 +43,6 @@ cache: {tmp_path}/cache
 tasks: {tmp_path}/tasks
 runs: {tmp_path}/runs
 results: {tmp_path}/results.jsonl
-keys_file: {tmp_path}/keys.env
 hf_cache: {tmp_path}/hf
 """)
     monkeypatch.setenv("MEDOMNI_HOME", str(tmp_path))

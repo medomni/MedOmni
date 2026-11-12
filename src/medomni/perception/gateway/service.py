@@ -3,25 +3,24 @@
 Everything between an HTTP request and the pool lives here, so app.py stays
 routes and this stays testable without a web framework.
 """
-# Changes on assurance/matrix (2026-09-17), for review by Perception:
-#   m10 when the container that answered runs a different image than the tag resolved to before the call,
-#       the Evidence fingerprint is recomputed over the image that actually ran.
-#   m13 an input the family reader cannot open (missing .dat, undecodable header) is a 400, not a 500.
-#       Perception moved that translation into evidence._identity, so this stays one exception.
+# When the container that answered runs a different image than the tag resolved to before the call, the Evidence
+# fingerprint is recomputed over the image that actually ran. An input the family reader cannot open (missing .dat,
+# undecodable header) is a 400, not a 500; evidence._identity makes that translation.
 import dataclasses
 import time
 
 from . import evidence as ev
-from .pool import PoolError, UpstreamError
+from .pool import PoolError, StartError, UpstreamError
 
 
 class ServiceError(Exception):
     """Something a caller must be told about, with the status to tell it with."""
 
-    def __init__(self, status, detail):
+    def __init__(self, status, detail, reason=None):
         super().__init__(detail)
         self.status = status
         self.detail = detail
+        self.reason = reason  # "start_failure": the container would not start, so the encoder never ran
 
 
 @dataclasses.dataclass
@@ -77,6 +76,8 @@ class Service:
         body = {"family": entry.family, "path": path, "options": options}
         try:
             status, response, start_ms, ran_on = await self.pool.encode(entry.id, body)
+        except StartError as exc:
+            raise ServiceError(503, str(exc), reason="start_failure") from None
         except PoolError as exc:
             raise ServiceError(503, str(exc)) from None
         except UpstreamError as exc:

@@ -1,6 +1,6 @@
 """The `h5-to-edf` family converter: a BDSP night (`.h5`) into one family's EDF (R-19, R-105, R-110).
 
-v0.2's bridge (`data_task/familybridge/bridge.py`), as a Core family converter. The conversion is unchanged: the
+v0.2's family bridge, as a Core family converter. The conversion is unchanged: the
 family's protocol channels (or roles) are looked up among the night's signals by v0.2's rule, and copied bit for bit
 as int16, cut to whole seconds, with no annotations and no subject header fields (they can carry gold).
 

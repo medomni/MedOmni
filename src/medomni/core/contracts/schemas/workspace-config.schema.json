@@ -92,10 +92,6 @@
       "title": "Deployment",
       "type": "object"
     },
-    "keys_file": {
-      "title": "Keys File",
-      "type": "string"
-    },
     "hf_cache": {
       "anyOf": [
         {
@@ -125,8 +121,7 @@
     "cache",
     "tasks",
     "runs",
-    "results",
-    "keys_file"
+    "results"
   ],
   "title": "WorkspaceConfig",
   "type": "object"

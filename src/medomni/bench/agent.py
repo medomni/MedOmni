@@ -5,7 +5,7 @@ import re
 import sys
 
 AGENT = """\
-# An agent config (Run your agent guide). Keys are named as ${{VARNAME}}: they live in your workspace's keys file.
+# An agent config (Run your agent guide). Keys are named as ${{VARNAME}}: export them in your shell.
 # `settings` belong to the runner: for the agent runner (Harbor), its agent block.
 kind: agent
 name: {name}

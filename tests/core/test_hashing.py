@@ -1,9 +1,5 @@
-"""Core's hash functions (part 4): same values as v0.2 where stored values depend on them; the cfg1: config hash (R-111).
-
-v0.2's helpers are imported from v0.2.1's files, read out of git history (code, not data).
-"""
+"""Core's hash functions (part 4) and the cfg1: config hash (R-111). Their equality with v0.2 is in tests/repro."""
 import hashlib
-import importlib.util
 import os
 
 import pytest
@@ -12,20 +8,6 @@ from medomni.core import hashing
 
 MIB = 1 << 20
 SIZES = [0, 10, MIB - 1, MIB, MIB + 1, 3 * MIB // 2, 2 * MIB, 2 * MIB + 1, 5 * MIB]
-IN_BAND = {MIB + 1, 3 * MIB // 2, 2 * MIB}  # where the bridge's copy reads a tail and the others don't
-
-
-def _v02(repo, rel, name):
-    spec = importlib.util.spec_from_file_location(name, repo / rel)
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    return m
-
-
-@pytest.fixture(scope="module")
-def v02(v02_root):
-    return (_v02(v02_root, "data_task/manifestbuilder/__init__.py", "v02_manifestbuilder"),
-            _v02(v02_root, "data_task/familybridge/bridge.py", "v02_bridge"))
 
 
 def _bytes(n: int) -> bytes:
@@ -38,18 +20,6 @@ def sized(tmp_path_factory):
     for n in SIZES:
         (d / f"f{n}").write_bytes(_bytes(n))
     return d
-
-
-@pytest.mark.parametrize("n", SIZES)
-def test_quick_sha_equals_the_stored_recipe(v02, sized, n):
-    manifestbuilder, bridge = v02
-    p = sized / f"f{n}"
-    assert hashing.quick_sha(p) == manifestbuilder.quick_sha(p)
-    assert len(hashing.quick_sha(p)) == 16
-    if n not in IN_BAND:
-        assert hashing.quick_sha(p) == bridge.quick_sha(p)
-    else:
-        assert hashing.quick_sha(p) != bridge.quick_sha(p)  # the one known difference (U2.3)
 
 
 @pytest.mark.parametrize("n", [0, 5 * MIB])

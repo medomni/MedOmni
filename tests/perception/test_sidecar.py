@@ -92,6 +92,16 @@ def test_healthy_resets_the_run():
     assert g.admit("ecg__nk") is None
 
 
+def test_a_start_failure_neither_counts_nor_resets():
+    """The container never started (a missing image): the machine's fault, so no breaker count (s4 part 1)."""
+    g = Guard(break_after=2, limits=LIM, inventory=INV)
+    g.record("ecg__nk", "files/s/short.edf", "unhealthy")
+    for _ in range(5):
+        assert g.record("ecg__nk", "files/s/short.edf", "start_failure") == {"outcome": "start_failure"}
+    assert g.record("ecg__nk", "files/s/short.edf", "unhealthy")["undeclared_run"] == 2
+    assert g.admit("ecg__nk") is None
+
+
 def test_declared_has_its_own_outcome():
     r = Guard(limits=LIM, inventory=INV).record("ecg__nk", "files/s/night.edf", "unhealthy")
     assert r["outcome"] == "declared" and "not_applicable" in r
@@ -422,6 +432,21 @@ def test_an_upstream_failure_counts_toward_the_breaker(usage_app):
         assert encode(api, "tables/labs.jsonl").status_code == 502
         [c] = api.get("/usage").json()["calls"]
     assert (c["outcome"], c["undeclared_run"], c["healthy"], c["status"]) == ("error", 1, False, 502)
+
+
+class NoStartPool(FakePool):
+    async def encode(self, encoder_id, body):
+        from medomni.perception.gateway.pool import StartError
+
+        raise StartError(f"could not start {encoder_id}: no image on this machine")
+
+
+def test_a_start_failure_is_logged_as_one(usage_app):
+    api, _ = usage_app(pool=NoStartPool())
+    with api:
+        assert encode(api, "tables/labs.jsonl").status_code == 503
+        [c] = api.get("/usage").json()["calls"]
+    assert (c["outcome"], c["status"]) == ("start_failure", 503) and "undeclared_run" not in c
 
 
 def test_the_budget_refuses_and_logs_the_refusal(usage_app):

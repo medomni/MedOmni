@@ -70,7 +70,7 @@ EXAMPLES = {
                            "intelligence": {"kind": "agent", "name": "my-agent"}}, "value"),
     "workspace-config": ({"datasets": {"dummy": {"path": "/srv/data/dummy"}}, "cache": "/srv/ws/cache",
                           "tasks": "/srv/ws/atomtasks", "runs": "/srv/ws/runs", "results": "/srv/ws/results.jsonl",
-                          "deployment": {"encoders": [CARD["id"]]}, "keys_file": "/srv/ws/keys.env"}, "cache"),
+                          "deployment": {"encoders": [CARD["id"]]}}, "cache"),
     "built-content": ({"version": "1.0", "targets": [{"name": "aki", "metric": "auc"}],
                        "atoms": [{"atom": "dummy-mimic_aki__1__n4", "subject": "1"}]}, "version"),
     "built-manifest": ({"config_hash": {"encoders": "cfg1:" + H}, "builder": "medomni-v1/1"}, "builder"),

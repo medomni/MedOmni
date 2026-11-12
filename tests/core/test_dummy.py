@@ -1,6 +1,5 @@
 """Dummy data (part 5): a conforming file for every family; dummy datasets from their dataset.yaml; planted labels."""
 import csv
-import importlib.util
 import json
 import re
 import shutil
@@ -11,16 +10,13 @@ import yaml
 
 from medomni.core import families, hashing
 from medomni.core.families.check import conforms
-from medomni.core.families.dummy import make_dummy, signal
+from medomni.core.families.dummy import make_dummy
 from medomni.core.families.dummy.datasets import INT_BASE, DummyError, Plant, make_dataset
 from medomni.core.testing import DATASETS
 
 REPO = Path(__file__).resolve().parents[2]
 FAMILIES = sorted(families.load_registry(REPO))
 SHAPES = ("dummy-mimic", "dummy-omop", "dummy-bdsp")
-BRIDGED = ["body-position-code-10hz", "ecg-1lead-200hz-uv", "eeg-sleep-6ch-200hz-uv", "emg-chin-200hz-uv",
-           "emg-limb-200hz-uv", "eog-2ch-200hz-uv", "psg-cardiorespiratory-4ch-200hz-mixed", "pulse-rate-10hz-bpm",
-           "resp-effort-rip-2ch-50hz", "spo2-series-10hz-pct"]
 
 
 def _files(path: Path) -> list[Path]:
@@ -72,22 +68,6 @@ def test_the_check_catches_values_outside_the_range(tmp_path):
     w.writeSamples([np.full(300, 30000, dtype=np.int32)], digital=True)
     w.close()
     assert any("outside the family's range" in x for x in conforms(fam, p))
-
-
-def test_bridge_round_trip(tmp_path, v02_root):
-    """The dummy h5 night goes through v0.2's bridge, and each family EDF it makes conforms (bridge.py read-only)."""
-    spec = importlib.util.spec_from_file_location("v02_bridge", v02_root / "data_task/familybridge/bridge.py")
-    bridge = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(bridge)
-    alias = yaml.safe_load((v02_root / "data_task/family_alias.yaml").read_text(encoding="utf-8"))
-    fams = [families.get(f, REPO) for f in BRIDGED]
-    h5 = tmp_path / "night.h5"
-    signal.write_h5(fams, 1, h5, subject="DUMMY-1", start=__import__("datetime").datetime(2150, 1, 1))
-    for fam in fams:
-        proto = yaml.safe_load((v02_root / f"data_task/families/{fam.id}.yaml").read_text(encoding="utf-8"))["protocol"]
-        out = tmp_path / f"{fam.id}.edf"
-        bridge.h5_to_family_edf(h5, out, fam.id, proto, alias)
-        assert conforms(fam, out) == [], fam.id
 
 
 # What to plant: the caller's (R-147). These match the labels of Studio's dummy packages (tests/studio/test_dummy_plants.py).

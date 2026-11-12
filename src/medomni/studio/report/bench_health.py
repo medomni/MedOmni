@@ -4,6 +4,7 @@
     PASS           every call healthy or a card-declared refusal, and at least one healthy
     DECLARED-ONLY  no healthy call, only declared refusals
     FAIL           any undeclared failure
+    NOT-STARTED    its container never started on this machine (e.g. a missing image): the machine's fault
     NO-EVIDENCE    the encoder was never called
 """
 from __future__ import annotations
@@ -27,6 +28,8 @@ def outcome(c: dict) -> str:
         return "declared"
     if c.get("outcome") == "bad_request":
         return "bad_request"  # the caller's fault, never the encoder's
+    if c.get("outcome") == "start_failure":
+        return "start_failure"  # the container never started: the machine's fault, never the encoder's
     return "undeclared"
 
 
@@ -37,6 +40,8 @@ def verdict(n: Counter) -> str:
         return "PASS"
     if n["declared"]:
         return "DECLARED-ONLY"
+    if n["start_failure"]:
+        return "NOT-STARTED"
     return "NO-EVIDENCE"
 
 

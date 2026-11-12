@@ -184,7 +184,7 @@ def _vectors(sink) -> None:
     from medomni.core import plugins
 
     repo = plugins.find_repo()
-    files = [repo / "tests/bench/test_checks.py", repo / "tests/core/test_built_tasks.py"] if repo else []  # the builder's, Core's
+    files = [repo / "tests/studio/test_checks.py", repo / "tests/core/test_built_tasks.py"] if repo else []  # the builder's, Core's
     if not files or not all(f.is_file() for f in files):
         sink.add("T-ISOL.2", "M", "*", NONE, "no repository test file to read", "vectors")
         return

@@ -1,5 +1,5 @@
 # encoder_limits.yaml — machine-readable card limits (fix roadmap harness-runtime §1), read by the perception service.
-# Retired families (Bosong 2026-09-24; data_task/taskbuilder/supply.yaml `retired:`) keep their entries here —
+# Retired families (Bosong 2026-09-24) keep their entries here —
 # never staged, so the sidecar never reads them; kept so this table still covers every card on disk.
 # Transcribed from perception/encoders/*/*/card.yaml prose on 2026-09-24; each entry quotes its source.
 # Fields (all optional; omit a field the card does not bound): min_duration_s, max_duration_s,

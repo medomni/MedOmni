@@ -3,7 +3,7 @@ rebuilt image with v0.2.1's own test input, gives the same response (the runtime
 
 BayesBeat's baseline rows were unseeded, so they are compared by shape, as `baseline.py` does; its image is seeded now.
 Needs Docker, the 44 local images, v0.2.1's checkout and the baseline folder: T4. Prints counts and encoder ids only.
-    pytest -m baseline tests/perception/test_baseline_encoders.py -s
+    MEDOMNI_V02=<v0.2.1 checkout> MEDOMNI_BASELINE_ENCODERS=<baseline run> pytest -m baseline tests/repro/test_baseline_encoders.py -s
 """
 import json
 import os
@@ -13,12 +13,12 @@ from pathlib import Path
 
 import pytest
 
-pytestmark = [pytest.mark.baseline, pytest.mark.containers]
+from .paths import BASELINE_ENCODERS, V02 as V02_ENV, env, needs
+
+pytestmark = [pytest.mark.baseline, pytest.mark.containers, needs(V02_ENV, BASELINE_ENCODERS)]
 
 REPO = Path(__file__).resolve().parents[2]
-V02 = Path(os.environ.get("MEDOMNI_V02", "<v0.2 checkout>"))
-BASELINE = Path(os.environ.get("MEDOMNI_BASELINE",
-                               "<workspace>/baseline/v0.2.1/20261105-171439-run1"))
+V02, BASELINE = env(V02_ENV), env(BASELINE_ENCODERS)
 NONDETERMINISTIC = {"ppg-waveform-uncal__bayesbeat"}
 WORKERS = int(os.environ.get("MEDOMNI_WORKERS", "3"))
 

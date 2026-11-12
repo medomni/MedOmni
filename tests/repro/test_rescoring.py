@@ -1,6 +1,6 @@
 """Check 5 (U3.4, R-88): v0.3's scorer, fed v0.2's saved submissions and gold, gives the baseline's numbers. No Harbor run.
 
-T4: needs v0.2.1's checkout and the baseline. Prints counts only.
+T4: needs v0.2.1's checkout (MEDOMNI_V02) and the baseline run (MEDOMNI_BASELINE_SCORES). Prints counts only.
 """
 from __future__ import annotations
 
@@ -15,10 +15,11 @@ import yaml
 
 from medomni.bench.scoring import Refused, score_targets
 
-pytestmark = pytest.mark.baseline
-V02 = Path(os.environ.get("MEDOMNI_V02", "<v0.2 checkout>"))
-BASE = Path(os.environ.get("MEDOMNI_BASELINE", "<workspace>/baseline/v0.2.1/20261105-163604-run1"))
-RUNS = V02 / "runs"
+from .paths import BASELINE_SCORES, V02 as V02_ENV, env, needs
+
+pytestmark = [pytest.mark.baseline, needs(V02_ENV, BASELINE_SCORES)]
+V02, BASE = env(V02_ENV), env(BASELINE_SCORES)
+RUNS = V02 / "runs" if V02 else None
 
 
 def declared(agent):

@@ -60,7 +60,7 @@ def built(tmp_path_factory):
     copy = make_dataset(REPO / "studio/datasets/aireadi", root / "aireadi", subjects=30)
     cfg = root / "workspace.yaml"
     cfg.write_text(f"datasets: {{aireadi: {{path: {copy.root}}}}}\ncache: {root}/cache\ntasks: {root}/tasks\nruns: {root}/runs\n"
-                   f"results: {root}/results.jsonl\nkeys_file: {root}/keys.env\nhf_cache: {root}/hf\n")
+                   f"results: {root}/results.jsonl\nhf_cache: {root}/hf\n")
     ws = workspace.load(cfg)
     b.build([PAIR], ["encoders"], ws=ws, draw_with=lambda r: sorted(r.patients)[:12])
     task_set = load_data({"name": "smoke-dummy", "builder": "medomni-v1", "arms": ["encoders"], "tasks": [{"task": PAIR, "version": 1}]}, TaskSet, "x")

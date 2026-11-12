@@ -19,7 +19,7 @@ def cases(gate):
 
 
 def parent(case: Path) -> dict:
-    return json.loads(next(case.glob("_parents/*/parent.json")).read_text())
+    return json.loads(next(case.glob("parents/*/parent.json")).read_text())
 
 
 def table(case: Path, sid: str, name: str):

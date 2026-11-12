@@ -67,7 +67,7 @@ def _atom(a: Path) -> None:
 def outside(tmp_path, monkeypatch):
     cfg = tmp_path / "workspace.yaml"
     cfg.write_text(f"datasets: {{}}\ncache: {tmp_path}/cache\ntasks: {tmp_path}/tasks\nruns: {tmp_path}/runs\n"
-                   f"results: {tmp_path}/results.jsonl\nkeys_file: {tmp_path}/keys.env\nhf_cache: {tmp_path}/hf\n")
+                   f"results: {tmp_path}/results.jsonl\nhf_cache: {tmp_path}/hf\n")
     ws = workspace.load(cfg)
     task_set = load_data({"name": "s", "builder": "outside", "arms": ["encoders"], "tasks": [{"task": TASK, "version": 1}]},
                          TaskSet, "set")

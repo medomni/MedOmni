@@ -30,13 +30,13 @@ For agent evaluators who build tasks on a real dataset. Every dataset is set up 
     medomni bench data connect mimic-iv --path /path/to/mimic-iv
     ```
 
-3. Check your copy against the package, without loading it: the version, the files the package lists, the columns the readers need, and that every raw value a label reads is classified.
+3. Check your copy against the dataset package, without loading it: the version, the files the package lists, the columns the readers need, and that every raw value a label reads is classified.
 
     ```bash
-    medomni bench data check mimic-iv
+    medomni studio data check mimic-iv
     ```
 
-4. Build the dataset's cache: its event table and file conversions.
+4. Load the dataset's event table into the cache.
 
     ```bash
     medomni cache build mimic-iv
@@ -44,7 +44,7 @@ For agent evaluators who build tasks on a real dataset. Every dataset is set up 
 
 ## Check
 
-`medomni bench data check` names each problem it finds and exits 1:
+`medomni studio data check` names each problem it finds and exits 1:
 
 - a version that differs from the one the package describes
 - a file the package lists that is missing
@@ -59,4 +59,4 @@ Fix your copy and run it again. When it passes, build a task set as in [Rebuild 
 ## Where next
 
 - [Rebuild a task set](rebuild-a-task-set.md): build a published task set and check it.
-- [Datasets](../learn/bench/datasets.md): the dataset package and the event table.
+- [Datasets](../learn/studio/datasets.md): the dataset package and the event table.

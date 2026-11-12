@@ -1,6 +1,6 @@
 # Recipes
 
-A recipe says what Build takes from a dataset. One format covers all of it:
+A recipe says what Build, MedOmni's `medomni-v1` builder, takes from a dataset. The recipe format is this builder's own; another builder can read other inputs. One format covers all of it:
 
 - **cohort:** who is included, and at which prediction time
 - **labels:** each target's answer
@@ -34,7 +34,7 @@ A patient is in the source population when `sha256(salt|patient id)`, read as a 
 
 - The rule needs no list of ids, so it can be published.
 - Source populations nest: the patients at 1% are all in the 5% source population.
-- For a dataset whose files are downloaded only for the source population, such as BDSP's nights or MIMIC-IV's images and recordings, the rule runs on the dataset's index tables first, and [Studio](../studio/overview.md) lists the files to download.
+- For a dataset whose files are downloaded only for the source population, such as BDSP's nights or MIMIC-IV's images and recordings, the rule runs on the dataset's index tables first, and [Studio](overview.md) lists the files to download.
 
 ### Cohort selection
 
@@ -86,12 +86,13 @@ Two more parts of the evidence rules shape what the agent reads:
 
 ## Where it lives
 
-- `src/medomni/core/recipes/`: the recipe format and its validator
-- `bench/datasets/<dataset>/labels.yaml` and `evidence.yaml`
-- `bench/datasets/<dataset>/tasks/<template>/cohorts/`: the cohorts and their test patients
+- `src/medomni/studio/build/contracts/`, `recipes.py`, `labels.py`, `evidence.py`: the recipe format, its validator and the engine that runs it
+- `src/medomni/studio/schemas/`: the format's JSON Schemas
+- `studio/datasets/<dataset>/labels.yaml` and `evidence.yaml`
+- `studio/datasets/<dataset>/tasks/<template>/cohorts/`: the cohorts and their test patients
 
 ## Where next
 
 - [Recipes reference](../../reference/recipes.md): every field, the shared codes, and two worked examples.
 - [Build](build.md): how a recipe runs.
-- [Studio](../studio/overview.md): preview a recipe's counts on your copy before you build.
+- [Studio](overview.md): preview a recipe's counts on your copy before you build.

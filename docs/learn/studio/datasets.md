@@ -1,6 +1,6 @@
 # Datasets
 
-A dataset is a source of patient data used under its own license. Bench reads it through its dataset package and obeys its dataset policy. MedOmni ships no data.
+A dataset is a source of patient data used under its own license. MedOmni's builder, `medomni-v1`, reads it through its dataset package, and Bench obeys its dataset policy when it runs. MedOmni ships no data.
 
 ```text
 your copy ──loading: format readers + dataset package──▶ event table ──Build──▶ atom tasks
@@ -9,14 +9,15 @@ your copy ──loading: format readers + dataset package──▶ event table �
 
 ## Dataset package
 
-One folder per dataset, `bench/datasets/<dataset>/`. It is configuration, not code:
+One folder per dataset, `studio/datasets/<dataset>/`, read by the `medomni-v1` builder. It is configuration, not code:
 
-- `dataset.yaml`: a description, the format readers to use, the dataset's rules and its named definitions
+- `dataset.yaml`: a description, the format readers to use, the dataset's rules and its named definitions, the dataset's own [family converters](../core/families.md#family-converters), and the disk space each atom task gets (`storage_mb`)
 - `labels.yaml`: the label library
 - `evidence.yaml`: what an atom task may hold, relative to the prediction time
 - `codes.csv`: every code the dataset emits, with a description and its source table
 - `policy.yaml`: what the license allows
 - `hooks/`: Python for what only this dataset needs, such as CKD staging by KDIGO
+- `converters/`: the dataset's own family converters, such as BDSP's `h5-to-edf`
 - `tasks/`: the dataset's task templates and their cohorts
 
 The description states the unit (a patient, a participant, a surgery case), the kind of time (date and time, visit dates only, seconds from case start) and the dataset version. Time is described, not converted: Build refuses a recipe the dataset's time cannot support.
@@ -50,7 +51,7 @@ Every dataset becomes one event table, kept in the [cache](../core/cache.md). It
 | `visit` | The visit the event belongs to |
 
 - Column names follow [MEDS](https://github.com/Medical-Event-Data-Standard/meds), so MEDS tools can read the table.
-- Raw files are `FILE//<family>` rows, with a path relative to your copy, and optionally the file's own id (a DICOM UID, a WFDB record). Loading does not hash them; the cache keys each by a [quick identity](../core/cache.md#layout).
+- Raw files are `FILE//<family>` rows, with a path relative to your copy, and optionally the file's own id (a DICOM UID, a WFDB record). Loading does not hash them; the cache keys each by a [quick identity](../core/cache.md#steps).
 - Annotations read from recordings, such as sleep stages, are events too.
 - A few codes are shared by every dataset; the rest are the dataset's own. See [Shared codes](../../reference/recipes.md#shared-codes).
 
@@ -64,7 +65,7 @@ One policy per dataset, read from its license and data use agreement. It records
 - which model routes may see the data: `local`, `cloud`, or `cloud` under conditions
 - any limits on use, such as research only
 
-`medomni bench run` refuses a route the policy does not allow. Nothing the policy denies is published. Recipes and config hashes contain no patient data, so every policy allows them.
+Before a run, Bench checks the agent's route against the policy: a denied route refuses the run, and a conditional one prints the conditions you must meet. Nothing the policy denies is published. Recipes and config hashes contain no patient data, so every policy allows them.
 
 ## Open, credentialed and dummy data
 
@@ -84,9 +85,9 @@ Dummy data lets every command run with no credentials. Its scores only show that
 
 ## Where it lives
 
-- `bench/datasets/<dataset>/`: the dataset package
+- `studio/datasets/<dataset>/`: the dataset package, with its own converters
 - `src/medomni/core/loading/`: the format readers and the loader
-- `src/medomni/core/families/`: the family converters and the dummy-data generator
+- `src/medomni/core/families/`: the converter interface and the dummy-data generator
 - your workspace: the path to your copy, and the cache
 
 ## Where next

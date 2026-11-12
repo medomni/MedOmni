@@ -1,6 +1,6 @@
 # Contribute
 
-For contributors who add an agent, a dataset or a task to Bench, or an encoder to Perception.
+For contributors who add an agent to Bench, a dataset or a task to Studio, or an encoder to Perception.
 
 There are two routes. Both run the same check.
 
@@ -33,9 +33,9 @@ medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 
 Every atom task of `medomni-bench/smoke-dummy` must finish with a run and no infrastructure error.
 
-## Add a dataset (Bench)
+## Add a dataset (Studio)
 
-For a new openly licensed dataset, such as VitalDB. Pull requests add datasets only when openly licensed; use a plug-in package for others.
+For a new openly licensed dataset, such as VitalDB, read by MedOmni's builder, `medomni-v1`. Pull requests add datasets only when openly licensed; use a plug-in package for others.
 
 ### Before you start
 
@@ -47,10 +47,10 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add datasets o
 1. Create the dataset package:
 
     ```bash
-    medomni bench data new my-dataset
+    medomni studio data new my-dataset
     ```
 
-2. Write `dataset.yaml`: the description (unit, kind of time, version), the format readers and what each reads, and the dataset's rules. See [Datasets reference](../reference/datasets.md#dataset-package).
+2. Write `dataset.yaml`: the description (unit, kind of time, version), the format readers and what each reads, the dataset's rules, and any family converters its raw files need. See [Datasets reference](../reference/datasets.md#dataset-package).
 3. List every code the dataset emits in `codes.csv`. Use the [shared codes](../reference/recipes.md#shared-codes) where the dataset has those concepts.
 4. Write `labels.yaml` and `evidence.yaml`. See [Recipes reference](../reference/recipes.md).
 5. Write the dataset policy from the license: what may be published and which routes may see the data.
@@ -60,7 +60,7 @@ For a new openly licensed dataset, such as VitalDB. Pull requests add datasets o
     medomni studio dummy my-dataset --subjects 20 --out ~/dummy/my-dataset
     ```
 
-7. Optional, when the dataset's policy allows samples: upload a small data sample to the MedOmni task-samples repository on Hugging Face. Nothing in Build reads it.
+7. Optional: add the package's dummy data, from `medomni studio dummy`, to MedOmni's public Hugging Face repository. It holds dummy data only, never real records. Nothing in Build reads it.
 8. Add at least one template and cohort, as below, and open a pull request.
 
 Python goes only in `hooks/`: for a label no rule can express, and `download.py`, which tells `medomni studio download-list` where the dataset's files come from. See [Hooks](../reference/datasets.md#hooks). A file format no format reader knows needs a new format reader in Core: open an issue first.
@@ -68,12 +68,12 @@ Python goes only in `hooks/`: for a label no rule can express, and `download.py`
 ### Check
 
 ```bash
-medomni bench data check my-dataset
+medomni studio data check my-dataset
 ```
 
 It checks the package's files and policy, writes and loads its dummy data, and checks that every code is in `codes.csv`.
 
-## Add a template and a cohort (Bench)
+## Add a template and a cohort (Studio)
 
 For a task on a supported dataset, using labels and families MedOmni already has, or labels you add to the dataset's library.
 
@@ -82,7 +82,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
 1. Create the template and a first cohort:
 
     ```bash
-    medomni bench task new vitaldb_my-task --dataset vitaldb
+    medomni studio task new vitaldb_my-task --dataset vitaldb
     ```
 
 2. Fill in `template.yaml`: the targets with each one's label and metric, the input, and the `agent` block with the statement, the prediction-time paragraph, environment and submission path. Give each label a `question`, or give the target its own. The agent sees the patient's whole record minus the labels' guards, so do not list leaking evidence again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
@@ -91,7 +91,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
 
     ```bash
     medomni studio preview vitaldb_my-task@n20
-    medomni bench task build vitaldb_my-task@n20
+    medomni studio task build vitaldb_my-task@n20
     ```
 
 5. Open a pull request with the template folder.
@@ -99,7 +99,7 @@ For a task on a supported dataset, using labels and families MedOmni already has
 ### Check
 
 ```bash
-medomni bench task check vitaldb_my-task@n20
+medomni studio task check vitaldb_my-task@n20
 ```
 
 It checks:
@@ -107,9 +107,8 @@ It checks:
 - the template's fields and metrics
 - that each target's label is in the library and states its window
 - that the cohort's test patients give their expected results
-- the [correctness checks](../learn/bench/build.md#correctness-checks): no answer in the evidence, events still ahead and images before the prediction time, enough patients, answers that vary, complete recordings, a closed network
+- the [correctness checks](../learn/studio/build.md#correctness-checks): no answer in the evidence, events still ahead and images before the prediction time, enough patients, answers that vary, complete recordings, a closed network
 - that staged files match their families
-- that an agent submitting the true answers scores perfectly, and one giving the same answer every time scores at chance
 
 ## Add an encoder (Perception)
 
@@ -171,7 +170,7 @@ For agents, datasets, tasks or encoders that live in your own repository.
 ### Steps
 
 1. Create a Python package named `medomni-<name>` that depends on `medomni`.
-2. Add a content folder to the package, laid out like MedOmni's repository: `bench/agents/`, `bench/datasets/<dataset>/`, `bench/benchmarks/<benchmark>/`, `perception/encoders/<family>/<encoder>/`. Create each piece in it as in the sections above.
+2. Add a content folder to the package, laid out like MedOmni's repository: `bench/agents/`, `studio/datasets/<dataset>/`, `bench/benchmarks/<benchmark>/`, `perception/encoders/<family>/<encoder>/`. Create each piece in it as in the sections above.
 3. Register the folder with one entry point in `pyproject.toml`:
 
     ```toml
@@ -179,7 +178,7 @@ For agents, datasets, tasks or encoders that live in your own repository.
     myname = "medomni_myname:content"
     ```
 
-    A family converter or a Studio tool is Python code: register it in `medomni.converters` or `medomni.tools`. See [Plug-ins](../learn/core/plugins.md#python-pieces).
+    A family converter, a task builder, an arm or a Studio tool is Python code: register it in `medomni.converters`, `medomni.builders`, `medomni.arms` (with its build side in `medomni.arm_builds`) or `medomni.tools`. A converter for one dataset's own format is declared in its `dataset.yaml` instead. See [Plug-ins](../learn/core/plugins.md#python-pieces).
 
 4. In your package's tests, run the same checks with `medomni.core.testing`.
 5. Install it as a wheel or in editable mode. Zip installs are not supported.
@@ -190,7 +189,9 @@ For agents, datasets, tasks or encoders that live in your own repository.
 medomni plugins
 ```
 
-Your package and each piece it adds are listed, and the commands above (`medomni bench task check`, `medomni perception check` and the rest) work on them as on built-in pieces.
+Your package and each piece it adds are listed, and the commands above (`medomni studio task check`, `medomni perception check` and the rest) work on them as on built-in pieces.
+
+<!-- outline (Stage 4 part 5): "What CI checks on your pull request": the checks above run in CI, plus the data check (no record id, no data file outside a testdata folder with provenance and licence). Point to the example plug-in package as the starting copy for a plug-in. -->
 
 ## Where next
 

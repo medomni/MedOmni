@@ -1,6 +1,6 @@
 # Tasks
 
-A task asks a clinical question of each patient in a cohort, with a fixed way to score the answers. It is written as a task template and one or more cohorts. Build turns a template and a cohort into atom tasks.
+A task asks a clinical question of each patient in a cohort, with a fixed way to score the answers. For MedOmni's builder, `medomni-v1`, it is written as a task template and one or more cohorts, and Build turns a template and a cohort into atom tasks. Bench runs the [built task](../core/built-tasks.md), whoever built it.
 
 ```text
 task template + cohort ──Build──▶ content of <template>@<cohort>, with the answers
@@ -20,7 +20,7 @@ A YAML file, `template.yaml`, that states:
     - **environment**: CPUs, memory, timeouts, no internet
     - **submission path**: where the agent writes its answer
 
-A template is frozen once its proposal is signed off in [Studio](../studio/overview.md). A later change to it raises the [version](#version) of each of its cohorts.
+A template is frozen once its proposal is signed off in [Studio](overview.md). A later change to it raises the [version](#version) of each of its cohorts.
 
 ## Cohort
 
@@ -39,23 +39,23 @@ Each task has a version `N.X`, kept as `version:` in its cohort file. Tasks star
 
 ## Atom task
 
-The unit an agent runs: one patient, all of the targets, at the patient's prediction time. It holds the instruction, the patient's evidence, the environment and a format check. It never holds the answers. The agent writes one prediction per target.
+The unit an agent runs: one patient, all of the targets, at the patient's prediction time. It holds the instruction, the patient's evidence, the environment and a format check. It never holds the answers. The agent writes one prediction per target. Its files are in [Built tasks](../core/built-tasks.md#the-files).
 
 ## Config hash
 
-A hash of the config a task is built from under one arm: the template, the cohort, the labels and recipes it uses, the arm's definition, and the dataset and MedOmni releases. Runs with the same config hash used the same task configuration. Scores with different config hashes in one table are flagged; see [Scoring](scoring.md#refusals-and-failures).
+A hash of the config a task is built from under one arm: the template, the cohort, the labels and recipes it uses, the arm's definition, the builder's name and version, and the dataset and MedOmni releases. Runs with the same config hash used the same task configuration. Scores with different config hashes in one table are flagged; see [Scoring](../bench/scoring.md#refusals-and-failures).
 
 The config hash covers no data; see [Design principles](../principles.md#task-reproducibility).
 
 ## Task set
 
-A named list of `<template>@<cohort>` pairs, each pinned at its version N, such as `v1`, and the [arms](runs.md#arms) to build them under. Task sets are what MedOmni publishes and what scores are compared on.
+A named list of `<template>@<cohort>` pairs, each pinned at its version N, such as `v1`, and the [arms](../bench/runs.md#arms) to build them under. Task sets are what MedOmni publishes and what scores are compared on. A task set is a Core contract: Studio builds it, and Bench runs and scores it.
 
 - A task set only grows: pairs are added, never changed. A new N of a pair enters only a new task set, such as `v2`.
 - Its content hash covers every pair and its N. Each score record carries the hash, and scores with different hashes are never put in one table.
 - Credentialed task sets publish configs only; you build them from your own access. See [Rebuild a task set](../../guides/rebuild-a-task-set.md).
-- Build builds every pair under every arm the set lists.
-- To build outside a task set, for example while writing a cohort, name the pair: `medomni bench task build mimic-iv_ckd-staging@n20`.
+- The set names its builder, `medomni-v1` for MedOmni's sets, which builds every pair under every arm the set lists.
+- To build outside a task set, for example while writing a cohort, name the pair: `medomni studio task build mimic-iv_ckd-staging@n20`.
 
 ## Benchmark
 
@@ -66,13 +66,13 @@ A benchmark holds several task sets under one card: its name, version, owner, li
 
 ## Where it lives
 
-- `bench/datasets/<dataset>/tasks/<template>/`: `template.yaml` and `cohorts/`
+- `studio/datasets/<dataset>/tasks/<template>/`: `template.yaml` and `cohorts/`
 - `bench/benchmarks/<benchmark>/`: a benchmark's card and its task sets
-- `src/medomni/bench/build/`: Build
+- `src/medomni/studio/build/`: Build
 - your workspace: the built atom tasks and the cache
 
 ## Where next
 
 - [Build](build.md): the steps from template to atom tasks.
 - [Tasks reference](../../reference/tasks.md): every template field, the built files, the config hash and the benchmark files.
-- [Runs](runs.md): how an agent runs atom tasks.
+- [Runs](../bench/runs.md): how an agent runs atom tasks.

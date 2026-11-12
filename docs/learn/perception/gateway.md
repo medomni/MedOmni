@@ -26,7 +26,7 @@ Model cards are files, so the gateway loads every card at start. Searching and r
 `POST /encode` sends one input to one named encoder. Only this call uses a container. For each call the router:
 
 1. **Looks up** the encoder in the catalogue. An unknown encoder, or one with a model card but no image, is refused.
-2. **Checks the cache.** An identical earlier request is answered from the [cache](../core/cache.md), without a container.
+2. **Checks its cache.** An identical earlier request is answered from the gateway's own cache, in memory, without a container. The cache lasts while the gateway runs.
 3. **Picks a container:**
     - a running one for that encoder, if it is under its concurrency limit
     - otherwise a new one, if the pool is under its limit of live containers

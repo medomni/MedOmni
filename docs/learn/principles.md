@@ -25,7 +25,7 @@ The last column names the projects each principle comes from.
 | **Plug-in packages** | An outside `medomni-*` package adds agents, datasets, tasks or encoders without a pull request, in a content folder laid out like the repository and read by the same loader. Tasks on data that cannot leave an institution join this way. | HELM, Inspect, lm-eval-harness, Harbor registries |
 | **Shared checks** | `medomni.core.testing` runs the same checks in MedOmni's CI and in a plug-in package's CI. | `langchain-tests`, `nf-core lint`, MONAI bundle CI |
 | **Harbor as the runner** | Bench runs agents on Harbor. | Terminal-Bench |
-| **Credit** | The full history is kept. Every model card and task template lists its authors. | MONAI bundles, MTEB, Terminal-Bench |
+| **Credit** | The history keeps each contributor's commits, with their author and date, and a `CONTRIBUTORS` file names everyone and what they built. Every model card and task template lists its authors. | MONAI bundles, MTEB, Terminal-Bench |
 
 ## Docs composition
 

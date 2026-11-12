@@ -41,6 +41,9 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
+validation:
+  anchors: warn
+
 nav:
   - Home: index.md
   - Get started: get-started.md
@@ -50,14 +53,11 @@ nav:
       - Architecture: learn/architecture.md
       - Core:
           - Contracts: learn/core/contracts.md
+          - Built tasks: learn/core/built-tasks.md
           - Families: learn/core/families.md
           - Cache: learn/core/cache.md
           - Plug-ins: learn/core/plugins.md
       - Bench:
-          - Datasets: learn/bench/datasets.md
-          - Tasks: learn/bench/tasks.md
-          - Build: learn/bench/build.md
-          - Recipes: learn/bench/recipes.md
           - Runs: learn/bench/runs.md
           - Scoring: learn/bench/scoring.md
       - Perception:
@@ -65,6 +65,10 @@ nav:
           - Gateway: learn/perception/gateway.md
       - Studio:
           - Overview: learn/studio/overview.md
+          - Datasets: learn/studio/datasets.md
+          - Tasks: learn/studio/tasks.md
+          - Build: learn/studio/build.md
+          - Recipes: learn/studio/recipes.md
           - Audit: learn/studio/audit.md
       - Extend MedOmni: learn/extend.md
   - Guides:
@@ -83,4 +87,3 @@ nav:
       - Audit: reference/audit.md
   - Commands: cli/index.md
   - Python API: api/index.md
-  - Migration (temporary): migration.md

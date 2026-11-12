@@ -16,31 +16,43 @@ For agent evaluators. You score your own agent on a MedOmni task set, with and w
     ```
 
     ```yaml
+    kind: agent
     name: my-agent
-    scaffold: terminus-2
     model: openai/my-model
     route: cloud
-    model_served: my-model-2026-10-01
-    env:
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-    max_turns: 300
+    settings:
+      scaffold: terminus-2
+      model_served: my-model-2026-10-01
+      env:
+        OPENAI_API_KEY: ${OPENAI_API_KEY}
+      max_turns: 300
     ```
 
     | Field | Meaning |
     |---|---|
-    | `scaffold` | The Harbor agent that drives the model. |
+    | `kind` | The kind of intelligence: `agent`. |
+    | `name` | The agent's name, as records show it. |
     | `model` | The model to request. |
-    | `route` | `local` for a model served on your machine, `cloud` for a provider's API. |
-    | `model_served` | The model name the provider reports back. A requested alias can be served by a different model; a run that reports another name is recorded as an error and never scored. |
-    | `env` | Keys, only as `${VARNAME}` references to `keys.env` in your workspace. Never write a key into the config. |
+    | `route` | `local` for a model served on your machine, `cloud` for a provider's API. Bench refuses a run on a route a dataset's policy denies, and prints the conditions of a `conditional` route, which you must meet; see [Datasets](../reference/datasets.md#datasets-in-v030). |
+    | `runner` | Optional: a runner other than the kind's own. MedOmni's tests use `runner: replay`. |
+    | `settings` | What the runner reads. For the agent runner, on Harbor, the fields below; the runner checks them. |
+    | `settings.scaffold` | The Harbor agent that drives the model. |
+    | `settings.model_served` | The model name the provider reports back. A requested alias can be served by a different model; a run that reports another name is recorded as an error and never scored. |
+    | `settings.env` | Keys, only as `${VARNAME}` references to variables you export in the shell that runs `medomni bench run`. Never write a key into the config: on a `cloud` route the runner refuses a key that is not a reference. |
+    | `settings.max_turns` | The most turns the agent may take on one atom task. |
+    | `settings.api_base` | The provider's base URL, for a model server on your machine or a compatible API. |
 
-2. Run the agent on a task set, under each arm you want to compare, as many times as you need:
+2. Export your model provider's key in your shell, then run the agent on a task set, under each arm you want to compare, as many times as you need:
+
+    ```bash
+    export OPENAI_API_KEY=...
+    ```
 
     ```bash
     medomni bench run --agent my-agent.yaml --set medomni-bench/v1 --arm encoders --arm no-perception --reps 2
     ```
 
-    The built-in arms are `encoders` (with encoders), `no-perception` (without), `encoders-required` (must call at least one) and `modality-ladder` (six rungs of input families). A task set lists the arms it is built under. `medomni bench run` checks the route against each dataset policy first, and resumes if run again. [Runs](../learn/bench/runs.md) explains both. While it runs, it prints one line with the number of finished and failed atom tasks; for a detailed live view, run `medomni studio progress <run>` beside it.
+    The built-in arms are `encoders` (with encoders), `no-perception` (without), `encoders-required` (must call at least one) and `modality-ladder` (six rungs of input families). A task set lists the arms it is built under. `medomni bench run` first checks the built tasks, and resumes if run again. [Runs](../learn/bench/runs.md) explains both. While it runs, it prints one line with the number of finished and failed atom tasks; for a detailed live view, run `medomni studio progress <run>` beside it.
 
 3. Score:
 

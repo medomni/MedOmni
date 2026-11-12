@@ -20,34 +20,34 @@ MedOmni/
 │   │   ├── contracts/        typed models, validators, schemas/
 │   │   ├── plugins/          entry-point loading
 │   │   ├── loading/          format readers (CSV, OMOP, folder trees, recording headers) and the loader
-│   │   ├── recipes/          the recipe format: cohorts, labels, evidence
-│   │   ├── families/         registry loader, family converters, dummy-data generator
-│   │   ├── cache/            cache keys, entries, cache commands
+│   │   ├── families/         registry loader, converter interface, dummy-data generator
+│   │   ├── cache/            cache backends, cache commands
+│   │   ├── tasks/            built tasks: atom layout, task sets, checks, the atom's shared Harbor parts
+│   │   ├── builders.py       TaskBuilder, the interface every task builder follows
 │   │   └── testing/          runs the checks each project registers
 │   ├── bench/                medomni.bench
-│   │   ├── build/            Build: task steps, cohort selection, checks, task sets, config hashes
-│   │   ├── runs/             runner interface, Harbor runner, replay, v0.2 import; run and prediction records
-│   │   ├── arms/             the arm interface and the four built-in arms
-│   │   ├── service/          the perception service in each atom task
+│   │   ├── runs/             runner interface, Harbor runner (assets/harbor/), replay; run and prediction records
+│   │   ├── arms/             the run side of the four built-in arms
 │   │   ├── scoring/          scorer, behaviour metrics
 │   │   └── metrics.py        auc, qwk, mae
 │   ├── perception/           medomni.perception
 │   │   ├── registry/         catalogue, image builds and pulls
 │   │   ├── runtime/          serving code built into every encoder image
-│   │   └── gateway/          the HTTP service
-│   └── studio/               medomni.studio: survey/, propose/, review/ (with the audit), preview/, assets/, report/
+│   │   ├── gateway/          the HTTP service
+│   │   └── sidecar/          the perception service: the gateway beside each atom task's agent
+│   └── studio/               medomni.studio
+│       ├── build/            the medomni-v1 builder: its recipe format, task steps, cohort selection, its checks, the arms' build side, config hashes
+│       └── survey/, propose/, review/ (with the audit), preview/, assets/, report/
 ├── core/
 │   └── families/             one file per family, and aliases.yaml
 ├── bench/
-│   ├── datasets/<dataset>/   dataset package: dataset.yaml, labels.yaml, evidence.yaml,
-│   │                         codes.csv, policy.yaml, hooks/, tasks/<template>/
 │   ├── benchmarks/<benchmark>/  benchmark.yaml (the card), sets/ (task sets: pinned <template>@<cohort> lists)
 │   └── agents/               contributed agent configs
 ├── perception/
 │   └── encoders/             <family>/<encoder>/: built into images, not installed
 ├── studio/
-│   ├── proposals/            task proposals and their review state
-│   └── forms/                intake and review forms
+│   ├── datasets/<dataset>/   dataset package: dataset.yaml, labels.yaml, evidence.yaml,
+│   │                         codes.csv, policy.yaml, hooks/, tasks/<template>/
 ├── tests/                    core/, bench/, perception/, studio/
 ├── docs/                     this site
 └── pyproject.toml
@@ -55,14 +55,16 @@ MedOmni/
 
 - **One name per project.** Its package, content folder, command and docs section use the same name: `medomni.perception`, `perception/`, `medomni perception …`, Perception.
 - **Code and content are apart.** A new dataset, task, family or encoder changes content only; the code that reads it is unchanged.
-- **Projects depend only on Core.** Bench and Perception never import each other. Studio may also import Bench and Perception; nothing imports Studio. They register their commands, checks and audit checks with Core; see [How Core finds the projects](#how-core-finds-the-projects). [Design principles](principles.md#structure) gives the rules.
-- **One page per component.** Core: [Contracts](core/contracts.md), [Families](core/families.md), [Cache](core/cache.md), [Plug-ins](core/plugins.md). Bench: [Datasets](bench/datasets.md), [Tasks](bench/tasks.md), [Build](bench/build.md), [Recipes](bench/recipes.md), [Runs](bench/runs.md), [Scoring](bench/scoring.md). Studio: [Overview](studio/overview.md), [Audit](studio/audit.md). Perception: [Encoders](perception/encoders.md), [Gateway](perception/gateway.md).
+- **Projects depend only on Core.** Bench and Perception never import each other. Studio may also import Bench and Perception; nothing imports Studio. They register their commands, checks, content kinds and audit checks with Core; see [How Core finds the projects](#how-core-finds-the-projects). [Design principles](principles.md#structure) gives the rules.
+- **Studio builds, Bench runs and scores.** They meet at the [built-task](core/built-tasks.md) contract, so Bench runs a task whoever built it, and runs and scores with Studio removed.
+- **Core names no content.** No dataset, benchmark, arm, runner or project folder is named in Core's code; MedOmni's own are the first of each kind, registered like any other.
+- **One page per component.** Core: [Contracts](core/contracts.md), [Built tasks](core/built-tasks.md), [Families](core/families.md), [Cache](core/cache.md), [Plug-ins](core/plugins.md). Bench: [Runs](bench/runs.md), [Scoring](bench/scoring.md). Studio: [Overview](studio/overview.md), [Datasets](studio/datasets.md), [Tasks](studio/tasks.md), [Build](studio/build.md), [Recipes](studio/recipes.md), [Audit](studio/audit.md). Perception: [Encoders](perception/encoders.md), [Gateway](perception/gateway.md).
 
 ## Context (C1)
 
 ![C1: MedOmni v0.3.0 in context](../assets/c1-context.drawio.svg)
 
-- **Agent evaluator**: describes an agent, builds a task set from their own data, runs the agent on it with Bench, reads the scores.
+- **Agent evaluator**: describes an agent, builds a task set from their own data with Studio, runs the agent on it with Bench, reads the scores.
 - **Encoder user**: calls the encoders through Perception's gateway.
 - **Contributor**: adds an agent, a dataset, a task or an encoder through its extension point, and proposes and reviews tasks in Studio.
 - **MedOmni**: one package with one command, holding Core, Bench, Perception and Studio.
@@ -71,7 +73,7 @@ MedOmni/
 - **Harbor**: the agent-evaluation framework that runs each atom task in Docker.
 - **Model provider**: the API behind an agent's model on a `cloud` route. A `local` route needs none.
 - **Container registry**: the published gateway and encoder images (`ghcr.io/medomni`).
-- **Hugging Face**: model cards and the public task samples of open datasets.
+- **Hugging Face**: model cards, and dummy data for each dataset. No real record is published there.
 
 ## Containers (C2)
 
@@ -81,12 +83,12 @@ MedOmni/
 |---|---|---|
 | `medomni` command | Core | The entrance: finds the projects through entry points and the plug-in packages' content folders and entry points, then hands each subcommand to its project. |
 | Workspace | Core | Configuration, the cache, built atom tasks, the run folders and the results file, on your machine. Never committed. |
-| Bench library | Bench | Builds atom tasks from your data, turns a task set into Harbor jobs, records runs and scores them. |
+| Bench library | Bench | Checks built tasks, turns a task set into Harbor jobs, records runs and scores them. |
 | Perception service | Bench | Runs inside each atom task with encoders: Perception's gateway, with Bench's call budget, family filter and call log. |
 | Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
 | Gateway | Perception | The HTTP service in front of every encoder: its catalogue finds encoders and serves model cards, its router sends each call to a running encoder container. |
 | Encoders | Perception | One image per encoder, each reading one family. Published to the container registry; model cards to Hugging Face. |
-| Studio tools | Studio | Survey datasets, collect and review task proposals, preview cohorts, run the audit and report results. |
+| Studio tools | Studio | Build atom tasks from your data with the `medomni-v1` builder, survey datasets, collect and review task proposals, preview cohorts, run the audit and report results. |
 
 Gateway and encoder images are tagged with the MedOmni release that built them. The gateway runs any encoder image built since the Container API last changed.
 
@@ -101,19 +103,19 @@ Gateway and encoder images are tagged with the MedOmni release that built them. 
 | Core | Plug-ins | `medomni.core.plugins` | Finds the projects' entry points, and the plug-in packages' content folders and entry points. |
 | Core | Testing kit | `medomni.core.testing` | Runs the checks each project registers. Plug-in packages import it for their own CI. |
 | Core | Loading | `medomni.core.loading` | The format readers, and the loader that runs a dataset package through them into its event table. |
-| Core | Recipes | `medomni.core.recipes` | The recipe format for cohorts, labels and evidence. |
-| Core | Families | `medomni.core.families` | The family registry, the family converters and the dummy-data generator. |
-| Core | Cache | `medomni.core.cache` | Cache keys and entries, and the cache commands. See [Cache](core/cache.md). |
-| Bench | Build | `medomni.bench.build` | Runs recipes into atom tasks; task sets and config hashes. See [Build](bench/build.md). |
-| Bench | Harness | `medomni.bench.runs` | The agent runner: turns a task set into Harbor jobs, checks the route against each dataset policy, and records runs and prediction records. |
-| Bench | Arms | `medomni.bench.arms` | The four built-in arms. Build and the harness look up any arm by its registered name. |
+| Core | Families | `medomni.core.families` | The family registry, the converter interface and the dummy-data generator. |
+| Core | Cache | `medomni.core.cache` | The cache backend call, the `folder` and `none` backends, and the cache commands. See [Cache](core/cache.md). |
+| Core | Built tasks | `medomni.core.tasks`, `medomni.core.builders` | The atom layout, task sets, the checks on built tasks, and the `TaskBuilder` interface. See [Built tasks](core/built-tasks.md). |
+| Bench | Harness | `medomni.bench.runs` | The agent runner: turns a task set into Harbor jobs and records runs and prediction records. |
+| Bench | Arms | `medomni.bench.arms` | The run side of the four built-in arms. The harness looks up any arm by its registered name. |
 | Bench | Scorer | `medomni.bench.scoring` | Scores complete tasks from their prediction records, one score record per target. The only thing that writes scores. |
-| Bench | Perception service | `medomni.bench.service` | Runs the gateway inside each atom task, with the call budget, family filter and call log. |
 | Perception | Gateway | `medomni.perception.gateway` | The gateway service, built into the gateway image. |
 | Perception | Registry | `medomni.perception.registry` | The encoder catalogue: model cards, images, pulls and the encoder check. |
+| Perception | Perception service | `medomni.perception.sidecar` | The gateway beside each atom task's agent, with the call budget, family filter and call log. Bench starts it through `medomni.services`. |
+| Studio | Build | `medomni.studio.build` | The `medomni-v1` builder: its recipe format (task templates, cohorts, labels, evidence) and the engine that runs recipes into atom tasks, with the arms' build side and config hashes. See [Build](studio/build.md). |
 | Studio | Tools | `medomni.studio` | One subpackage per tool kind: survey, propose, review (with the audit), preview, assets, report. |
 
-The projects meet in one contract: the perception service calls Perception's gateway through the Gateway API. Bench imports no Perception code.
+The projects meet in contracts: Studio's builder writes built tasks that Bench reads, and Bench starts Perception's perception service through the `medomni.services` entry point and talks to it only through the Gateway API. Bench imports no Perception code and no Studio code.
 
 Contributors and plug-in packages add agents, datasets, tasks and encoders to the projects; [Extend MedOmni](extend.md) lists each extension point with its template and check.
 
@@ -123,6 +125,8 @@ Core is the `medomni` command and the shared machinery. It imports no project; e
 
 - its subcommands, such as `medomni bench …`, in `medomni.commands`
 - the checks behind its check commands, and its audit checks, in `medomni.checks`
+- its content kinds, each a folder pattern and its contract, such as `studio/datasets/*/dataset.yaml`, in `medomni.content`
+- a service a run starts beside the agent, such as Perception's perception service, in `medomni.services`
 
 This is internal wiring, done once per project. Users never do it; a later project joins the same way. Outside packages that add pieces use [plug-ins](core/plugins.md) instead.
 

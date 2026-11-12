@@ -51,11 +51,7 @@ Output blocks:
 
 ## Check
 
-Perception's CI tests the gateway against this contract on every pull request. To validate the schemas themselves:
-
-```bash
-medomni contracts check gateway-api
-```
+MedOmni's tests check the gateway against this contract on every pull request. Requests and replies are messages, not files in the repository, so `medomni contracts check` does not read them.
 
 ## Where next
 

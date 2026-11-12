@@ -24,15 +24,6 @@ Scoring all atom tasks together, after all their runs finish, means no run sees 
 - An agent failure, such as no answer or a malformed answer, scores as chance.
 - An infrastructure failure refuses the score.
 
-## Checks before any run
-
-`medomni bench task check` scores two stand-in agents on every `<template>@<cohort>`, with no model calls:
-
-- **True answers:** an agent that submits the answers must score perfectly. If not, the answers, the patient order or the metric are wrong.
-- **Same answer:** an agent that always gives the same answer must score at chance, skill about 0. If not, the score itself carries information.
-
-Either failure stops the check.
-
 ## Metrics
 
 Each target in a template names its metric, a name registered in `medomni.metrics`. Bench registers three:
@@ -45,14 +36,26 @@ Each score record holds the scorer version, a hash of the metric code. `medomni 
 
 ## Behaviour metrics
 
-Next to the score, each run record holds how the agent worked:
+On an arm with the perception service, Bench measures how far the agent took each encoder answer, at three levels:
 
-- encoder use, per call, at three levels:
-    - **called**: the call is in the perception service's call log
-    - **surfaced**: a value from the reply appears in the agent's terminal output
-    - **cited**: the agent's reasoning names that value before it writes its answer
-- whether each called encoder is relevant to the targets
-- which staged files it opened
+- **called**: the call is in the perception service's call log
+- **surfaced**: a value from the answer appears in the agent's terminal output after the call
+- **cited**: a message from the agent names that value before it writes its answer
+
+Whether an answer changed the prediction needs a paired run without it, so that level is reported as unmeasured. Every encoder counts, whether or not its family bears on the targets.
+
+- Each run record counts the agent's calls per encoder, in `agent.encoder_calls`.
+- The run folder's `encoder_use.jsonl` holds each call's level.
+- Each score record's `encoder_use` sums up its row: how many atom tasks called an encoder, the share that reached each level, over those atom tasks and over all of them, and the share of surfaced answers never cited.
+
+## Stand-in agents
+
+Before every run, `medomni bench run` scores two stand-in agents on each task, with no model calls:
+
+- one that answers every patient's true values must score perfectly: AUC 1, QWK 1, MAE 0
+- one that gives every patient the same answer, the best one without looking, must score at chance: AUC 0.5, QWK 0, and MAE equal to the answers' mean distance from their median
+
+A task that fails either has broken answers or scoring, such as an answer for no atom task, and nothing runs. The problems name the task, target and both scores, never a patient's value.
 
 ## Results file
 
@@ -63,11 +66,11 @@ Next to the score, each run record holds how the agent worked:
 
 ## Where it lives
 
-- `src/medomni/bench/scoring/`: the scorer and the behaviour metrics
+- `src/medomni/bench/scoring/`: the scorer, the behaviour metrics and the stand-in agents
 - `src/medomni/bench/metrics.py`: `auc`, `qwk` and `mae`
 - your workspace: `results.jsonl`
 
 ## Where next
 
 - [Run your agent](../../guides/run-your-agent.md#results-file): the results file fields.
-- [Tasks](tasks.md): where the metrics and answers come from.
+- [Tasks](../studio/tasks.md): where the metrics and answers come from.

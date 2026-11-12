@@ -13,11 +13,13 @@ What you can add to MedOmni, how, and what checks it.
 | You add | Project | Follows contract | Create with | Check | Pull request | Plug-in package |
 |---|---|---|---|---|---|---|
 | An agent | Bench | Agent config | `medomni bench agent new` | `medomni bench run --set medomni-bench/smoke-dummy` | `bench/agents/` | content folder: `bench/agents/` |
-| A dataset | Bench | Dataset config, recipe, dataset policy | `medomni bench data new` | `medomni bench data check` | openly licensed only | content folder: `bench/datasets/<dataset>/` |
-| A task | Bench | Task template, recipe | `medomni bench task new` | `medomni bench task check` | openly licensed data only | content folder: `bench/datasets/<dataset>/tasks/<template>/` |
-| A benchmark | Bench | Benchmark card, task set | `bench/benchmarks/<benchmark>/` | `medomni bench task check --set <benchmark>/<set>` | MedOmni team only | content folder: `bench/benchmarks/<benchmark>/` |
+| A dataset | Studio | Dataset config, recipe, dataset policy | `medomni studio data new` | `medomni studio data check` | openly licensed only | content folder: `studio/datasets/<dataset>/` |
+| A task | Studio | Task template, recipe | `medomni studio task new` | `medomni studio task check` | openly licensed data only | content folder: `studio/datasets/<dataset>/tasks/<template>/` |
+| A benchmark | Bench | Benchmark card, task set | `bench/benchmarks/<benchmark>/` | `medomni studio task check --set <benchmark>/<set>` | MedOmni team only | content folder: `bench/benchmarks/<benchmark>/` |
 | An encoder | Perception | Model card, Container API | `medomni perception new` | `medomni perception check` | `perception/encoders/` | content folder: `perception/encoders/<family>/<encoder>/` |
-| An arm | Bench | The arm interface | A plug-in package | `medomni bench task build --set <benchmark>/<set>`, on a set that lists it | no: Bench's four arms are fixed | entry point: `medomni.arms` |
+| An arm | Bench, and each builder | The arm interface | A plug-in package | `medomni studio task build --set <benchmark>/<set>`, on a set that lists it | no: the four built-in arms are fixed | entry points: `medomni.arms`, and `medomni.arm_builds` per builder |
+| A task builder | Studio | Built task, `TaskBuilder` | A plug-in package | `medomni bench run --set <benchmark>/<set>` on what it builds | no: MedOmni's builder is `medomni-v1` | entry point: `medomni.builders` |
+| A cache backend | Core | The cache backend call | A plug-in package | `medomni cache build <dataset>` | no: Core ships `folder` and `none` | entry point: `medomni.caches` |
 | A Studio tool | Studio | Its kind's interface | `src/medomni/studio/<kind>/` | `medomni studio check` | `src/medomni/studio/<kind>/` | entry point: `medomni.tools` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).

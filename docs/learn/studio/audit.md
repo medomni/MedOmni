@@ -20,7 +20,7 @@ The [Audit reference](../../reference/audit.md) shows which auditor covers each 
 
 ## Auditors
 
-- **Machine checks** run on every audit and can only reject. For tasks, they read the results of Bench's [correctness checks](../bench/build.md#correctness-checks), which refuse a bad task at every build. They add seven of their own: a test case for every leakage rule, the canary, the call budget, encoder limits, family coverage, the file inventory and the instruction.
+- **Machine checks** run on every audit and can only reject. For tasks, they read the results of Build's [correctness checks](build.md#correctness-checks), which refuse a bad task at every build. They add seven of their own: a test case for every leakage rule, the canary, the call budget, encoder limits, family coverage, the file inventory and the instruction.
 - **LLM reviews** are advisory.
 - **Human sign-offs** are required for clinical validity.
 
@@ -39,13 +39,20 @@ medomni studio audit
 
 It runs the machine checks, reads the recorded verdicts and writes a report and a findings list to the workspace.
 
+<!-- outline (Stage 4 part 4), a section "Release check", to be written when it is built:
+- `medomni studio release-check` reads three things and fails on any conflict: each encoder card's `license` (which images and weights may be published), each dataset policy's `publish` rules (which tracked files under each package may ship: id lists, labels, per-record outputs, samples), and the release tree's data files (each in a testdata folder with a provenance and licence file).
+- How restricted licences are handled, as Bosong decides (D1).
+- It includes the version check that `studio task check --release` runs today.
+- When it runs: before every release, and in CI if part 5 adds it.
+-->
+
 ## Where it lives
 
 - `src/medomni/studio/review/`: the matrix, the runner and the report writer
-- each project's audit checks, registered through Core's plug-in loading: data and tasks from Bench, encoders from Perception
+- each project's audit checks, registered through Core's plug-in loading: data and tasks from Studio, runs from Bench, encoders from Perception
 
 ## Where next
 
 - [Audit reference](../../reference/audit.md): the matrix and the command's options.
-- [Tasks](../bench/tasks.md): the config hash verdicts bind to.
+- [Tasks](tasks.md): the config hash verdicts bind to.
 - [Studio](overview.md): the other review tools.

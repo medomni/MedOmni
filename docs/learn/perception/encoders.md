@@ -48,9 +48,11 @@ It runs four stages in order and stops at the first failure:
 1. **Card:** validates the model card, as `medomni contracts check` does, and the folder.
 2. **Build:** builds the image.
 3. **Test data:** runs the image on `testdata/` and compares the responses with `expected.json`.
-4. **Real samples:** runs the image offline on real samples of its family and checks each response against the model card. It needs at least three samples, from the family's published samples or `--samples <dir>`. With fewer, the stage reports "unverified" instead of passing.
+4. **Real samples:** runs the image offline on real samples of its family and checks each response against the model card. It needs at least three, in `--samples <dir>`, such as the files `medomni studio family-samples` writes from your own copy of a dataset. MedOmni publishes no real samples. Without them, the stage reports "unverified" and the test data stands in.
 
 Stages 3 and 4 run the encoder's tests in `tests/perception/`. `--freeze` records `expected.json` from the current build; a later change that alters the responses fails stage 3.
+
+`--record` writes an encoder that passed into `perception/deployed.yaml`, which pins the image the perception service starts for each encoder. It refuses an image built from uncommitted source, and leaves the other encoders' entries as they are. The service serves an encoder whose entry passed stage 3 and did not fail stage 4. `--record` and `--freeze` can't be combined.
 
 ## Images
 
@@ -63,6 +65,7 @@ Stages 3 and 4 run the encoder's tests in `tests/perception/`. `--freeze` record
 - `perception/encoders/<family>/<encoder>/`: each encoder
 - `src/medomni/perception/runtime/`: the serving code shared by every image, with one decoder per family in `decoders/`
 - `src/medomni/perception/registry/`: the catalogue, image builds and pulls
+- `perception/deployed.yaml`: the images the perception service starts, written by `--record`
 - `tests/perception/`: the encoder tests the check runs
 
 ## Where next

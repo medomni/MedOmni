@@ -18,7 +18,8 @@ Contract: family registry, one file per family in `core/families/<id>.yaml`, plu
 | `protocol.dtype` | yes | Data type of the values, such as `float32`, `int16` or `uint8`. |
 | `protocol.range` | no | Plausible value range, `[min, max]` in `units`, such as `[50, 100]` for SpO2 in %. Null means unchecked. |
 | `status` | yes | `declared` (shape known), `supplied` (measured on real data) or `deprecated`. |
-| `samples` | no | Where the family's checked sample files live. |
+| `samples` | no | Where the family's published sample files live: dummy or test data, never real records. |
+| `samples_access` | no | `controlled` when the family's real sample set is access-controlled: PPG, 12-lead ECG, chest X-ray, irregular clinical measurements and sleep EEG. An encoder of such a family is served when it passes its test data. |
 
 ## Aliases
 
@@ -34,7 +35,7 @@ Reusable alias blocks are declared once under `vocab` and referenced by name.
 ## Rules
 
 - A sample file opens in a declared format, carries every declared channel, matches `rate_hz` within 2% (or an alias rate), matches `units` and `dtype`, and has its values inside `range`.
-- Sample content is real: no flat channels, constant images or empty tables.
+- Sample content is not degenerate: no flat channels, constant images or empty tables.
 - The same rules apply to every file Build stages and every input the encoder check uses: a file outside its family's `range` stops the build.
 
 ## Check

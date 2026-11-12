@@ -1,8 +1,8 @@
 # Recipes
 
-The fields of a cohort file, a label library and an evidence file, the shared codes, and two worked examples. [Recipes](../learn/bench/recipes.md) explains how the parts fit.
+The fields of a cohort file, a label library and an evidence file, the shared codes, and two worked examples. The recipe format is the input of MedOmni's builder, `medomni-v1`. [Recipes](../learn/studio/recipes.md) explains how the parts fit.
 
-Contract: recipe, `src/medomni/core/contracts/schemas/recipe.schema.json`
+Format: recipe, in `src/medomni/studio/schemas/`: `recipe.schema.json` (cohort), `recipe-tests.schema.json` (test patients), `recipe-labels.schema.json` and `recipe-evidence.schema.json`.
 
 ## Times and windows
 
@@ -17,11 +17,11 @@ Windows are written relative to the prediction time or an event:
 
 ## Cohort file
 
-`bench/datasets/<dataset>/tasks/<template>/cohorts/<cohort>.yaml`
+`studio/datasets/<dataset>/tasks/<template>/cohorts/<cohort>.yaml`
 
 | Field | Required | Meaning |
 |---|---|---|
-| `version` | yes | The [version](../learn/bench/tasks.md#version) `N.X` of the tasks built from this cohort, as a quoted string such as `"1.0"`. Unquoted, YAML reads it as a number and `1.10` becomes `1.1`, so the contract refuses it. |
+| `version` | yes | The [version](../learn/studio/tasks.md#version) `N.X` of the tasks built from this cohort, as a quoted string such as `"1.0"`. Unquoted, YAML reads it as a number and `1.10` becomes `1.1`, so the contract refuses it. |
 | `source` | yes | The source population: `all`, or `{fraction: f}` for the hash rule with the dataset's salt. Omitting `fraction` uses the dataset's default. |
 | `anchor` | yes | The prediction time: `event` (a code), `pick` (`first` or `last`; default `first`), `plus` (an offset). |
 | `require` | no | A list of requirements, all of which must hold. |
@@ -44,7 +44,7 @@ Test patients: `cohorts/<cohort>.tests.yaml`, a list of patients, each with `eve
 
 ## Label library
 
-`bench/datasets/<dataset>/labels.yaml`: one entry per label, named `<dataset>:<label>` in templates.
+`studio/datasets/<dataset>/labels.yaml`: one entry per label, named `<dataset>:<label>` in templates.
 
 | Field | Meaning |
 |---|---|
@@ -68,7 +68,7 @@ Named definitions are in the package's `dataset.yaml`, under `definitions`, each
 
 ## Evidence file
 
-`bench/datasets/<dataset>/evidence.yaml`: `tables`, `static`, `files`, `views` and `reading_note`.
+`studio/datasets/<dataset>/evidence.yaml`: `tables`, `static`, `files`, `views` and `reading_note`.
 
 Per table:
 
@@ -191,6 +191,6 @@ The guard removes every creatinine row and the pre-operative creatinine field fr
 
 ## Where next
 
-- [Recipes](../learn/bench/recipes.md): the ideas behind the format.
+- [Recipes](../learn/studio/recipes.md): the ideas behind the format.
 - [Datasets reference](datasets.md): the dataset package and its files.
 - [Tasks reference](tasks.md): the template, the atom task and the config hash.

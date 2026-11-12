@@ -1,12 +1,12 @@
 # Tasks
 
-The task template, the built files, the config hash, and the benchmarks and their task sets. [Tasks](../learn/bench/tasks.md) explains how they fit together.
+The task template, the built files, the config hash, and the benchmarks and their task sets. Templates and cohorts are the input of MedOmni's builder, `medomni-v1`; the built files and task sets are Core contracts that Bench reads. [Tasks](../learn/studio/tasks.md) explains how they fit together.
 
-Contract: task template, `src/medomni/core/contracts/schemas/task-template.schema.json`. The cohort fields are in [Recipes](recipes.md#cohort-file).
+Format: task template, `src/medomni/studio/schemas/task-template.schema.json`, read by `medomni-v1`. The cohort fields are in [Recipes](recipes.md#cohort-file).
 
 ## Tasks in v0.3.0
 
-One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
+One folder per template in `studio/datasets/<dataset>/tasks/`, with its cohorts.
 
 - 30 templates on credentialed data: 15 on AI-READI, 9 on MIMIC-IV, 6 on BDSP
 - 3 templates on VitalDB, on open data
@@ -14,7 +14,7 @@ One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
 
 ## Task template
 
-`bench/datasets/<dataset>/tasks/<template>/template.yaml`
+`studio/datasets/<dataset>/tasks/<template>/template.yaml`
 
 | Field | Required | Meaning |
 |---|---|---|
@@ -34,21 +34,21 @@ One folder per template in `bench/datasets/<dataset>/tasks/`, with its cohorts.
 Check a template, its cohort and the build; the exit code is 1 on any failure:
 
 ```bash
-medomni bench task check <template>@<cohort>
+medomni studio task check <template>@<cohort>
 ```
 
 ## Built files
 
-Build writes each task's content once, then renders it into atom tasks under each arm.
+Build writes each task's content once, then renders it into atom tasks under each arm. The files Bench reads are the [built-task contract](../learn/core/built-tasks.md#the-files); `record.json` is `medomni-v1`'s own.
 
 The content is in `atomtasks/_content/<template>@<cohort>/`, such as `atomtasks/_content/mimic-iv_ckd-staging@n20/`:
 
 | Path | Holds |
 |---|---|
-| the atom list | The task's atom tasks, one per patient. |
-| the answers | Each patient's answer for every target. |
-| the targets and scoring spec | What is scored, and with which metric. |
-| one folder per atom | `record.json`: the evidence the instruction shows, as structured data. |
+| `content.json` | The atom list, the targets and their metrics, each atom's prediction time, the task version, the step counts. |
+| `answers.csv` | Each patient's answer for every target. |
+| `manifest.json` | The build manifest: the config hash under each arm and variant, the builder (`medomni-v1/<version>`), the step counts and the release. |
+| `<atom>/record.json` | The evidence the instruction shows, as structured data. |
 
 An atom task is what an agent runs, rendered under `atomtasks/<arm>/<atom>/`, or `atomtasks/<arm>/<variant>/<atom>/` for an arm with variants, such as `atomtasks/modality-ladder/r1/<atom>/`. Rendering stages the patient's files from the cache. Its files are real copies, never links:
 
@@ -57,21 +57,22 @@ An atom task is what an agent runs, rendered under `atomtasks/<arm>/<atom>/`, or
 | `task.toml` | Task metadata, arm, resources, the `<template>@<cohort>` and the patient. |
 | `instruction.md` | The clinical question, the prediction time, the patient's record, and each target with its question. |
 | `environment/` | The closed-network containers, with the perception service when the arm attaches it. |
-| `tests/` | A format check on the answer. It never scores. |
+| `tests/` | `expected.json` (the target names) and `format_check.py`, a format check on the answer. It never scores. |
 | `data/` | The patient's staged files, minus anything that leaks a target. |
 
 The answers stay in the content folder; a render never copies them into an atom task. The atom tasks of one `<template>@<cohort>` are scored together against them.
 
 ## Config hash
 
-Each `<template>@<cohort>` under each arm, or arm variant, has a config hash: `cfg1:` and the SHA-256 over its config files and two release names. Each file adds its path, its length and its bytes, in path order.
+Each `<template>@<cohort>` under each arm, or arm variant, has a config hash: `cfg1:` and the SHA-256 over its config files, the builder and two release names. Each file adds its path, its length and its bytes, in path order.
 
-- The files: the template, the cohort, the labels and recipes the task uses, and the arm's definition with its variant.
+- The files: the ones the builder's `config_files` names. For `medomni-v1`, the template, the cohort, the labels and recipes the task uses, and the arm's definition with its variant.
+- The builder: its name and version, such as `medomni-v1`.
 - The releases: the dataset release and the MedOmni release.
 
 Build writes it to the build manifest, beside the step counts. Run and score records copy it as `config_hash`. The prefix names the algorithm, so published config hashes stay checkable after an upgrade. It covers no data.
 
-`medomni bench task check --release` checks every pinned pair in every task set of the workspace's benchmarks. It fails when a pair's cohort, labels, targets, scoring or dataset release differs from the last release and its N has not risen. It compares config files only. MedOmni runs it before a release; your builds and runs never do.
+`medomni studio task check --release` checks every pinned pair in every task set of the workspace's benchmarks. It fails when a pair's cohort, labels, targets, scoring or dataset release differs from the last release and its N has not risen. It compares config files only. MedOmni runs it before a release; your builds and runs never do.
 
 Result records imported from v0.2 runs are version 0 and carry a `v0.2:` config hash instead, over the v0.2 template's config files. Only imported records may carry one. They name the sets `medomni-bench/v0.2-ladder`, `v0.2-forced` and `v0.2-mid`, one per v0.2 task tree with runs.
 
@@ -79,7 +80,7 @@ Result records imported from v0.2 runs are version 0 and carry a `v0.2:` config 
 
 A benchmark is one folder, `bench/benchmarks/<benchmark>/`: its card in `benchmark.yaml`, and its task sets in `sets/<set>.yaml`. A task set is named `<benchmark>/<set>`.
 
-Contract: benchmark card, `src/medomni/core/contracts/schemas/benchmark-card.schema.json`.
+Contract: benchmark card, `src/medomni/core/contracts/schemas/benchmark.schema.json`.
 
 | Field | Required | Meaning |
 |---|---|---|
@@ -97,6 +98,7 @@ Contract: task set, `src/medomni/core/contracts/schemas/task-set.schema.json`.
 |---|---|---|
 | `name` | yes | The task set's name, such as `v1`; equals the file name. |
 | `description` | no | One line on what it holds. |
+| `builder` | yes | The [task builder](../learn/core/built-tasks.md#write-your-own-builder) that builds the set, such as `medomni-v1`. |
 | `arms` | yes | The [arms](../learn/bench/runs.md#arms) every pair is built under. |
 | `tasks` | yes | One or more entries `{task: <template>@<cohort>, version: <N>}`, with N an integer. Imported v0.2 sets use 0. |
 

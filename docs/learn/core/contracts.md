@@ -6,26 +6,34 @@ A contract is a fixed format plus the validator that checks it. Every file or me
 
 | Contract | Describes | Written by | Read by |
 |---|---|---|---|
-| Family registry | The schema of a family file and of its aliases | MedOmni team | Bench, Perception |
-| Dataset config | A dataset package: description, format readers, rules, named definitions | Contributors | Bench |
-| Event table | The table every dataset becomes, with its `FILE` rows | Bench | Bench, Studio |
-| Dataset policy | What a dataset's license allows | Contributors | Bench |
-| Recipe | A cohort with its task version, a label library and evidence rules | Contributors | Bench, Studio |
-| Task template | One task: targets, input, and an `agent` block (statement, instruction, environment, submission path) | Contributors | Bench |
-| Benchmark card | One benchmark: name, version, owner, license, the intelligence kinds it accepts | MedOmni team, plug-in packages | Bench, you |
-| Task set | `<template>@<cohort>` pairs pinned at version N, and the arms to build them under | MedOmni team, plug-in packages | Bench, you |
-| Config hash | The hash of a task's config files under one arm | Bench | Bench, you |
-| Cache entry | One cache entry and its `CACHE.json` | Bench, Perception | Bench, Perception, you |
-| Agent config | One intelligence of kind `agent`: scaffold, model, route | You, contributors | Bench |
-| Task proposal | One proposed task and its review state | Clinicians, reviewers | Studio |
+| Family registry | The schema of a family file and of its aliases | MedOmni team | Studio, Bench, Perception |
+| Dataset config | A dataset package: description, format readers, rules, named definitions (their form is the builder's), converters | Contributors | Studio |
+| Event table | The table every dataset becomes, with its `FILE` rows | Core's loader | Studio |
+| Dataset policy | What a dataset's license allows | Contributors | Studio, Bench |
+| Built task | The content folder and atom tasks a builder writes. See [Built tasks](built-tasks.md) | A task builder | Bench |
+| Benchmark card | One benchmark: name, version, owner, license, the intelligence kinds it accepts | MedOmni team, plug-in packages | Studio, Bench, you |
+| Task set | `<template>@<cohort>` pairs pinned at version N, the arms to build them under, and the builder | MedOmni team, plug-in packages | Studio, Bench, you |
+| Config hash | The hash of a task's config files under one arm | A task builder | Bench, you |
+| Agent config | One intelligence of kind `agent`: name, model, route, and the settings its runner reads | You, contributors | Bench |
 | Model card | One encoder | Contributors | Perception, agents |
 | Container API | Requests between the gateway and an encoder image | MedOmni team | Perception |
 | Gateway API | Requests to the gateway and the evidence it returns | MedOmni team | Bench, agents, your code |
 | Prediction record | One answer for one target of one atom task: the only handoff from a run to the scorer | Bench's agent runner | Bench's scorer |
 | Result record | One run, or one score for one target, naming its intelligence | Bench | You, Studio |
-| Workspace config | Where your data copies, cache, built tasks and results are kept | You | Bench, Perception, Studio |
+| Workspace config | Where your data copies, built tasks and results are kept, and which cache backend is used | You | Bench, Perception, Studio |
 
 The fields of each are on its Reference page. Family files themselves are content, written by the MedOmni team; only their schema is a contract.
+
+## Studio's formats
+
+Studio defines its own formats. `medomni contracts check` checks them, and reading checks them, as for Core's contracts. They are not Core's: the recipe format belongs to MedOmni's builder, `medomni-v1`, and another [builder](built-tasks.md#write-your-own-builder) may read other files.
+
+| Format | Describes | Written by | Read by |
+|---|---|---|---|
+| Recipe | A cohort with its task version and test patients, a label library and evidence rules | Contributors | `medomni-v1` |
+| Task template | One task: targets, input, and an `agent` block (statement, instruction, environment, submission path) | Contributors | `medomni-v1` |
+| Dataset config, as `medomni-v1` reads it | The dataset config, with its named definitions written as cohort requirements | Contributors | `medomni-v1` |
+| Task proposal | One proposed task and its review state | Clinicians, reviewers | Studio |
 
 ## How a file is checked
 
@@ -46,7 +54,7 @@ Contracts follow the MedOmni release, such as v0.3.0. They have no version numbe
 Three things outlive a release, so each carries its own marker:
 
 - **Config hashes** start with the algorithm that made them, such as `cfg1:`, so published config hashes stay checkable after an upgrade.
-- **Tasks** carry their own [version](../bench/tasks.md#version), `N.X`, so a task set stays comparable across releases.
+- **Tasks** carry their own [version](../studio/tasks.md#version), `N.X`, so a task set stays comparable across releases.
 - **Encoder images** record the release that built them. The gateway runs any image built since the Container API last changed, so a release that leaves the Container API alone needs no rebuild.
 
 Only the MedOmni team changes contracts. To propose a change, such as a new family, open an issue.
@@ -63,8 +71,9 @@ It validates every contract file in the repository and in the installed plug-in 
 
 - `src/medomni/core/contracts/`: the classes and validators
 - `src/medomni/core/contracts/schemas/`: one JSON Schema per contract, for tools outside Python
+- `src/medomni/studio/build/contracts/` and `src/medomni/studio/schemas/`: Studio's formats and their JSON Schemas
 - `core/families/`: the family files, which follow the family registry contract
-- `bench/datasets/<dataset>/`: the dataset packages, which follow the dataset config, recipe and dataset policy contracts
+- `studio/datasets/<dataset>/`: the dataset packages, which follow the dataset config and dataset policy contracts, and `medomni-v1`'s recipe format
 
 ## Where next
 

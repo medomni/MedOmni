@@ -22,10 +22,10 @@ Three projects and the core they share:
 
 | Project | Does | Package | Command |
 |---|---|---|---|
-| **Bench** | Runs AI agents on medical tasks and scores them. A task gives an agent one patient's evidence and a clinical question; a fixed verifier scores the answer. It scores the agent as a whole (scaffold and model), as Terminal-Bench and SWE-bench do. | `medomni.bench` | `medomni bench` |
+| **Bench** | Runs AI agents on built medical tasks and scores them, whoever built the tasks. A task gives an agent one patient's evidence and a clinical question; a fixed verifier scores the answer. It scores the agent as a whole (scaffold and model), as Terminal-Bench and SWE-bench do. | `medomni.bench` | `medomni bench` |
 | **Perception** | Serves 44 medical encoders through an HTTP gateway. Each encoder reads one kind of input, such as a 12-lead ECG, and returns evidence for an agent or your own code. | `medomni.perception` | `medomni perception` |
-| **Studio** | The work people do around Bench and Perception: dataset survey, task proposals from clinicians, review and sign-off, cohort previews, the audit and reports. | `medomni.studio` | `medomni studio` |
-| **Core** | Shared by every project: the contracts, the `medomni` command, plug-in loading, dataset loading, the family converters, the cache and the testing kit. | `medomni.core` | `medomni` |
+| **Studio** | Makes and builds tasks: dataset survey, task proposals from clinicians, review and sign-off, cohort previews, MedOmni's task builder, the audit and reports. | `medomni.studio` | `medomni studio` |
+| **Core** | Shared by every project: the contracts, the `medomni` command, plug-in loading, dataset loading, the family converter interface, the cache, the built-task contract and the testing kit. | `medomni.core` | `medomni` |
 
 Not in v0.3.0: MedOmni Agent (a later project) and a PyPI release.
 
@@ -35,11 +35,11 @@ Not in v0.3.0: MedOmni Agent (a later project) and a PyPI release.
 |---|---|---|---|
 | Bench | **Agent evaluator** | Run your agent on MedOmni tasks and read the scores | [Run your agent](guides/run-your-agent.md) |
 | Perception | **Encoder user** | Call medical encoders over HTTP from your own code | [Use the encoders](guides/use-the-encoders.md) |
-| Bench or Perception | **Contributor** | Add an agent, a dataset or a task to Bench, or an encoder to Perception | [Contribute](guides/contribute.md) |
+| Bench, Studio or Perception | **Contributor** | Add an agent to Bench, a dataset or a task to Studio, or an encoder to Perception | [Contribute](guides/contribute.md) |
 
 ## How it fits together
 
-Bench and Perception each have their own package and content folder, and depend only on Core. Studio sits above both. Inside a task, the agent calls Perception's encoders through the perception service: Perception's gateway, run by Bench with a call budget and a call log. Tasks, traces and results stay on your machine. [Architecture](learn/architecture.md) shows the layout.
+Bench and Perception each have their own package and content folder, and depend only on Core. Studio sits above both: its builder writes built tasks, which Bench runs and scores. Inside a task, the agent calls Perception's encoders through the perception service: Perception's gateway, which Bench starts beside the agent, with a call budget and a call log. Tasks, traces and results stay on your machine. [Architecture](learn/architecture.md) shows the layout.
 
 ## Where next
 

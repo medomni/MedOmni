@@ -2,10 +2,10 @@
 
 Every dataset v0.3.0 builds tasks from, with how to get access and what its policy allows, and the fields of a dataset package.
 
-Contracts: dataset config, `dataset-config.schema.json`, and dataset policy, `dataset-policy.schema.json`, in `src/medomni/core/contracts/schemas/`. Each dataset has one package, in `bench/datasets/<dataset>/`.
+Contracts: dataset config, `dataset-config.schema.json`, and dataset policy, `dataset-policy.schema.json`, in `src/medomni/core/contracts/schemas/`. Each dataset has one package, in `studio/datasets/<dataset>/`, which MedOmni's builder, `medomni-v1`, reads with its own stricter `v1-dataset-config.schema.json`, in `src/medomni/studio/schemas/`.
 
 !!! note "Not legal advice"
-    Each policy summarises the data owner's license and data use agreement. `medomni bench run` enforces the route rules. You are responsible for the rest of your agreement.
+    Each policy summarises the data owner's license and data use agreement. You are responsible for following your agreement. Before a run, Bench checks the agent's route against the policy of each dataset in the task set, but it cannot check a route's conditions for you.
 
 ## Datasets in v0.3.0
 
@@ -39,6 +39,7 @@ Each cohort selects from its dataset's source population: the patients for whom 
 | `codes.csv` | yes | Every code the dataset emits: `code`, `description`, `source_table`. |
 | `policy.yaml` | yes | The dataset policy, below. |
 | `hooks/` | no | Python for what no reader option can express. See [Hooks](#hooks). |
+| `converters/` | no | The dataset's own family converters, listed in `dataset.yaml`. |
 | `tasks/` | no | Task templates and their cohorts. |
 
 `dataset.yaml`:
@@ -51,7 +52,9 @@ Each cohort selects from its dataset's source population: the patients for whom 
 | `verify` | no | What to check before reading, beyond the files the readers list. See [Verify](#verify). |
 | `read` | yes | A list of format readers, each with what it reads. See [Format readers](#format-readers). |
 | `rules` | no | Visit and timing rules. See [Visit rules](#visit-rules). |
-| `definitions` | no | Named definitions, such as a disease, that recipes use. See [Recipes](recipes.md#cohort-file). |
+| `definitions` | no | Named definitions, such as a disease, that recipes use. Core leaves their form to the builder; `medomni-v1` reads them as cohort requirements. See [Recipes](recipes.md#cohort-file). |
+| `converters` | no | The dataset's own [family converters](../learn/core/families.md#family-converters): files in the package, such as `converters/h5_to_edf.py`, each defining `CONVERTER`. Core loads them by path. |
+| `storage_mb` | no | The disk space each atom task gets, in MB. 16,384 when absent; BDSP sets 65,536. |
 
 ## Format readers
 
@@ -138,7 +141,7 @@ Hidden files and empty files are skipped.
 
 ## Hooks
 
-A hook is Python for what no reader option can express, at `bench/datasets/<dataset>/hooks/<name>.py`. A `hook` reader names it; hooks run after the other readers, in the order listed.
+A hook is Python for what no reader option can express, at `studio/datasets/<dataset>/hooks/<name>.py`. A `hook` reader names it; hooks run after the other readers, in the order listed.
 
 ```yaml
 read:
@@ -151,7 +154,7 @@ read:
 | `derive(rows, raw_root, params)` | yes | Returns new event rows. `rows` are the rows read so far, which it must not change; it may also read raw files. |
 | `inputs(raw_root, params)` | no | The raw files it reads, relative to your copy. They are checked before loading, and they join the cache key. |
 | `dummy(raw_root, subjects, params, rng)` | no | Writes those raw files for a dummy copy. `subjects` maps each subject id to its start time. |
-| `problems(raw_root, params)` | no | Problems in your copy, which `medomni bench data check` reports. |
+| `problems(raw_root, params)` | no | Problems in your copy, which `medomni studio data check` reports. |
 
 Every code a hook emits is listed in `codes.csv` with `source_table` `hook:<name>`.
 
@@ -173,7 +176,7 @@ The hooks in v0.3.0:
 | MIMIC-IV | `wdb` | Bedside waveforms and numerics: one row per segment and family, and one per numerics file. |
 | MIMIC-IV | `views` | Demographics, labs, ED vitals and outpatient measurements as one table, image sizes, and `crop_file` for the numerics. |
 | VitalDB | `download` | VitalDB's open API: the clinical, lab and track tables, then each case's `.vital` file. |
-| VitalDB | `views` | The case's demographics, the lab rows as one table, and `dummy_unit` for `.vital` files. |
+| VitalDB | `views` | The case's demographics, the lab rows as one table, and `dummy_unit` for `.vital` files. Lab times are dates counted from 2000-01-01 00:00:00, the start of the case, the moment the EDF recordings start; surgical times stay in seconds from the start of the case. |
 
 ## Verify
 
@@ -217,9 +220,9 @@ verify:
 
 ## Rules
 
-- `medomni bench run` refuses a route the policy marks `deny`, and asks you to confirm each condition of a `conditional` route.
+- Use only a route the policy allows. Before a run, Bench refuses a route the policy denies, and prints the `route_conditions` of a `conditional` route: it runs, and you must meet each condition. A dataset with no policy allows only `local`.
 - Nothing marked `deny` under `publish` is ever uploaded or published. For credentialed datasets, templates, recipes and config hashes ship instead of data.
-- A task sample on Hugging Face is allowed only where `publish.samples` is `allow`.
+- MedOmni's public Hugging Face repository holds dummy data only. No real record is published there, whatever the policy allows.
 
 ## Where next
 

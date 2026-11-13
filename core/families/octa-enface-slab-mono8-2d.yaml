@@ -1,0 +1,10 @@
+id: octa-enface-slab-mono8-2d
+read_by: deep-encoder
+protocol:
+  format: [dicom]
+  ndim: 2
+  dtype: uint8
+  range: null
+  planes: 1
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 9f6de5108c3bf985dd1ec922f4c53a429de7a214, dir: families/octa-enface-slab-mono8-2d/}

@@ -1,0 +1,27 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_stroke-infarct-ed
+dataset: mimic-iv
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: cerebral_infarction, label: 'mimic-iv:derived:cerebral-infarction', metric: auc}
+input:
+  demographics: [age, sex]
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+  labs: {}
+evidence: [default, full]
+exclude:
+  streams: [diagnoses, notes, 'medications (deferred, would need own leakage review)']
+agent:
+  statement: Predict whether this patient's hospital admission will be given a diagnosis of cerebral infarction.
+  instruction: '## Prediction time
+
+
+    - Index admission: the patient''s first hospital admission on record.
+
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
+
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

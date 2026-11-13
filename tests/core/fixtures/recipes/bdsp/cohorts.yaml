@@ -1,0 +1,144 @@
+# Ported from S1's p16_recipes.yaml by internal_docs/roadmaps/v0.3.0/roadmaps/s2/probes/p11_port_recipes.py. Do not edit.
+bdsp_arousal@n20:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - high_arousal_index_15h
+      n: 20
+      seed: 7
+    require:
+    - converts:
+        min_families: 3
+      when: select
+    source: all
+  targets:
+    high_arousal_index_15h: bdsp:psgmetric:arousal-high
+bdsp_demographic-eeg@n20:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - sex_female
+      n: 20
+      seed: 7
+    require:
+    - converts:
+        min_families: 3
+      when: select
+    source: all
+  targets:
+    age_ge_65: bdsp:bdspdemo:age-ge65
+    deceased_6mo: bdsp:bdspdemo:deceased-6mo
+    race_black: bdsp:bdspdemo:race-black
+    sex_female: bdsp:bdspdemo:sex-female
+bdsp_depression-sleep@n20:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - depressive_disorders
+      n: 20
+      seed: 7
+    require:
+    - converts:
+        min_families: 3
+      when: select
+    source: all
+  targets:
+    depressive_disorders: bdsp:derived:depression
+bdsp_hf-sleep@n20:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - heart_failure
+      n: 20
+      seed: 7
+    require:
+    - converts:
+        min_families: 3
+      when: select
+    source: all
+  targets:
+    heart_failure: bdsp:derived:heart-failure
+bdsp_snoring-demographic@n20:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - osa_severity_ahi
+      n: 20
+      seed: 7
+    require:
+    - converts:
+        min_families: 3
+      when: select
+    source: all
+  targets:
+    frequent_limb_movements: bdsp:psgmetric:limb-high
+    high_arousal_index: bdsp:psgmetric:arousal-high
+    low_sleep_efficiency: bdsp:psgmetric:eff-low
+    osa_severity_ahi: bdsp:psgclass:ahi-severity
+    reduced_n3: bdsp:psgmetric:n3-low
+    reduced_rem: bdsp:psgmetric:rem-low
+bdsp_snoring-metrics@ladder:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - osa_severity_ahi
+      n: 20
+      seed: 20260925|ladder-mid|bdsp_snoring-metrics
+    require:
+    - has_label: osa_severity_ahi
+    - files:
+      - snore-acoustic
+      - body-position-code-10hz
+      - resp-flow
+      - resp-effort-rip-2ch-50hz
+      - spo2-series-10hz-pct
+      - pulse-rate-10hz-bpm
+      - eeg-sleep-6ch-200hz-uv
+      - eog-2ch-200hz-uv
+      - emg-chin-200hz-uv
+      - emg-limb-200hz-uv
+      - ecg-1lead-200hz-uv
+      - psg-cardiorespiratory-4ch-200hz-mixed
+      - ppg-waveform-uncal
+      to: anchor
+    source: all
+  targets:
+    frequent_limb_movements: bdsp:psgmetric:limb-high
+    high_arousal_index: bdsp:psgmetric:arousal-high
+    low_sleep_efficiency: bdsp:psgmetric:eff-low
+    osa_severity_ahi: bdsp:psgclass:ahi-severity
+    reduced_n3: bdsp:psgmetric:n3-low
+    reduced_rem: bdsp:psgmetric:rem-low
+bdsp_snoring-metrics@n20:
+  cohort:
+    anchor:
+      event: RECORDING//END
+    select:
+      by:
+      - osa_severity_ahi
+      n: 20
+      seed: 7
+    require:
+    - converts:
+        min_families: 3
+      when: select
+    source: all
+  targets:
+    frequent_limb_movements: bdsp:psgmetric:limb-high
+    high_arousal_index: bdsp:psgmetric:arousal-high
+    low_sleep_efficiency: bdsp:psgmetric:eff-low
+    osa_severity_ahi: bdsp:psgclass:ahi-severity
+    reduced_n3: bdsp:psgmetric:n3-low
+    reduced_rem: bdsp:psgmetric:rem-low

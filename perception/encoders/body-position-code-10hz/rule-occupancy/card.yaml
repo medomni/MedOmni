@@ -1,39 +1,20 @@
-{
-  "id": "body-position-code-10hz__rule-occupancy",
-  "family": "body-position-code-10hz",
-  "modality": "position",
-  "summary": "Device-code occupancy, entropy and transition counts without assuming a posture codebook.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "Device-specific position codes are treated as categories; no supine/upright mapping is inferred.",
-    "Exact EDF-calibrated values define categories. More than 32 distinct values degrades as ambiguous or continuous input.",
-    "Transition counts include all code changes without debouncing; no sleep-position diagnosis."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "code_count",
-        "modal_fraction",
-        "code_entropy",
-        "transition_count",
-        "duration"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/body-position-code-10hz__rule-occupancy:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: body-position-code-10hz__rule-occupancy
+family: body-position-code-10hz
+modality: position
+summary: Device-code occupancy, entropy and transition counts without assuming a posture codebook.
+authors:
+- {name: Bosong Huang}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: [Device-specific position codes are treated as categories; no supine/upright mapping is inferred., Exact EDF-calibrated
+    values define categories. More than 32 distinct values degrades as ambiguous or continuous input., Transition counts include
+    all code changes without debouncing; no sleep-position diagnosis.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [code_count, modal_fraction, code_entropy, transition_count, duration]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/body-position-code-10hz__rule-occupancy:dev', digest: null}
+acceptance: pending

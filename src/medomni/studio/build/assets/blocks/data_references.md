@@ -1,0 +1,1 @@
+`references.jsonl` lists this patient's larger signal and image files, each with its `path`, `family` and, where recorded, its time. Every `path` is relative to `/workspace/data/`, where the file is mounted read-only.

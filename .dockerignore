@@ -1,11 +1,22 @@
-# ALLOWLIST (fix roadmap F3, 2026-09-24): the sidecar image build context is exactly what
-# harness/perception-image/Dockerfile COPYs — nothing else. A denylist leaked every new tree
-# (runs/ traces are DUA; atomtasks*/ are tens of GB) into docker's small loopback storage.
+# The perception service image (src/medomni/perception/sidecar/Dockerfile) is the one build with the repository root
+# as its context. BuildKit reads that Dockerfile's own Dockerfile.dockerignore; Docker's legacy builder reads only this
+# file, so the two carry the same rules (tests/perception/test_sidecar.py checks it). Encoder builds stage their own
+# contexts, and task environments build from their atom folder, so neither reads this file.
+# Only what the Dockerfile copies: the encoders' weights (*/assets), test data and runtime state stay out.
 *
-!perception
-!data_task/families
-!data_task/family_alias.yaml
-!harness/perception-image
-# inside the allowed trees: never ship runtime state
-perception/var
+!pyproject.toml
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception
+!core/families
+# the legacy builder can't re-include a file through a wildcard folder, so: the encoder tree, nothing inside an
+# encoder folder, then its three files
+!perception/encoders
+perception/encoders/*/*/*
+!perception/encoders/*/*/card.yaml
+!perception/encoders/*/*/adapter.py
+!perception/encoders/*/*/Dockerfile
+!perception/deployed.yaml
+!perception/deployment.yaml
 **/__pycache__
+**/*.pyc

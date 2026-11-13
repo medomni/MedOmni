@@ -2,28 +2,18 @@ id: resp-effort-rip-2ch-50hz__neurokit2
 family: resp-effort-rip-2ch-50hz
 modality: resp
 summary: Breathing rate and cycle count from chest and abdominal respiratory effort.
+authors:
+- {name: Timo Stoffregen}
 outputs:
 - kind: labels
   scale: physical
-  labels:
-  - thorax_breathing_rate_mean
-  - thorax_cycle_count
-  - abdomen_breathing_rate_mean
-  - abdomen_cycle_count
-limits:
-- Requires 60 seconds to 30 minutes of two finite, non-flat effort channels at 50
-  Hz.
-- Each channel is processed independently with the Khodadad peak detector.
-- Uncalibrated amplitude is not lung volume. No apnea diagnosis or thoracoabdominal
-  synchrony is reported.
-reliability:
-  status: unmeasured
+  labels: [thorax_breathing_rate_mean, thorax_cycle_count, abdomen_breathing_rate_mean, abdomen_cycle_count]
+limits: ['Requires 60 seconds to 30 minutes of two finite, non-flat effort channels at 50 Hz.', Each channel is processed
+    independently with the Khodadad peak detector., Uncalibrated amplitude is not lung volume. No apnea diagnosis or thoracoabdominal
+    synchrony is reported.]
+reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source:
-  url: https://github.com/neuropsychology/NeuroKit
-  rev: ff419d983568ef492eb8d229af643c0ef0100b32
-runtime:
-  image: ghcr.io/medomni/resp-effort-rip-2ch-50hz__neurokit2
-  digest: null
+source: {url: 'https://github.com/neuropsychology/NeuroKit', rev: ff419d983568ef492eb8d229af643c0ef0100b32}
+runtime: {image: ghcr.io/medomni/resp-effort-rip-2ch-50hz__neurokit2, digest: null}
 acceptance: pending

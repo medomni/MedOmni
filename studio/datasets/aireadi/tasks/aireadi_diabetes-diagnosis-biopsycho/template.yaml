@@ -1,0 +1,27 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_diabetes-diagnosis-biopsycho
+dataset: aireadi
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: diabetes_status, label: 'aireadi:aireadi-dmstatus', metric: qwk}
+input:
+  omop_terms: [CES-D-10 depression score, Diet score, Smoking history, Alcohol use, Cannabis use, Vaping, Medication use survey,
+    Education level, Food insecurity (PhenX), Neighbourhood environment (PhenX), Racial / ethnic discrimination (PhenX), Health
+      insurance coverage (PhenX), Discrimination in health care (PhenX), Driving habits, Years of education]
+  omop: [ces1, ces10, ces2, ces3, ces4, ces5, ces6, ces7, ces8, ces9, cestl, cm_act, cm_ant, cm_asp, cm_dcg, cm_ibp, cm_slp,
+    cmtrt_a1c, cmtrt_glcs, cmtrt_insln, cmtrt_lfst, dietscore, dmledu, dri1, dri2, food_insecurity_change_diet_frequency,
+    sualcage, sualcdrv, sualckncf, subrdosfr, subrkncf, sulqdosfr, sulqkncf, sumrjcdur, sumrjceddur, sumrjfr, sumrjkncf, sumrjstage,
+    sumrjtrt, susmkcdur, susmkdosfr, susmkncf, susmkstaage, susmkstoage, suvpcdur, suvpdosfr, suvpkncf1, suvpstage, suvptoage,
+    suvptoyr, suwndosfr, suwnkncf, years_of_education]
+evidence: [default, full]
+agent:
+  statement: Classify this participant's diabetes status.
+  instruction: '## Prediction time
+
+
+    - The evidence is the participant''s data from their study visit.
+
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

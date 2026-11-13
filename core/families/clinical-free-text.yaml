@@ -1,0 +1,12 @@
+id: clinical-free-text
+read_by: direct
+protocol:
+  format: [table]
+  ndim: 1
+  dtype: text
+  range: null
+status: declared
+samples: null
+pending: {since: '2026-09-20', by: Bosong Huang, question: notes engine parked until the diagnosis-task text-leakage policy
+    is ruled (in-window radiology reports can state the target in prose; window cut alone does not close it), ref: docs/roadmaps/data_task-manifests.md
+    (family incorporation ladder)}

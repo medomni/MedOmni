@@ -1,0 +1,22 @@
+# Evidence rules (Recipes reference page). From S1's p22_evidence.yaml (U1.22).
+files: {}
+static:
+  aliases:
+    age:
+    - age_at_visit
+    - shifted_date_of_birth
+    death_date:
+    - shifted_date_of_death
+    race:
+    - race
+    - ethnic_group
+    sex:
+    - gender
+    - sex
+  blank: guard.fields
+tables:
+  diagnosis:
+    drop: guard
+    time: shifted_dx_time_date
+reading_note: "The EDF channel layout and native sampling rates differ per file — read each file's own header rather than assuming one layout or rate."
+views: psg

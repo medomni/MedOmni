@@ -1,0 +1,33 @@
+# F1 fixtures — expected verdict per case (fix roadmap, test-scheme.md T1).
+# Each gate dir holds one `control` (must stay GREEN) and cases that differ from it by exactly ONE
+# declared mutation (verified: `diff -r <gate>/control <gate>/<case>` shows only that line).
+# Verdicts: GREEN = gate passes · RED = gate fails · FLAG = reported, does not fail (T1-constgold only).
+
+t1-eligible:            # D-8: an adm24h atom's index admission must still be open at B = admit + 24 h
+  reads: parent.json index_stay[sid] {admit, disch, death}  (builder-only; the agent-visible index row is masked)
+  control:                  {verdict: GREEN, stay_hours: 40}
+  short_stay_12h:           {verdict: RED,   mutation: "index_stay.disch = admit + 12 h"}
+  closes_at_boundary_24h:   {verdict: RED,   mutation: "index_stay.disch = admit + 24 h  (== B: 'at or before' is RED)"}
+
+t1-leak:                # provenance mask: the INDEX admission row carries no outcome field, read from the bytes
+  reads: data/tables/admissions.csv (index row = hadm_id in parent.json index_stay) + data/tables/diagnoses_icd.csv
+  control:                        {verdict: GREEN, note: "a PRIOR admission row with populated dischtime / discharge_location / flag=0 is legitimate history and must pass"}
+  unmasked_dischtime:             {verdict: RED, mutation: "index row dischtime populated"}
+  unmasked_deathtime:             {verdict: RED, mutation: "index row deathtime populated"}
+  unmasked_hospital_expire_flag:  {verdict: RED, mutation: "index row hospital_expire_flag = 1"}
+  unmasked_discharge_location:    {verdict: RED, mutation: "index row discharge_location = DIED"}
+  unmasked_edouttime:             {verdict: RED, mutation: "index row edouttime populated (in leakage.ADMISSION_OUTCOME_FIELDS)"}
+  index_dx_rows:                  {verdict: RED, mutation: "diagnoses_icd gains a row on the INDEX hadm_id (discharge-assigned codes, task-contract §3)"}
+
+t1-eventgate:           # D-9: for every event target, no gold positive has its event timestamp <= B
+  reads: parent.json targets[].event, boundaries[sid], event_times[target][sid]  (builder-only)
+  control:          {verdict: GREEN, note: "2 positives, ICU intime B + 5 h; 2 negatives"}
+  icu_at_boundary:  {verdict: RED,   mutation: "event_times.icu_admission.FX0301 = B exactly (equality edge: '<=' is RED)"}
+
+t1-constgold:           # a gold constant over the whole eligible POOL is a defect; outside plausible bounds is flagged
+  reads: parent.json pool_stats[target] {derivation, metric_family, n_eligible, counts} + plausible.fixture.yaml
+  control_binary:           {verdict: GREEN, counts: "0:900 / 1:308  (25.5 %, inside [0.05, 0.60])"}
+  constant_binary:          {verdict: RED,   counts: "0:1208  (constant — the frequent_limb_movements defect)"}
+  implausible_binary:       {verdict: FLAG,  counts: "0:1205 / 1:3  (0.25 %, below 0.05 — a partial fix must not pass silently)"}
+  control_numeric_bounded:  {verdict: GREEN, counts: "6:96 / 5:2 / 4:1  (bounded scale, 3 values; >= 2 distinct passes)"}
+  constant_numeric:         {verdict: RED,   counts: "6:99  (constant)"}

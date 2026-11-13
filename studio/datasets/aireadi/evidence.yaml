@@ -1,0 +1,14 @@
+# Evidence rules (Recipes reference page). From S1's p22_evidence.yaml (U1.22).
+files:
+  mode: reference  # files are referenced in place, not copied into the atom (v0.2 data_mode, U2.9)
+static: {}
+tables:
+  condition_occurrence: &id001
+    drop: guard
+    write_empty: true
+  measurement: *id001
+  observation: *id001
+  procedure_occurrence: *id001
+  visit_occurrence: *id001
+reading_note: "Each file format needs its own reader; read each file's own header rather than assuming a layout."
+views: views

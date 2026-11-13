@@ -1,0 +1,54 @@
+# Ported from S1's p17_labels.yaml by internal_docs/roadmaps/v0.3.0/roadmaps/s2/probes/p11_port_recipes.py. Do not edit.
+derived:acute-renal-failure:
+  exists: ^DIAGNOSIS//ICD//(N17|584)
+  from: any
+  to: any
+derived:cerebral-infarction:
+  exists: ^DIAGNOSIS//ICD//(I63|433|434)
+  from: any
+  to: any
+derived:ckd-kdigo:
+  from: any
+  op: ==
+  to: any
+  value: CKD//LABEL
+  x: 1
+derived:coagulation-hemorrhagic:
+  exists: ^DIAGNOSIS//ICD//(D65|D66|D67|D68|D69|286|287)
+  from: any
+  to: any
+derived:heart-failure:
+  exists: ^DIAGNOSIS//ICD//(I50|428)
+  from: any
+  to: any
+derived:septicemia:
+  exists: ^DIAGNOSIS//ICD//(A40|A41|038)
+  from: any
+  to: any
+outcome:ed-revisit-30d:
+  exists: ED//STAY
+  from: visit:MIMIC//DISCHARGE
+  include_from: false
+  to: visit:MIMIC//DISCHARGE + 30 days
+outcome:icu-admission:
+  exists: MIMIC//ICU_ADMISSION
+  from: any
+  same_visit: true
+  to: any
+outcome:in-hospital-death:
+  exists: MIMIC//DEATH
+  from: any
+  same_visit: true
+  to: any
+outcome:los-gt7:
+  from: anchor.event
+  include_to: false
+  none: MIMIC//DISCHARGE
+  same_visit: true
+  to: anchor.event + 8 days
+outcome:readmit-30d:
+  exists: MIMIC//ADMISSION
+  from: visit:MIMIC//DISCHARGE
+  include_to: false
+  other_visit: true
+  to: visit:MIMIC//DISCHARGE + 31 days

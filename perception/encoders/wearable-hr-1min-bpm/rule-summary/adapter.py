@@ -1,6 +1,6 @@
 """Observed heart-rate summaries; no interpolation or clinical classification."""
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "wearable-hr-1min-bpm"
 

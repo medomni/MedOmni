@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-config.schema.json",
+  "x-contract": "agent config",
+  "additionalProperties": false,
+  "description": "An agent config (Run your agent guide): an intelligence of kind `agent` (R-76). What the runner needs beyond the\nmodel is in `settings`, which that runner owns and checks (R-145); Core reads none of it.",
+  "properties": {
+    "kind": {
+      "const": "agent",
+      "default": "agent",
+      "title": "Kind",
+      "type": "string"
+    },
+    "name": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Name",
+      "type": "string"
+    },
+    "model": {
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "route": {
+      "enum": [
+        "local",
+        "cloud"
+      ],
+      "title": "Route",
+      "type": "string"
+    },
+    "runner": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runner"
+    },
+    "settings": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Settings",
+      "type": "object"
+    }
+  },
+  "required": [
+    "name",
+    "model",
+    "route"
+  ],
+  "title": "AgentConfig",
+  "type": "object"
+}

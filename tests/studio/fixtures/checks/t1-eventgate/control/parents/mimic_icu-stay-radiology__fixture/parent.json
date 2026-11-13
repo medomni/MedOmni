@@ -1,0 +1,32 @@
+{
+ "type": "mimic_icu-stay-radiology",
+ "generation": "fix-fixture",
+ "batch": "fixture",
+ "boundary_kind": "adm0",
+ "targets": [
+  {
+   "name": "icu_admission",
+   "derivation": "outcome:icu-admission",
+   "metric_family": "auc",
+   "event": true
+  }
+ ],
+ "cohort": [
+  "FX0301",
+  "FX0302",
+  "FX0303",
+  "FX0304"
+ ],
+ "boundaries": {
+  "FX0301": "2150-05-01 09:00:00",
+  "FX0302": "2150-05-02 09:00:00",
+  "FX0303": "2150-05-03 09:00:00",
+  "FX0304": "2150-05-04 09:00:00"
+ },
+ "event_times": {
+  "icu_admission": {
+   "FX0301": "2150-05-01 14:00:00",
+   "FX0302": "2150-05-02 14:00:00"
+  }
+ }
+}

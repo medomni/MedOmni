@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-set.schema.json",
+  "x-contract": "task set",
+  "$defs": {
+    "SetEntry": {
+      "additionalProperties": false,
+      "description": "One pin: a task id at version N, and nothing else (R-108, R-111). Entries never change; a new N enters only\na new set. Imported v0.2 sets pin version 0.",
+      "properties": {
+        "task": {
+          "pattern": "^\\S+$",
+          "title": "Task",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 0,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "task",
+        "version"
+      ],
+      "title": "SetEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A benchmark's `sets/<name>.yaml`: grow-only pins of task ids at a version, the builder that builds them, and the\narms they are built under (R-83, R-84, R-108).",
+  "properties": {
+    "name": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "builder": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Builder",
+      "type": "string"
+    },
+    "arms": {
+      "items": {
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Arms",
+      "type": "array"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/SetEntry"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "builder",
+    "arms",
+    "tasks"
+  ],
+  "title": "TaskSet",
+  "type": "object"
+}

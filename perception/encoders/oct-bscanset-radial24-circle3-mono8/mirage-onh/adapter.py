@@ -12,7 +12,7 @@ acquisition geometries, which is the kind of average nobody could interpret
 afterwards. An encoder for the circle scans is a separate encoder, and this one
 says how many it declined.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import contextlib
 import os
@@ -22,7 +22,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from contract import Degraded, embedding, labels
+from medomni.perception.runtime import Degraded, embedding, labels
 
 FAMILY = "oct-bscanset-radial24-circle3-mono8"
 

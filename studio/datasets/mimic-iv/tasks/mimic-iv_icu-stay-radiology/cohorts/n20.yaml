@@ -1,0 +1,16 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+version: '1.0'
+source: {}
+anchor: {event: MIMIC//ADMISSION, pick: first}
+require:
+- none: [MIMIC//ICU_ADMISSION]
+  to: anchor
+  same_visit: true
+- none: [MIMIC//DEATH]
+  to: anchor
+  same_visit: true
+select:
+  n: 20
+  by: [icu_admission]
+  balance: ['derived:cxr-before-anchor']
+  seed: 7

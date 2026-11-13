@@ -1,0 +1,3 @@
+subject_id,hadm_id,admittime,dischtime,deathtime,admission_type,admit_provider_id,admission_location,discharge_location,insurance,language,marital_status,race,edregtime,edouttime,hospital_expire_flag
+FX0201,FXH0011,2149-09-13 08:00:00,2149-09-18 08:00:00,,EW EMER.,,EMERGENCY ROOM,HOME,Other,ENGLISH,SINGLE,UNKNOWN,,,0
+FX0201,FXH0012,2150-04-01 08:00:00,2150-04-03 20:00:00,,EW EMER.,,EMERGENCY ROOM,,Other,ENGLISH,SINGLE,UNKNOWN,,,

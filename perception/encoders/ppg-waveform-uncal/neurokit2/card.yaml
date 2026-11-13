@@ -2,35 +2,25 @@ id: ppg-waveform-uncal__neurokit2
 family: ppg-waveform-uncal
 modality: ppg
 summary: Pulse rate, detected beat count, and template similarity from an uncalibrated PPG waveform.
-intended_use: >-
-  Continuous uncalibrated PPG of sufficient length to contain several beats. Reports waveform-derived rate and beat quality, not blood pressure or oxygenation.
+authors:
+- {name: Timo Stoffregen}
+- {name: Bosong Huang}
+intended_use: Continuous uncalibrated PPG of sufficient length to contain several beats. Reports waveform-derived rate and
+  beat quality, not blood pressure or oxygenation.
 outputs:
 - kind: labels
   scale: physical
-  labels:
-  - pulse_rate_mean
-  - pulse_rate_min
-  - pulse_rate_max
-  - beat_count
+  labels: [pulse_rate_mean, pulse_rate_min, pulse_rate_max, beat_count]
 - kind: labels
   scale: score
-  labels:
-  - template_quality_mean
-limits:
-- Reads one Pleth, Plethysmogram, or PPG channel from continuous EDF or a single-segment WFDB record.
-- Requires at least 30 seconds at a native sample rate of at least 25 Hz. Missing or flat signals are
-  rejected.
-- Elgendi cleaning and peak detection are used. Pulse rate is not an ECG rhythm diagnosis.
-- Quality is mean beat-template correlation, not a calibrated probability.
-- Amplitude is uncalibrated. No oxygen saturation or physical amplitude is inferred.
-reliability:
-  status: unmeasured
+  labels: [template_quality_mean]
+limits: ['Reads one Pleth, Plethysmogram, or PPG channel from continuous EDF or a single-segment WFDB record.', Requires at
+    least 30 seconds at a native sample rate of at least 25 Hz. Missing or flat signals are rejected., Elgendi cleaning and
+    peak detection are used. Pulse rate is not an ECG rhythm diagnosis., 'Quality is mean beat-template correlation, not a
+    calibrated probability.', Amplitude is uncalibrated. No oxygen saturation or physical amplitude is inferred.]
+reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source:
-  url: https://github.com/neuropsychology/NeuroKit
-  rev: ff419d983568ef492eb8d229af643c0ef0100b32
-runtime:
-  image: ghcr.io/medomni/ppg-waveform-uncal__neurokit2
-  digest: null
+source: {url: 'https://github.com/neuropsychology/NeuroKit', rev: ff419d983568ef492eb8d229af643c0ef0100b32}
+runtime: {image: ghcr.io/medomni/ppg-waveform-uncal__neurokit2, digest: null}
 acceptance: pending

@@ -7,9 +7,9 @@ statements below are the model's own and not ours.
 The adapter owns only what is specific to this model — the lead order it expects,
 the ten-second window, and the normalization it was trained with. Reading the
 record and naming its leads is family work and happens upstream, in
-runtime/contract.py.
+medomni.perception.runtime.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import os
 import sys
@@ -18,7 +18,8 @@ import numpy as np
 import torch
 from scipy.signal import resample
 
-from contract import BadRequest, Degraded, embedding, labels
+from medomni.perception.runtime import BadRequest, Degraded, embedding, labels
+from medomni.perception.runtime.helpers import check_norm_unused
 
 FAMILY = "ecg-1lead-200hz-uv"
 
@@ -58,37 +59,14 @@ _ARCHITECTURE = dict(
 )
 
 
-def _check_norm_unused(state):
-    """The checkpoint carries BatchNorm tensors, and the network runs without them.
-
-    That pairing looks like a mistake — weights loaded and then ignored — so it
-    is checked instead of trusted. In the published checkpoint every BatchNorm
-    tensor is still at its initialization value: scale one, shift zero, running
-    mean zero, running variance one, no batches tracked. That is what a network
-    trained with use_bn=False leaves behind, and it is why running it with
-    use_bn=False discards nothing.
-
-    A future checkpoint with trained statistics would be silently wrong here, so
-    it must fail at start rather than answer.
-    """
-    at_init = {"weight": 1.0, "bias": 0.0, "running_mean": 0.0, "running_var": 1.0,
-               "num_batches_tracked": 0}
-    for key, tensor in state.items():
-        field = key.rsplit(".", 1)[-1]
-        if "bn" not in key or field not in at_init:
-            continue
-        if not torch.all(tensor.to(torch.float64) == at_init[field]):
-            raise RuntimeError(
-                f"{key} holds trained statistics, but this network runs with "
-                "use_bn=False and would ignore them. Refusing to answer with a "
-                "model that is not the one the weights describe.")
+_check_norm_unused = check_norm_unused  # shared with the other ECGFounder heads
 
 
 def _read_labels():
     """The head's vocabulary, from the upstream file at the pinned revision.
 
     The card declares the same list. Keeping the two independent is deliberate:
-    registry.py test compares what the adapter emits against what the card
+    `medomni perception check` compares what the adapter emits against what the card
     declares, which only means something while they come from different places.
     """
     names = [line.strip() for line in open(LABEL_FILE, encoding="utf-8")

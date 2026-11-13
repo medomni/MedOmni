@@ -1,39 +1,20 @@
-{
-  "id": "resp-impedance-62hz-ohm__rule-amplitude",
-  "family": "resp-impedance-62hz-ohm",
-  "modality": "respiratory",
-  "summary": "Native-rate respiratory impedance amplitude summaries in ohms, without resampling.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "Descriptive waveform features only, not respiratory rate, tidal volume or apnea diagnosis.",
-    "Requires the Resp waveform at 62.4725 Hz in Ohm; metadata and annotation channels cannot substitute.",
-    "No filtering or gap filling; non-finite samples degrade."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "resp_mean",
-        "resp_std",
-        "resp_rms",
-        "resp_peak_to_peak",
-        "resp_duration"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/resp-impedance-62hz-ohm__rule-amplitude:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: resp-impedance-62hz-ohm__rule-amplitude
+family: resp-impedance-62hz-ohm
+modality: respiratory
+summary: Native-rate respiratory impedance amplitude summaries in ohms, without resampling.
+authors:
+- {name: Nicolas Zumarraga}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: ['Descriptive waveform features only, not respiratory rate, tidal volume or apnea diagnosis.', Requires the Resp waveform
+    at 62.4725 Hz in Ohm; metadata and annotation channels cannot substitute., No filtering or gap filling; non-finite samples
+    degrade.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [resp_mean, resp_std, resp_rms, resp_peak_to_peak, resp_duration]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/resp-impedance-62hz-ohm__rule-amplitude:dev', digest: null}
+acceptance: pending

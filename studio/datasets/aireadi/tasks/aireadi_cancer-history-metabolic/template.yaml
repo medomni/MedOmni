@@ -1,0 +1,24 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_cancer-history-metabolic
+dataset: aireadi
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: cancer_history, label: 'aireadi:omopbin:mhoccur_ca', metric: auc}
+input:
+  omop_terms: [HbA1c, Serum glucose, Total cholesterol, LDL cholesterol, HDL cholesterol, Triglycerides, BMI, Diet score,
+    Smoking history, Alcohol use, Medication use survey, 'Clinical record (survey, clinic tests, labs)']
+  omop: [cm_act, cm_ant, cm_asp, cm_dcg, cm_ibp, cm_slp, cmtrt_a1c, cmtrt_glcs, cmtrt_insln, cmtrt_lfst, dietscore, sualcage,
+    sualcdrv, sualckncf, subrdosfr, subrkncf, sulqdosfr, sulqkncf, susmkcdur, susmkdosfr, susmkncf, susmkstaage, susmkstoage,
+    suwndosfr, suwnkncf]
+evidence: [default, full]
+agent:
+  statement: Predict whether this participant has a history of cancer.
+  instruction: '## Prediction time
+
+
+    - The evidence is the participant''s data from their study visit.
+
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

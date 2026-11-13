@@ -2,24 +2,21 @@ id: ppg-waveform-uncal__bayesbeat
 family: ppg-waveform-uncal
 modality: ppg
 summary: Atrial-fibrillation probabilities and Bayesian uncertainty from a 25-second PPG segment.
+authors:
+- {name: Timo Stoffregen}
 intended_use: Bedside or wearable PPG with enough quality for pulse-rhythm analysis.
 outputs:
 - kind: labels
   scale: probability
   labels: [non_af, af, non_af_epistemic, af_epistemic, non_af_aleatoric, af_aleatoric]
-options:
-  start_sec: Start of the 25-second segment. The default is zero.
-  samples: Number of Bayesian forward passes, from 2 through 100. The default is 15.
-limits:
-- Uses the upstream 0.5-4 Hz filter, 32 Hz resampling, and zero-to-one scaling.
-- Needs one complete, finite, non-flat 25-second segment.
-- Uncertainty values are model outputs. They are not calibrated clinical confidence intervals.
+options: {start_sec: Start of the 25-second segment. The default is zero., samples: 'Number of Bayesian forward passes, from
+    2 through 100. The default is 15.'}
+limits: ['Uses the upstream 0.5-4 Hz filter, 32 Hz resampling, and zero-to-one scaling.', 'Needs one complete, finite, non-flat
+    25-second segment.', Uncertainty values are model outputs. They are not calibrated clinical confidence intervals.]
 reliability: {status: unmeasured}
 non_training: true
 license: UNDECLARED
-source: {url: https://github.com/Sarathismg/BayesBeat, rev: a5e50eedec15366d16efd9e0e4023362cc2cc89c}
-weights:
-  sha256: c5c717731fc1c07877abf43699cbd29589ce635e5f33c639cfa3941b5cc1fe86
-  uri: https://raw.githubusercontent.com/Sarathismg/BayesBeat/a5e50eedec15366d16efd9e0e4023362cc2cc89c/saved_model/bayesbeat_cpu.pt
+source: {url: 'https://github.com/Sarathismg/BayesBeat', rev: a5e50eedec15366d16efd9e0e4023362cc2cc89c}
+weights: {sha256: c5c717731fc1c07877abf43699cbd29589ce635e5f33c639cfa3941b5cc1fe86, uri: 'https://raw.githubusercontent.com/Sarathismg/BayesBeat/a5e50eedec15366d16efd9e0e4023362cc2cc89c/saved_model/bayesbeat_cpu.pt'}
 runtime: {image: ghcr.io/medomni/ppg-waveform-uncal__bayesbeat, digest: null}
 acceptance: pending

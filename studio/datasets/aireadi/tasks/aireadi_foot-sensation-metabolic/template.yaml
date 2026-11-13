@@ -1,0 +1,33 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_foot-sensation-metabolic
+dataset: aireadi
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: foot_sensation_impaired_right, label: 'aireadi:omopthresh:mssrffl:<10', metric: auc}
+- {name: foot_sensation_impaired_left, label: 'aireadi:omopthresh:msslffl:<10', metric: auc}
+input:
+  omop_terms: [Type 2 diabetes on oral / non-insulin medication, Healthy (no diabetes), 'Pre-diabetes, lifestyle-controlled',
+    'Type 2 diabetes, insulin-dependent', High blood pressure, Elevated A1C levels (elevated blood sugar, High blood cholesterol,
+    Type II Diabetes, Pre-diabetes, Diabetic retinopathy (in one or both, HbA1c, Serum glucose, Insulin, C-peptide, Total
+      cholesterol, LDL cholesterol, HDL cholesterol, Triglycerides, Creatinine, Urea nitrogen (BUN), Urine albumin, Urine
+      creatinine, Systolic blood pressure, Diastolic blood pressure, Resting heart rate, BMI, Weight, Waist circumference,
+    Waist-to-hip ratio, PAID-5 diabetes distress score, Diet score, Family history of type 2 diabetes, 'Diabetes lifestyle
+      survey (exercise, diet habits, foot care)']
+  files: {cgm-5min-mgdl: wearable_blood_glucose/continuous_glucose_monitoring/, fundus-photography-2d: retinal_photography/cfp/,
+    oct-volume-raster-mono8-3d: 'aireadi:oct-volume-raster-mono8-3d', octa-enface-slab-mono8-2d: 'aireadi:octa-enface-slab-mono8-2d',
+    octa-flowcube-mono8-3d: retinal_octa/flow_cube/, retinal-heightmap-surfaces-f32: retinal_octa/segmentation/}
+  omop: [bmi_vsorres, bp1_sysbp_vsorres, bp2_sysbp_vsorres, cmtrt_glcs, cmtrt_insln, dietscore, import_glucose, import_hba1c,
+    import_hdl_cholesterol, import_insulin, import_ldl_cholesterol, import_total_cholesterol, import_triglycerides, mhoccur_hbp,
+    mhterm_dm1, mhterm_dm2, mhterm_predm, waist_vsorres, weight_vsorres]
+evidence: [default, full]
+agent:
+  statement: Predict whether this participant has impaired protective foot sensation on monofilament testing.
+  instruction: '## Prediction time
+
+
+    - The evidence is the participant''s data from their study visit.
+
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

@@ -17,6 +17,6 @@ Pinned revision: 123d9ca78103450717a58402d3ab4aadf2428a2e
 
 Samples 01 and 04 are artifacts in the published family samples, not encoder errors; the family samples should be re-cut with a plausibility screen.
 
-Raw MIMIC bedside segment p<subject>/88501826_0015 (7 channels, pressures at two samples per frame): healthy, CVP and PAP read at 124.945 Hz for 3237 s, five non-pressure channels ignored and reported, 42% (CVP) and 85% (PAP) of samples flagged implausible.
+A raw bedside segment from the MIMIC-IV Waveform Database 0.1.0 (open access, ODbL 1.0) (7 channels, pressures at two samples per frame): healthy, CVP and PAP read at 124.945 Hz for 3237 s, five non-pressure channels ignored and reported, 42% (CVP) and 85% (PAP) of samples flagged implausible.
 
 Real samples remain outside Git: redistribution license is unspecified in the HF manifest. Smoke tests do not establish clinical reliability.

@@ -1,0 +1,21 @@
+[
+  {
+    "path": "checkpoint.pth",
+    "sha256": "0a8eedb6a24967a084d9e9bf4eabf34611ffa4398473c7078bd051602c77d230",
+    "repo": "MedOmni/encoder-assets",
+    "file": "weights/fundus-photography-2d__retfound-jsiec/RETFound_JSIEC_checkpoint-best.pth",
+    "revision": "ea0d6ceb08299637f4fcd231ad7187e01b73174d",
+    "type": "dataset",
+    "weights": true
+  },
+  {
+    "path": "models_vit.py",
+    "sha256": "f5a91312fcbac14141405d24a92ac3a95e2573e98260bbd3c5b044792edd2f75",
+    "url": "https://raw.githubusercontent.com/rmaphoh/RETFound/ae9a9ecf37857cf47b8aa9f87cd6f710d75db287/models_vit.py"
+  },
+  {
+    "path": "LICENSE",
+    "sha256": "517acfe79046fca3d989a5a6f8b55b8c3919bb442609bd9ed0e81af6e25deb3a",
+    "url": "https://raw.githubusercontent.com/rmaphoh/RETFound/ae9a9ecf37857cf47b8aa9f87cd6f710d75db287/LICENSE"
+  }
+]

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workspace-config.schema.json",
+  "x-contract": "workspace config",
+  "$defs": {
+    "CacheSetting": {
+      "additionalProperties": false,
+      "description": "Which cache backend a workspace uses (Cache page, R-155): Core's `folder` or `none`, or one from a plug-in\npackage (`medomni.caches`). `path` and `options` are the backend's; the folder backend needs `path`.",
+      "properties": {
+        "backend": {
+          "default": "folder",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Backend",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "options": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Options",
+          "type": "object"
+        }
+      },
+      "title": "CacheSetting",
+      "type": "object"
+    },
+    "DatasetPath": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "DatasetPath",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`<workspace>/workspace.yaml`: where your copies, cache, built tasks, runs and results are (U2.7, R-60).",
+  "properties": {
+    "datasets": {
+      "default": {},
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "$ref": "#/$defs/DatasetPath"
+        }
+      },
+      "title": "Datasets",
+      "type": "object"
+    },
+    "cache": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/CacheSetting"
+        }
+      ],
+      "title": "Cache"
+    },
+    "tasks": {
+      "title": "Tasks",
+      "type": "string"
+    },
+    "runs": {
+      "title": "Runs",
+      "type": "string"
+    },
+    "results": {
+      "title": "Results",
+      "type": "string"
+    },
+    "deployment": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Deployment",
+      "type": "object"
+    },
+    "hf_cache": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Hf Cache"
+    },
+    "scratch": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scratch"
+    }
+  },
+  "required": [
+    "cache",
+    "tasks",
+    "runs",
+    "results"
+  ],
+  "title": "WorkspaceConfig",
+  "type": "object"
+}

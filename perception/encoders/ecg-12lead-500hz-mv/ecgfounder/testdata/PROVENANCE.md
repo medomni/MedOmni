@@ -66,7 +66,7 @@ per-signal checksums are untouched, because the samples are untouched.
 Why rename at all: a WFDB record is two files, and the test harness treats every
 `input*` file in this directory as one sample. A signal file is not a sample, it
 is half of one. So the header carries the `input-` prefix and the signal file
-does not, and `registry.py test` sends three requests rather than six.
+does not, and `medomni perception check` sends three requests rather than six.
 
 ## What these responses do and do not show
 

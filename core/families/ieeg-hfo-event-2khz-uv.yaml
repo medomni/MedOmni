@@ -1,0 +1,16 @@
+id: ieeg-hfo-event-2khz-uv
+read_by: deep-encoder
+protocol:
+  format: [json-manifest, edf]
+  channels: 1
+  rate_hz: 2000
+  units: uV
+  ndim: 1
+  dtype: int16
+  range: null
+  scope: event
+status: deprecated
+samples: {hf_repo: MedOmni/family-samples, revision: 521e28cd8c15c0ca9de5507a9e8c54391cdeb6ca, dir: families/ieeg-hfo-event-2khz-uv/}
+retired: {since: '2026-09-24', by: Bosong Huang, reason: 'no dataset we hold carries this family — out of scope for this benchmark
+    (not a gap, not UNVERIFIED); returns if a dataset that carries it is added. Existing sample pins are kept.', ref: 'docs/roadmaps/fix/task-contract.md
+    (supply.yaml `retired:`), docs/roadmaps/pending/family-conformance-l3.md §6'}

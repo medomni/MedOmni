@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-template.schema.json",
+  "x-contract": "task template",
+  "$defs": {
+    "AgentTask": {
+      "additionalProperties": false,
+      "description": "The part of a template only the agent kind uses: its clinical question, instruction, environment and answer\npath. `statement` is the question alone; the renderer opens every atom's instruction with it (U2.9).",
+      "properties": {
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "instruction": {
+          "minLength": 1,
+          "title": "Instruction",
+          "type": "string"
+        },
+        "environment": {
+          "$ref": "#/$defs/Environment"
+        },
+        "submission_path": {
+          "minLength": 1,
+          "title": "Submission Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement",
+        "instruction",
+        "environment",
+        "submission_path"
+      ],
+      "title": "AgentTask",
+      "type": "object"
+    },
+    "Author": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "github": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Github"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Author",
+      "type": "object"
+    },
+    "Environment": {
+      "additionalProperties": false,
+      "properties": {
+        "cpus": {
+          "minimum": 1,
+          "title": "Cpus",
+          "type": "integer"
+        },
+        "memory_mb": {
+          "minimum": 256,
+          "title": "Memory Mb",
+          "type": "integer"
+        },
+        "allow_internet": {
+          "title": "Allow Internet",
+          "type": "boolean"
+        },
+        "agent_timeout_sec": {
+          "minimum": 1,
+          "title": "Agent Timeout Sec",
+          "type": "integer"
+        },
+        "verifier_timeout_sec": {
+          "minimum": 1,
+          "title": "Verifier Timeout Sec",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cpus",
+        "memory_mb",
+        "allow_internet",
+        "agent_timeout_sec",
+        "verifier_timeout_sec"
+      ],
+      "title": "Environment",
+      "type": "object"
+    },
+    "FullEvidence": {
+      "additionalProperties": false,
+      "description": "What the `full` evidence variant stages differently from `default`: its own `input` and `exclude`, each\nreplacing the template's when given (v0.2's `-full` twins that overrode them).",
+      "properties": {
+        "input": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input"
+        },
+        "exclude": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclude"
+        }
+      },
+      "title": "FullEvidence",
+      "type": "object"
+    },
+    "Target": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "pattern": "^[a-z0-9_]+$",
+              "type": "string"
+            }
+          ],
+          "title": "Name"
+        },
+        "label": {
+          "pattern": "^[a-z0-9-]+:.+$",
+          "title": "Label",
+          "type": "string"
+        },
+        "metric": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question"
+        }
+      },
+      "required": [
+        "name",
+        "label",
+        "metric"
+      ],
+      "title": "Target",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A dataset package's `tasks/<template>/template.yaml`.",
+  "properties": {
+    "template_id": {
+      "pattern": "^[a-z0-9][a-z0-9-]*_[a-z0-9][a-z0-9-]*$",
+      "title": "Template Id",
+      "type": "string"
+    },
+    "dataset": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Dataset",
+      "type": "string"
+    },
+    "authors": {
+      "items": {
+        "$ref": "#/$defs/Author"
+      },
+      "minItems": 1,
+      "title": "Authors",
+      "type": "array"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/Target"
+      },
+      "minItems": 1,
+      "title": "Targets",
+      "type": "array"
+    },
+    "input": {
+      "additionalProperties": true,
+      "minProperties": 1,
+      "title": "Input",
+      "type": "object"
+    },
+    "evidence": {
+      "default": [
+        "default"
+      ],
+      "items": {
+        "enum": [
+          "default",
+          "full"
+        ],
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "exclude": {
+      "additionalProperties": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "default": {},
+      "title": "Exclude",
+      "type": "object"
+    },
+    "full": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FullEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "agent": {
+      "$ref": "#/$defs/AgentTask"
+    }
+  },
+  "required": [
+    "template_id",
+    "dataset",
+    "authors",
+    "targets",
+    "input",
+    "agent"
+  ],
+  "title": "TaskTemplate",
+  "type": "object"
+}

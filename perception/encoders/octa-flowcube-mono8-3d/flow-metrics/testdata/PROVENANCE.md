@@ -33,7 +33,9 @@ why the adapter calls scikit-image rather than carrying its own morphology.
 
 No fixture derived from real data is committed here: the family's samples come
 from AI-READI, whose agreement keeps them out of Git. Real inference is
-verified by `registry.py family-test`, which runs the three pinned
+verified by `medomni perception check --samples`, which runs the three pinned
 `MedOmni/family-samples` cubes — Spectralis 20x20 mm acquisitions of 13, 20 and
 26 B-scans at 496x512, JPEG-lossless — through the built image with Docker
 networking disabled.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

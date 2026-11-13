@@ -1,72 +1,119 @@
 # Tasks
 
-A task type is defined by a spec. The task builder turns a spec and your data into atom tasks, one per patient, and a fingerprint proves the result matches anyone else's build.
+The task template, the built files, the config hash, and the benchmarks and their task sets. Templates and cohorts are the input of MedOmni's builder, `medomni-v1`; the built files and task sets are Core contracts that Bench reads. [Tasks](../learn/studio/tasks.md) explains how they fit together.
 
-## Task types in v0.2.1
+Format: task template, `src/medomni/studio/schemas/task-template.schema.json`, read by `medomni-v1`. The cohort fields are in [Recipes](recipes.md#cohort-file).
 
-30 task types, one spec each in `data_task/taskbuilder/specs/`: 15 on AI-READI, 9 on MIMIC-IV and 6 on BDSP. Each type also has a `-mini` spec (a small cohort), and 28 have a `-full` spec (the whole record minus inputs that leak the answer).
+## Tasks in v0.3.0
 
-## Task spec
+One folder per template in `studio/datasets/<dataset>/tasks/`, with its cohorts.
+
+- 30 templates on credentialed data: 15 on AI-READI, 9 on MIMIC-IV, 6 on BDSP
+- 3 templates on VitalDB, on open data
+- an `n20` cohort for every template, and a `ladder` cohort for the 5 templates of the modality ladder, whose rungs are in each template's `arms/modality-ladder.yaml`
+
+## Task template
+
+`studio/datasets/<dataset>/tasks/<template>/template.yaml`
 
 | Field | Required | Meaning |
 |---|---|---|
-| `task_id` | yes | `<dataset>_<name>`, with `-full` or `-mini` for those versions. |
-| `dataset` | yes | The dataset the task binds to. |
-| `seed` | yes | Seed for cohort sampling. |
-| `target` | yes | What is predicted, how the label is derived, and its `metric` (`accuracy`, `auc`, `brier`, `qwk`, `macro_auc`, `mae`). |
-| `cohort` | yes | Who is in the cohort, and how many per class. |
-| `input` | yes | The evidence the agent may see, by stream and family. |
-| `environment` | yes | CPUs, memory, internet access, agent and verifier timeouts. |
-| `submission_path` | yes | Where the agent writes its answer. |
-| `instruction` | yes | The template that renders the agent's instruction. |
-| `evidence_mode` | no | `selected` (default), `full` or `mini`. |
-| `prediction_time` | no | The time after which nothing is evidence. |
-| `excluded_from_inputs` | no | Inputs banned because they leak the target. |
-| `extends` | no | A base spec merged underneath this one. |
+| `template_id` | yes | `<dataset>_<name>`; equals the folder name. |
+| `dataset` | yes | The dataset the template binds to. |
+| `authors` | yes | Who wrote the template: name and GitHub handle for each. |
+| `targets` | yes | One or more. Each has a `name`, a `label` from the dataset's library, and its `metric`: `auc`, `qwk` or `mae`. An optional `question` replaces the label's. |
+| `input` | yes | The tables and families the proposal named. A record only: the evidence is the patient's whole record minus the targets' guards. |
+| `evidence` | no | The evidence variants: `[default]` (default). v0.3.0 builds only `default` and refuses `<template>:full@<cohort>`. |
+| `exclude` | no | Codes or fields the proposal asked to remove. A record only, like `input`. |
+| `agent` | yes | What an agent needs to run the task: the four fields below. |
+| `agent.statement` | yes | The clinical question alone. Every atom task's instruction opens with it. |
+| `agent.instruction` | yes | The template's own paragraph on the prediction time. Build adds the rest of the instruction. |
+| `agent.environment` | yes | CPUs, memory, internet access, agent and verifier timeouts. |
+| `agent.submission_path` | yes | Where the agent writes its answer. |
 
-Check a spec and the task it emits; the report is JSON and the exit code is 1 on any failure:
+Check a template, its cohort and the build; the exit code is 1 on any failure:
 
 ```bash
-python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<task-id>.yaml
+medomni studio task check <template>@<cohort>
 ```
 
-## Atom task
+## Built files
 
-What an agent runs, in `data_task/atomtasks/<atom>/` (`atomtasks-noenc/` and `atomtasks-forced/` for the other conditions):
+Build writes each task's content once, then renders it into atom tasks under each arm. The files Bench reads are the [built-task contract](../learn/core/built-tasks.md#the-files); `record.json` is `medomni-v1`'s own.
+
+The content is in `atomtasks/_content/<template>@<cohort>/`, such as `atomtasks/_content/mimic-iv_ckd-staging@n20/`:
 
 | Path | Holds |
 |---|---|
-| `task.toml` | Task metadata, condition, resources, and the parent task type and patient. |
-| `instruction.md` | The question, the patient's record and the targets to predict. |
-| `environment/` | The closed-network containers, with the perception sidecar when encoders are available. |
-| `tests/` | A format check on the answer. It never scores. |
+| `content.json` | The atom list, the targets and their metrics, each atom's prediction time, the task version, the step counts. |
+| `answers.csv` | Each patient's answer for every target. |
+| `manifest.json` | The build manifest: the config hash under each arm and variant, the builder (`medomni-v1/<version>`), the step counts and the release. |
+| `<atom>/record.json` | The evidence the instruction shows, as structured data. |
+
+An atom task is what an agent runs, rendered under `atomtasks/<arm>/<atom>/`, or `atomtasks/<arm>/<variant>/<atom>/` for an arm with variants, such as `atomtasks/modality-ladder/r1/<atom>/`. Rendering stages the patient's files from the cache. Its files are real copies, never links:
+
+| Path | Holds |
+|---|---|
+| `task.toml` | Task metadata, arm, resources, the `<template>@<cohort>` and the patient. |
+| `instruction.md` | The clinical question, the prediction time, the patient's record, and each target with its question. |
+| `environment/` | The closed-network containers, with the perception service when the arm attaches it. |
+| `tests/` | `expected.json` (the target names) and `format_check.py`, a format check on the answer. It never scores. |
 | `data/` | The patient's staged files, minus anything that leaks a target. |
 
-The answers sit with the task type, in `atomtasks/_parents/<task type>/`, never in an atom task. The atom tasks of one type are scored together against them.
+The answers stay in the content folder; a render never copies them into an atom task. The atom tasks of one `<template>@<cohort>` are scored together against them.
 
-**Leakage is blocked at build time.** Inputs that would reveal a target are banned from the evidence, based on how the target is derived (the leakage rules in `data_task/taskbuilder/registry/`), and the builder scans the staged files and fails the build on a hit.
+## Config hash
 
-## Fingerprint
+Each `<template>@<cohort>` under each arm, or arm variant, has a config hash: `cfg1:` and the SHA-256 over its config files, the builder and two release names. Each file adds its path, its length and its bytes, in path order.
 
-A task's fingerprint is the SHA-256 over every file in its folder, in path order, each file's relative path followed by its bytes, excluding `FINGERPRINT` itself. It is written to the folder's `FINGERPRINT` file. `validate.py` recomputes it and fails if it differs.
+- The files: the ones the builder's `config_files` names. For `medomni-v1`, the template, the cohort, the labels and recipes the task uses, and the arm's definition with its variant.
+- The builder: its name and version, such as `medomni-v1`.
+- The releases: the dataset release and the MedOmni release.
 
-A fingerprint is never changed in place: a changed task is a new task, rebuilt and re-pinned. A score is refused if the runs of one task type carry different fingerprints.
+Build writes it to the build manifest, beside the step counts. Run and score records copy it as `config_hash`. The prefix names the algorithm, so published config hashes stay checkable after an upgrade. It covers no data.
 
-## Batches
+`medomni studio task check --release` checks every pinned pair in every task set of the workspace's benchmarks. It fails when a pair's cohort, labels, targets, scoring or dataset release differs from the last release and its N has not risen. It compares config files only. MedOmni runs it before a release; your builds and runs never do.
 
-A batch pins task ids to fingerprints, in `data_task/tasks/batches/<name>.yaml`. `pin_batch.py <batch> <task-id> ...` rewrites the whole file from the ids it is given.
+Result records imported from v0.2 runs are version 0 and carry a `v0.2:` config hash instead, over the v0.2 template's config files. Only imported records may carry one. They name the sets `medomni-bench/v0.2-ladder`, `v0.2-forced` and `v0.2-mid`, one per v0.2 task tree with runs.
 
-| Batch | Tasks |
-|---|---|
-| `v1-mini` | The 30 `-mini` tasks. |
-| `v1-full` | All 88 specs: 30 types, 30 `-mini`, 28 `-full`. |
-| `first-batch` | 3 earlier tasks on MIMIC-IV and BDSP. |
-| `stage1` | 2 earlier tasks on MIMIC-IV. |
+## Benchmarks and task sets
 
-Credentialed tasks publish fingerprints, never task data: build them from your own access and compare. See [Connect your data](../guides/connect-your-data.md).
+A benchmark is one folder, `bench/benchmarks/<benchmark>/`: its card in `benchmark.yaml`, and its task sets in `sets/<set>.yaml`. A task set is named `<benchmark>/<set>`.
+
+Contract: benchmark card, `src/medomni/core/contracts/schemas/benchmark.schema.json`.
+
+| Field | Required | Meaning |
+|---|---|---|
+| `name` | yes | The benchmark's name; equals the folder name. |
+| `version` | yes | The benchmark's own version. |
+| `owner` | yes | Who maintains it. |
+| `license` | yes | The license of the benchmark's own files. Each dataset keeps its own license. |
+| `accepts` | yes | The intelligence kinds it may be run with: `agent`. |
+
+A task set pins each `<template>@<cohort>` at its version N, and nothing else. Task sets only grow, and an entry never changes: a new N enters only a new task set. The set's content hash, `task_set_hash`, covers the pairs and their N.
+
+Contract: task set, `src/medomni/core/contracts/schemas/task-set.schema.json`.
+
+| Field | Required | Meaning |
+|---|---|---|
+| `name` | yes | The task set's name, such as `v1`; equals the file name. |
+| `description` | no | One line on what it holds. |
+| `builder` | yes | The [task builder](../learn/core/built-tasks.md#write-your-own-builder) that builds the set, such as `medomni-v1`. |
+| `arms` | yes | The [arms](../learn/bench/runs.md#arms) every pair is built under. |
+| `tasks` | yes | One or more entries `{task: <template>@<cohort>, version: <N>}`, with N an integer. Imported v0.2 sets use 0. |
+
+`medomni-bench`, MedOmni's own benchmark: version 1.0, owner MedOmni team, license CC-BY-4.0, accepts `agent`.
+
+| Task set | Data | Arms | Holds |
+|---|---|---|---|
+| `medomni-bench/smoke-dummy` | Dummy data | `encoders` | One pair per template, on generated data. |
+| `medomni-bench/vitaldb` | VitalDB | `encoders`, `no-perception` | The 3 VitalDB templates at `n20`. |
+| `medomni-bench/v1` | AI-READI, MIMIC-IV, BDSP | `encoders`, `no-perception` | The 30 credentialed templates at `n20`. |
+| `medomni-bench/modality-ladder` | AI-READI, MIMIC-IV, BDSP | `modality-ladder` | The 5 ladder templates at their `ladder` cohort. |
 
 ## Where next
 
-- [Families](families.md): the inputs a spec can name.
-- [Contribute](../guides/contribute.md): write a new spec.
+- [Families](families.md): the inputs a template can name.
+- [Recipes](recipes.md): the cohort, label and evidence fields.
+- [Contribute](../guides/contribute.md): write a new template and cohort.
 - [Datasets](datasets.md): what each dataset needs.

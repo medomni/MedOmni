@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "built-content.schema.json",
+  "x-contract": "built task",
+  "$defs": {
+    "BuiltAtom": {
+      "additionalProperties": true,
+      "properties": {
+        "atom": {
+          "minLength": 1,
+          "title": "Atom",
+          "type": "string"
+        },
+        "subject": {
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        },
+        "prediction_time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prediction Time"
+        }
+      },
+      "required": [
+        "atom",
+        "subject"
+      ],
+      "title": "BuiltAtom",
+      "type": "object"
+    },
+    "BuiltTarget": {
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "metric": {
+          "minLength": 1,
+          "title": "Metric",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "metric"
+      ],
+      "title": "BuiltTarget",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "description": "`_content/<task>/content.json`.",
+  "properties": {
+    "version": {
+      "minLength": 1,
+      "title": "Version",
+      "type": "string"
+    },
+    "datasets": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Datasets",
+      "type": "array"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/BuiltTarget"
+      },
+      "minItems": 1,
+      "title": "Targets",
+      "type": "array"
+    },
+    "atoms": {
+      "items": {
+        "$ref": "#/$defs/BuiltAtom"
+      },
+      "minItems": 1,
+      "title": "Atoms",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "targets",
+    "atoms"
+  ],
+  "title": "BuiltContent",
+  "type": "object"
+}

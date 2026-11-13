@@ -1,5 +1,29 @@
-{
-  "source": {"url": "https://github.com/joncarter1/wav2sleep/archive/278e30463c8149c4e6899b8784da492fec695bd9.tar.gz", "sha256": "b5cd4619dbbbfec92b6219a7548910d67b32163aca5f20c4a08f62dd7af677ac"},
-  "config": {"sha256": "b92f4e26f3290f5207b53be343d82a4e338968b54782718f13429e800f114509"},
-  "weights": {"sha256": "ea6fb4410315cf6cce406fe1ffd44cba83e8dc69be6a69101aff62cc2cbee0bc"}
-}
+[
+  {
+    "path": "source.tar.gz",
+    "sha256": "b5cd4619dbbbfec92b6219a7548910d67b32163aca5f20c4a08f62dd7af677ac",
+    "url": "https://github.com/joncarter1/wav2sleep/archive/278e30463c8149c4e6899b8784da492fec695bd9.tar.gz",
+    "unpack": {
+      "glob": "wav2sleep-*",
+      "to": "source",
+      "check": "src/wav2sleep/models/wav2sleep.py"
+    }
+  },
+  {
+    "path": "model/config.yaml",
+    "sha256": "b92f4e26f3290f5207b53be343d82a4e338968b54782718f13429e800f114509",
+    "file": "code/eeg-sleep-6ch-200hz-uv__wav2sleep/config.yaml",
+    "repo": "MedOmni/encoder-assets",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "type": "dataset"
+  },
+  {
+    "path": "model/state_dict.pth",
+    "sha256": "ea6fb4410315cf6cce406fe1ffd44cba83e8dc69be6a69101aff62cc2cbee0bc",
+    "file": "weights/eeg-sleep-6ch-200hz-uv__wav2sleep/state_dict.pth",
+    "weights": true,
+    "repo": "MedOmni/encoder-assets",
+    "revision": "cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65",
+    "type": "dataset"
+  }
+]

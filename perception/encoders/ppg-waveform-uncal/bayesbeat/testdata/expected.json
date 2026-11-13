@@ -5,34 +5,34 @@
   "healthy": true,
   "outputs": [
    {
-    "kind": "labels",
-    "scale": "probability",
     "items": [
      {
       "label": "non_af",
-      "value": 0.00012845692981500179
+      "value": 0.00011417745554354042
      },
      {
       "label": "af",
-      "value": 0.999871551990509
+      "value": 0.9998857975006104
      },
      {
       "label": "non_af_epistemic",
-      "value": 2.7284914327907472e-09
+      "value": 5.1639332809827465e-09
      },
      {
       "label": "af_epistemic",
-      "value": 2.7267728075486275e-09
+      "value": 5.163232508209603e-09
      },
      {
       "label": "non_af_aleatoric",
-      "value": 0.0001284377067349851
+      "value": 0.00011415925837354735
      },
      {
       "label": "af_aleatoric",
-      "value": 0.0001284480094909668
+      "value": 0.00011408329010009766
      }
-    ]
+    ],
+    "kind": "labels",
+    "scale": "probability"
    }
   ],
   "notes": [

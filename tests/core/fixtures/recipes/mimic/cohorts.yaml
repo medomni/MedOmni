@@ -1,0 +1,243 @@
+# Ported from S1's p16_recipes.yaml by internal_docs/roadmaps/v0.3.0/roadmaps/s2/probes/p11_port_recipes.py. Do not edit.
+mimic_acute-renal-hospital@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - acute_renal_failure
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    acute_renal_failure: mimic:derived:acute-renal-failure
+mimic_ckd-staging@ladder:
+  cohort:
+    anchor:
+      event: CKD//SPAN_END
+    select:
+      by:
+      - lab_ckd
+      n: 20
+      seed: 20260925|ladder-mid|mimic_ckd-staging
+    require:
+    - has_label: lab_ckd
+    - files:
+      - cxr-radiograph-2d
+      - ecg-12lead-500hz-mv
+      to: anchor
+    source: {}
+  targets:
+    lab_ckd: mimic:derived:ckd-kdigo
+mimic_ckd-staging@n20:
+  cohort:
+    anchor:
+      event: CKD//SPAN_END
+    select:
+      by:
+      - lab_ckd
+      n: 20
+      seed: 7
+    source: {}
+  targets:
+    lab_ckd: mimic:derived:ckd-kdigo
+mimic_coag-hemorrhagic@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - coagulation_hemorrhagic
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    coagulation_hemorrhagic: mimic:derived:coagulation-hemorrhagic
+mimic_heart-failure-mm@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - heart_failure
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    heart_failure: mimic:derived:heart-failure
+mimic_hf@ladder:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - heart_failure
+      n: 20
+      seed: 20260925|ladder-mid|mimic_hf
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    - has_label: heart_failure
+    - files:
+      - cxr-radiograph-2d
+      - ecg-12lead-500hz-mv
+      to: anchor
+    source: {}
+  targets:
+    heart_failure: mimic:derived:heart-failure
+mimic_hf@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - heart_failure
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    heart_failure: mimic:derived:heart-failure
+mimic_in-hospital-death-icu@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - in_hospital_death
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    - none:
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    ed_revisit_30d: mimic:outcome:ed-revisit-30d
+    in_hospital_death: mimic:outcome:in-hospital-death
+    prolonged_stay_gt7d: mimic:outcome:los-gt7
+    readmit_30d: mimic:outcome:readmit-30d
+mimic_sepsis-hospital@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - septicemia
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    septicemia: mimic:derived:septicemia
+mimic_stroke-infarct-ed@n20:
+  cohort:
+    anchor:
+      event: MIMIC//ADMISSION
+      pick: first
+      plus: 24 hours
+    select:
+      by:
+      - cerebral_infarction
+      n: 20
+      seed: 7
+    require:
+    - any:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+    - from: anchor.event
+      none:
+      - MIMIC//DISCHARGE
+      - MIMIC//DEATH
+      same_visit: true
+      to: anchor
+    source: {}
+  targets:
+    cerebral_infarction: mimic:derived:cerebral-infarction

@@ -1,0 +1,34 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_in-hospital-death-icu
+dataset: mimic-iv
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: in_hospital_death, label: 'mimic-iv:outcome:in-hospital-death', metric: auc}
+- {name: readmit_30d, label: 'mimic-iv:outcome:readmit-30d', metric: auc}
+- {name: prolonged_stay_gt7d, label: 'mimic-iv:outcome:los-gt7', metric: auc}
+- {name: ed_revisit_30d, label: 'mimic-iv:outcome:ed-revisit-30d', metric: auc}
+input:
+  labs: {'51221': hematocrit, '51265': platelet_count, '51222': hemoglobin, '51301': white_blood_cells, '51248': mch, '51249': mchc,
+    '51250': mcv, '51279': red_blood_cells, '51277': rdw, '50912': creatinine, '52546': creatinine, '51006': urea_nitrogen,
+    '52647': urea_nitrogen, '50931': glucose, '52569': glucose, '50971': potassium, '52610': potassium, '50983': sodium, '52623': sodium,
+    '50902': chloride, '52535': chloride, '50882': bicarbonate, '50868': anion_gap, '52500': anion_gap, '50920': estimated_gfr_mdrd_equation,
+    '51146': basophils, '51200': eosinophils, '51244': lymphocytes, '51254': monocytes, '51256': neutrophils, '50893': calcium_total,
+    '50960': magnesium, '50861': alanine_aminotransferase_alt, '50970': phosphate}
+  demographics: [age, sex]
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+evidence: [default, full]
+agent:
+  statement: From this patient's first day in hospital, predict whether they survive the admission, how long it lasts, and
+    whether they return to hospital or the emergency department within 30 days of discharge.
+  instruction: '## Prediction time
+
+
+    - Index admission: the patient''s first hospital admission on record.
+
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
+
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

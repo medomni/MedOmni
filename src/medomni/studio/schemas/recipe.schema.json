@@ -1,0 +1,411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "recipe.schema.json",
+  "x-contract": "recipe",
+  "$defs": {
+    "Anchor": {
+      "additionalProperties": false,
+      "properties": {
+        "event": {
+          "minLength": 1,
+          "title": "Event",
+          "type": "string"
+        },
+        "pick": {
+          "default": "first",
+          "enum": [
+            "first",
+            "last"
+          ],
+          "title": "Pick",
+          "type": "string"
+        },
+        "plus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plus"
+        }
+      },
+      "required": [
+        "event"
+      ],
+      "title": "Anchor",
+      "type": "object"
+    },
+    "Any_": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "any": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Any",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "any"
+      ],
+      "title": "Any_",
+      "type": "object"
+    },
+    "Converts": {
+      "additionalProperties": false,
+      "description": "At least `min_families` of the patient's files convert and match their family (S1's recipes). Checked in\ndraw order, and a patient who fails is replaced by the next (Build page, file check).",
+      "properties": {
+        "converts": {
+          "$ref": "#/$defs/ConvertsRule"
+        },
+        "when": {
+          "const": "select",
+          "default": "select",
+          "title": "When",
+          "type": "string"
+        }
+      },
+      "required": [
+        "converts"
+      ],
+      "title": "Converts",
+      "type": "object"
+    },
+    "ConvertsRule": {
+      "additionalProperties": false,
+      "properties": {
+        "min_families": {
+          "minimum": 1,
+          "title": "Min Families",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "min_families"
+      ],
+      "title": "ConvertsRule",
+      "type": "object"
+    },
+    "Definition": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "minLength": 1,
+          "title": "Definition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition"
+      ],
+      "title": "Definition",
+      "type": "object"
+    },
+    "Files": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "files": {
+          "items": {
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Files",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "files"
+      ],
+      "title": "Files",
+      "type": "object"
+    },
+    "HasLabel": {
+      "additionalProperties": false,
+      "properties": {
+        "has_label": {
+          "minLength": 1,
+          "title": "Has Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "has_label"
+      ],
+      "title": "HasLabel",
+      "type": "object"
+    },
+    "None_": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "include_from": {
+          "default": true,
+          "title": "Include From",
+          "type": "boolean"
+        },
+        "include_to": {
+          "default": true,
+          "title": "Include To",
+          "type": "boolean"
+        },
+        "none": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "None",
+          "type": "array"
+        },
+        "same_visit": {
+          "default": false,
+          "title": "Same Visit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "none"
+      ],
+      "title": "None_",
+      "type": "object"
+    },
+    "Select": {
+      "additionalProperties": false,
+      "properties": {
+        "n": {
+          "minimum": 1,
+          "title": "N",
+          "type": "integer"
+        },
+        "by": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "By",
+          "type": "array"
+        },
+        "balance": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Balance",
+          "type": "array"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "minLength": 1,
+              "type": "string"
+            }
+          ],
+          "title": "Seed"
+        }
+      },
+      "required": [
+        "n",
+        "seed"
+      ],
+      "title": "Select",
+      "type": "object"
+    },
+    "SourceFraction": {
+      "additionalProperties": false,
+      "properties": {
+        "fraction": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fraction"
+        }
+      },
+      "title": "SourceFraction",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`tasks/<template>/cohorts/<cohort>.yaml`.",
+  "properties": {
+    "version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Version",
+      "type": "string"
+    },
+    "source": {
+      "anyOf": [
+        {
+          "const": "all",
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/SourceFraction"
+        }
+      ],
+      "title": "Source"
+    },
+    "anchor": {
+      "$ref": "#/$defs/Anchor"
+    },
+    "require": {
+      "default": [],
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Any_"
+          },
+          {
+            "$ref": "#/$defs/None_"
+          },
+          {
+            "$ref": "#/$defs/Files"
+          },
+          {
+            "$ref": "#/$defs/HasLabel"
+          },
+          {
+            "$ref": "#/$defs/Definition"
+          },
+          {
+            "$ref": "#/$defs/Converts"
+          }
+        ]
+      },
+      "title": "Require",
+      "type": "array"
+    },
+    "select": {
+      "$ref": "#/$defs/Select"
+    }
+  },
+  "required": [
+    "version",
+    "source",
+    "anchor",
+    "select"
+  ],
+  "title": "Cohort",
+  "type": "object"
+}

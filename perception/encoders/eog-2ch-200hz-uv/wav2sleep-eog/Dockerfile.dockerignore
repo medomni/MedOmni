@@ -1,0 +1,15 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/eog-2ch-200hz-uv/wav2sleep-eog/adapter.py
+!perception/encoders/eog-2ch-200hz-uv/wav2sleep-eog/assets
+!perception/encoders/eog-2ch-200hz-uv/wav2sleep-eog/assets.json
+!perception/encoders/eog-2ch-200hz-uv/wav2sleep-eog/card.yaml
+!perception/encoders/eog-2ch-200hz-uv/wav2sleep-eog/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+!src/medomni/perception/runtime/assets.py
+**/__pycache__
+**/*.pyc

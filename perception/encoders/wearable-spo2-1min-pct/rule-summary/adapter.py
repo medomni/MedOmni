@@ -1,6 +1,6 @@
 """Observed SpO2 summaries; no interpolation or clinical classification."""
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "wearable-spo2-1min-pct"
 

@@ -1,0 +1,22 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_diabetes-retinal
+dataset: aireadi
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: diabetes_status, label: 'aireadi:aireadi-dmstatus', metric: qwk}
+input:
+  files: {fundus-photography-2d: retinal_photography/cfp/, oct-volume-raster-mono8-3d: 'aireadi:oct-volume-raster-mono8-3d',
+    octa-enface-slab-mono8-2d: retinal_octa/enface/}
+  omop: []
+evidence: [default, full]
+agent:
+  statement: Classify this participant's diabetes status.
+  instruction: '## Prediction time
+
+
+    - The evidence is the participant''s data from their study visit.
+
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

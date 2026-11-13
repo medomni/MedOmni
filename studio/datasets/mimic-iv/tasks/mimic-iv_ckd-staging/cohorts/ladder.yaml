@@ -1,0 +1,12 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+version: '1.0'
+anchor: {event: CKD//SPAN_END}
+select:
+  by: [lab_ckd]
+  n: 20
+  seed: 20260925|ladder-mid|mimic_ckd-staging
+require:
+- {has_label: lab_ckd}
+- files: [cxr-radiograph-2d, ecg-12lead-500hz-mv]
+  to: anchor
+source: {}

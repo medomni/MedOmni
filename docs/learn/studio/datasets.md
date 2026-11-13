@@ -1,0 +1,97 @@
+# Datasets
+
+A dataset is a source of patient data used under its own license. MedOmni's builder, `medomni-v1`, reads it through its dataset package, and Bench obeys its dataset policy when it runs. MedOmni ships no data.
+
+```text
+your copy ──loading: format readers + dataset package──▶ event table ──Build──▶ atom tasks
+                         policy ──▶ which routes may see them
+```
+
+## Dataset package
+
+One folder per dataset, `studio/datasets/<dataset>/`, read by the `medomni-v1` builder. It is configuration, not code:
+
+- `dataset.yaml`: a description, the format readers to use, the dataset's rules and its named definitions, the dataset's own [family converters](../core/families.md#family-converters), and the disk space each atom task gets (`storage_mb`)
+- `labels.yaml`: the label library
+- `evidence.yaml`: what an atom task may hold, relative to the prediction time
+- `codes.csv`: every code the dataset emits, with a description and its source table
+- `policy.yaml`: what the license allows
+- `hooks/`: Python for what only this dataset needs, such as CKD staging by KDIGO
+- `converters/`: the dataset's own family converters, such as BDSP's `h5-to-edf`
+- `tasks/`: the dataset's task templates and their cohorts
+
+The description states the unit (a patient, a participant, a surgery case), the kind of time (date and time, visit dates only, seconds from case start) and the dataset version. Time is described, not converted: Build refuses a recipe the dataset's time cannot support.
+
+## Loading
+
+Loading turns your copy into the dataset's event table. It has two parts:
+
+- **Format readers**: shared code in Core, one per file format. A format reader knows a format and no dataset: it turns a CSV table, an OMOP table, a folder of files or a recording header into event rows.
+- **The dataset package**: configuration for one dataset. It names the format readers to use and what each reads: which files and columns, which column is the time, which code each row gets. Its visit rules say how events group into visits, such as one visit per participant.
+
+The loader in Core runs the package through the format readers. v0.2 did both parts in one Python adapter per dataset. v0.3.0 has format readers for:
+
+- CSV tables
+- OMOP tables
+- folder trees, where a file's folder gives its family
+- recording headers: EDF, WFDB, HDF5 and DICOM
+
+A dataset loads only the tables its recipes and labels use. A dataset in a format no format reader knows adds one to Core, which every later dataset can use.
+
+## Event table
+
+Every dataset becomes one event table, kept in the [cache](../core/cache.md). It is the only thing later steps read.
+
+| Column | Holds |
+|---|---|
+| `subject_id` | The unit: patient, participant or case |
+| `time` | When the event happened; empty for static facts such as sex |
+| `code` | What happened, such as `ADMISSION` or `LAB//cr` |
+| `numeric_value`, `text_value` | The event's value, if any |
+| `visit` | The visit the event belongs to |
+
+- Column names follow [MEDS](https://github.com/Medical-Event-Data-Standard/meds), so MEDS tools can read the table.
+- Raw files are `FILE//<family>` rows, with a path relative to your copy, and optionally the file's own id (a DICOM UID, a WFDB record). Loading does not hash them; the cache keys each by a [quick identity](../core/cache.md#steps).
+- Annotations read from recordings, such as sleep stages, are events too.
+- A few codes are shared by every dataset; the rest are the dataset's own. See [Shared codes](../../reference/recipes.md#shared-codes).
+
+Raw files are never copied into the table or the cache. Only files a [family converter](../core/families.md#family-converters) changes are written to the cache.
+
+## Dataset policy
+
+One policy per dataset, read from its license and data use agreement. It records:
+
+- what may be published: schema, templates, recipes, ID lists, labels, per-record outputs, samples
+- which model routes may see the data: `local`, `cloud`, or `cloud` under conditions
+- any limits on use, such as research only
+
+Before a run, Bench checks the agent's route against the policy: a denied route refuses the run, and a conditional one prints the conditions you must meet. Nothing the policy denies is published. Recipes and config hashes contain no patient data, so every policy allows them.
+
+## Open, credentialed and dummy data
+
+| Kind | Examples | What you need |
+|---|---|---|
+| Credentialed | MIMIC-IV, AI-READI, BDSP | Your own access, then your own download. |
+| Open | VitalDB | Your own download; no access request. |
+| Dummy | Generated | Nothing. Made from the dataset package and each family's declared format, never from a real record. |
+
+MedOmni hosts no dataset, open or credentialed: you download every dataset yourself, with the list `medomni studio download-list <dataset>` writes, and the licenses differ only in each package's policy. MedOmni publishes recipes and config hashes, and, where a policy allows samples, a small data sample on Hugging Face. Build never reads a sample.
+
+Dummy data lets every command run with no credentials. Its scores only show that the pipeline works.
+
+- A dataset's dummy data comes from its own `dataset.yaml` and `codes.csv`, with no extra file: the same tables, columns, codes and families, filled with generated values.
+- Every dataset package is loaded from its dummy data, so its configuration runs in CI.
+- `medomni studio dummy <dataset>` writes it to a folder, to look at or to run commands on.
+
+## Where it lives
+
+- `studio/datasets/<dataset>/`: the dataset package, with its own converters
+- `src/medomni/core/loading/`: the format readers and the loader
+- `src/medomni/core/families/`: the converter interface and the dummy-data generator
+- your workspace: the path to your copy, and the cache
+
+## Where next
+
+- [Datasets reference](../../reference/datasets.md): every dataset, its license, and the package's fields.
+- [Connect your data](../../guides/connect-your-data.md): connect and check your own copy.
+- [Recipes](recipes.md): the queries that read the event table.

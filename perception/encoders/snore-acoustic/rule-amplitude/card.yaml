@@ -1,44 +1,20 @@
-{
-  "id": "snore-acoustic__rule-amplitude",
-  "family": "snore-acoustic",
-  "modality": "respiratory",
-  "summary": "Native-unit snore-sensor amplitude statistics and observed duration.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "No snore-event classification, acoustic dB calibration, or sleep-apnea diagnosis.",
-    "Reports each available declared sensor role independently in its source units.",
-    "No filtering or resampling; empty and non-finite signals degrade."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "snore_mean",
-        "snore_std",
-        "snore_rms",
-        "snore_peak_to_peak",
-        "snore_duration",
-        "snoring_sensor_mean",
-        "snoring_sensor_std",
-        "snoring_sensor_rms",
-        "snoring_sensor_peak_to_peak",
-        "snoring_sensor_duration"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/snore-acoustic__rule-amplitude:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: snore-acoustic__rule-amplitude
+family: snore-acoustic
+modality: respiratory
+summary: Native-unit snore-sensor amplitude statistics and observed duration.
+authors:
+- {name: Bosong Huang}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: ['No snore-event classification, acoustic dB calibration, or sleep-apnea diagnosis.', Reports each available declared
+    sensor role independently in its source units., No filtering or resampling; empty and non-finite signals degrade.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [snore_mean, snore_std, snore_rms, snore_peak_to_peak, snore_duration, snoring_sensor_mean, snoring_sensor_std,
+    snoring_sensor_rms, snoring_sensor_peak_to_peak, snoring_sensor_duration]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/snore-acoustic__rule-amplitude:dev', digest: null}
+acceptance: pending

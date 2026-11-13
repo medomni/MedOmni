@@ -1,0 +1,12 @@
+id: pulse-rate-10hz-bpm
+read_by: rule-extractor
+protocol:
+  format: [edf]
+  channels: [pulse]
+  rate_hz: 10
+  units: bpm
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: e7c52128e841cabf495eed4b3d01ea7808a06e9b, dir: families/pulse-rate-10hz-bpm/}

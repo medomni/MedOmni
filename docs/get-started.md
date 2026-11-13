@@ -1,112 +1,71 @@
 # Get started
 
-This page takes you from a checkout to a scored experiment: two patients, one task type, one agent.
+From install to a scored Bench run: first on dummy data, which needs no credentials, then on real data. To use only the encoders, see [Use the encoders](guides/use-the-encoders.md).
 
 ## Before you start
 
-- Docker, [uv](https://docs.astral.sh/uv/) and the [Harbor](https://github.com/laude-institute/harbor) CLI (0.23.0).
-- Licensed access to at least one dataset. See [Datasets](reference/datasets.md).
-- An API key for the agent's model.
+- Python 3.11 or later, Docker and [uv](https://docs.astral.sh/uv/).
+- A model for your agent: a local model server, or an API key for a model provider.
 
-## 1. Set up
+## 1. Install
 
-Check out the tag and create a Python environment outside the checkout:
-
+<!-- outline (Stage 4 part 6): availability wording. Replace <repository-url> with the public repository once the first release is exported; say where encoder images are pulled from (ghcr.io/medomni) and that there is no PyPI release. Same in README.md. -->
 ```bash
-git checkout v0.2.1
+git clone --branch v0.3.0 <repository-url> medomni && cd medomni
 ```
 
 ```bash
-uv venv ~/.venvs/medomni && source ~/.venvs/medomni/bin/activate && uv pip install pyyaml numpy pandas pydicom pyedflib h5py pillow wfdb
-```
-
-Every `python` command below runs in this environment.
-
-## 2. Configure
-
-| File | Set |
-|---|---|
-| `data_task/data_roots.yaml` | Where each dataset is (`mimic`, `aireadi`, `bdsp`). |
-| `harness/config.yaml` | Where runs are written (`runs_root`) and your keys file (`keys_file`). |
-| keys file | Your API key in dotenv form, for example `DEEPSEEK_API_KEY=...`. Never commit it. |
-
-v0.2.1 also hard-codes one path that you must change: `BRIDGE_CACHE` in `data_task/taskbuilder/emit_atomic.py`.
-
-## 3. Build images
-
-The perception sidecar, and the encoders your task needs:
-
-```bash
-docker build -f harness/perception-image/Dockerfile -t medomni-perception .
+uv venv && source .venv/bin/activate && uv pip install -e .
 ```
 
 ```bash
-uv run perception/registry.py build cxr-radiograph-2d__torchxrayvision
+medomni --version
 ```
 
-## 4. Build tasks
+MedOmni writes your configuration, built tasks, runs and results to the workspace: `~/.medomni`, or the folder in `MEDOMNI_HOME`. Nothing in it is committed or uploaded.
 
-Two patients of one MIMIC-IV task type, with encoders available:
+## 2. Describe your agent
+
+Copy the agent template and set your model. See [Run your agent](guides/run-your-agent.md) for every field.
 
 ```bash
-python data_task/taskbuilder/emit_atomic.py mimic_icu-stay-radiology --variant enc --batch smoke -n 2
+medomni bench agent new my-agent
 ```
 
-The tasks land in `data_task/atomtasks/` and stay on your machine.
+## 3. Run on dummy data
 
-## 5. Run
-
-Save this as `harness/experiments/my-first.yaml`:
-
-```yaml
-experiment: my-first
-tier: SMOKE
-description: two patients, one task type, with encoders
-generation: fix-smoke
-types: [mimic_icu-stay-radiology]
-variants: {enc: data_task/atomtasks}
-agents: [terminus-2]
-reps: [1]
-expect: {terminus-2: {model_served: deepseek-flash}}
-```
-
-`expect.model_served` is the model name the provider reports back; a run that reports another name is recorded as an error and never scored.
-
-Emit the job. This dry-runs it and writes a prerun sheet to `harness/prerun/` with the exact `harbor run` command:
+Dummy data is generated from the dataset packages and each family's declared format. It needs no credentials and contains no patient values. To look at it, `medomni studio dummy <dataset> --out <dir>` writes one dataset's dummy data to a folder.
 
 ```bash
-python harness/build.py emit my-first
+medomni studio task build --set medomni-bench/smoke-dummy
 ```
 
-Load your keys and run that command:
+Studio's builder, `medomni-v1`, writes the set's built tasks to your workspace. Bench runs and scores them.
+
+For a provider's API, export its key in the same shell first, such as `export OPENAI_API_KEY=...`.
 
 ```bash
-set -a; source harness/api-keys.env; set +a
+medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 ```
+
+`medomni bench run` pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run in its run folder.
+
+## 4. Score
 
 ```bash
-harbor run -c harness/harbor/base.yaml -c harness/harbor/agents/terminus-2.yaml -c harness/harbor/jobs/<job>.yaml
+medomni bench score --set medomni-bench/smoke-dummy
 ```
 
-The sheet also prints `harness/docker_hygiene.py` lines. That script is not in v0.2.1; skip them.
+It prints one row per task, target, agent and arm: the score, the number of patients and the failure rate. Scores on dummy data only show that the pipeline works.
 
-## 6. Score
+## 5. Run on real data
 
-```bash
-python harness/build.py import runs/experiments/my-first/jobs/<job>
-```
+MedOmni hosts no dataset. Download and connect each dataset as in [Connect your data](guides/connect-your-data.md), then build its task set as in [Rebuild a task set](guides/rebuild-a-task-set.md):
 
-```bash
-python harness/score.py --experiment my-first
-```
-
-```bash
-python harness/analyze.py grid my-first
-```
-
-The last command prints one row per task type (score, patients, failure rate) and writes it to `runs/experiments/my-first/analysis/grid.md`. Two patients only show that the pipeline works; the number means nothing clinically.
+- **VitalDB** is open and needs no access request: `medomni-bench/vitaldb`.
+- **MIMIC-IV, AI-READI and BDSP** need your own access: `medomni-bench/v1`.
 
 ## Where next
 
-- [Run your agent](guides/run-your-agent.md): your own model, more task types, with and without encoders.
+- [Run your agent](guides/run-your-agent.md): your own model, with and without encoders.
 - [Concepts](learn/concepts.md): the terms used above.

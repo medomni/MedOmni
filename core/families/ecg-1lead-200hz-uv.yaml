@@ -1,0 +1,12 @@
+id: ecg-1lead-200hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [ecg]
+  rate_hz: 200
+  units: uV
+  ndim: 1
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 4196a320d5be61b04cac991cfe5680b2f9cf0fe8, dir: families/ecg-1lead-200hz-uv/}

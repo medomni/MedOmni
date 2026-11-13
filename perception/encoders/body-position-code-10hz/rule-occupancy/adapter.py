@@ -1,6 +1,6 @@
 """Categorical summaries without inventing the device's posture codebook."""
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 FAMILY = "body-position-code-10hz"
 
 

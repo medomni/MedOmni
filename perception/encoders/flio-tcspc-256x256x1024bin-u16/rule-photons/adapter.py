@@ -1,6 +1,6 @@
 """Photon-histogram moments, explicitly not fitted fluorescence lifetimes."""
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 FAMILY = "flio-tcspc-256x256x1024bin-u16"
 
 

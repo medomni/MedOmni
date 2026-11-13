@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from py_agata.variability import mean_glucose, std_glucose, cv_glucose
 from py_agata.time_in_ranges import time_in_given_range
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "cgm-5min-mgdl"
 

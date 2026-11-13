@@ -1,67 +1,125 @@
 # Contribute
 
-This guide is for contributors: you end up with a new task, agent config or encoder in the repository, checked by the same commands the team uses.
+For contributors who add an agent to Bench, a dataset or a task to Studio, or an encoder to Perception.
 
-Each area of the repository has an owner who reviews changes to it; the repository README lists them.
+## How MedOmni is developed
 
-## Add a task
+MedOmni is developed in a private repository. The public repository is an export of each release, and every commit in it keeps its author.
 
-For a task on MIMIC-IV, AI-READI or BDSP, using families MedOmni already declares.
+A pull request goes to the public repository:
 
-### Before you start
+1. Create the starting files with the piece's `new` command, fill them in, and run its check command locally.
+2. Open a pull request on the public repository. CI runs the same check, and the MedOmni team reviews it.
+3. Once it is merged there, it is brought into development under your name and ships in the next release.
 
-- Access to the dataset, and its root set in `data_task/data_roots.yaml`.
-- The task's inputs map to existing families. See [Families](../reference/families.md).
+Work that should stay in your own repository, for example a task on data that cannot leave your institution, can be a plug-in package instead: your own `medomni-*` package that ships the same pieces in a content folder and runs the same check. See [Publish a plug-in package](#publish-a-plug-in-package).
+
+Contributions change only extension points. Only the MedOmni team changes Core and the contracts; if you need a contract change, such as a new family, open an issue first.
+
+Every model card and task template lists its `authors`.
+
+## Add an agent (Bench)
+
+For a new scaffold or model.
 
 ### Steps
 
-1. Add the proposal as a row in `data_task/taskbuilder/intake/proposals.csv` (timestamp, proposer, org, dataset, title, statement, mode, target, streams, optional prediction time), then compile it into a draft spec.
+1. Create the agent config and fill it in, as in [Run your agent](run-your-agent.md).
 
     ```bash
-    python data_task/taskbuilder/intake/compile.py data_task/taskbuilder/intake/proposals.csv
+    medomni bench agent new my-agent
     ```
 
-2. Resolve every item in the draft's `unresolved:` list, record the decisions in `data_task/taskbuilder/intake/resolutions/<task-id>.yaml`, and freeze the spec.
-
-    ```bash
-    python data_task/taskbuilder/intake/freeze.py <task-id>
-    ```
-
-3. Emit the task folder and validate it.
-
-    ```bash
-    python data_task/taskbuilder/emit.py data_task/taskbuilder/specs/<task-id>.yaml
-    ```
-
-4. To run the task type as atom tasks, add its targets to the atomic builder's census in `emit_atomic.py` and build it, as in [Connect your data](connect-your-data.md).
-5. Pin the task into a batch. `pin_batch.py` rewrites the whole batch file from the task ids you list, so list every task the batch should hold. Task data stays local.
-
-    ```bash
-    python data_task/taskbuilder/pin_batch.py <batch> <task-id> [<task-id> ...]
-    ```
+2. Open a pull request adding it as `bench/agents/<name>.yaml`.
 
 ### Check
 
 ```bash
-python data_task/taskbuilder/validate.py data_task/taskbuilder/specs/<task-id>.yaml
+medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 ```
 
-It checks the spec's keys and metric, that the label derivation resolves, that no answers or leaking inputs reach `data/`, that staged files match their families, and that the folder matches its `FINGERPRINT`.
+Every atom task of `medomni-bench/smoke-dummy` must finish with a run and no infrastructure error.
 
-## Add an agent
+## Add a dataset (Studio)
 
-For a new model or provider behind the `terminus-2` scaffold.
+For a new openly licensed dataset, such as VitalDB, read by MedOmni's builder, `medomni-v1`. Pull requests add datasets only when openly licensed; use a plug-in package for others.
+
+### Before you start
+
+- The dataset's license allows redistribution of samples (for example CC BY 4.0).
+- Its recordings map to existing families. See [Families](../reference/families.md).
 
 ### Steps
 
-1. Add `harness/harbor/agents/terminus-2-<name>.yaml` with the model name, the key as a `${VARNAME}` reference, and `max_turns: 300`. See [Run your agent](run-your-agent.md).
-2. Probe the model, then add it to `harness/models.yaml` with the name the provider actually serves.
+1. Create the dataset package:
+
+    ```bash
+    medomni studio data new my-dataset
+    ```
+
+2. Write `dataset.yaml`: the description (unit, kind of time, version), the format readers and what each reads, the dataset's rules, and any family converters its raw files need. See [Datasets reference](../reference/datasets.md#dataset-package).
+3. List every code the dataset emits in `codes.csv`. Use the [shared codes](../reference/recipes.md#shared-codes) where the dataset has those concepts.
+4. Write `labels.yaml` and `evidence.yaml`. See [Recipes reference](../reference/recipes.md).
+5. Write the dataset policy from the license: what may be published and which routes may see the data.
+6. Generate dummy data from your package and check that it has the tables and codes you expect. It comes from `dataset.yaml` and `codes.csv`, with no extra file.
+
+    ```bash
+    medomni studio dummy my-dataset --subjects 20 --out ~/dummy/my-dataset
+    ```
+
+7. Optional: add the package's dummy data, from `medomni studio dummy`, to MedOmni's public Hugging Face repository. It holds dummy data only, never real records. Nothing in Build reads it.
+8. Add at least one template and cohort, as below, and open a pull request.
+
+Python goes only in `hooks/`: for a label no rule can express, and `download.py`, which tells `medomni studio download-list` where the dataset's files come from. See [Hooks](../reference/datasets.md#hooks). A file format no format reader knows needs a new format reader in Core: open an issue first.
 
 ### Check
 
-`python harness/build.py emit <experiment>` dry-runs the first job in Harbor and prints `dry-run OK` or the error.
+```bash
+medomni studio data check my-dataset
+```
 
-## Add an encoder
+It checks the package's files and policy, writes and loads its dummy data, and checks that every code is in `codes.csv`.
+
+## Add a template and a cohort (Studio)
+
+For a task on a supported dataset, using labels and families MedOmni already has, or labels you add to the dataset's library.
+
+### Steps
+
+1. Create the template and a first cohort:
+
+    ```bash
+    medomni studio task new vitaldb_my-task --dataset vitaldb
+    ```
+
+2. Fill in `template.yaml`: the targets with each one's label and metric, the input, and the `agent` block with the statement, the prediction-time paragraph, environment and submission path. Give each label a `question`, or give the target its own. The agent sees the patient's whole record minus the labels' guards, so do not list leaking evidence again. The fields are in [Tasks reference](../reference/tasks.md#task-template).
+3. Write a cohort in `cohorts/`: source population, prediction time, requirements and cohort selection (`select`). Add its test patients. See [Recipes reference](../reference/recipes.md#cohort-file).
+4. Preview the counts on your copy, adjust the cohort, then build.
+
+    ```bash
+    medomni studio preview vitaldb_my-task@n20
+    medomni studio task build vitaldb_my-task@n20
+    ```
+
+5. Open a pull request with the template folder.
+
+### Check
+
+```bash
+medomni studio task check vitaldb_my-task@n20
+```
+
+It checks:
+
+- the template's fields and metrics
+- that each target's label is in the library and states its window
+- that the cohort's test patients give their expected results
+- the [correctness checks](../learn/studio/build.md#correctness-checks): no answer in the evidence, events still ahead and images before the prediction time, enough patients, answers that vary, complete recordings, a closed network
+- that staged files match their families
+
+## Add an encoder (Perception)
+
+Encoder folders live in `perception/encoders/` and are built into images; they are not part of the installed package.
 
 ### Before you start
 
@@ -70,55 +128,81 @@ For a new model or provider behind the `terminus-2` scaffold.
 
 ### Steps
 
-1. Create the encoder's folder by adapting the nearest existing encoder:
+1. Create the encoder folder:
+
+    ```bash
+    medomni perception new <family>/<encoder>
+    ```
+
+    It writes:
 
     ```text
     perception/encoders/<family>/<encoder>/
     ├── adapter.py
     ├── card.yaml
-    ├── demo.py
     ├── Dockerfile
-    └── testdata/
-        ├── input.*
-        ├── expected.json
-        └── PROVENANCE.md
+    ├── assets.json
+    └── testdata/       empty, filled in step 4
     ```
 
-2. Implement `FAMILY` and `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`. Build the Dockerfile on the shared runtime and pin the base image, dependencies, source revision and weight hashes.
-3. Write the model card. It declares the family, outputs, options, license and source; see [Encoders](../reference/encoders.md).
-4. Build the image, record its expected responses, and regenerate the encoder index.
+2. Implement the adapter and pin the image:
+    - `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`
+    - base image, dependencies and source revision pinned in the Dockerfile
+    - torch, if the encoder needs it, installed with `torch==<version>` from the CPU build index, at a version listed in `src/medomni/perception/registry/torch.yaml`
+    - weights and other files in `assets.json`, each with its source (a URL or a Hugging Face file) and sha256; the image build fetches and checks them
+3. Write the model card: the family, outputs, options, license and source. See [Encoders](../reference/encoders.md).
+4. Write the test data, its inputs and `PROVENANCE.md`:
 
     ```bash
-    uv run perception/registry.py build <family>__<encoder>
+    medomni studio testdata <family>__<encoder>
     ```
+
+5. Record the expected responses on the test data, and open a pull request.
 
     ```bash
-    uv run perception/registry.py freeze --docker <family>__<encoder>
+    medomni perception check perception/encoders/<family>/<encoder> --freeze
     ```
-
-    ```bash
-    uv run perception/registry.py index
-    ```
-
-`perception/AGENTS.md` has the full onboarding notes.
 
 ### Check
 
 ```bash
-uv run perception/registry.py validate <family>__<encoder>
+medomni perception check perception/encoders/<family>/<encoder>
 ```
+
+It validates the model card with `medomni contracts check`, checks the Dockerfile's torch installs against the list, builds the image, checks the torch inside it is a listed CPU build, and runs the encoder's tests: it runs the image on the test data and compares the responses with `expected.json`. See [Check and freeze](../learn/perception/encoders.md#check-and-freeze). GPU encoders may run on a self-hosted runner.
+
+## Publish a plug-in package
+
+For agents, datasets, tasks or encoders that live in your own repository.
+
+### Steps
+
+1. Create a Python package named `medomni-<name>` that depends on `medomni`.
+2. Add a content folder to the package, laid out like MedOmni's repository: `bench/agents/`, `studio/datasets/<dataset>/`, `bench/benchmarks/<benchmark>/`, `perception/encoders/<family>/<encoder>/`. Create each piece in it as in the sections above.
+3. Register the folder with one entry point in `pyproject.toml`:
+
+    ```toml
+    [project.entry-points."medomni.plugins"]
+    myname = "medomni_myname:content"
+    ```
+
+    A family converter, a task builder, an arm or a Studio tool is Python code: register it in `medomni.converters`, `medomni.builders`, `medomni.arms` (with its build side in `medomni.arm_builds`) or `medomni.tools`. A converter for one dataset's own format is declared in its `dataset.yaml` instead. See [Plug-ins](../learn/core/plugins.md#python-pieces).
+
+4. In your package's tests, run the same checks with `medomni.core.testing`.
+5. Install it as a wheel or in editable mode. Zip installs are not supported.
+
+### Check
 
 ```bash
-uv run perception/registry.py test --docker <family>__<encoder>
+medomni plugins
 ```
 
-```bash
-uv run perception/registry.py plan <family>__<encoder>
-```
+Your package and each piece it adds are listed, and the commands above (`medomni studio task check`, `medomni perception check` and the rest) work on them as on built-in pieces.
 
-`validate` checks the model card against the schema and the family registry; `test` runs the built image on its test data and compares the responses with `expected.json`; `plan` should report the encoder as runnable.
+<!-- outline (Stage 4 part 5): "What CI checks on your pull request": the checks above run in CI, plus the data check (no record id, no data file outside a testdata folder with provenance and licence). Point to the example plug-in package as the starting copy for a plug-in. -->
 
 ## Where next
 
-- [Tasks](../reference/tasks.md): the spec format.
-- [Design principles](../learn/principles.md): including the rules for editing these docs.
+- [Design principles](../learn/principles.md): what Core and the extension points are.
+- [Tasks](../reference/tasks.md): the task template contract.
+- [Recipes](../reference/recipes.md): the cohort, label and evidence fields.

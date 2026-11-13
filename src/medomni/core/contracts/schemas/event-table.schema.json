@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "event-table.schema.json",
+  "x-contract": "event table",
+  "$defs": {
+    "Description": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "time": {
+          "enum": [
+            "datetime",
+            "visit-dates",
+            "seconds-from-start"
+          ],
+          "title": "Time",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit",
+        "time",
+        "version"
+      ],
+      "title": "Description",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The description of a loaded event table, written beside it.",
+  "properties": {
+    "dataset": {
+      "minLength": 1,
+      "title": "Dataset",
+      "type": "string"
+    },
+    "description": {
+      "$ref": "#/$defs/Description"
+    },
+    "columns": {
+      "default": [
+        "subject_id",
+        "time",
+        "code",
+        "numeric_value",
+        "text_value",
+        "visit_id",
+        "path",
+        "sha256",
+        "native_id"
+      ],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Columns",
+      "type": "array"
+    },
+    "rows": {
+      "minimum": 0,
+      "title": "Rows",
+      "type": "integer"
+    },
+    "subjects": {
+      "minimum": 0,
+      "title": "Subjects",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "dataset",
+    "description",
+    "rows",
+    "subjects"
+  ],
+  "title": "EventTable",
+  "type": "object"
+}

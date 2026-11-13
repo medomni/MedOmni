@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "container-response.schema.json",
+  "x-contract": "container API",
+  "$defs": {
+    "EmbeddingBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "embedding",
+          "title": "Kind",
+          "type": "string"
+        },
+        "dim": {
+          "minimum": 1,
+          "title": "Dim",
+          "type": "integer"
+        },
+        "vector": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Vector",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "dim",
+        "vector"
+      ],
+      "title": "EmbeddingBlock",
+      "type": "object"
+    },
+    "EventItem": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "t_start": {
+          "title": "T Start",
+          "type": "number"
+        },
+        "t_end": {
+          "title": "T End",
+          "type": "number"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        }
+      },
+      "required": [
+        "label",
+        "t_start",
+        "t_end"
+      ],
+      "title": "EventItem",
+      "type": "object"
+    },
+    "EventsBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "events",
+          "title": "Kind",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/EventItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "items"
+      ],
+      "title": "EventsBlock",
+      "type": "object"
+    },
+    "LabelItem": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "title": "LabelItem",
+      "type": "object"
+    },
+    "LabelsBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "labels",
+          "title": "Kind",
+          "type": "string"
+        },
+        "scale": {
+          "enum": [
+            "probability",
+            "logit",
+            "score",
+            "physical"
+          ],
+          "title": "Scale",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/LabelItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "scale",
+        "items"
+      ],
+      "title": "LabelsBlock",
+      "type": "object"
+    },
+    "TextBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "text",
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "title": "TextBlock",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "encoder_id": {
+      "pattern": "^[a-z0-9-]+__[a-z0-9-]+$",
+      "title": "Encoder Id",
+      "type": "string"
+    },
+    "family": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Family",
+      "type": "string"
+    },
+    "healthy": {
+      "title": "Healthy",
+      "type": "boolean"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "outputs": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "embedding": "#/$defs/EmbeddingBlock",
+            "events": "#/$defs/EventsBlock",
+            "labels": "#/$defs/LabelsBlock",
+            "text": "#/$defs/TextBlock"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/LabelsBlock"
+          },
+          {
+            "$ref": "#/$defs/EventsBlock"
+          },
+          {
+            "$ref": "#/$defs/TextBlock"
+          },
+          {
+            "$ref": "#/$defs/EmbeddingBlock"
+          }
+        ]
+      },
+      "title": "Outputs",
+      "type": "array"
+    },
+    "runtime": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runtime"
+    }
+  },
+  "required": [
+    "encoder_id",
+    "family",
+    "healthy",
+    "notes",
+    "outputs"
+  ],
+  "title": "ContainerResponse",
+  "type": "object"
+}

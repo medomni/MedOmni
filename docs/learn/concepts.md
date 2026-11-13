@@ -1,42 +1,80 @@
 # Concepts
 
-The terms used across MedOmni, in the order a run meets them.
+The ideas behind MedOmni. Each entry links to the page with the details.
+
+## Projects
+
+**Project**
+:   A part of MedOmni with its own package, content folder, command and docs section. v0.3.0 has three: Bench, Perception and Studio. Bench and Perception depend on Core and not on each other; Studio may also use them.
+
+**Core**
+:   What every project uses: the contracts, the `medomni` command, plug-in loading, dataset loading, families, the cache, the built-task contract and the testing kit. Projects register with it; it imports none of them. Only the MedOmni team changes it. See [Architecture](architecture.md).
+
+**Bench**
+:   The project that evaluates AI agents on medical tasks. It runs an agent on built tasks in Harbor, with or without encoders, and scores the answers, whoever built the tasks. See [Run your agent](../guides/run-your-agent.md).
+
+**Studio**
+:   The project that makes and builds tasks, and the work people do around Bench and Perception: dataset survey, task proposals, review and sign-off, cohort previews, MedOmni's task builder, the audit and reports. A proposal ends in a frozen task template, which the builder turns into built tasks. See [Studio](studio/overview.md).
+
+**Perception**
+:   The project that turns medical data into evidence an agent can use. It serves the encoders through the gateway. See [Use the encoders](../guides/use-the-encoders.md).
+
+## Data and encoders
 
 **Dataset**
-:   A source of patient data you obtain under its own license: MIMIC-IV, AI-READI or BDSP in v0.2.1. MedOmni ships none.
+:   A source of patient data, used under its own license: MIMIC-IV, AI-READI, BDSP or VitalDB. MedOmni ships no data. A dataset package, which is configuration only, says how to read it. See [Datasets](studio/datasets.md).
 
-**Task**
-:   A clinical question asked of each patient in a cohort, with a fixed way to score the answers. Each task type is defined by a task spec, a yaml file in `data_task/taskbuilder/specs/`.
-
-**Atom task**
-:   One task for one patient: the unit an agent runs. A task type's atom tasks are scored together, against answers the agent never sees.
-
-**Fingerprint**
-:   A hash of a task's content. The same spec on the same data gives the same fingerprint, so anyone with the data can rebuild a task and prove it matches.
-
-**Batch**
-:   A named, pinned list of tasks and their fingerprints.
+**Event table**
+:   The table every dataset becomes: one row per event, with raw files as `FILE//<family>` rows. Every later step reads it. See [Datasets](studio/datasets.md#event-table).
 
 **Family**
-:   Inputs that can share an encoder are one family, defined by a declared format such as 12-lead ECG at 500 Hz. Datasets supply families; encoders read them.
+:   A declared input format, such as 12-lead ECG at 500 Hz. Datasets supply files in families; encoders read them. See [Families](core/families.md).
 
 **Encoder**
-:   A containerised model or rule that reads one family and returns evidence an agent can use, such as labels, events or text.
-
-**Model card**
-:   An encoder's declared facts: what it reads and returns, where it comes from, its license and its known limits.
+:   A containerised model or rule that reads one family and returns evidence: labels, events, text or embeddings, with their provenance and reliability. See [Encoders](perception/encoders.md).
 
 **Gateway**
-:   The HTTP service through which an agent finds encoders, reads their model cards and calls them.
+:   The HTTP service in Perception that lists encoders, serves their model cards and runs them. Agents and your own code call encoders through it. See [Gateway](perception/gateway.md).
 
-**Agent**
-:   The system being evaluated: a scaffold (`terminus-2` in v0.2.1) driving a model.
+## Evaluation
 
-**Condition**
-:   What encoder access an agent gets: with encoders (`enc`), without (`noenc`), or required to use at least one (`enc-forced`). Only the encoder access, and the instruction paragraph that describes it, differ. The config calls it `variant`.
+**Task template**
+:   A clinical question with its targets, and an `agent` block with the agent's instruction and environment. A frozen template is the end of Make. See [Tasks](studio/tasks.md).
 
-**Experiment**
-:   One yaml file declaring which agents run which task types, under which conditions, how many times.
+**Cohort**
+:   A recipe next to a template: who is included, at which prediction time, and how many per class. A template and a cohort are written `<template>@<cohort>`, and are one task with a version `N.X`. See [Recipes](studio/recipes.md).
 
-**Run**
-:   One agent on one atom task, once. Its outcome is recorded in the results file, and scoring turns the runs of one task type into a score.
+**Recipe**
+:   The format MedOmni's builder, `medomni-v1`, reads for what it takes from a dataset: the cohort, the labels and the evidence. It holds rules, never patient ids. See [Recipes](studio/recipes.md).
+
+**Build**
+:   MedOmni's task builder, `medomni-v1`, in Studio: it turns a template, a cohort and your copy into atom tasks. See [Build](studio/build.md).
+
+**Task builder**
+:   Code that writes built tasks: a content folder with the answers, and one atom task per patient under each arm. Any builder that follows the built-task contract can feed Bench. See [Built tasks](core/built-tasks.md).
+
+**Atom task**
+:   One patient's evidence and the question, at the patient's prediction time: the unit an agent runs. See [Built tasks](core/built-tasks.md#the-files).
+
+**Task set**
+:   A published list of `<template>@<cohort>` pairs, each pinned at its version, and the arms to build them under. It is named `<benchmark>/<set>`, such as `medomni-bench/v1`. Scores are compared on task sets. See [Tasks](studio/tasks.md#task-set).
+
+**Benchmark**
+:   Several task sets under one card: version, owner, license and the intelligence kinds it accepts. MedOmni's own is `medomni-bench`; a plug-in package can publish another. See [Tasks](studio/tasks.md#benchmark).
+
+**Cache**
+:   The results of slow steps, kept only to save time: a build with no cache gives the same atom tasks. See [Cache](core/cache.md).
+
+**Intelligence**
+:   The system being evaluated, with a kind. v0.3.0 has one kind, `agent`: a scaffold driving a model, described in an agent config. Records name it as `intelligence: {kind, name}`. See [Runs](bench/runs.md).
+
+**Arm**
+:   One way of giving the same tasks to the intelligence, compared side by side, as in a clinical trial: with encoders, without them, or adding input families rung by rung. A builder implements what the arm hides or shows; Bench implements what the run attaches. See [Runs](bench/runs.md#arms).
+
+## Extending MedOmni
+
+**Contract**
+:   A versioned format with the validator that checks it, such as the task template or the model card. Projects and plug-in packages depend only on contracts. See [Contracts](core/contracts.md).
+
+**Extension point**
+:   A place where contributors add to MedOmni: an agent in Bench, a dataset or task in Studio, an encoder in Perception. Each has a `new` command that writes its starting files and one check command, and is filled by pull request or from a plug-in package. See [Contribute](../guides/contribute.md).

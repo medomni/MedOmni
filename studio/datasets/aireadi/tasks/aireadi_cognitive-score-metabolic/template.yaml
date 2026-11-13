@@ -1,0 +1,31 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: aireadi_cognitive-score-metabolic
+dataset: aireadi
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: moca_lt_26, label: 'aireadi:omopthresh:moca_total_score:<26', metric: auc}
+- {name: moca_orientation, label: 'aireadi:omopnum:moca_orientation', metric: mae}
+- {name: moca_abstraction, label: 'aireadi:omopnum:moca_abstraction', metric: mae}
+- {name: moca_mis, label: 'aireadi:omopnum:moca_combined_mis_score', metric: mae}
+input:
+  omop_terms: [Type 2 diabetes on oral / non-insulin medication, Healthy (no diabetes), 'Pre-diabetes, lifestyle-controlled',
+    Type II Diabetes, Pre-diabetes, HbA1c, Serum glucose, Insulin, C-peptide, Total cholesterol, LDL cholesterol, HDL cholesterol,
+    BMI, Weight, Waist circumference, Waist-to-hip ratio, CES-D-10 depression score, PAID-5 diabetes distress score, Diet
+      score, Family history of type 2 diabetes, 'Diabetes lifestyle survey (exercise, diet habits, foot care)', Years of education,
+    Step count, Wearable sleep staging]
+  files: {cgm-5min-mgdl: wearable_blood_glucose/continuous_glucose_monitoring/}
+  omop: [bmi_vsorres, cmtrt_glcs, cmtrt_insln, dietscore, import_glucose, import_hba1c, import_hdl_cholesterol, import_insulin,
+    import_ldl_cholesterol, import_total_cholesterol, mhterm_dm1, mhterm_dm2, mhterm_predm, waist_vsorres, weight_vsorres,
+    years_of_education]
+evidence: [default, full]
+agent:
+  statement: Predict this participant's performance on the Montreal Cognitive Assessment (MoCA).
+  instruction: '## Prediction time
+
+
+    - The evidence is the participant''s data from their study visit.
+
+    - The prediction is made as of that visit; each target is the participant''s status as recorded by the study.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

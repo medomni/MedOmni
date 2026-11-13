@@ -1,40 +1,22 @@
-{
-  "id": "flio-tcspc-256x256x1024bin-u16__rule-photons",
-  "family": "flio-tcspc-256x256x1024bin-u16",
-  "modality": "FLIO",
-  "summary": "Photon counts and raw arrival-bin moments for one 256×256×1024-bin FLIO wavelength-band acquisition.",
-  "intended_use": "Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.",
-  "limits": [
-    "Raw bin moments are not fluorescence lifetimes; no background or instrument-response correction.",
-    "One wavelength-band DICOM per request. Bands are not pooled and inter-band ratios are not inferred.",
-    "Bin indices are reported without assuming a calibrated bin width or time origin.",
-    "Requires unsigned 16-bit photon counts, 1024 time frames and 256×256 spatial samples."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "photon_count",
-        "mean_arrival_bin",
-        "std_arrival_bin",
-        "peak_bin",
-        "nonzero_pixel_fraction"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/flio-tcspc-256x256x1024bin-u16__rule-photons:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: flio-tcspc-256x256x1024bin-u16__rule-photons
+family: flio-tcspc-256x256x1024bin-u16
+modality: FLIO
+summary: Photon counts and raw arrival-bin moments for one 256×256×1024-bin FLIO wavelength-band acquisition.
+authors:
+- {name: Nicolas Zumarraga}
+- {name: Bosong Huang}
+intended_use: Descriptive baseline features for benchmark agents; requires interpretation with acquisition context.
+limits: [Raw bin moments are not fluorescence lifetimes; no background or instrument-response correction., One wavelength-band
+    DICOM per request. Bands are not pooled and inter-band ratios are not inferred., Bin indices are reported without assuming
+    a calibrated bin width or time origin., 'Requires unsigned 16-bit photon counts, 1024 time frames and 256×256 spatial
+    samples.']
+outputs:
+- kind: labels
+  scale: physical
+  labels: [photon_count, mean_arrival_bin, std_arrival_bin, peak_bin, nonzero_pixel_fraction]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/flio-tcspc-256x256x1024bin-u16__rule-photons:dev', digest: null}
+acceptance: pending

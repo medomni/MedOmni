@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-proposal.schema.json",
+  "x-contract": "task proposal",
+  "additionalProperties": false,
+  "description": "One proposed task and its review state (Studio). The draft becomes a frozen template when signed off.",
+  "properties": {
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "by": {
+      "minLength": 1,
+      "title": "By",
+      "type": "string"
+    },
+    "org": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Org"
+    },
+    "at": {
+      "minLength": 1,
+      "title": "At",
+      "type": "string"
+    },
+    "mode": {
+      "minLength": 1,
+      "title": "Mode",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "draft",
+        "under-review",
+        "signed-off",
+        "frozen"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "dataset": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dataset"
+    },
+    "draft": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Draft",
+      "type": "object"
+    }
+  },
+  "required": [
+    "title",
+    "by",
+    "at",
+    "mode",
+    "state"
+  ],
+  "title": "TaskProposal",
+  "type": "object"
+}

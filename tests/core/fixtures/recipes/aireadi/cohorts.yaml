@@ -1,0 +1,260 @@
+# Ported from S1's p16_recipes.yaml by internal_docs/roadmaps/v0.3.0/roadmaps/s2/probes/p11_port_recipes.py. Do not edit.
+aireadi_cancer-history-metabolic@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - cancer_history
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    cancer_history: aireadi:omopbin:mhoccur_ca
+aireadi_cataract-ocular@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - cataract_history
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    cataract_history: aireadi:omopbin:mhoccur_crt
+aireadi_cognitive-function-retinal@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - moca_lt_26
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    moca_lt_26: aireadi:omopthresh:moca_total_score:<26
+aireadi_cognitive-score-metabolic@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - moca_lt_26
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    moca_abstraction: aireadi:omopnum:moca_abstraction
+    moca_lt_26: aireadi:omopthresh:moca_total_score:<26
+    moca_mis: aireadi:omopnum:moca_combined_mis_score
+    moca_orientation: aireadi:omopnum:moca_orientation
+aireadi_crp-wcc-lifestyle@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - hs_crp_ge_3
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    hs_crp_ge_3: aireadi:omopthresh:import_crp_hs:>=3
+    wbc_value: aireadi:omopnum:lbscat_wbc
+aireadi_crp-white-cell-count-2@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - hs_crp_ge_3
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    hs_crp_ge_3: aireadi:omopthresh:import_crp_hs:>=3
+    wbc_value: aireadi:omopnum:lbscat_wbc
+aireadi_crp-white-cell-count@ladder:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - hs_crp_ge_3
+      n: 20
+      seed: 20260925|ladder-mid|aireadi_crp-white-cell-count
+    require:
+    - has_label: hs_crp_ge_3
+    - files:
+      - wearable-hr-1min-bpm
+      - wearable-spo2-1min-pct
+      - wearable-resprate-1min-brpm
+      - numeric-observation
+      - ecg-12lead-500hz-mv
+      - cgm-5min-mgdl
+      - fundus-photography-2d
+      - fundus-faf-mono8-2d
+      - oct-volume-raster-mono8-3d
+      - oct-bscanset-radial24-circle3-mono8
+      - octa-enface-slab-mono8-2d
+      - octa-flowcube-mono8-3d
+      - retinal-heightmap-surfaces-f32
+      - flio-tcspc-256x256x1024bin-u16
+      to: anchor
+    source: all
+  targets:
+    hs_crp_ge_3: aireadi:omopthresh:import_crp_hs:>=3
+    wbc_value: aireadi:omopnum:lbscat_wbc
+aireadi_crp-white-cell-count@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - hs_crp_ge_3
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    hs_crp_ge_3: aireadi:omopthresh:import_crp_hs:>=3
+    wbc_value: aireadi:omopnum:lbscat_wbc
+aireadi_depression-lifestyle@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - cesd10_ge_10
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    cesd10_ge_10: aireadi:omopthresh:cestl:>=10
+aireadi_diabetes-diagnosis-biopsycho@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - diabetes_status
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    diabetes_status: aireadi:aireadi-dmstatus
+aireadi_diabetes-retinal@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - diabetes_status
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    diabetes_status: aireadi:aireadi-dmstatus
+aireadi_dpn-neuropathy-metabolic@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - foot_sensation_impaired_right
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    foot_sensation_impaired_left: aireadi:omopthresh:msslffl:<10
+    foot_sensation_impaired_right: aireadi:omopthresh:mssrffl:<10
+aireadi_dyslipidaemia-diagnosis-biop@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - tg_ge_200
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    hdl_cholesterol: aireadi:omopnum:import_hdl_cholesterol
+    ldl_cholesterol: aireadi:omopnum:import_ldl_cholesterol
+    tg_ge_200: aireadi:omopthresh:import_triglycerides:>=200
+    total_cholesterol: aireadi:omopnum:import_total_cholesterol
+aireadi_foot-sensation-metabolic@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - foot_sensation_impaired_right
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    foot_sensation_impaired_left: aireadi:omopthresh:msslffl:<10
+    foot_sensation_impaired_right: aireadi:omopthresh:mssrffl:<10
+aireadi_prior-hypertension-cardiovas@ladder:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - hypertension_history
+      n: 20
+      seed: 20260925|ladder-mid|aireadi_prior-hypertension-cardiovas
+    require:
+    - has_label: hypertension_history
+    - files:
+      - wearable-hr-1min-bpm
+      - wearable-spo2-1min-pct
+      - wearable-resprate-1min-brpm
+      - numeric-observation
+      - ecg-12lead-500hz-mv
+      - cgm-5min-mgdl
+      - fundus-photography-2d
+      - fundus-faf-mono8-2d
+      - oct-volume-raster-mono8-3d
+      - oct-bscanset-radial24-circle3-mono8
+      - octa-enface-slab-mono8-2d
+      - octa-flowcube-mono8-3d
+      - retinal-heightmap-surfaces-f32
+      - flio-tcspc-256x256x1024bin-u16
+      to: anchor
+    source: all
+  targets:
+    hypertension_history: aireadi:omopbin:mhoccur_hbp
+aireadi_prior-hypertension-cardiovas@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - hypertension_history
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    hypertension_history: aireadi:omopbin:mhoccur_hbp
+aireadi_visual-function-biopsychosoc@n20:
+  cohort:
+    anchor:
+      event: VISIT
+    select:
+      by:
+      - photopic_va_reduced_od
+      n: 20
+      seed: 7
+    source: all
+  targets:
+    autorefraction_cylinder_od: aireadi:omopnum:viaodcyl
+    autorefraction_cylinder_os: aireadi:omopnum:viaoscyl
+    autorefraction_sphere_od: aireadi:omopnum:viaodsph
+    autorefraction_sphere_os: aireadi:omopnum:viaossph
+    mesopic_va_reduced_od: aireadi:omopthresh:viaodmlog:<70
+    mesopic_va_reduced_os: aireadi:omopthresh:viaosmlog:<70
+    photopic_va_reduced_od: aireadi:omopthresh:viaodplog:<80
+    photopic_va_reduced_os: aireadi:omopthresh:viaosplog:<80

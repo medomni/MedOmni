@@ -1,0 +1,46 @@
+# Evidence rules (Recipes reference page). From S1's p22_evidence.yaml (U1.22).
+files:
+  crop: [numeric-observation]  # one table for the whole stay, with no start time of its own
+static: {}
+tables:
+  admissions:
+    blank_after_end:
+    - dischtime
+    - deathtime
+    - hospital_expire_flag
+    - discharge_location
+    - edouttime
+    - los
+    blank_in_index_visit: guard.fields
+    end: dischtime
+    missing_end: after
+    time: admittime
+    visit: hadm_id
+  diagnoses_icd:
+    drop: guard
+    missing_time: drop
+    skip_index_visit: true
+    time_from:
+      column: dischtime
+      key: hadm_id
+      table: admissions
+    visit: hadm_id
+  ed_edstays:
+    blank_after_end:
+    - outtime
+    end: outtime
+    missing_end: before
+    time: intime
+  ed_triage:
+    keep_if_kept:
+      key: stay_id
+      table: ed_edstays
+  ed_vitalsign:
+    time: charttime
+  labevents:
+    drop: guard
+    time: charttime
+  omr:
+    time: chartdate
+reading_note: "Each file format needs its own reader; a WFDB waveform record is a `.hea` header plus its companion `.dat` signal file."
+views: views

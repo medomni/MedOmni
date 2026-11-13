@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/eeg-sleep-6ch-200hz-uv/yasa/adapter.py
+!perception/encoders/eeg-sleep-6ch-200hz-uv/yasa/card.yaml
+!perception/encoders/eeg-sleep-6ch-200hz-uv/yasa/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

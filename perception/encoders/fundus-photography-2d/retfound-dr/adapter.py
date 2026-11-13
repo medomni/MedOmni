@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torchvision import transforms
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = 'fundus-photography-2d'
 # Head index order = the training folders sorted by name: anodr, bmilddr, cmoderatedr,

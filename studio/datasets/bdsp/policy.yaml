@@ -1,0 +1,26 @@
+# The dataset policy (Datasets reference page). A summary of the data owner's agreement, not legal advice.
+dataset: bdsp
+version: "3.0"
+access: credentialed
+license:
+  id: BDSP Credentialed Health Data License 1.5.0 + DUA
+  url: https://bdsp.io/
+publish:
+  schema: allow
+  templates: allow
+  recipes: allow
+  id_lists: deny
+  labels: deny
+  per_record_derived: deny
+  samples: deny
+routes:
+  local: allow
+  cloud: conditional
+route_conditions:
+  cloud: BDSP's written approval for cloud models (Bosong, 2026-11-10)
+use:
+  commercial: false
+  restriction: research use under the BDSP data use agreement; no record-level derivatives to third parties
+sources:
+- https://bdsp.io/
+- internal_docs/roadmaps/v0.3.0/research/cohort-sharing-dua.md

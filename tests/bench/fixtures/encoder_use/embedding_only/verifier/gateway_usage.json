@@ -1,0 +1,26 @@
+{
+ "status": "ok",
+ "encoders": "on",
+ "calls": [
+  {
+   "encoder_id": "fundus-photography-2d__retfound",
+   "path": "refs/fundus-photography-2d/FX0001_a.dcm",
+   "healthy": true,
+   "status": 200,
+   "cached": false,
+   "outcome": "healthy",
+   "t": 1790000020.0,
+   "outputs": [
+    {
+     "kind": "embedding",
+     "dim": 1024
+    }
+   ]
+  }
+ ],
+ "opened": [],
+ "budget": {
+  "used": 1,
+  "max": 300
+ }
+}

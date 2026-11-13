@@ -1,0 +1,13 @@
+id: eeg-sleep-6ch-200hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [f3-m2, f4-m1, c3-m2, c4-m1, o1-m2, o2-m1]
+  rate_hz: 200
+  units: uV
+  ndim: 2
+  dtype: int16
+  range: null
+status: supplied
+samples: null
+samples_access: controlled

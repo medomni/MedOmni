@@ -1,0 +1,29 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_sepsis-hospital
+dataset: mimic-iv
+authors:
+- {name: Bomin Ko}
+targets:
+- {name: septicemia, label: 'mimic-iv:derived:septicemia', metric: auc}
+input:
+  labs: {'51265': platelet_count, '51301': white_blood_cells, '50912': creatinine, '52546': creatinine, '50931': glucose,
+    '52569': glucose, '50882': bicarbonate, '51256': neutrophils}
+  demographics: [age, sex]
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+evidence: [default, full]
+exclude:
+  streams: [diagnoses, notes, 'medications (deferred, would need own leakage review)', microbiology cultures (staging engine
+      deferred to v0.2)]
+agent:
+  statement: Predict whether this patient's hospital admission will be given a diagnosis of septicemia.
+  instruction: '## Prediction time
+
+
+    - Index admission: the patient''s first hospital admission on record.
+
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
+
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

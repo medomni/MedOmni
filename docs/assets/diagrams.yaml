@@ -1,0 +1,171 @@
+# The architecture diagrams on Learn › Architecture, as data. Regenerate after any change:
+#   medomni studio diagrams docs/assets/diagrams.yaml --out docs/assets/
+# Boxes: kind internal (filled), person, system, external (white), data (tint). Positions in pixels.
+# Arrow ends: from_side / to_side as top | bottom | left | right, or [side, fraction]; default: facing sides.
+
+parts:
+  system: {colour: "#002060"}
+  core: {colour: "#212121"}
+  bench: {colour: "#1E8090"}
+  perception: {colour: "#C55A11"}
+  studio: {colour: "#7030A0"}
+  ext: {colour: "#424242"}
+
+diagrams:
+  c1-context:
+    title: C1 context
+    width: 1100
+    height: 560
+    key: [[MedOmni, system], [External system, external]]
+    boxes:
+      - {id: evaluator, kind: person, part: system, x: 130, y: 20, w: 240, h: 84, title: Agent evaluator, tag: Person, desc: [builds task sets · runs agents]}
+      - {id: encuser, kind: person, part: system, x: 430, y: 20, w: 240, h: 84, title: Encoder user, tag: Person, desc: [calls encoders]}
+      - {id: contributor, kind: person, part: system, x: 730, y: 20, w: 240, h: 84, title: Contributor, tag: Person, desc: [datasets · tasks · encoders · reviews]}
+      - {id: medomni, kind: system, part: system, x: 60, y: 200, w: 980, h: 90, title: MedOmni, tag: Software System, desc: [Core · Bench · Perception · Studio, "one package, one command: medomni"]}
+      - {id: datasets, kind: external, part: studio, x: 20, y: 400, w: 160, h: 80, title: Datasets, tag: External System, desc: [your licensed copy · VitalDB]}
+      - {id: harbor, kind: external, part: bench, x: 200, y: 400, w: 160, h: 80, title: Harbor, tag: External System, desc: [Docker · atom tasks]}
+      - {id: provider, kind: external, part: bench, x: 380, y: 400, w: 160, h: 80, title: Model provider, tag: External System, desc: [LLM API]}
+      - {id: registry, kind: external, part: perception, x: 560, y: 400, w: 160, h: 80, title: Container registry, tag: External System, desc: [ghcr.io/medomni]}
+      - {id: hf, kind: external, part: perception, x: 740, y: 400, w: 160, h: 80, title: Hugging Face, tag: External System, desc: [model cards, dummy data]}
+      - {id: plugins, kind: external, part: core, x: 920, y: 400, w: 160, h: 80, title: Plug-in packages, tag: External System, desc: [medomni-*]}
+    edges:
+      - {from: evaluator, to: medomni, to_side: [top, 0.194], label: "builds, runs, scores", tech: "medomni studio, medomni bench"}
+      - {from: encuser, to: medomni, to_side: [top, 0.5], label: calls encoders, tech: HTTP/JSON}
+      - {from: contributor, to: medomni, to_side: [top, 0.806], label: "adds, proposes, reviews", tech: "pull request, medomni studio"}
+      - {from: medomni, to: datasets, from_side: [bottom, 0.041], to_side: top, label: reads raw files, tech: local files}
+      - {from: medomni, to: harbor, from_side: [bottom, 0.224], label: runs atom tasks, tech: Harbor CLI}
+      - {from: medomni, to: provider, from_side: [bottom, 0.408], label: model calls, tech: HTTPS API}
+      - {from: medomni, to: registry, from_side: [bottom, 0.592], label: pulls images, tech: Docker}
+      - {from: medomni, to: hf, from_side: [bottom, 0.776], label: "cards, dummy data", tech: HF Hub}
+      - {from: plugins, to: medomni, from_side: top, to_side: [bottom, 0.959], label: add pieces, tech: entry points}
+
+  c2-containers:
+    title: C2 containers
+    width: 1500
+    height: 800
+    key: [[Core, core], [Bench, bench], [Perception, perception], [Studio, studio], [Local data (tint), data], [External system, external]]
+    frames:
+      - {part: system, x: 250, y: 40, w: 1000, h: 700, label: "MedOmni [Software System]"}
+      - {part: bench, x: 270, y: 80, w: 440, h: 300, label: Bench}
+      - {part: perception, x: 740, y: 80, w: 490, h: 300, label: Perception}
+      - {part: core, x: 270, y: 400, w: 440, h: 320, label: Core}
+      - {part: studio, x: 740, y: 420, w: 490, h: 160, label: Studio}
+    boxes:
+      - {id: provider, kind: external, part: bench, x: 20, y: 30, w: 170, h: 80, title: Model provider, tag: External System, desc: [LLM API]}
+      - {id: harbor, kind: external, part: bench, x: 20, y: 150, w: 170, h: 80, title: Harbor, tag: External System, desc: [Docker · atom tasks]}
+      - {id: datasets, kind: external, part: studio, x: 1290, y: 470, w: 190, h: 80, title: Datasets, tag: External System, desc: [your copy · VitalDB]}
+      - {id: plugins, kind: external, part: core, x: 20, y: 445, w: 170, h: 90, title: Plug-in packages, tag: External System, desc: [medomni-*]}
+      - {id: benchlib, part: bench, x: 290, y: 255, w: 400, h: 100, title: Bench library, tag: "Container: Python", desc: [medomni.bench, checks · harness · scorer]}
+      - {id: service, part: perception, x: 760, y: 120, w: 200, h: 85, title: Perception service, tag: "Container: Python, Docker", desc: [gateway in each atom task, budget · filter · call log]}
+      - {id: perclib, part: perception, x: 1010, y: 255, w: 200, h: 100, title: Perception library, tag: "Container: Python", desc: [medomni.perception, registry · pulls]}
+      - {id: encoders, part: perception, x: 760, y: 255, w: 200, h: 100, title: Encoders, tag: "Container: Docker images", desc: [one per encoder]}
+      - {id: gateway, part: perception, x: 1010, y: 120, w: 200, h: 85, title: Gateway, tag: "Container: FastAPI, Docker", desc: [catalogue · router · evidence]}
+      - {id: command, part: core, x: 290, y: 440, w: 400, h: 100, title: medomni command, tag: "Container: Python", desc: [medomni.core · contracts · plug-ins, loading · families · cache · built tasks]}
+      - {id: workspace, kind: data, part: core, x: 290, y: 600, w: 400, h: 100, title: Workspace, tag: "Container: local files", desc: [config · cache, built tasks · runs · results]}
+      - {id: studio, part: studio, x: 760, y: 460, w: 450, h: 100, title: Studio tools, tag: "Container: Python", desc: [medomni.studio, Build (recipes) · survey · propose · review · report]}
+      - {id: registry, kind: external, part: perception, x: 1290, y: 120, w: 190, h: 85, title: Container registry, tag: External System, desc: [ghcr.io/medomni]}
+      - {id: hf, kind: external, part: perception, x: 1290, y: 255, w: 190, h: 85, title: Hugging Face, tag: External System, desc: [model cards · dummy data]}
+    edges:
+      - {from: datasets, to: studio, label: raw files, tech: local files, label_at: [1222, 490]}
+      - {from: benchlib, to: harbor, from_side: [left, 0.2], to_side: right, label: jobs, tech: Harbor CLI, label_at: [222, 222]}
+      - {from: harbor, to: provider, from_side: top, to_side: bottom, label: model calls, tech: HTTPS API, label_at: [112, 126]}
+      - {from: benchlib, to: service, from_side: [top, 0.9], to_side: [left, 0.75], label: starts, tech: medomni.services, label_at: [668, 226]}
+      - {from: harbor, to: service, from_side: [right, 0.3], to_side: [left, 0.35], label: agent calls, tech: Gateway API, highlight: true, label_at: [470, 150]}
+      - {from: service, to: encoders, from_side: bottom, to_side: top, label: calls, tech: HTTP, label_at: [866, 226]}
+      - {from: perclib, to: gateway, from_side: top, to_side: bottom, label: starts, tech: Docker, label_at: [1116, 226]}
+      - {from: gateway, to: encoders, from_side: [bottom, 0.1], to_side: [right, 0.25], label: calls, tech: HTTP, label_at: [1040, 226]}
+      - {from: perclib, to: registry, from_side: [right, 0.1], to_side: [left, 0.7], label: pulls images, tech: Docker, label_at: [1222, 200]}
+      - {from: perclib, to: hf, from_side: [right, 0.45], to_side: left, label: model cards, tech: HF Hub, label_at: [1222, 318]}
+      - {from: command, to: benchlib, from_side: top, to_side: bottom, label: calls, tech: entry points, label_at: [496, 392]}
+      - {from: command, to: perclib, from_side: [top, 0.95], to_side: [bottom, 0.1], label: calls, tech: entry points, label_at: [604, 412]}
+      - {from: command, to: studio, label: calls, tech: entry points, label_at: [700, 496]}
+      - {from: command, to: workspace, from_side: bottom, to_side: top, label: "config, cache, tasks, runs", tech: "files, parquet, JSONL", label_at: [496, 566]}
+      - {from: studio, to: workspace, from_side: [bottom, 0.1], to_side: [right, 0.3], label: writes built tasks, tech: files, label_at: [720, 604]}
+      - {from: studio, to: benchlib, from_side: [top, 0.25], to_side: [right, 0.9], label: reads results, tech: Python, label_at: [890, 440]}
+      - {from: plugins, to: command, label: loads extensions, tech: entry points, label_at: [194, 470]}
+
+  c3-components:
+    title: C3 components
+    width: 1600
+    height: 790
+    key: [[Core, core], [Bench, bench], [Perception, perception], [Studio, studio]]
+    frames:
+      - {part: system, x: 20, y: 40, w: 1560, h: 680, label: "medomni [Container: Python package]"}
+      - {part: core, x: 40, y: 80, w: 560, h: 480, label: Core}
+      - {part: bench, x: 620, y: 80, w: 440, h: 270, label: Bench}
+      - {part: perception, x: 1100, y: 80, w: 470, h: 270, label: Perception}
+      - {part: studio, x: 620, y: 400, w: 950, h: 300, label: Studio}
+    boxes:
+      - {id: cli, part: core, x: 60, y: 120, w: 250, h: 80, title: Command, tag: medomni.core.cli, desc: [the medomni command]}
+      - {id: plugins, part: core, x: 60, y: 230, w: 250, h: 80, title: Plug-ins, tag: medomni.core.plugins, desc: [loads projects and packages]}
+      - {id: contracts, part: core, x: 60, y: 340, w: 250, h: 80, title: Contracts, tag: medomni.core.contracts, desc: [typed models · validators]}
+      - {id: testing, part: core, x: 60, y: 450, w: 250, h: 80, title: Testing kit, tag: medomni.core.testing, desc: [the checks, for CI and plug-ins]}
+      - {id: loading, part: core, x: 330, y: 340, w: 250, h: 80, title: Loading, tag: medomni.core.loading, desc: [format readers · loader]}
+      - {id: families, part: core, x: 330, y: 120, w: 250, h: 80, title: Families, tag: medomni.core.families, desc: [registry · converter interface · dummy data]}
+      - {id: cache, part: core, x: 330, y: 450, w: 250, h: 80, title: Cache, tag: medomni.core.cache, desc: [backends · commands]}
+      - {id: built, part: core, x: 330, y: 230, w: 250, h: 80, title: Built tasks, tag: "medomni.core.tasks, builders", desc: [contract · checks · TaskBuilder]}
+      - {id: scorer, part: bench, x: 640, y: 120, w: 190, h: 80, title: Scorer, tag: medomni.bench.scoring, desc: [metrics · behaviour]}
+      - {id: harness, part: bench, x: 850, y: 120, w: 190, h: 80, title: Harness, tag: medomni.bench.runs, desc: [Harbor jobs · run records]}
+      - {id: arms, part: bench, x: 640, y: 230, w: 190, h: 80, title: Arms, tag: medomni.bench.arms, desc: [what a run attaches]}
+      - {id: service, part: perception, x: 1120, y: 120, w: 205, h: 80, title: Perception service, tag: medomni.perception.sidecar, desc: [budget · filter · call log]}
+      - {id: registry, part: perception, x: 1345, y: 120, w: 205, h: 80, title: Registry, tag: medomni.perception.registry, desc: [catalogue · pulls · check]}
+      - {id: gateway, part: perception, x: 1120, y: 230, w: 205, h: 80, title: Gateway, tag: medomni.perception.gateway, desc: [catalogue · router · evidence]}
+      - {id: runtime, part: perception, x: 1345, y: 230, w: 205, h: 80, title: Runtime, tag: medomni.perception.runtime, desc: [serving code in every image]}
+      - {id: build, part: studio, x: 760, y: 440, w: 291, h: 80, title: Build, tag: medomni.studio.build, desc: [medomni-v1 · recipes · steps · checks]}
+      - {id: preview, part: studio, x: 640, y: 590, w: 168, h: 80, title: Preview, tag: medomni.studio.preview, desc: [cohort counts]}
+      - {id: survey, part: studio, x: 823, y: 590, w: 168, h: 80, title: Survey, tag: medomni.studio.survey, desc: [what a dataset has]}
+      - {id: propose, part: studio, x: 1006, y: 590, w: 168, h: 80, title: Propose, tag: medomni.studio.propose, desc: [intake · proposals]}
+      - {id: review, part: studio, x: 1189, y: 590, w: 168, h: 80, title: Review, tag: medomni.studio.review, desc: [sign-off · audit]}
+      - {id: report, part: studio, x: 1372, y: 590, w: 168, h: 80, title: Report, tag: medomni.studio.report, desc: [tables · figures]}
+    edges:
+      - {from: cli, to: plugins, from_side: bottom, to_side: top, label: finds projects, tech: entry points, one_line: true, label_at: [192, 219]}
+      - {from: build, to: loading, from_side: [left, 0.35], to_side: [bottom, 0.9], label: loads, tech: Python, label_at: [672, 452]}
+      - {from: build, to: cache, from_side: [left, 0.65], to_side: [right, 0.5], label: "reads, writes", tech: Python, label_at: [588, 470]}
+      - {from: build, to: built, from_side: [left, 0.0], to_side: [right, 0.5], label: follows, tech: TaskBuilder, label_at: [592, 300]}
+      - {from: harness, to: service, label: starts, tech: Docker, label_at: [1052, 140]}
+      - {from: service, to: gateway, from_side: [bottom, 0.5], to_side: [top, 0.5], label: runs, tech: Python, one_line: true, label_at: [1222, 219]}
+      - {from: preview, to: build, from_side: [top, 0.714], to_side: [bottom, 0.0], label: previews, tech: Python, one_line: true, label_at: [770, 548]}
+
+  c1-c3-overview:
+    title: C1 to C3 nested
+    width: 1440
+    height: 740
+    key: [[Core, core], [Bench, bench], [Perception, perception], [Studio, studio], [Local data (tint), data]]
+    frames:
+      - {part: system, x: 20, y: 140, w: 1400, h: 520, label: "MedOmni [Software System]"}
+      - {part: studio, x: 40, y: 180, w: 560, h: 190, label: Studio}
+      - {part: core, x: 40, y: 390, w: 560, h: 250, label: Core}
+      - {part: bench, x: 630, y: 180, w: 380, h: 200, label: Bench}
+      - {part: perception, x: 1030, y: 180, w: 370, h: 280, label: Perception}
+    boxes:
+      - {id: contributor, kind: person, part: system, x: 170, y: 20, w: 240, h: 70, title: Contributor, tag: Person}
+      - {id: evaluator, kind: person, part: system, x: 650, y: 20, w: 240, h: 70, title: Agent evaluator, tag: Person}
+      - {id: encuser, kind: person, part: system, x: 1070, y: 20, w: 240, h: 70, title: Encoder user, tag: Person}
+      - {id: survey, part: studio, x: 60, y: 220, w: 170, h: 50, title: Survey}
+      - {id: propose, part: studio, x: 240, y: 220, w: 170, h: 50, title: Propose}
+      - {id: preview, part: studio, x: 420, y: 220, w: 170, h: 50, title: Preview}
+      - {id: review, part: studio, x: 60, y: 290, w: 170, h: 50, title: Review}
+      - {id: report, part: studio, x: 240, y: 290, w: 170, h: 50, title: Report}
+      - {id: cli, part: core, x: 60, y: 430, w: 170, h: 50, title: Command}
+      - {id: contracts, part: core, x: 240, y: 430, w: 170, h: 50, title: Contracts}
+      - {id: plugins, part: core, x: 420, y: 430, w: 170, h: 50, title: Plug-ins}
+      - {id: loading, part: core, x: 60, y: 500, w: 170, h: 50, title: Loading}
+      - {id: families, part: core, x: 420, y: 500, w: 170, h: 50, title: Families}
+      - {id: cache, part: core, x: 240, y: 500, w: 170, h: 50, title: Cache}
+      - {id: testing, part: core, x: 60, y: 570, w: 170, h: 50, title: Testing kit}
+      - {id: built, part: core, x: 240, y: 570, w: 170, h: 50, title: Built tasks}
+      - {id: arms, part: bench, x: 650, y: 220, w: 170, h: 60, title: Arms}
+      - {id: build, part: studio, x: 420, y: 290, w: 170, h: 50, title: Build}
+      - {id: harness, part: bench, x: 830, y: 220, w: 170, h: 60, title: Harness}
+      - {id: scorer, part: bench, x: 650, y: 300, w: 170, h: 60, title: Scorer}
+      - {id: gateway, part: perception, x: 1050, y: 220, w: 170, h: 60, title: Gateway}
+      - {id: registry, part: perception, x: 1230, y: 220, w: 160, h: 60, title: Registry}
+      - {id: service, part: perception, x: 1050, y: 300, w: 170, h: 60, title: Perception service}
+      - {id: runtime, part: perception, x: 1230, y: 300, w: 160, h: 60, title: Runtime}
+      - {id: encoders, part: perception, x: 1050, y: 380, w: 170, h: 60, title: Encoders}
+      - {id: workspace, kind: data, part: core, x: 630, y: 490, w: 770, h: 70, title: Workspace, desc: [config · cache · built tasks · runs · results]}
+    edges:
+      - {from: contributor, to: propose, from_side: bottom, to_side: top, label: proposes tasks, tech: medomni studio, label_at: [306, 150]}
+      - {from: evaluator, to: harness, from_side: bottom, to_side: top, label: runs agents, tech: medomni bench, label_at: [852, 150]}
+      - {from: encuser, to: gateway, from_side: bottom, to_side: top, label: calls encoders, tech: HTTP/JSON, label_at: [1172, 150]}
+      - {from: harness, to: service, from_side: [right, 0.9], to_side: [left, 0.3], label: starts, tech: Docker, label_at: [940, 300]}

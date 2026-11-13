@@ -1,0 +1,11 @@
+id: retinal-heightmap-surfaces-f32
+read_by: deep-encoder
+protocol:
+  format: [dicom]
+  units: depth
+  ndim: 3
+  dtype: float32
+  range: null
+  axis3: retinal surfaces, 2, 9, 10 or 11 by device
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 0823c49d4390620710008719e0f5b07d6d91bbc1, dir: families/retinal-heightmap-surfaces-f32/}

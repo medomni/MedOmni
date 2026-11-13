@@ -1,0 +1,10 @@
+[metadata]
+fixture = true
+
+[atom]
+parent = "mimic_icu-stay-radiology"
+subject_id = "FX0301"
+batch = "fixture"
+boundary_kind = "adm0"
+boundary_ts = "2150-05-01 09:00:00"
+targets = ["icu_admission"]

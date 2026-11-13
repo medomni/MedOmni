@@ -1,7 +1,7 @@
 """Independent breathing measurements from two effort belts."""
 import neurokit2 as nk
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 FAMILY = 'resp-effort-rip-2ch-50hz'
 
 def encode(sample, options):

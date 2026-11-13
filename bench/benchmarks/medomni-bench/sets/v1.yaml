@@ -1,0 +1,35 @@
+name: v1
+description: The 30 credentialed templates at n20.
+builder: medomni-v1
+arms: [encoders, no-perception]
+tasks:
+- {task: aireadi_cancer-history-metabolic@n20, version: 1}
+- {task: aireadi_cataract-ocular@n20, version: 1}
+- {task: aireadi_cognitive-function-retinal@n20, version: 1}
+- {task: aireadi_cognitive-score-metabolic@n20, version: 1}
+- {task: aireadi_crp-wcc-lifestyle@n20, version: 1}
+- {task: aireadi_crp-white-cell-count@n20, version: 1}
+- {task: aireadi_crp-white-cell-count-2@n20, version: 1}
+- {task: aireadi_depression-lifestyle@n20, version: 1}
+- {task: aireadi_diabetes-diagnosis-biopsycho@n20, version: 1}
+- {task: aireadi_diabetes-retinal@n20, version: 1}
+- {task: aireadi_dpn-neuropathy-metabolic@n20, version: 1}
+- {task: aireadi_dyslipidaemia-diagnosis-biop@n20, version: 1}
+- {task: aireadi_foot-sensation-metabolic@n20, version: 1}
+- {task: aireadi_prior-hypertension-cardiovas@n20, version: 1}
+- {task: aireadi_visual-function-biopsychosoc@n20, version: 1}
+- {task: bdsp_arousal@n20, version: 1}
+- {task: bdsp_demographic-eeg@n20, version: 1}
+- {task: bdsp_depression-sleep@n20, version: 1}
+- {task: bdsp_hf-sleep@n20, version: 1}
+- {task: bdsp_snoring-demographic@n20, version: 1}
+- {task: bdsp_snoring-metrics@n20, version: 1}
+- {task: mimic-iv_acute-renal-hospital@n20, version: 1}
+- {task: mimic-iv_ckd-staging@n20, version: 1}
+- {task: mimic-iv_coag-hemorrhagic@n20, version: 1}
+- {task: mimic-iv_heart-failure-mm@n20, version: 1}
+- {task: mimic-iv_hf@n20, version: 1}
+- {task: mimic-iv_icu-stay-radiology@n20, version: 1}
+- {task: mimic-iv_in-hospital-death-icu@n20, version: 1}
+- {task: mimic-iv_sepsis-hospital@n20, version: 1}
+- {task: mimic-iv_stroke-infarct-ed@n20, version: 1}

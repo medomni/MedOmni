@@ -1,0 +1,26 @@
+{
+ "type": "aireadi_cognitive-score-metabolic",
+ "generation": "fix-fixture",
+ "batch": "fixture",
+ "boundary_kind": "visit",
+ "targets": [
+  {
+   "name": "fixture_target",
+   "derivation": "omopnum:moca_orientation",
+   "metric_family": "mae"
+  }
+ ],
+ "cohort": [],
+ "pool_stats": {
+  "fixture_target": {
+   "derivation": "omopnum:moca_orientation",
+   "metric_family": "mae",
+   "n_eligible": 99,
+   "counts": {
+    "6.0": 96,
+    "5.0": 2,
+    "4.0": 1
+   }
+  }
+ }
+}

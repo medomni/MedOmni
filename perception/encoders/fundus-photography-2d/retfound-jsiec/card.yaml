@@ -1,34 +1,35 @@
 id: fundus-photography-2d__retfound-jsiec
 family: fundus-photography-2d
 modality: fundus
-summary: >-
-  SEMANTIC: named fundus findings, not an embedding. Probability of each of 39 conditions
-  (normal, DR stages, glaucoma, vein occlusions, AMD-like maculopathy, myopia...), from RETFound fine-tuned on JSIEC.
-intended_use: >-
-  Read the probabilities or the top-findings text directly; the 39 conditions are mutually exclusive in training (softmax).
-limits:
-- Calibrated on JSIEC (Joint Shantou International Eye Centre, 1,000 images), not on this cohort's devices; probabilities are interpretable but not calibrated here, and rare classes had few training images.
-- Trained with label smoothing 0.1, so probabilities are compressed away from 0 and 1.
-- One photograph per call; no eye-level or patient-level aggregation.
-- Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported; infrared and grayscale images are rejected.
-- Images are resized to a 256-pixel short edge, centre-cropped to 224 pixels, and normalized with ImageNet statistics (the RETFound fine-tuning evaluation transform).
-- The fine-tuned checkpoint states no licence; RETFound's code and backbone are CC-BY-NC-4.0. Local use only until clarified.
+summary: 'SEMANTIC: named fundus findings, not an embedding. Probability of each of 39 conditions (normal, DR stages, glaucoma,
+  vein occlusions, AMD-like maculopathy, myopia...), from RETFound fine-tuned on JSIEC.'
+authors:
+- {name: Bosong Huang}
+intended_use: Read the probabilities or the top-findings text directly; the 39 conditions are mutually exclusive in training
+  (softmax).
+limits: ['Calibrated on JSIEC (Joint Shantou International Eye Centre, 1,000 images), not on this cohort''s devices; probabilities
+    are interpretable but not calibrated here, and rare classes had few training images.', 'Trained with label smoothing 0.1,
+    so probabilities are compressed away from 0 and 1.', One photograph per call; no eye-level or patient-level aggregation.,
+  'Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported;
+    infrared and grayscale images are rejected.', 'Images are resized to a 256-pixel short edge, centre-cropped to 224 pixels,
+    and normalized with ImageNet statistics (the RETFound fine-tuning evaluation transform).', The fine-tuned checkpoint states
+    no licence; RETFound's code and backbone are CC-BY-NC-4.0. Local use only until clarified.]
 outputs:
 - kind: labels
   scale: probability
-  labels: [normal, tessellated_fundus, large_optic_cup, diabetic_retinopathy_stage_1, diabetic_retinopathy_stage_2, diabetic_retinopathy_stage_3, possible_glaucoma, optic_atrophy, severe_hypertensive_retinopathy, disc_swelling_and_elevation, dragged_disc, congenital_disc_abnormality, retinitis_pigmentosa, bietti_crystalline_dystrophy, peripheral_retinal_degeneration_and_break, myelinated_nerve_fiber, vitreous_particles, fundus_neoplasm, branch_retinal_vein_occlusion, central_retinal_vein_occlusion, massive_hard_exudates, yellow_white_spots_flecks, cotton_wool_spots, vessel_tortuosity, chorioretinal_atrophy_coloboma, preretinal_hemorrhage, fibrosis, laser_spots, silicone_oil_in_eye, blurred_fundus_without_proliferative_dr, blurred_fundus_with_suspected_proliferative_dr, retinal_artery_occlusion, rhegmatogenous_retinal_detachment, central_serous_chorioretinopathy, vogt_koyanagi_harada_disease, maculopathy, epiretinal_membrane, macular_hole, pathological_myopia]
-- kind: text
-reliability:
-  status: unmeasured
+  labels: [normal, tessellated_fundus, large_optic_cup, diabetic_retinopathy_stage_1, diabetic_retinopathy_stage_2, diabetic_retinopathy_stage_3,
+    possible_glaucoma, optic_atrophy, severe_hypertensive_retinopathy, disc_swelling_and_elevation, dragged_disc, congenital_disc_abnormality,
+    retinitis_pigmentosa, bietti_crystalline_dystrophy, peripheral_retinal_degeneration_and_break, myelinated_nerve_fiber,
+    vitreous_particles, fundus_neoplasm, branch_retinal_vein_occlusion, central_retinal_vein_occlusion, massive_hard_exudates,
+    yellow_white_spots_flecks, cotton_wool_spots, vessel_tortuosity, chorioretinal_atrophy_coloboma, preretinal_hemorrhage,
+    fibrosis, laser_spots, silicone_oil_in_eye, blurred_fundus_without_proliferative_dr, blurred_fundus_with_suspected_proliferative_dr,
+    retinal_artery_occlusion, rhegmatogenous_retinal_detachment, central_serous_chorioretinopathy, vogt_koyanagi_harada_disease,
+    maculopathy, epiretinal_membrane, macular_hole, pathological_myopia]
+- {kind: text}
+reliability: {status: unmeasured}
 non_training: true
 license: CC-BY-NC-4.0
-source:
-  url: https://github.com/rmaphoh/RETFound
-  rev: ae9a9ecf37857cf47b8aa9f87cd6f710d75db287
-weights:
-  sha256: 0a8eedb6a24967a084d9e9bf4eabf34611ffa4398473c7078bd051602c77d230
-  uri: hf://datasets/MedOmni/encoder-assets@ea0d6ceb08299637f4fcd231ad7187e01b73174d/weights/fundus-photography-2d__retfound-jsiec/RETFound_JSIEC_checkpoint-best.pth
-runtime:
-  image: ghcr.io/medomni/fundus-photography-2d__retfound-jsiec
-  digest: null
+source: {url: 'https://github.com/rmaphoh/RETFound', rev: ae9a9ecf37857cf47b8aa9f87cd6f710d75db287}
+weights: {sha256: 0a8eedb6a24967a084d9e9bf4eabf34611ffa4398473c7078bd051602c77d230, uri: 'hf://datasets/MedOmni/encoder-assets@ea0d6ceb08299637f4fcd231ad7187e01b73174d/weights/fundus-photography-2d__retfound-jsiec/RETFound_JSIEC_checkpoint-best.pth'}
+runtime: {image: ghcr.io/medomni/fundus-photography-2d__retfound-jsiec, digest: null}
 acceptance: pending

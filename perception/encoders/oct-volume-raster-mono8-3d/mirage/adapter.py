@@ -16,7 +16,7 @@ neither comes from the paper:
     the B-scan modality is supplied. The architecture accepts that, and the
     result is the OCT half of a model that was trained to see both.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import contextlib
 import os
@@ -26,7 +26,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from contract import Degraded, embedding
+from medomni.perception.runtime import Degraded, embedding
 
 FAMILY = "oct-volume-raster-mono8-3d"
 

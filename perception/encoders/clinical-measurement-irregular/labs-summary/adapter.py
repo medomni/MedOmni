@@ -2,7 +2,7 @@
 import json
 import math
 from datetime import datetime
-from contract import Degraded, text
+from medomni.perception.runtime import Degraded, text
 
 FAMILY = "clinical-measurement-irregular"
 

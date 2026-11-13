@@ -1,0 +1,44 @@
+{
+ "status": "ok",
+ "encoders": "on",
+ "calls": [
+  {
+   "encoder_id": "body-position-code-10hz__rule-occupancy",
+   "path": "files/FX0001/body-position-code-10hz.edf",
+   "healthy": true,
+   "status": 200,
+   "cached": false,
+   "outcome": "healthy",
+   "t": 1790000020.0,
+   "outputs": [
+    {
+     "kind": "labels",
+     "items": [
+      {
+       "label": "code_count",
+       "value": 3
+      },
+      {
+       "label": "modal_fraction",
+       "value": 0.9513394018205462
+      },
+      {
+       "label": "code_entropy",
+       "value": 0.2812395385710813
+      },
+      {
+       "label": "transition_count",
+       "value": 13
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "opened": [],
+ "budget": {
+  "used": 1,
+  "max": 300
+ },
+ "submission_writes": []
+}

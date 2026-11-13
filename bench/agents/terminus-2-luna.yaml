@@ -1,0 +1,9 @@
+kind: agent
+name: terminus-2-luna
+model: openai/gpt-6-luna
+route: cloud
+settings:
+  scaffold: terminus-2
+  model_served: gpt-6-luna
+  env: {OPENAI_API_KEY: '${OPENAI_API_KEY}'}
+  max_turns: 300

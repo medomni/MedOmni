@@ -1,0 +1,156 @@
+# label_vocab.yaml — every raw free-text label a derivation reads, classified explicitly (T1-labelvocab).
+# A label is `counted` into a named bucket or `ignored`; an unclassified label fails the build, it is never
+# silently dropped. Derivations look labels up here instead of substring matching (the "limb"/"plm"
+# matcher missed BDSP's dominant `LM` label and made frequent_limb_movements constant).
+# Exact labels first, then `patterns` (regex, full match). Reviewed by assurance. Task session, 2026-09-24.
+
+psg_stages:          # BDSP *_scores.csv, column Sleep_Stage -> w | n1 | n2 | n3 | r | ignored
+  labels:
+    W: w
+    N1: n1
+    N2: n2
+    N3: n3
+    R: r
+    "": ignored   # unscored epoch (1,210): the pre-F2 code skipped it too
+  patterns: []
+
+psg_events:          # BDSP *_events.csv, column Event -> resp | arousal | limb | ignored
+  # Generated 2026-09-24 from the full vocabulary (psg_label_hist.jsonl: 1,400 nights, 86 word labels).
+  # resp / arousal reproduce the pre-F2 matcher EXACTLY (regression-identical gold); the only change is
+  # limb: `LM` counts. REVIEW POINTS for assurance / Bosong:
+  #  - `Apnea Arousal` and `Hypopnea Arousal` are arousals, but the old matcher counted them as resp
+  #    (it tested apnea/hypopnea first); kept as resp here — correcting them changes ruled gold (see report).
+  #  - `PLM` (~2.5 per night: a series marker, its movements are already `LM` rows) and `Resp Related LM`
+  #    (respiratory-related, excluded from periodic-limb scoring by convention) are ignored for limb.
+  labels:
+    "Inspiration": ignored   # 2700938
+    "N2": ignored   # 469332
+    "Flow Limitation": ignored   # 452784
+    "Single Snoring": ignored   # 267703
+    "W": ignored   # 244825
+    "Display Change": ignored   # 129510
+    "RMI": ignored   # 124736
+    "R": ignored   # 117065
+    "LM": limb   # 95584
+    "N3": ignored   # 91059
+    "Paradoxical": ignored   # 86454
+    "Desaturation": ignored   # 85156
+    "Device Connected": ignored   # 79064
+    "Device Disconnected": ignored   # 73627
+    "Hypopnea": resp   # 62522
+    "N1": ignored   # 57997
+    "Artifact": ignored   # 41312
+    "Resp Arousal": arousal   # 40638
+    "RERAArousal": arousal   # 36650
+    "Spontaneous Arousal": arousal   # 36231
+    "Note": ignored   # 35499
+    "RERA Event": ignored   # 35406
+    "Impedance Test Start": ignored   # 34449
+    "Signal Quality Low": ignored   # 26034
+    "Snore": ignored   # 22519
+    "Calibration Test Signal Off": ignored   # 18689
+    "Calibration Test Signal On": ignored   # 18671
+    "Apnea Obstructive": resp   # 17921
+    "Test Passed": ignored   # 15746
+    "LM Arousal": arousal   # 14502
+    "Test Failed": ignored   # 10920
+    "Apnea Central": resp   # 10371
+    "Test Error": ignored   # 7465
+    "Supine": ignored   # 6876
+    "CPAP": ignored   # 3916
+    "Right": ignored   # 3721
+    "Left": ignored   # 3385
+    "PLM": ignored   # 3096
+    "Hypopnea Arousal": resp   # 2785
+    "Apnea Mixed": resp   # 2421
+    "Baseline": ignored   # 2104
+    "Arrhythmia": ignored   # 1905
+    "No Effort": ignored   # 1789
+    "Look Left": ignored   # 1290
+    "Look Up": ignored   # 1284
+    "Look Right": ignored   # 1282
+    "Look Down": ignored   # 1281
+    "Lights Off": ignored   # 1274
+    "Lights On": ignored   # 1264
+    "Desaturation Arousal": arousal   # 1263
+    "Analysis Stop": ignored   # 1231
+    "Analysis Start": ignored   # 1230
+    "Apnea Arousal": resp   # 1213
+    "Grind Teeth": ignored   # 1194
+    "Blink": ignored   # 1186
+    "Left Toes Down": ignored   # 1137
+    "Right Toes Down": ignored   # 1123
+    "Deep Breath": ignored   # 1098
+    "Nasal Breathing": ignored   # 1080
+    "Hold Breath": ignored   # 1070
+    "Oral Breathing": ignored   # 1040
+    "BiLevel": ignored   # 1037
+    "Normal Breathing": ignored   # 972
+    "Video Clip": ignored   # 882
+    "Eyes Closed": ignored   # 751
+    "Eyes Open": ignored   # 742
+    "Pressure Stop": ignored   # 600
+    "Pressure Start": ignored   # 589
+    "Snoring - Loud": ignored   # 572
+    "Snoring - Moderate": ignored   # 480
+    "EEG Eyes Closed": ignored   # 462
+    "EEG Eyes Open": ignored   # 462
+    "Room Air Stop": ignored   # 295
+    "Room Air Start": ignored   # 291
+    "Snoring - Soft": ignored   # 267
+    "Arousal": arousal   # 265
+    "Resp Related LM": ignored   # 237
+    "Prone": ignored   # 232
+    "Recording Interrupted": ignored   # 232
+    "Oxygen": ignored   # 171
+    "Recording Resumed": ignored   # 161
+    "Test Reference": ignored   # 85
+    "ASV": ignored   # 81
+    "Upright": ignored   # 81
+    "Unknown Position": ignored   # 80
+    "Moving": ignored   # 63
+    "Hypopnea Obstructive": resp   # 39
+    "Snore Arousal": arousal   # 32
+    "Sound": ignored   # 21
+    "Atrial Fibrillation": ignored   # 18
+    "Decresc": ignored   # 10
+    "Tachycardia": ignored   # 9
+    "Apneic-Phase": ignored   # 7
+    "WideComplexTachycardia": ignored   # 5
+    "Hypopnea Mixed": resp   # 4
+    "Desat-Auton Arousal": arousal   # 3
+    "Asystole": ignored   # 2
+    "Rhythmic Movement Disorder": ignored   # 2
+    "Apnea": resp   # 1
+    "Bradycardia": ignored   # 1
+    "Button": ignored   # 1
+    "Hyperpneic-Phase": ignored   # 1
+    "NarrowComplexTachycardia": ignored   # 1
+    "Optimal Pressure Start": ignored   # 1
+    "Talking": ignored   # 1
+    "Video Edit Mark In": ignored   # 1
+    # Added 2026-11-10 (Bosong): labels first seen in the v0.3 BDSP download; each occurs at most 12 times.
+    "Hypopnea Central": resp
+    "Spontaneous-Auton Arousal": arousal
+    "Bruxism Tonic": ignored
+    "Cresc": ignored
+    "Event": ignored
+    "Hyperventilation Start": ignored
+    "Optimal Pressure Stop": ignored
+    "Sigh": ignored
+  patterns:
+    - {regex: '-?[0-9]+(\.[0-9]+)?', class: ignored, reason: 'a numeric value in the Event column (2,380 distinct), not an event label'}
+    - {regex: '', class: ignored, reason: 'empty label'}
+
+bdsp_race:           # BDSP EHR demographics `race` -> black | white | asian | other | unknown
+  labels:
+    "African American  or Black": black     # double space as stored in the source
+    "Caucasian or White": white
+    "Asian": asian
+    "American Indian or Alaskan Native": other
+    "Multiple": other
+    "Native Hawaiian or Other Pacific Islander": other
+    "Unknown, Unavailable or Unreported": unknown
+    "Patient Declines": unknown
+    "": unknown
+  patterns: []

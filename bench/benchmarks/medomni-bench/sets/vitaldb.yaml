@@ -1,0 +1,8 @@
+name: vitaldb
+description: The 3 VitalDB templates, written to test adding a new dataset; no task proposal behind them.
+builder: medomni-v1
+arms: [encoders, no-perception]
+tasks:
+- {task: vitaldb_icu-stay@n20, version: 1}
+- {task: vitaldb_inhosp-death@n20, version: 1}
+- {task: vitaldb_postop-creatinine@n20, version: 1}

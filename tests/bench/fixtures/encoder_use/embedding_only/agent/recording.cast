@@ -1,0 +1,5 @@
+{"version": 2, "width": 160, "height": 40, "timestamp": 1790000000}
+[18.0, "i", "curl -s -X POST ... | python3 -m json.tool\r"]
+[20.6, "o", "{\"encoder_id\": \"fundus-photography-2d__retfound\", \"outputs\": [{\"kind\": \"embedding\", \"dim\": 1024}]}\r\n"]
+[40.0, "i", "python3 -c \"open('/workspace/submission/predictions.csv','w').write('target,prediction\\\\nfx_target,0.42\\\\n')\"\r"]
+[40.2, "o", "root@fx:/workspace# "]

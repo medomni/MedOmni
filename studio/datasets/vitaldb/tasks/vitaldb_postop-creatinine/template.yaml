@@ -1,0 +1,17 @@
+template_id: vitaldb_postop-creatinine
+dataset: vitaldb
+authors:
+- {name: Bosong Huang}
+targets:
+- {name: cr_max_7d, label: 'vitaldb:cr_max_7d', metric: mae}
+input: {note: the whole case record up to the end of the operation}
+agent:
+  statement: Predict this patient's highest blood creatinine in the 7 days after this operation.
+  instruction: '## Prediction time
+
+
+    The prediction is made at the moment this operation ends. Every record, test and signal you are given was taken at or
+    before that moment; surgical times are in seconds from the start of the case,
+    and the times in tables/measurements.jsonl count from 2000-01-01 00:00:00, the start of the case.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

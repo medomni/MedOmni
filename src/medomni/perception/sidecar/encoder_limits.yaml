@@ -1,0 +1,450 @@
+# encoder_limits.yaml — machine-readable card limits (fix roadmap harness-runtime §1), read by the perception service.
+# Retired families (Bosong 2026-09-24) keep their entries here —
+# never staged, so the sidecar never reads them; kept so this table still covers every card on disk.
+# Transcribed from perception/encoders/*/*/card.yaml prose on 2026-09-24; each entry quotes its source.
+# Fields (all optional; omit a field the card does not bound): min_duration_s, max_duration_s,
+# sample_rate_hz (number or list of accepted rates), n_channels (int, or {min, max}), width, height,
+# frames (int or {min, max}); units: the card's own unit where stated.
+# Extensions used below: width/height and sample_rate_hz may also be {min, max} (card states a floor),
+# and frames may be a list of accepted counts. {min: N} means ">= N"; a bare number means exactly N.
+# `limits: none` = the card states no machine-checkable input bound.
+# Quotes are verbatim card strings (limits items, summary, intended_use, or an options value);
+# durations are converted to seconds, the quote keeps the card's own units.
+abp-waveform-125hz-mmhg__pyvital-hpi:
+  family: abp-waveform-125hz-mmhg
+  min_duration_s: 20
+  sample_rate_hz: 124.945
+  quote:
+    - "PyVital hypotension prediction score from the first 20 seconds of arterial pressure."
+    - "Uses the first 20 seconds; requires finite arterial pressure in mmHg at the family rate of 124.945 Hz."
+abp-waveform-125hz-mmhg__pyvital-sv:
+  family: abp-waveform-125hz-mmhg
+  min_duration_s: 20
+  quote:
+    - "Stroke volume and cardiac output from a 20-second arterial-pressure waveform and demographics."
+    - "Start of the 20-second model window. The default is zero."
+    - "Requires a complete pulsatile ABP segment and does not fill missing demographics."
+  note: "Window start is option start_sec (default 0); the record must cover start_sec plus the window. Card states no input sample rate (100 Hz is internal preprocessing)."
+actigraphy-gravity-10hz__rule-activity:
+  family: actigraphy-gravity-10hz
+  limits: none
+  quote:
+    - "Requires the protocol activity channel; gravity axes are not converted into proprietary activity counts."
+    - "Counts refer to classified 10-Hz samples, not ActiGraph counts or sleep/wake labels."
+    - "Negative and non-finite activity degrades. Sum is a raw sample sum, not energy or a calibrated integral."
+  note: "\"10-Hz samples\" describes what counts refer to, not a stated input-rate requirement."
+body-position-code-10hz__rule-occupancy:
+  family: body-position-code-10hz
+  limits: none
+  quote:
+    - "Exact EDF-calibrated values define categories. More than 32 distinct values degrades as ambiguous or continuous input."
+  note: "Card declares a value-domain bound (more than 32 distinct values degrades); no schema field for it."
+capnography-mmhg__rule-amplitude:
+  family: capnography-mmhg
+  limits: none
+  quote:
+    - "Requires explicitly named protocol roles in EDF or WFDB, with mmHg units."
+cgm-5min-mgdl__pyagata:
+  family: cgm-5min-mgdl
+  max_duration_s: 7776000
+  quote:
+    - "Samples must lie on a five-minute grid. Missing slots stay missing; no interpolation occurs."
+    - "At least two positive values are required. The maximum supported span is 90 days."
+  note: "90 days = 7776000 s. Five-minute grid is a sampling-interval constraint with missing slots allowed, so no sample_rate_hz; \"at least two positive values\" is a sample-count bound with no schema field."
+clinical-measurement-irregular__labs-summary:
+  family: clinical-measurement-irregular
+  limits: none
+  quote:
+    - "Latest values require valid timestamps. Missing or mixed timezone information degrades the input."
+clinical-measurement-irregular__rule-vitals:
+  family: clinical-measurement-irregular
+  limits: none
+  quote: []
+cxr-radiograph-2d__biomedclip:
+  family: cxr-radiograph-2d
+  limits: none
+  quote:
+    - "Uses the upstream 224-pixel image transform and a locally packaged tokenizer."
+  note: "224-pixel transform is preprocessing, not an input-size bound."
+cxr-radiograph-2d__chexzero:
+  family: cxr-radiograph-2d
+  limits: none
+  quote:
+    - "Images are aspect-preserving resized and padded to 320 pixels, normalized, then resized to the checkpoint resolution."
+  note: "Resize/pad is preprocessing, not an input-size bound."
+cxr-radiograph-2d__torchxrayvision:
+  family: cxr-radiograph-2d
+  limits: none
+  quote:
+    - "Screening-level findings on frontal adult chest radiographs. The adapter center-crops each image and resizes it to the published 224x224 model input."
+    - "Adult frontal views only. A lateral view is out of distribution."
+  note: "Crop/resize to 224x224 is preprocessing; frontal-view restriction is not a numeric bound."
+ecg-12lead-500hz-mv__ecgfounder:
+  family: ecg-12lead-500hz-mv
+  min_duration_s: 10
+  sample_rate_hz: 500
+  n_channels: {min: 12}
+  quote:
+    - "Diagnostic screening on a ten-second twelve-lead resting ECG at 500 Hz, in mV, with leads aligned by name. One probability per statement, independent of the others, and one embedding for an agent that can use a vector."
+    - "Needs all twelve leads. A reduced lead set is a different family and a different encoder."
+    - "Ten seconds are encoded, from the start of the record. A longer record is truncated, and the rest is never seen."
+  note: "Longer records are truncated, so no max_duration_s."
+ecg-1lead-200hz-uv__ecgfounder:
+  family: ecg-1lead-200hz-uv
+  min_duration_s: 10
+  sample_rate_hz: 200
+  quote:
+    - "Ten-second single-lead ECG segments sampled at 200 Hz."
+    - "Uses the single family ECG channel."
+    - "Resamples the selected ten-second interval to the checkpoint training rate of 500 Hz."
+  note: "\"Uses the single family ECG channel\" is channel selection, not a stated file channel count; n_channels omitted."
+ecg-1lead-200hz-uv__neurokit2:
+  family: ecg-1lead-200hz-uv
+  min_duration_s: 30
+  max_duration_s: 1800
+  sample_rate_hz: 200
+  quote:
+    - "Requires 30 seconds to 30 minutes of finite, non-flat ECG at 200 Hz in microvolts."
+ecg-monitor-3to5lead-250hz-continuous__ecgfounder:
+  family: ecg-monitor-3to5lead-250hz-continuous
+  min_duration_s: 10
+  quote:
+    - "Ten-second continuous monitor ECG segments with a named lead II."
+    - "Uses lead II and ignores the other monitor leads."
+    - "Resamples the first ten seconds to the checkpoint training rate of 500 Hz."
+  note: "Requires a named lead II (not a channel count). Card states no input sample rate (500 Hz is the internal resampling target)."
+echo-study-dicom-video__echoprime:
+  family: echo-study-dicom-video
+  limits: none
+  quote:
+    - "DICOM frames are cropped, resized, sampled, and normalized with the published EchoPrime settings."
+echo-ultrasound-frame-2d__echo-clip:
+  family: echo-ultrasound-frame-2d
+  limits: none
+  quote:
+    - "A DICOM video contributes only its central frame. Temporal motion is not encoded."
+eeg-n2-bipolar-2ch-250hz-uv__brain-age:
+  family: eeg-n2-bipolar-2ch-250hz-uv
+  min_duration_s: 900
+  quote:
+    - "Estimating functional brain maturation from a 15-minute pediatric N2 sleep segment."
+    - "Uses only the first 15 complete minutes and requires the F4-C4 and C4-O2 derivations."
+  note: "Requires the named F4-C4 and C4-O2 derivations (named, not a channel count). No sample rate stated."
+eeg-scalp-1020-19ch-200hz-uv__deepsoz:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  limits: none
+  quote:
+    - "Whole seconds to inspect, from 10 through 600. The default is 120."
+    - "Start of the selected interval. The default is zero."
+  note: "duration_sec is a request option bounding the inspected interval, not a stated bound on the file length; a file shorter than start_sec+duration_sec may be refused, but the card does not say so. Card states no channel count or sample rate."
+eeg-scalp-1020-19ch-200hz-uv__eegwavenet:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  sample_rate_hz: 200
+  n_channels: 19
+  quote:
+    - "Screening finite 19-electrode scalp EEG for seizure intervals."
+    - "Resamples 200 Hz input to the published 256 Hz rate and applies the upstream 64 Hz low-pass filter."
+    - "Seconds to inspect, from 5 through 300. The default is 120."
+  note: "duration_sec is a request option bounding the inspected interval, not a stated bound on the file length; a file shorter than start_sec+duration_sec may be refused, but the card does not say so."
+eeg-scalp-1020-19ch-200hz-uv__eventnet:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  sample_rate_hz: 200
+  n_channels: 19
+  quote:
+    - "Requires finite non-flat 19-electrode EEG; resamples 200 to 256 Hz and orders channels as SzCORE."
+eeg-scalp-1020-19ch-200hz-uv__iclabel:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  min_duration_s: 120
+  max_duration_s: 1800
+  sample_rate_hz: 200
+  n_channels: 19
+  quote:
+    - "Requires 2 to 30 minutes of finite non-flat EEG, 19 named electrodes at 200 Hz in uV."
+eeg-scalp-1020-19ch-200hz-uv__neurognn:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  sample_rate_hz: 200
+  n_channels: 19
+  quote:
+    - "Seizure probabilities for complete 60-second EEG windows using NeuroGNN."
+    - "Requires finite non-flat 19-channel EEG at 200 Hz; original reference is retained."
+    - "Reports non-overlapping windows; trailing partial windows are not scored. Event threshold is 0.5, not clinically calibrated."
+  note: "Scores complete non-overlapping 60-second windows; card does not say whether a record shorter than 60 s is refused or yields no windows, so min_duration_s omitted."
+eeg-scalp-1020-19ch-200hz-uv__neurognn-type:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  min_duration_s: 60
+  n_channels: 19
+  quote:
+    - "Requires finite non-flat 19-channel EEG and scores one complete 60-second window."
+    - "Start of the 60-second window. The default is zero."
+  note: "Window start is option start_sec (default 0); the record must cover start_sec plus the window. No sample rate stated."
+eeg-scalp-1020-19ch-200hz-uv__tang:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  min_duration_s: 57
+  sample_rate_hz: 200
+  n_channels: 19
+  quote:
+    - "Screening one finite 57-second 19-electrode EEG interval for seizure activity."
+    - "Resamples 200 Hz input to the published 256 Hz rate."
+    - "Scores one 57-second window per request and does not return a patient-level diagnosis."
+    - "Start of the 57-second window. The default is zero."
+  note: "Window start is option start_sec (default 0); the record must cover start_sec plus the window."
+eeg-scalp-1020-19ch-200hz-uv__zhu:
+  family: eeg-scalp-1020-19ch-200hz-uv
+  sample_rate_hz: 200
+  n_channels: 19
+  quote:
+    - "Zhu transformer seizure probabilities from non-overlapping 25-second windows."
+    - "Requires finite non-flat 19-electrode EEG; resamples 200 to 256 Hz and orders channels as SzCORE."
+  note: "Non-overlapping 25-second windows; card does not say whether a record shorter than 25 s is refused, so min_duration_s omitted."
+eeg-sleep-6ch-200hz-uv__yasa:
+  family: eeg-sleep-6ch-200hz-uv
+  min_duration_s: 300
+  sample_rate_hz: 200
+  n_channels: {min: 6}
+  quote:
+    - "The six declared channels must be available at 200 Hz in microvolts. Only C3-M2 is staged."
+    - "Requires at least five minutes. Whole-night recordings are preferred; short windows give limited context."
+emg-chin-200hz-uv__rule-amplitude:
+  family: emg-chin-200hz-uv
+  limits: none
+  quote:
+    - "No filtering, resampling or missing-value interpolation. Flat signals remain valid amplitude summaries."
+emg-limb-200hz-uv__rule-amplitude:
+  family: emg-limb-200hz-uv
+  limits: none
+  quote:
+    - "Available declared limb roles are summarized independently. Missing roles produce no labels."
+    - "No filtering or resampling. Non-finite input degrades."
+eog-2ch-200hz-uv__wav2sleep-eog:
+  family: eog-2ch-200hz-uv
+  min_duration_s: 60
+  n_channels: 2
+  quote:
+    - "Five-class sleep stages from two electro-oculography channels."
+    - "Sleep staging of complete 30-second epochs in two-channel EOG recordings."
+    - "Requires at least two complete epochs and ignores a final partial epoch."
+    - "Maximum number of 30-second epochs to score. The default and maximum are 1200."
+  note: "min_duration_s = two complete 30-second epochs. max_epochs caps scoring (1200 epochs) and is not stated as a refusal of longer input, so no max_duration_s. No sample rate stated."
+flio-tcspc-256x256x1024bin-u16__rule-photons:
+  family: flio-tcspc-256x256x1024bin-u16
+  width: 256
+  height: 256
+  frames: 1024
+  quote:
+    - "Requires unsigned 16-bit photon counts, 1024 time frames and 256×256 spatial samples."
+fundus-faf-mono8-2d__retinograd:
+  family: fundus-faf-mono8-2d
+  width: {min: 32}
+  height: {min: 32}
+  quote:
+    - "A frame smaller than 32 pixels on a side degrades rather than being enlarged to 768."
+fundus-faf-mono8-2d__rule-intensity:
+  family: fundus-faf-mono8-2d
+  limits: none
+  quote:
+    - "Declared YBR_FULL_422 supply is decoded to RGB then converted with 0.299R+0.587G+0.114B; conversion is reported."
+    - "Features depend on exposure and device processing. Other undeclared color formats degrade."
+fundus-photography-2d__dr-grade:
+  family: fundus-photography-2d
+  width: {min: 224}
+  height: {min: 224}
+  quote:
+    - "Preprocessing reproduces the checkpoint's own config: bicubic resize so the short side is 256, centre crop to 224, ImageNet normalisation. A photograph smaller than 224 on a side degrades rather than being enlarged."
+fundus-photography-2d__retfound:
+  family: fundus-photography-2d
+  frames: 1
+  quote:
+    - "Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported."
+  note: "Resize/crop to 224 is preprocessing, not an input-size bound."
+ieeg-hfo-event-2khz-uv__hfo-artifact:
+  family: ieeg-hfo-event-2khz-uv
+  min_duration_s: 2
+  n_channels: 1
+  quote:
+    - "Needs a two-second, single-channel iEEG window centered on the candidate event."
+  note: "Card says a two-second window is needed but not whether longer input is refused, so no max_duration_s. No sample rate stated."
+ieeg-hfo-event-2khz-uv__hfo-ehfo:
+  family: ieeg-hfo-event-2khz-uv
+  min_duration_s: 2
+  n_channels: 1
+  quote:
+    - "Needs a two-second, single-channel iEEG window centered on the candidate event."
+  note: "Card says a two-second window is needed but not whether longer input is refused, so no max_duration_s. No sample rate stated."
+ieeg-hfo-event-2khz-uv__hfo-spkhfo:
+  family: ieeg-hfo-event-2khz-uv
+  min_duration_s: 2
+  n_channels: 1
+  quote:
+    - "Needs a two-second, single-channel iEEG window centered on the candidate event."
+  note: "Card says a two-second window is needed but not whether longer input is refused, so no max_duration_s. No sample rate stated."
+numeric-observation__vitalscore:
+  family: numeric-observation
+  limits: none
+  quote:
+    - "Requires respiratory rate, oxygen saturation, supplemental oxygen status, systolic blood pressure, heart rate, alert status, temperature, and Glasgow Coma Scale from one observation time."
+  note: "Required-field list, not a numeric bound."
+oct-bscanset-radial24-circle3-mono8__mirage-onh:
+  family: oct-bscanset-radial24-circle3-mono8
+  frames: 27
+  quote:
+    - "A file that does not hold exactly 24 radial and 3 circle frames degrades: that composition is what the family declares, and a partial set is not a smaller one."
+  note: "Frame count is 24 radial + 3 circle = 27. Resize to 512 is preprocessing."
+oct-bscanset-radial24-circle3-mono8__rule-intensity:
+  family: oct-bscanset-radial24-circle3-mono8
+  frames: 27
+  quote:
+    - "Requires exactly 27 acquisition frames; geometry comes from the asserted family."
+oct-volume-raster-mono8-3d__mirage:
+  family: oct-volume-raster-mono8-3d
+  limits: none
+  quote:
+    - "Blank B-scans are excluded from the average and reported. A volume whose B-scans are all blank degrades."
+    - "Every B-scan is resized to 512 square and scaled to 0..1, as the published wrapper expects. Aspect ratio is not preserved, and the axial and lateral axes are not scaled alike."
+  note: "Resize to 512 is preprocessing; all-blank degrade is a content check, not a numeric bound."
+oct-volume-raster-mono8-3d__rule-intensity:
+  family: oct-volume-raster-mono8-3d
+  limits: none
+  quote: []
+octa-enface-slab-mono8-2d__rule-intensity:
+  family: octa-enface-slab-mono8-2d
+  limits: none
+  quote: []
+octa-flowcube-mono8-3d__flow-metrics:
+  family: octa-flowcube-mono8-3d
+  limits: none
+  quote:
+    - "The published samples are 20x20 mm acquisitions with 13 to 26 B-scans, so the projection is 20 to 40 times coarser across B-scans than along them. Densities computed on such a grid are comparable with each other and not with a dense 6x6 scan's."
+    - "Blank B-scans are excluded from every measure and reported. A cube whose B-scans are all blank, or which carries no flow signal at any depth, degrades."
+  note: "\"13 to 26 B-scans\" describes the published samples, not a stated input bound."
+octa-flowcube-mono8-3d__rule-intensity:
+  family: octa-flowcube-mono8-3d
+  limits: none
+  quote: []
+ppg-waveform-uncal__bayesbeat:
+  family: ppg-waveform-uncal
+  min_duration_s: 25
+  quote:
+    - "Atrial-fibrillation probabilities and Bayesian uncertainty from a 25-second PPG segment."
+    - "Needs one complete, finite, non-flat 25-second segment."
+    - "Start of the 25-second segment. The default is zero."
+  note: "Window start is option start_sec (default 0); the record must cover start_sec plus the window. Card states no input sample rate (32 Hz is internal resampling)."
+ppg-waveform-uncal__neurokit2:
+  family: ppg-waveform-uncal
+  min_duration_s: 30
+  sample_rate_hz: {min: 25}
+  quote:
+    - "Requires at least 30 seconds at a native sample rate of at least 25 Hz. Missing or flat signals are rejected."
+    - "Reads one Pleth, Plethysmogram, or PPG channel from continuous EDF or a single-segment WFDB record."
+  note: "Reads one named PPG channel (selection, not a channel count)."
+pressure-nonarterial-125hz-mmhg__rule-summary:
+  family: pressure-nonarterial-125hz-mmhg
+  limits: none
+  quote:
+    - "Per-role CVP, PAP and ICP level and spread in mmHg at the native 124.945 Hz, with signal coverage and the share of physically impossible values."
+    - "implausible_fraction counts samples outside -20 to 150 mmHg, values no CVP, PAP or ICP can take; a high fraction means an unzeroed transducer, flush or mislabeled channel, and the other statistics then describe the artifact, not the patient."
+  note: "Summary says statistics are at \"the native 124.945 Hz\" descriptively, not as a requirement, so sample_rate_hz omitted. The -20..150 mmHg range is counted (implausible_fraction), not refused."
+psg-cardiorespiratory-4ch-200hz-mixed__wav2sleep:
+  family: psg-cardiorespiratory-4ch-200hz-mixed
+  min_duration_s: 60
+  quote:
+    - "Sleep staging of complete 30-second epochs in cardiorespiratory polysomnography."
+    - "Requires at least two complete epochs and ignores a final partial epoch."
+    - "Maximum number of 30-second epochs to score. The default and maximum are 1200."
+  note: "min_duration_s = two complete 30-second epochs. max_epochs caps scoring and is not stated as a refusal. Four named signals (summary), not a stated channel count. No sample rate stated."
+pulse-rate-10hz-bpm__rule-summary:
+  family: pulse-rate-10hz-bpm
+  limits: none
+  quote:
+    - "Observed pulse-rate statistics, valid-reading fraction and recording duration at 10 Hz."
+    - "Nonpositive and non-finite readings are excluded with notes. No gap filling."
+  note: "\"at 10 Hz\" in the summary is descriptive, not a stated requirement."
+resp-effort-rip-2ch-50hz__neurokit2:
+  family: resp-effort-rip-2ch-50hz
+  min_duration_s: 60
+  max_duration_s: 1800
+  sample_rate_hz: 50
+  n_channels: 2
+  quote:
+    - "Requires 60 seconds to 30 minutes of two finite, non-flat effort channels at 50 Hz."
+resp-flow__rule-amplitude:
+  family: resp-flow
+  limits: none
+  quote:
+    - "At least one declared role is required. Flat signals are retained; no resampling or gap filling."
+resp-impedance-62hz-ohm__rule-amplitude:
+  family: resp-impedance-62hz-ohm
+  sample_rate_hz: 62.4725
+  quote:
+    - "Requires the Resp waveform at 62.4725 Hz in Ohm; metadata and annotation channels cannot substitute."
+retinal-heightmap-surfaces-f32__rule-surfaces:
+  family: retinal-heightmap-surfaces-f32
+  frames: [2, 9, 10, 11]
+  quote:
+    - "Accepts DICOM Float Pixel Data with 2, 9, 10 or 11 frames in acquisition order."
+snore-acoustic__rule-amplitude:
+  family: snore-acoustic
+  limits: none
+  quote:
+    - "No filtering or resampling; empty and non-finite signals degrade."
+spo2-series-10hz-pct__pobm:
+  family: spo2-series-10hz-pct
+  min_duration_s: 300
+  max_duration_s: 43200
+  sample_rate_hz: 10
+  quote:
+    - "Requires 5 minutes to 12 hours of finite saturation in (0,100] at 10 Hz."
+  note: "Value range (0,100] is a value-domain bound with no schema field."
+wearable-hr-1min-bpm__rule-summary:
+  family: wearable-hr-1min-bpm
+  limits: none
+  quote:
+    - "Nonpositive and non-finite values are excluded and counted; all-invalid input degrades."
+wearable-resprate-1min-brpm__rule-summary:
+  family: wearable-resprate-1min-brpm
+  limits: none
+  quote:
+    - "Nonpositive and non-finite values are excluded and counted; all-invalid input degrades."
+wearable-spo2-1min-pct__rule-summary:
+  family: wearable-spo2-1min-pct
+  limits: none
+  quote:
+    - "Values outside (0,100] percent and non-finite values are excluded and counted."
+    - "Empty records and conflicting duplicate timestamps degrade. Five pinned HF samples are empty."
+
+# added 2026-09-24 for record cb840da (harness), transcribed from the cards' prose
+fundus-photography-2d__flair:
+  family: fundus-photography-2d
+  frames: 1
+  note: colour-only and 8-bit requirements have no inventory meta field; such refusals count as undeclared
+  quote:
+  - Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported; infrared and grayscale images are rejected.
+fundus-photography-2d__retfound-dr:
+  family: fundus-photography-2d
+  frames: 1
+  note: colour-only and 8-bit requirements have no inventory meta field; such refusals count as undeclared
+  quote:
+  - Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported; infrared and grayscale images are rejected.
+fundus-photography-2d__retfound-jsiec:
+  family: fundus-photography-2d
+  frames: 1
+  note: colour-only and 8-bit requirements have no inventory meta field; such refusals count as undeclared
+  quote:
+  - Only single-frame, eight-bit colour DICOM images are accepted. RGB, YBR_FULL, and YBR_FULL_422 encodings are supported; infrared and grayscale images are rejected.
+oct-volume-raster-mono8-3d__kdoct:
+  family: oct-volume-raster-mono8-3d
+  limits: none
+  note: refusal depends on scan protocol, which no inventory meta field records
+  quote:
+  - Optic-nerve-head scans are not this encoder's family and receive no finding.
+octa-enface-slab-mono8-2d__vessel-density:
+  family: octa-enface-slab-mono8-2d
+  limits: none
+  note: refusal depends on scan protocol, which no inventory meta field records
+  quote:
+  - Macular slabs only (fovea structure or macular protocol). An optic-disc slab returns a text line saying so and no measurement; an unidentified slab degrades.
+retinal-heightmap-surfaces-f32__layer-thickness:
+  family: retinal-heightmap-surfaces-f32
+  limits: none
+  note: refusal depends on scan protocol, which no inventory meta field records
+  quote:
+  - Macular scans only (ProtocolName names the macula). An optic-disc scan returns a text line saying so and no measurement; an unidentified protocol degrades.

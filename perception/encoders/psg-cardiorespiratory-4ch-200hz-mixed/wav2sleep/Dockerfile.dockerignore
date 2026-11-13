@@ -1,0 +1,15 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/adapter.py
+!perception/encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/assets
+!perception/encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/assets.json
+!perception/encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/card.yaml
+!perception/encoders/psg-cardiorespiratory-4ch-200hz-mixed/wav2sleep/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+!src/medomni/perception/runtime/assets.py
+**/__pycache__
+**/*.pyc

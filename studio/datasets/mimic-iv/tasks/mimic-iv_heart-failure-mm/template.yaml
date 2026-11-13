@@ -1,0 +1,27 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_heart-failure-mm
+dataset: mimic-iv
+authors:
+- {name: Bosong Huang}
+targets:
+- {name: heart_failure, label: 'mimic-iv:derived:heart-failure', metric: auc}
+input:
+  demographics: [age, sex]
+  files: {cxr-radiograph-2d: 'one frontal (PA/AP) radiograph, PNG', ecg-12lead-500hz-mv: 'one WFDB record (.hea + .dat), latest
+      on disk'}
+  vitals: {source: ed/ed/vitalsign.csv.gz, max_rows: 40}
+exclude:
+  streams: [labs, diagnoses, notes]
+agent:
+  statement: Predict whether this patient has heart failure.
+  instruction: '## Prediction time
+
+
+    - Index admission: the patient''s first hospital admission on record.
+
+    - The evidence covers the first 24 hours of the index admission, the emergency department visit that led to it, and everything
+    recorded earlier. Nothing recorded after that is provided.
+
+    - The prediction is made at the end of those 24 hours. Every patient here is still alive and in hospital at that moment.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

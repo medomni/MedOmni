@@ -25,6 +25,9 @@ extra:
   version:
     provider: mike
 
+exclude_docs: |
+  assets/diagrams.yaml
+
 plugins:
   - search
 
@@ -38,6 +41,9 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
+validation:
+  anchors: warn
+
 nav:
   - Home: index.md
   - Get started: get-started.md
@@ -45,16 +51,39 @@ nav:
       - Design principles: learn/principles.md
       - Concepts: learn/concepts.md
       - Architecture: learn/architecture.md
+      - Core:
+          - Contracts: learn/core/contracts.md
+          - Built tasks: learn/core/built-tasks.md
+          - Families: learn/core/families.md
+          - Cache: learn/core/cache.md
+          - Plug-ins: learn/core/plugins.md
+      - Bench:
+          - Runs: learn/bench/runs.md
+          - Scoring: learn/bench/scoring.md
+      - Perception:
+          - Encoders: learn/perception/encoders.md
+          - Gateway: learn/perception/gateway.md
+      - Studio:
+          - Overview: learn/studio/overview.md
+          - Datasets: learn/studio/datasets.md
+          - Tasks: learn/studio/tasks.md
+          - Build: learn/studio/build.md
+          - Recipes: learn/studio/recipes.md
+          - Audit: learn/studio/audit.md
+      - Extend MedOmni: learn/extend.md
   - Guides:
       - Run your agent: guides/run-your-agent.md
       - Connect your data: guides/connect-your-data.md
+      - Rebuild a task set: guides/rebuild-a-task-set.md
       - Use the encoders: guides/use-the-encoders.md
       - Contribute: guides/contribute.md
   - Reference:
       - Tasks: reference/tasks.md
+      - Recipes: reference/recipes.md
       - Encoders: reference/encoders.md
       - Families: reference/families.md
       - Datasets: reference/datasets.md
       - Gateway API: reference/gateway-api.md
       - Audit: reference/audit.md
   - Commands: cli/index.md
+  - Python API: api/index.md

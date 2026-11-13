@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dataset-config.schema.json",
+  "x-contract": "dataset config",
+  "$defs": {
+    "Description": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "time": {
+          "enum": [
+            "datetime",
+            "visit-dates",
+            "seconds-from-start"
+          ],
+          "title": "Time",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit",
+        "time",
+        "version"
+      ],
+      "title": "Description",
+      "type": "object"
+    },
+    "HashRule": {
+      "additionalProperties": false,
+      "description": "Keep a subject when sha256(salt|id), as a fraction, is below `fraction` (R-32, R-41).",
+      "properties": {
+        "salt": {
+          "minLength": 1,
+          "title": "Salt",
+          "type": "string"
+        },
+        "fraction": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Fraction",
+          "type": "number"
+        }
+      },
+      "required": [
+        "salt",
+        "fraction"
+      ],
+      "title": "HashRule",
+      "type": "object"
+    },
+    "Reader": {
+      "additionalProperties": false,
+      "description": "One format reader and what it reads. The reader's own options are checked by the reader (part 6).",
+      "properties": {
+        "reader": {
+          "minLength": 1,
+          "title": "Reader",
+          "type": "string"
+        },
+        "options": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Options",
+          "type": "object"
+        }
+      },
+      "required": [
+        "reader"
+      ],
+      "title": "Reader",
+      "type": "object"
+    },
+    "Units": {
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "minLength": 1,
+          "title": "Table",
+          "type": "string"
+        },
+        "column": {
+          "minLength": 1,
+          "title": "Column",
+          "type": "string"
+        }
+      },
+      "required": [
+        "table",
+        "column"
+      ],
+      "title": "Units",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "description": {
+      "$ref": "#/$defs/Description"
+    },
+    "units": {
+      "$ref": "#/$defs/Units"
+    },
+    "source": {
+      "anyOf": [
+        {
+          "const": "all",
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/HashRule"
+        }
+      ],
+      "title": "Source"
+    },
+    "read": {
+      "items": {
+        "$ref": "#/$defs/Reader"
+      },
+      "minItems": 1,
+      "title": "Read",
+      "type": "array"
+    },
+    "verify": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Verify",
+      "type": "object"
+    },
+    "rules": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Rules",
+      "type": "object"
+    },
+    "definitions": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Definitions",
+      "type": "object"
+    },
+    "converters": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Converters",
+      "type": "array"
+    },
+    "storage_mb": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Storage Mb"
+    }
+  },
+  "required": [
+    "description",
+    "units",
+    "source",
+    "read"
+  ],
+  "title": "DatasetConfig",
+  "type": "object"
+}

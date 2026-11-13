@@ -1,7 +1,7 @@
 """Single-lead ECG measurements using NeuroKit2."""
 import neurokit2 as nk
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = 'ecg-1lead-200hz-uv'
 

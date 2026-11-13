@@ -1,0 +1,9 @@
+tables:
+  admissions: {time: admittime, visit: hadm_id, end: dischtime, blank_after_end: [dischtime]}
+  labevents: {time: charttime, drop: guard}
+  chartevents: {time: charttime}
+  diagnoses_icd: {time_from: {table: admissions, key: hadm_id, column: dischtime}, drop: guard}
+static:
+  blank: guard.fields
+  aliases: {age: anchor_age, sex: [gender]}
+files: {}

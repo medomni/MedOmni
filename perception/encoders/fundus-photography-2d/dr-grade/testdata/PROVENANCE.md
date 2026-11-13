@@ -29,7 +29,7 @@ SHA-256:
 
 No fixture derived from real data is committed here: the family's samples come
 from AI-READI, whose agreement keeps them out of Git. Real inference is
-verified by `registry.py family-test`, which runs the five pinned
+verified by `medomni perception check --samples`, which runs the five pinned
 `MedOmni/family-samples` photographs — Topcon Maestro2 480x640 JPEG-2000
 frames — through the built image with Docker networking disabled.
 
@@ -38,3 +38,5 @@ four round to grade 0 and one to grade 1. A screening cohort should look like
 that, so the numbers are consistent rather than surprising — which is not the
 same as measured. One score sits just below the scale, which exercises the
 clamping path on real data; the card records both.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

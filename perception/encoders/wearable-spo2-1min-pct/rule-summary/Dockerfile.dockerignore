@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/wearable-spo2-1min-pct/rule-summary/adapter.py
+!perception/encoders/wearable-spo2-1min-pct/rule-summary/card.yaml
+!perception/encoders/wearable-spo2-1min-pct/rule-summary/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

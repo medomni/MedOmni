@@ -11,19 +11,66 @@
       "label": "Wake",
       "t_start": 0.0,
       "t_end": 30.0,
-      "score": 0.6021060347557068
+      "score": 0.6507009863853455
      },
      {
       "label": "Wake",
       "t_start": 30.0,
       "t_end": 60.0,
-      "score": 0.48144450783729553
+      "score": 0.4898979067802429
+     },
+     {
+      "label": "Wake",
+      "t_start": 60.0,
+      "t_end": 90.0,
+      "score": 0.4553467929363251
+     },
+     {
+      "label": "N1+N2",
+      "t_start": 90.0,
+      "t_end": 120.0,
+      "score": 0.46536916494369507
+     },
+     {
+      "label": "Wake",
+      "t_start": 120.0,
+      "t_end": 150.0,
+      "score": 0.9066711068153381
+     },
+     {
+      "label": "Wake",
+      "t_start": 150.0,
+      "t_end": 180.0,
+      "score": 0.955371081829071
+     },
+     {
+      "label": "Wake",
+      "t_start": 180.0,
+      "t_end": 210.0,
+      "score": 0.9225351810455322
+     },
+     {
+      "label": "Wake",
+      "t_start": 210.0,
+      "t_end": 240.0,
+      "score": 0.9890967011451721
+     },
+     {
+      "label": "Wake",
+      "t_start": 240.0,
+      "t_end": 270.0,
+      "score": 0.981220006942749
+     },
+     {
+      "label": "Wake",
+      "t_start": 270.0,
+      "t_end": 300.0,
+      "score": 0.8920339345932007
      }
     ]
    }
   ],
   "notes": [
-   "ppg read as pleth",
    "ECG and PPG resampled to 1024, effort signals to 256 samples per epoch; each signal globally z-scored"
   ]
  }

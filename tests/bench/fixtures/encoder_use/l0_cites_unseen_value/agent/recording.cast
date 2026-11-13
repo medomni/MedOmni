@@ -1,0 +1,5 @@
+{"version": 2, "width": 160, "height": 40, "timestamp": 1790000000}
+[18.0, "i", "curl -s -X POST ... > /tmp/out.json\r"]
+[20.5, "o", "root@fx:/workspace# "]
+[40.0, "i", "python3 -c \"open('/workspace/submission/predictions.csv','w').write('target,prediction\\\\nfx_target,0.42\\\\n')\"\r"]
+[40.2, "o", "root@fx:/workspace# "]

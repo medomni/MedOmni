@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/cgm-5min-mgdl/pyagata/adapter.py
+!perception/encoders/cgm-5min-mgdl/pyagata/card.yaml
+!perception/encoders/cgm-5min-mgdl/pyagata/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

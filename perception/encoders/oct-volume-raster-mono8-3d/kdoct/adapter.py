@@ -12,7 +12,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torchvision import transforms
-from contract import Degraded, labels, text
+from medomni.perception.runtime import Degraded, labels, text
 
 FAMILY = 'oct-volume-raster-mono8-3d'
 # Head index order = the training folders sorted by name (KD-OCT Student-Training/UCSD/data/dataset.py).

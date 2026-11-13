@@ -4,13 +4,14 @@ from pathlib import Path
 import numpy as np
 import torch
 from scipy.signal import butter, resample_poly, sosfiltfilt
-from contract import BadRequest, Degraded, labels
+from medomni.perception.runtime import BadRequest, Degraded, labels
 
 ROOT = Path(__file__).parent / "assets"
 sys.path.insert(0, str(ROOT))
 from models.BayesBeat import Bayesian_Deepbeat
 
 FAMILY = "ppg-waveform-uncal"
+SEED = 0
 _model = None
 
 
@@ -53,7 +54,8 @@ def encode(sample, options):
     model = options.get("_model") or _model
     if model is None:
         model = load()
-    with torch.inference_mode():
+    with torch.random.fork_rng(), torch.inference_mode():
+        torch.manual_seed(SEED)  # the Bayesian layers draw weights: a fixed seed makes a call repeatable
         repeated = torch.repeat_interleave(tensor, draws, dim=0)
         logits, _ = model(repeated)
         probabilities = torch.softmax(logits, dim=1).reshape(1, draws, 2).numpy()

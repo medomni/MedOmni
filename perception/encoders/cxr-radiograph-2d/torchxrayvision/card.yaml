@@ -1,38 +1,26 @@
 id: cxr-radiograph-2d__torchxrayvision
 family: cxr-radiograph-2d
 modality: cxr
-
-summary: >-
-  Eighteen operating-point-normalized pathology scores from a DenseNet-121
-  trained on eight public datasets.
-intended_use: >-
-  Screening-level findings on frontal adult chest radiographs. The adapter
-  center-crops each image and resizes it to the published 224x224 model input.
-limits:
-  - Adult frontal views only. A lateral view is out of distribution.
-  - The library applies a sigmoid and rescales each result. Each published operating point maps to 0.5.
-  - These values are scores and not probabilities. Compare each score with 0.5. Do not interpret it as calibrated risk.
-  - The eighteen labels come from eight source datasets, so not every label was trained on every dataset.
-  - The training data includes MIMIC-CXR. A task that scores on MIMIC-CXR therefore overlaps with the pretraining of this encoder.
+summary: Eighteen operating-point-normalized pathology scores from a DenseNet-121 trained on eight public datasets.
+authors:
+- {name: Timo Stoffregen}
+- {name: Bosong Huang}
+intended_use: Screening-level findings on frontal adult chest radiographs. The adapter center-crops each image and resizes
+  it to the published 224x224 model input.
+limits: [Adult frontal views only. A lateral view is out of distribution., The library applies a sigmoid and rescales each
+    result. Each published operating point maps to 0.5., These values are scores and not probabilities. Compare each score
+    with 0.5. Do not interpret it as calibrated risk., 'The eighteen labels come from eight source datasets, so not every
+    label was trained on every dataset.', The training data includes MIMIC-CXR. A task that scores on MIMIC-CXR therefore
+    overlaps with the pretraining of this encoder.]
 outputs:
-  - kind: labels
-    scale: score
-    labels: [Atelectasis, Consolidation, Infiltration, Pneumothorax, Edema,
-             Emphysema, Fibrosis, Effusion, Pneumonia, Pleural_Thickening,
-             Cardiomegaly, Nodule, Mass, Hernia, Lung Lesion, Fracture,
-             Lung Opacity, Enlarged Cardiomediastinum]
-
-reliability:
-  status: unmeasured
+- kind: labels
+  scale: score
+  labels: [Atelectasis, Consolidation, Infiltration, Pneumothorax, Edema, Emphysema, Fibrosis, Effusion, Pneumonia, Pleural_Thickening,
+    Cardiomegaly, Nodule, Mass, Hernia, Lung Lesion, Fracture, Lung Opacity, Enlarged Cardiomediastinum]
+reliability: {status: unmeasured}
 non_training: true
 license: Apache-2.0
-source:
-  url: https://github.com/mlmed/torchxrayvision
-  rev: f4087b3f9c0848ba4ab5da3f35eb397681991868      # tag 1.5.4
-weights:
-  sha256: 56524913dd16a906422e8d8b66a7a5c46be1d82eb7ac012d8103776f1aa68899
-  uri: https://github.com/mlmed/torchxrayvision/releases/download/v1/nih-pc-chex-mimic_ch-google-openi-kaggle-densenet121-d121-tw-lr001-rot45-tr15-sc15-seed0-best.pt
-runtime:
-  image: ghcr.io/medomni/cxr-radiograph-2d__torchxrayvision
-  digest: null                 # until the image is pushed. README phase 5.
+source: {url: 'https://github.com/mlmed/torchxrayvision', rev: f4087b3f9c0848ba4ab5da3f35eb397681991868}
+weights: {sha256: 56524913dd16a906422e8d8b66a7a5c46be1d82eb7ac012d8103776f1aa68899, uri: 'https://github.com/mlmed/torchxrayvision/releases/download/v1/nih-pc-chex-mimic_ch-google-openi-kaggle-densenet121-d121-tw-lr001-rot45-tr15-sc15-seed0-best.pt'}
+runtime: {image: ghcr.io/medomni/cxr-radiograph-2d__torchxrayvision, digest: null}
 acceptance: pending

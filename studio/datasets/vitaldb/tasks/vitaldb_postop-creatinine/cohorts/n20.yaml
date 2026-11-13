@@ -1,0 +1,11 @@
+version: '1.0'
+source: all
+anchor: {event: OP//END}
+require:
+- any: [LAB//cr]
+  to: anchor
+- {has_label: cr_max_7d}
+select:
+  n: 20
+  by: []
+  seed: 7

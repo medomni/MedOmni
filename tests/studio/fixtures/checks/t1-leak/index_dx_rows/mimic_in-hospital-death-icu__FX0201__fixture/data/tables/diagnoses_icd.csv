@@ -1,0 +1,3 @@
+subject_id,hadm_id,seq_num,icd_code,icd_version
+FX0201,FXH0011,1,I10,10
+FX0201,FXH0012,1,R0902,10

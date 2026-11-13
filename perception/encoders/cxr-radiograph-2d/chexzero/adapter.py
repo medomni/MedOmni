@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torchvision.transforms import functional as TF, InterpolationMode
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 sys.path.insert(0,str(Path(__file__).parent/'assets'))
 import clip
 from model import build_model

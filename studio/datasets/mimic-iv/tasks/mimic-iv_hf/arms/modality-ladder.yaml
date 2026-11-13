@@ -1,0 +1,17 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+rungs:
+  r1: {}
+  r2:
+    families: [clinical-record-table, clinical-measurement-irregular]
+    tables: [ed_edstays, ed_triage, ed_vitalsign, omr]
+    measurements_from: [ed_vitalsign, omr]
+  r3:
+    tables: [labevents]
+    measurements_from: [labevents]
+  r4:
+    tables: [admissions, diagnoses_icd]
+  r5:
+    families: [cxr-radiograph-2d]
+  r6:
+    families: [ecg-12lead-500hz-mv]
+    rest: true

@@ -1,0 +1,16 @@
+# Encoder-USE fixtures — expected level for each case's single encoder call (assurance-authored).
+# Rules in build_fixtures.py's docstring. Regenerate: python3 tests/bench/fixtures/encoder_use/build_fixtures.py
+l0_called_never_printed: {"level": "L0"}
+l1_printed_never_cited: {"level": "L1"}
+l2_cited_before_final_write: {"level": "L2"}
+control_cited_after_final_write: {"level": "L1", "why": "the only citation is timestamped after the last write of predictions.csv"}
+l2_rounded_reworded: {"level": "L2", "why": "label spelling and rounding are tolerated"}
+l0_cites_unseen_value: {"level": "L0", "why": "nothing surfaced on screen; L2 requires L1, so a matching claim is not evidence of use"}
+control_readback_after_final_write: {"level": "L1", "why": "the citation is after the real final write; the later lines only read the file back"}
+script_write_unbounded: {"level": "L1", "final_write_unknown": true, "why": "no locatable final write, so the citation cannot be shown to precede it"}
+witness_bounds_script_write: {"level": "L1", "why": "the witness puts the final write at 25, before the citation"}
+witness_enables_l2: {"level": "L2", "why": "the witness locates the script's write at 40, after the citation"}
+witness_empty_is_unknown: {"level": "L1", "final_write_unknown": true, "why": "the witness ran and saw no write, so the keystroke line is not trusted"}
+l2_named_finding_with_encoder: {"level": "L2", "why": "named finding + encoder named in the same sentence, before the final write"}
+l1_finding_term_from_table: {"level": "L1", "why": "the term matches an encoder label, but the sentence cites the table, not the encoder"}
+embedding_only: {"level": "L1", "l1_kind": "surfaced-embedding", "why": "an embedding can be seen but never cited"}

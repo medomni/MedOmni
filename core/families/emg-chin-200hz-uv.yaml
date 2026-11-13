@@ -1,0 +1,12 @@
+id: emg-chin-200hz-uv
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [chin1-chin2]
+  rate_hz: 200
+  units: uV
+  ndim: 2
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 33b3e3e0a2405e6bfa114bfa82e7e307783eddac, dir: families/emg-chin-200hz-uv/}

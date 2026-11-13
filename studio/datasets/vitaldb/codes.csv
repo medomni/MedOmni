@@ -1,0 +1,45 @@
+code,description,source_table
+CASE//START,Case start,clinical_info
+CASE//END,Case end,clinical_info
+OP//START,Operation start,clinical_info
+OP//END,Operation end,clinical_info
+VITALDB//ADMISSION,Admission,clinical_info
+VITALDB//DISCHARGE,Discharge,clinical_info
+VITALDB//DEATH_INHOSP,In-hospital death (0 or 1),clinical_info
+VITALDB//ICU_DAYS,Days in intensive care after surgery,clinical_info
+VITALDB//AGE,Age in years,clinical_info
+VITALDB//ASA,ASA physical status,clinical_info
+LAB//alb,Laboratory result: alb,labs
+LAB//alt,Laboratory result: alt,labs
+LAB//ammo,Laboratory result: ammo,labs
+LAB//aptt,Laboratory result: aptt,labs
+LAB//ast,Laboratory result: ast,labs
+LAB//be,Laboratory result: be,labs
+LAB//bun,Laboratory result: bun,labs
+LAB//ccr,Laboratory result: ccr,labs
+LAB//cl,Laboratory result: cl,labs
+LAB//cr,Laboratory result: cr,labs
+LAB//crp,Laboratory result: crp,labs
+LAB//esr,Laboratory result: esr,labs
+LAB//fib,Laboratory result: fib,labs
+LAB//gfr,Laboratory result: gfr,labs
+LAB//gluc,Laboratory result: gluc,labs
+LAB//hb,Laboratory result: hb,labs
+LAB//hco3,Laboratory result: hco3,labs
+LAB//hct,Laboratory result: hct,labs
+LAB//ica,Laboratory result: ica,labs
+LAB//k,Laboratory result: k,labs
+LAB//lac,Laboratory result: lac,labs
+LAB//na,Laboratory result: na,labs
+LAB//p,Laboratory result: p,labs
+LAB//pco2,Laboratory result: pco2,labs
+LAB//ph,Laboratory result: ph,labs
+LAB//plt,Laboratory result: plt,labs
+LAB//po2,Laboratory result: po2,labs
+LAB//pt%,Laboratory result: pt%,labs
+LAB//ptinr,Laboratory result: ptinr,labs
+LAB//ptsec,Laboratory result: ptsec,labs
+LAB//sao2,Laboratory result: sao2,labs
+LAB//tbil,Laboratory result: tbil,labs
+LAB//tprot,Laboratory result: tprot,labs
+LAB//wbc,Laboratory result: wbc,labs

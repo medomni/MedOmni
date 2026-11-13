@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "result-record.schema.json",
+  "x-contract": "result record",
+  "$defs": {
+    "AgentRun": {
+      "additionalProperties": false,
+      "description": "What only the agent runner records: the arm and how the agent used encoders and files (R-76, R-84).",
+      "properties": {
+        "arm": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Arm",
+          "type": "string"
+        },
+        "arm_variant": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arm Variant"
+        },
+        "encoders_served": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/EncoderServed"
+          },
+          "title": "Encoders Served",
+          "type": "array"
+        },
+        "encoder_calls": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "default": {},
+          "title": "Encoder Calls",
+          "type": "object"
+        },
+        "files_opened": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Files Opened",
+          "type": "array"
+        }
+      },
+      "required": [
+        "arm"
+      ],
+      "title": "AgentRun",
+      "type": "object"
+    },
+    "EncoderServed": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "image_digest": {
+          "minLength": 1,
+          "title": "Image Digest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "image_digest"
+      ],
+      "title": "EncoderServed",
+      "type": "object"
+    },
+    "IntelligenceRef": {
+      "additionalProperties": false,
+      "description": "The intelligence a run, score or prediction belongs to: its kind and the name of its config.",
+      "properties": {
+        "kind": {
+          "const": "agent",
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "name"
+      ],
+      "title": "IntelligenceRef",
+      "type": "object"
+    },
+    "RunRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "run",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "minLength": 1,
+          "title": "Run Id",
+          "type": "string"
+        },
+        "release": {
+          "minLength": 1,
+          "title": "Release",
+          "type": "string"
+        },
+        "task_set": {
+          "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9.-]*$",
+          "title": "Task Set",
+          "type": "string"
+        },
+        "task": {
+          "pattern": "^\\S+$",
+          "title": "Task",
+          "type": "string"
+        },
+        "task_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Task Version",
+          "type": "string"
+        },
+        "config_hash": {
+          "pattern": "^(cfg1|v0\\.2):[0-9a-f]{64}$",
+          "title": "Config Hash",
+          "type": "string"
+        },
+        "intelligence": {
+          "$ref": "#/$defs/IntelligenceRef"
+        },
+        "model_served": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model Served"
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Kind"
+        },
+        "api_cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Cost"
+        },
+        "agent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentRun"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "run_id",
+        "release",
+        "task_set",
+        "task",
+        "task_version",
+        "config_hash",
+        "intelligence",
+        "model_served"
+      ],
+      "title": "RunRecord",
+      "type": "object"
+    },
+    "ScoreRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "score",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "minLength": 1,
+          "title": "Run Id",
+          "type": "string"
+        },
+        "release": {
+          "minLength": 1,
+          "title": "Release",
+          "type": "string"
+        },
+        "task_set": {
+          "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9.-]*$",
+          "title": "Task Set",
+          "type": "string"
+        },
+        "task_set_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Task Set Hash",
+          "type": "string"
+        },
+        "target": {
+          "minLength": 1,
+          "title": "Target",
+          "type": "string"
+        },
+        "task_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Task Version",
+          "type": "string"
+        },
+        "config_hash": {
+          "pattern": "^(cfg1|v0\\.2):[0-9a-f]{64}$",
+          "title": "Config Hash",
+          "type": "string"
+        },
+        "arm": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arm"
+        },
+        "arm_variant": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arm Variant"
+        },
+        "n_atoms": {
+          "minimum": 0,
+          "title": "N Atoms",
+          "type": "integer"
+        },
+        "n_failed": {
+          "minimum": 0,
+          "title": "N Failed",
+          "type": "integer"
+        },
+        "intelligence": {
+          "$ref": "#/$defs/IntelligenceRef"
+        },
+        "metric": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "flags": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "encoder_use": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Encoder Use",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "run_id",
+        "release",
+        "task_set",
+        "task_set_hash",
+        "target",
+        "task_version",
+        "config_hash",
+        "n_atoms",
+        "n_failed",
+        "intelligence",
+        "metric",
+        "value"
+      ],
+      "title": "ScoreRecord",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "run": "#/$defs/RunRecord",
+      "score": "#/$defs/ScoreRecord"
+    },
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RunRecord"
+    },
+    {
+      "$ref": "#/$defs/ScoreRecord"
+    }
+  ]
+}

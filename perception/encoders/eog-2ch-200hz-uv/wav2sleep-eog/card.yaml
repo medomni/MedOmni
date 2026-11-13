@@ -2,20 +2,21 @@ id: eog-2ch-200hz-uv__wav2sleep-eog
 family: eog-2ch-200hz-uv
 modality: eog
 summary: Five-class sleep stages from two electro-oculography channels.
+authors:
+- {name: Timo Stoffregen}
+- {name: Bosong Huang}
 intended_use: Sleep staging of complete 30-second epochs in two-channel EOG recordings.
 outputs:
 - kind: events
   labels: [Wake, N1, N2, N3, REM]
-options:
-  max_epochs: Maximum number of 30-second epochs to score. The default and maximum are 1200.
-limits:
-- Uses the published two-channel EOG checkpoint and its five-class vocabulary.
-- Applies the upstream non-causal whole-recording normalization, so output can change when the recording boundary changes.
-- Requires at least two complete epochs and ignores a final partial epoch.
+options: {max_epochs: Maximum number of 30-second epochs to score. The default and maximum are 1200.}
+limits: [Uses the published two-channel EOG checkpoint and its five-class vocabulary., 'Applies the upstream non-causal whole-recording
+    normalization, so output can change when the recording boundary changes.', Requires at least two complete epochs and ignores
+    a final partial epoch.]
 reliability: {status: unmeasured}
 non_training: true
 license: MIT
-source: {url: https://github.com/joncarter1/wav2sleep, rev: 278e30463c8149c4e6899b8784da492fec695bd9}
-weights: {sha256: 5702782e6ce89cfb6d51e348a708d355eed04f3fe4b9653046f9c7af75213e0a, uri: hf://datasets/MedOmni/encoder-assets@cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/weights/eog-2ch-200hz-uv__wav2sleep-eog/state_dict.pth}
+source: {url: 'https://github.com/joncarter1/wav2sleep', rev: 278e30463c8149c4e6899b8784da492fec695bd9}
+weights: {sha256: 5702782e6ce89cfb6d51e348a708d355eed04f3fe4b9653046f9c7af75213e0a, uri: 'hf://datasets/MedOmni/encoder-assets@cfb1f33824e30015ee8dd8d7659d6c0ac1d64d65/weights/eog-2ch-200hz-uv__wav2sleep-eog/state_dict.pth'}
 runtime: {image: ghcr.io/medomni/eog-2ch-200hz-uv__wav2sleep-eog, digest: null}
 acceptance: pending

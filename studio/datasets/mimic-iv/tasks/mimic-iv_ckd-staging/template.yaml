@@ -1,0 +1,35 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: mimic-iv_ckd-staging
+dataset: mimic-iv
+authors:
+- {name: Bosong Huang}
+targets:
+- {name: lab_ckd, label: 'mimic-iv:derived:ckd-kdigo', metric: auc}
+input:
+  demographics: [age, sex]
+  labs: {'51222': hemoglobin, '50882': bicarbonate, '50971': potassium, '50970': phosphate, '50893': calcium_total, '50862': albumin_serum,
+    '50983': sodium, '50931': glucose}
+  max_results_per_lab: 30
+evidence: [default, full]
+exclude:
+  lab_itemids: ['50912', '52546', '51006']
+  derived: [eGFR]
+  icd_prefixes: [N18, '585']
+full:
+  exclude:
+    lab_itemids: ['50912', '52546', '51006', '50920', '51770', '50841', '51021', '51032', '51052', '51067', '51070', '51073',
+      '51080', '51081', '51082', '51099', '51106']
+    derived: [eGFR]
+    icd_prefixes: [N18, '585']
+agent:
+  statement: Predict whether this patient has chronic kidney disease. Kidney function tests (creatinine, urea nitrogen, eGFR,
+    urine albumin) have been removed from the record.
+  instruction: '## Prediction time
+
+
+    - The evidence is the patient''s record up to the end of the period over which their kidney function was monitored. The
+    kidney function tests themselves are removed.
+
+    - The prediction is made at the end of that period.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

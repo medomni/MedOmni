@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/snore-acoustic/rule-amplitude/adapter.py
+!perception/encoders/snore-acoustic/rule-amplitude/card.yaml
+!perception/encoders/snore-acoustic/rule-amplitude/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

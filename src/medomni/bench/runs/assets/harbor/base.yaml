@@ -1,0 +1,22 @@
+# MedOmni's Harbor base settings. `bench run` adds the job's name, its jobs_dir (the workspace's `runs`), the agent
+# block and the atom folders (bench/runs/harbor.py, job_config).
+# n_attempts stays 1: repetitions are separate jobs (rep in the job name), never Harbor attempts.
+# The runs folder must be on a file system with chmod (ext4, not exFAT): Harbor sets up trial folders with it.
+n_attempts: 1
+# Agent time cap lives in the TASK (task.toml [agent] timeout_sec = 1200 from the fix-smoke
+# generation on); no runner multiplier, so the contract and the runner agree (fix roadmap S4).
+# Turn cap: agents/<a>.yaml kwargs.max_turns (terminus-2 default is 1,000,000).
+n_concurrent_trials: 4   # reverted to validated-comfortable level, 2026-09-22
+environment:
+  type: docker
+  delete: true
+retry:
+  max_retries: 0
+  # if retries are ever enabled, verifier/timeout failures are REAL results, never retried
+  # (HealthAgentBench precedent: timeouts count as reward=0)
+  exclude_exceptions:
+    - VerifierOutputParseError
+    - AgentTimeoutError
+    - RewardFileEmptyError
+    - RewardFileNotFoundError
+    - VerifierTimeoutError

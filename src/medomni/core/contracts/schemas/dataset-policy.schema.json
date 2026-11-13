@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dataset-policy.schema.json",
+  "x-contract": "dataset policy",
+  "$defs": {
+    "License": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "url": {
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "url"
+      ],
+      "title": "License",
+      "type": "object"
+    },
+    "Publish": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Schema",
+          "type": "string"
+        },
+        "templates": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Templates",
+          "type": "string"
+        },
+        "recipes": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Recipes",
+          "type": "string"
+        },
+        "id_lists": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Id Lists",
+          "type": "string"
+        },
+        "labels": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Labels",
+          "type": "string"
+        },
+        "per_record_derived": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Per Record Derived",
+          "type": "string"
+        },
+        "samples": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Samples",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "templates",
+        "recipes",
+        "id_lists",
+        "labels",
+        "per_record_derived",
+        "samples"
+      ],
+      "title": "Publish",
+      "type": "object"
+    },
+    "Routes": {
+      "additionalProperties": false,
+      "properties": {
+        "local": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Local",
+          "type": "string"
+        },
+        "cloud": {
+          "enum": [
+            "allow",
+            "conditional",
+            "deny"
+          ],
+          "title": "Cloud",
+          "type": "string"
+        }
+      },
+      "required": [
+        "local",
+        "cloud"
+      ],
+      "title": "Routes",
+      "type": "object"
+    },
+    "Use": {
+      "additionalProperties": false,
+      "properties": {
+        "commercial": {
+          "title": "Commercial",
+          "type": "boolean"
+        },
+        "restriction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Restriction"
+        }
+      },
+      "required": [
+        "commercial"
+      ],
+      "title": "Use",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Dataset",
+      "type": "string"
+    },
+    "version": {
+      "minLength": 1,
+      "title": "Version",
+      "type": "string"
+    },
+    "access": {
+      "enum": [
+        "open",
+        "credentialed"
+      ],
+      "title": "Access",
+      "type": "string"
+    },
+    "license": {
+      "$ref": "#/$defs/License"
+    },
+    "modules": {
+      "additionalProperties": {
+        "$ref": "#/$defs/License"
+      },
+      "default": {},
+      "title": "Modules",
+      "type": "object"
+    },
+    "publish": {
+      "$ref": "#/$defs/Publish"
+    },
+    "routes": {
+      "$ref": "#/$defs/Routes"
+    },
+    "route_conditions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Route Conditions",
+      "type": "object"
+    },
+    "use": {
+      "$ref": "#/$defs/Use"
+    },
+    "attribution": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Attribution"
+    },
+    "sources": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Sources",
+      "type": "array"
+    }
+  },
+  "required": [
+    "dataset",
+    "version",
+    "access",
+    "license",
+    "publish",
+    "routes",
+    "use",
+    "sources"
+  ],
+  "title": "DatasetPolicy",
+  "type": "object"
+}

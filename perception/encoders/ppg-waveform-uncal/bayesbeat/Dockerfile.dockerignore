@@ -1,0 +1,15 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/ppg-waveform-uncal/bayesbeat/adapter.py
+!perception/encoders/ppg-waveform-uncal/bayesbeat/assets
+!perception/encoders/ppg-waveform-uncal/bayesbeat/assets.json
+!perception/encoders/ppg-waveform-uncal/bayesbeat/card.yaml
+!perception/encoders/ppg-waveform-uncal/bayesbeat/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+!src/medomni/perception/runtime/assets.py
+**/__pycache__
+**/*.pyc

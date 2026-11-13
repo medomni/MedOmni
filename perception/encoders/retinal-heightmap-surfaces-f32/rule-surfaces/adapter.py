@@ -1,6 +1,6 @@
 """Surface statistics in stored coordinates, without invented anatomical mapping."""
 import numpy as np
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 FAMILY = "retinal-heightmap-surfaces-f32"
 
 

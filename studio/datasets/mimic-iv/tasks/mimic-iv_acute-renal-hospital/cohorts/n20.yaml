@@ -1,0 +1,15 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+version: '1.0'
+anchor: {event: MIMIC//ADMISSION, pick: first, plus: 24 hours}
+select:
+  by: [acute_renal_failure]
+  n: 20
+  seed: 7
+require:
+- any: [MIMIC//DISCHARGE, MIMIC//DEATH]
+  same_visit: true
+- from: anchor.event
+  none: [MIMIC//DISCHARGE, MIMIC//DEATH]
+  same_visit: true
+  to: anchor
+source: {}

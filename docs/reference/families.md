@@ -1,45 +1,52 @@
 # Families
 
-Inputs that can share an encoder are one family, defined by a declared format. Datasets supply families and encoders read them, so a family is where the two meet.
+The fields of a family file and of `aliases.yaml`. [Families](../learn/core/families.md) explains how the registry is used.
 
-One file per family in `data_task/families/<id>.yaml`, plus `data_task/family_alias.yaml`.
+Contract: family registry, one file per family in `core/families/<id>.yaml`, plus `core/families/aliases.yaml`.
 
 ## Family file
 
 | Field | Required | Meaning |
 |---|---|---|
 | `id` | yes | Family id; equals the file name. |
-| `reader` | yes | How it is read: `deep-encoder`, `rule-extractor` or `direct`. |
+| `read_by` | yes | What reads it: `deep-encoder`, `rule-extractor` or `direct`. |
 | `protocol.format` | yes | Accepted file formats: `edf`, `wfdb`, `dicom`, `image`, `omh`, `table`, `json-manifest`. |
 | `protocol.channels` / `protocol.roles` | for EDF and WFDB | The exact montage or a channel count, or a role vocabulary that at least one channel must match. |
 | `protocol.rate_hz` | no | Sampling rate; null means unchecked. |
 | `protocol.units` | no | Dominant unit; null means unchecked. |
 | `protocol.ndim` | yes | Dimensionality of the data. |
+| `protocol.dtype` | yes | Data type of the values, such as `float32`, `int16` or `uint8`. |
+| `protocol.range` | no | Plausible value range, `[min, max]` in `units`, such as `[50, 100]` for SpO2 in %. Null means unchecked. |
 | `status` | yes | `declared` (shape known), `supplied` (measured on real data) or `deprecated`. |
-| `samples` | no | Where the family's checked sample files live. |
+| `samples` | no | Where the family's published sample files live: dummy or test data, never real records. |
+| `samples_access` | no | `controlled` when the family's real sample set is access-controlled: PPG, 12-lead ECG, chest X-ray, irregular clinical measurements and sleep EEG. An encoder of such a family is served when it passes its test data. |
 
 ## Aliases
 
-`family_alias.yaml` lists what each family accepts beyond its protocol: channel and role relabels, extra sampling rates, label prefixes and DICOM colour modes. Reusable alias blocks are declared once under `vocab` and referenced by name. Aliases are strict: an unknown key, family or target fails.
+`aliases.yaml` lists, per family:
+
+- channel and role relabels
+- extra sampling rates
+- label prefixes
+- DICOM colour modes
+
+Reusable alias blocks are declared once under `vocab` and referenced by name.
 
 ## Rules
 
-- A sample file opens in a declared format, carries every declared channel, matches `rate_hz` within 2% (or an alias rate) and matches `units`.
-- Sample content is real: no flat channels, constant images or empty tables.
+- A sample file opens in a declared format, carries every declared channel, matches `rate_hz` within 2% (or an alias rate), matches `units` and `dtype`, and has its values inside `range`.
+- Sample content is not degenerate: no flat channels, constant images or empty tables.
+- The same rules apply to every file Build stages and every input the encoder check uses: a file outside its family's `range` stops the build.
 
 ## Check
 
 ```bash
-python data_task/taskbuilder/family_audit.py audit
+medomni contracts check families
 ```
 
-```bash
-uv run --with pyyaml --with pydantic python data_task/materialize_family_aliases.py --check
-```
-
-The first checks the families and their samples; the second checks the aliases.
+It checks every family file, its samples and the aliases.
 
 ## Where next
 
 - [Encoders](encoders.md): which encoders read each family.
-- [Tasks](tasks.md): how a spec names its inputs by family.
+- [Tasks](tasks.md): how a template names its inputs by family.

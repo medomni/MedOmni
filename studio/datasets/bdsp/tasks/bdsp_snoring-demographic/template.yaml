@@ -1,0 +1,31 @@
+# Converted from v0.2.1's task specs by `python -m medomni.core.contracts.convert templates` (R-68).
+template_id: bdsp_snoring-demographic
+dataset: bdsp
+authors:
+- {name: Ming Shen Lu}
+targets:
+- {name: osa_severity_ahi, label: 'bdsp:psgclass:ahi-severity', metric: qwk}
+- {name: low_sleep_efficiency, label: 'bdsp:psgmetric:eff-low', metric: auc}
+- {name: reduced_rem, label: 'bdsp:psgmetric:rem-low', metric: auc}
+- {name: reduced_n3, label: 'bdsp:psgmetric:n3-low', metric: auc}
+- {name: high_arousal_index, label: 'bdsp:psgmetric:arousal-high', metric: auc}
+- {name: frequent_limb_movements, label: 'bdsp:psgmetric:limb-high', metric: auc}
+input:
+  demographics: [age, sex]
+  psg: null
+evidence: [default, full]
+full:
+  input:
+    demographics: [age, sex]
+    psg: {family: eeg-sleep-6ch-200hz-uv, families: all}
+agent:
+  statement: Predict the severity of this patient's obstructive sleep apnea and other measures of their night's sleep.
+  instruction: '## Prediction time
+
+
+    - The evidence is one full overnight sleep study (polysomnogram), the whole recording, together with the patient''s clinical
+    records up to its end.
+
+    - The prediction is made as of the end of the recording.'
+  environment: {cpus: 4, memory_mb: 8192, allow_internet: true, agent_timeout_sec: 1200, verifier_timeout_sec: 300}
+  submission_path: /workspace/submission/predictions.csv

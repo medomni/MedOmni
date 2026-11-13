@@ -1,0 +1,11 @@
+id: octa-flowcube-mono8-3d
+read_by: deep-encoder
+protocol:
+  format: [dicom]
+  ndim: 3
+  dtype: uint8
+  range: null
+  planes: 1
+  quantity: flow decorrelation
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: bd708a40281e3435a032ef66b566f3e35b9d393e, dir: families/octa-flowcube-mono8-3d/}

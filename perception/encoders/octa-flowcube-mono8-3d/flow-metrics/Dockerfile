@@ -1,5 +1,5 @@
-# Build from the perception/ directory, so the shared runtime is in context:
-#   docker build -f encoders/octa-flowcube-mono8-3d/flow-metrics/Dockerfile -t <tag> .
+# Build from the repository root, so the runtime and Core are in context:
+#   docker build -f perception/encoders/octa-flowcube-mono8-3d/flow-metrics/Dockerfile -t <tag> .
 #
 # No model, no weights, no network: the measures are computed from the cube.
 # scikit-image supplies Otsu's threshold and the skeletonisation, because the
@@ -14,10 +14,18 @@ RUN pip install --no-cache-dir \
         numpy==2.2.6 \
         pyyaml==6.0.2
 WORKDIR /app
-COPY runtime/serve.py runtime/contract.py runtime/family_alias.generated.yaml ./
-COPY encoders/octa-flowcube-mono8-3d/flow-metrics/adapter.py ./
-COPY encoders/octa-flowcube-mono8-3d/flow-metrics/card.yaml ./
-COPY encoders/octa-flowcube-mono8-3d/flow-metrics/testdata ./testdata
-ENV APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1
+
+# The runtime (R-117) and the Core modules it uses (families, contracts, R-120), under /app/medomni.
+RUN pip install --no-cache-dir pydantic==2.14.2
+COPY src/medomni/__init__.py medomni/
+COPY src/medomni/core medomni/core
+COPY src/medomni/perception/__init__.py medomni/perception/
+COPY src/medomni/perception/runtime medomni/perception/runtime
+COPY core/families core/families
+# The encoder: its adapter, card and test data (test data travels with the image).
+COPY perception/encoders/octa-flowcube-mono8-3d/flow-metrics/adapter.py ./
+COPY perception/encoders/octa-flowcube-mono8-3d/flow-metrics/card.yaml ./
+COPY perception/encoders/octa-flowcube-mono8-3d/flow-metrics/testdata ./testdata
+ENV PYTHONPATH=/app MEDOMNI_ROOT=/app APP_DIR=/app DATA_ROOT=/data PYTHONUNBUFFERED=1
 EXPOSE 8080
-CMD ["python", "/app/serve.py", "serve"]
+CMD ["python", "-m", "medomni.perception.runtime.serve", "serve"]

@@ -2,34 +2,22 @@ id: eeg-sleep-6ch-200hz-uv__yasa
 family: eeg-sleep-6ch-200hz-uv
 modality: eeg
 summary: Thirty-second sleep stages from the C3-M2 EEG channel using the pretrained YASA classifier.
-intended_use: >-
-  Whole-night sleep EEG carrying a C3-M2 channel, in adults. Not intended for fragmentary recordings or for paediatric montages.
+authors:
+- {name: Timo Stoffregen}
+- {name: Bosong Huang}
+intended_use: Whole-night sleep EEG carrying a C3-M2 channel, in adults. Not intended for fragmentary recordings or for paediatric
+  montages.
 outputs:
 - kind: events
-  labels:
-  - Wake
-  - N1
-  - N2
-  - N3
-  - REM
-limits:
-- The six declared channels must be available at 200 Hz in microvolts. Only C3-M2 is staged.
-- Reads continuous EDF, including separate mastoid electrodes or explicit A1/A2 references. HDF5 is not
-  supported.
-- Requires at least five minutes. Whole-night recordings are preferred; short windows give limited context.
-- No EOG, EMG, age, or sex is supplied to this EEG-only classifier.
-- Incomplete trailing epochs are discarded and reported. These stages are not a diagnosis.
-reliability:
-  status: unmeasured
+  labels: [Wake, N1, N2, N3, REM]
+limits: [The six declared channels must be available at 200 Hz in microvolts. Only C3-M2 is staged., 'Reads continuous EDF,
+    including separate mastoid electrodes or explicit A1/A2 references. HDF5 is not supported.', Requires at least five minutes.
+    Whole-night recordings are preferred; short windows give limited context., 'No EOG, EMG, age, or sex is supplied to this
+    EEG-only classifier.', Incomplete trailing epochs are discarded and reported. These stages are not a diagnosis.]
+reliability: {status: unmeasured}
 non_training: true
 license: BSD-3-Clause
-source:
-  url: https://github.com/raphaelvallat/yasa
-  rev: dfddbd5a7ff622de494365803a4494a2a9dba714
-runtime:
-  image: ghcr.io/medomni/eeg-sleep-6ch-200hz-uv__yasa
-  digest: null
+source: {url: 'https://github.com/raphaelvallat/yasa', rev: dfddbd5a7ff622de494365803a4494a2a9dba714}
+runtime: {image: ghcr.io/medomni/eeg-sleep-6ch-200hz-uv__yasa, digest: null}
 acceptance: pending
-weights:
-  sha256: 330c1afdc86396e0b6d9f1294d4c4796beb5f7e7cd38be424c10feae98867e31
-  uri: https://raw.githubusercontent.com/raphaelvallat/yasa/dfddbd5a7ff622de494365803a4494a2a9dba714/src/yasa/classifiers/clf_eeg_lgb_0.5.0.joblib
+weights: {sha256: 330c1afdc86396e0b6d9f1294d4c4796beb5f7e7cd38be424c10feae98867e31, uri: 'https://raw.githubusercontent.com/raphaelvallat/yasa/dfddbd5a7ff622de494365803a4494a2a9dba714/src/yasa/classifiers/clf_eeg_lgb_0.5.0.joblib'}

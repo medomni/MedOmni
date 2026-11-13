@@ -1,0 +1,15 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/fundus-photography-2d/retfound/adapter.py
+!perception/encoders/fundus-photography-2d/retfound/assets
+!perception/encoders/fundus-photography-2d/retfound/assets.json
+!perception/encoders/fundus-photography-2d/retfound/card.yaml
+!perception/encoders/fundus-photography-2d/retfound/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+!src/medomni/perception/runtime/assets.py
+**/__pycache__
+**/*.pyc

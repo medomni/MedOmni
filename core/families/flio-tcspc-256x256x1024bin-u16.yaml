@@ -1,0 +1,12 @@
+id: flio-tcspc-256x256x1024bin-u16
+read_by: deep-encoder
+protocol:
+  format: [dicom]
+  ndim: 3
+  dtype: uint16
+  range: null
+  planes: 1
+  axis3: time, 1024 bins × 12.5 ps
+  bands: 2
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: bfc2fffec07d9636f9708d84daf62e309d0c3647, dir: families/flio-tcspc-256x256x1024bin-u16/}

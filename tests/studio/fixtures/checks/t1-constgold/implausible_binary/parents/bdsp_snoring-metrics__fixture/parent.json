@@ -1,0 +1,25 @@
+{
+ "type": "bdsp_snoring-metrics",
+ "generation": "fix-fixture",
+ "batch": "fixture",
+ "boundary_kind": "recend",
+ "targets": [
+  {
+   "name": "fixture_target",
+   "derivation": "psgmetric:limb-high",
+   "metric_family": "auc"
+  }
+ ],
+ "cohort": [],
+ "pool_stats": {
+  "fixture_target": {
+   "derivation": "psgmetric:limb-high",
+   "metric_family": "auc",
+   "n_eligible": 1208,
+   "counts": {
+    "0": 1205,
+    "1": 3
+   }
+  }
+ }
+}

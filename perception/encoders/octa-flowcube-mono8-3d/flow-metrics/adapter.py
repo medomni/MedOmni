@@ -18,11 +18,11 @@ Two choices are the adapter's, and the card states both:
     is derived from the image itself, and the threshold it chose is reported
     beside the density it produced.
 
-Card: card.yaml   Contract: perception/spec/container-api.md §5
+Card: card.yaml   Interface: src/medomni/perception/runtime/adapter.py
 """
 import numpy as np
 
-from contract import Degraded, labels
+from medomni.perception.runtime import Degraded, labels
 
 FAMILY = "octa-flowcube-mono8-3d"
 

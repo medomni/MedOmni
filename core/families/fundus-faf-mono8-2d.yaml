@@ -1,0 +1,11 @@
+id: fundus-faf-mono8-2d
+read_by: deep-encoder
+protocol:
+  format: [dicom]
+  ndim: 2
+  dtype: uint8
+  range: null
+  planes: 1
+  quantity: autofluorescence
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 44576464d4647cc2cc1347103ca0b09746c26d9f, dir: families/fundus-faf-mono8-2d/}

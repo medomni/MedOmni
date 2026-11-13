@@ -1,0 +1,9 @@
+{"version": 2, "width": 160, "height": 40, "timestamp": 1790000000}
+[18.0, "i", "curl -s -X POST ... | python3 -m json.tool\r"]
+[20.6, "o", "{\"encoder_id\": \"body-position-code-10hz__rule-occupancy\", \"healthy\": true, \"outputs\": [{\"kind\": \"labels\", \"items\": [{\"label\": \"code_count\", \"value\": 3}, {\"label\": \"modal_fraction\", \"value\": 0.9513394018205462}, {\"label\": \"code_entropy\", \"value\": 0.2812395385710813}, {\"label\": \"transition_count\", \"value\": 13}]}]}\r\n"]
+[25.0, "i", "python3 -c \"open('/workspace/submission/predictions.csv','w').write('target,prediction\\\\nfx_target,0.42\\\\n')\"\r"]
+[25.2, "o", "root@fx:/workspace# "]
+[40.0, "i", "cat /workspace/submission/predictions.csv 2>/dev/null\r"]
+[40.2, "o", "target,prediction\r\nfx_target,0.42\r\n"]
+[41.0, "i", "python3 -c \"import pandas as pd; d=pd.read_csv('/workspace/submission/predictions.csv'); print((d.prediction>0.5).all())\"\r"]
+[41.5, "o", "False\r\n"]

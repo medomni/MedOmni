@@ -1,38 +1,24 @@
 build/
+!src/medomni/studio/build/
 __pycache__/
 *.pyc
-.env
+.pytest_cache/
+.DS_Store
 _artifacts/
-data_task/tasks/*/data/
-data_task/tasks/*/tests/gold.csv
 perception/var/
 
-# per-subject row cache holds clinical VALUES - never committed (manifests/L1 beside it are committable)
-data_manifest/dataplane/*/rowcache/
-data_task/atomtasks/
-.DS_Store
-harness/api-keys.env
-harness/*.env
-data_task/atomtasks-noenc/
+# API keys: users export them in the shell; a local env file is never committed
+.env
+*.env
 
-# per-subject clinical records (MIMIC/BDSP/AI-READI DUA) — never committed;
-# the aggregate ledger beside them (SOURCE/POOL/DEMAND/FEASIBILITY.json) is committable
-data_manifest/dataplane/*/patients/
-
-# gold labels anywhere: ground truth, and MIMIC/AI-READI rows are per-subject (DUA)
+# patient data: gold labels, built task trees and run outputs stay in the workspace, outside the repository.
+# These globs catch a copy put inside it by mistake.
 **/gold.csv
+atomtasks/
+runs/
 
-# every run trace + the ledger (DUA) — only the layout README is committed
-runs/*
-!runs/README.md
-
-# rendered atoms, every variant (-noenc/-ladder/-forced/...) and the prerun render
-# trees: each atom folder is named after its subject and stages that subject's
-# signals, tables and demographics under <atom>/data/ (MIMIC/BDSP/AI-READI DUA).
-# Globs, not per-variant lines, so the next emitter sweep is covered too.
-data_task/atomtasks-*/
-data_task/taskbuilder/prerun/*-review/
-
-# manuscript working copy: the PDF is large and the drafts live with the paper,
-# not the benchmark. Nothing under it has ever been tracked.
+# manuscript working copy
 paper_writing/
+
+# uv environment (rebuild with `uv sync`)
+.venv/

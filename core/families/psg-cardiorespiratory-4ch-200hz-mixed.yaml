@@ -1,0 +1,12 @@
+id: psg-cardiorespiratory-4ch-200hz-mixed
+read_by: deep-encoder
+protocol:
+  format: [edf]
+  channels: [ecg, pleth, abd, thx]
+  rate_hz: 200
+  units: per-channel
+  ndim: 2
+  dtype: int16
+  range: null
+status: declared
+samples: {hf_repo: MedOmni/family-samples, revision: 37ecba3da39720af2070635e256890ee9b664806, dir: families/psg-cardiorespiratory-4ch-200hz-mixed/}

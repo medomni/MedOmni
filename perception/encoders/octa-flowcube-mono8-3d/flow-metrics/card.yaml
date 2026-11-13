@@ -1,46 +1,33 @@
 id: octa-flowcube-mono8-3d__flow-metrics
 family: octa-flowcube-mono8-3d
 modality: octa
-
-summary: >-
-  Quantitative flow measures from an OCTA cube: signal distribution, vessel
-  area and length density on the en-face projection, and where in depth the
-  flow sits.
-intended_use: >-
-  A numeric readout of an angiogram for a reader that cannot look at one. The
-  densities are the measures the OCTA literature reports; the depth centroid
-  says whether the flow signal is superficial or spread through the cube.
-limits:
-  - A rule extractor with no model and no weights. It measures the image; it diagnoses nothing.
-  - "The en-face projection is the mean along depth, not a maximum and not a segmented slab. Retinal layers are not separated, so these are whole-cube measures and not superficial or deep plexus measures, which is what a clinical report would quote."
-  - "Binarisation is Otsu's threshold, computed per image by scikit-image and reported as `enface_otsu_threshold`. A different threshold gives a different density; no fixed or clinical threshold is applied."
-  - "`vessel_area_density` is the fraction of projected pixels above the threshold; `vessel_length_density` is skeleton pixels over projected pixels. Both are per-pixel fractions, not per-millimetre, because this family declares no pixel spacing."
-  - "The published samples are 20x20 mm acquisitions with 13 to 26 B-scans, so the projection is 20 to 40 times coarser across B-scans than along them. Densities computed on such a grid are comparable with each other and not with a dense 6x6 scan's."
-  - Blank B-scans are excluded from every measure and reported. A cube whose B-scans are all blank, or which carries no flow signal at any depth, degrades.
-  - "`flow_depth_centroid` is the intensity-weighted centre of the axial profile, in 0..1 of the cube's depth. It is not a layer assignment."
-  - Measures are invariant to B-scan order by construction, and the cube is neither reordered nor resampled.
+summary: 'Quantitative flow measures from an OCTA cube: signal distribution, vessel area and length density on the en-face
+  projection, and where in depth the flow sits.'
+authors:
+- {name: Xianglong Bao}
+- {name: Bosong Huang}
+intended_use: A numeric readout of an angiogram for a reader that cannot look at one. The densities are the measures the OCTA
+  literature reports; the depth centroid says whether the flow signal is superficial or spread through the cube.
+limits: [A rule extractor with no model and no weights. It measures the image; it diagnoses nothing., 'The en-face projection
+    is the mean along depth, not a maximum and not a segmented slab. Retinal layers are not separated, so these are whole-cube
+    measures and not superficial or deep plexus measures, which is what a clinical report would quote.', 'Binarisation is
+    Otsu''s threshold, computed per image by scikit-image and reported as `enface_otsu_threshold`. A different threshold gives
+    a different density; no fixed or clinical threshold is applied.', '`vessel_area_density` is the fraction of projected
+    pixels above the threshold; `vessel_length_density` is skeleton pixels over projected pixels. Both are per-pixel fractions,
+    not per-millimetre, because this family declares no pixel spacing.', 'The published samples are 20x20 mm acquisitions
+    with 13 to 26 B-scans, so the projection is 20 to 40 times coarser across B-scans than along them. Densities computed
+    on such a grid are comparable with each other and not with a dense 6x6 scan''s.', 'Blank B-scans are excluded from every
+    measure and reported. A cube whose B-scans are all blank, or which carries no flow signal at any depth, degrades.', '`flow_depth_centroid`
+    is the intensity-weighted centre of the axial profile, in 0..1 of the cube''s depth. It is not a layer assignment.', 'Measures
+    are invariant to B-scan order by construction, and the cube is neither reordered nor resampled.']
 outputs:
-  - kind: labels
-    scale: physical
-    labels:
-      - flow_mean
-      - flow_sd
-      - flow_p50
-      - flow_p95
-      - enface_otsu_threshold
-      - vessel_area_density
-      - vessel_length_density
-      - flow_depth_centroid
-      - n_bscans
-
-reliability:
-  status: unmeasured
+- kind: labels
+  scale: physical
+  labels: [flow_mean, flow_sd, flow_p50, flow_p95, enface_otsu_threshold, vessel_area_density, vessel_length_density, flow_depth_centroid,
+    n_bscans]
+reliability: {status: unmeasured}
 non_training: true
 license: Apache-2.0
-source:
-  url: https://github.com/BosonHwang/MedOmni
-  rev: null
-runtime:
-  image: ghcr.io/medomni/octa-flowcube-mono8-3d__flow-metrics
-  digest: null
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: ghcr.io/medomni/octa-flowcube-mono8-3d__flow-metrics, digest: null}
 acceptance: pending

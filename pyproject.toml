@@ -1,0 +1,132 @@
+[project]
+name = "medomni"
+version = "0.3.0"
+description = "Open-source software for medical AI on many data modalities"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+# One install for everything the package runs. Torch, CUDA and model weights live in the encoder images, not here.
+# numpy stays below 2: pyedflib, wfdb and the scorer's dependencies are pinned against numpy 1.
+dependencies = [
+    "numpy>=1.26,<2",
+    "pandas>=2.2,<3",
+    "pyarrow>=16,<21",  # newer pyarrow needs numpy 2 (26 refuses numpy 1.26)
+    "pyyaml>=6",
+    "pydantic>=2.7,<3",
+    "jsonschema>=4.21",
+    "scikit-learn>=1.5",
+    "requests>=2.31",
+    # format readers and families
+    "pyedflib>=0.1.38",
+    "edfio>=0.4",
+    "wfdb>=4.1",
+    "pydicom>=2.4",
+    "h5py>=3.10",
+    "vitaldb>=1.7,<2",  # reads VitalDB's .vital files (R-93); MIT
+    "pillow>=10",
+    # gateway
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    # harness
+    "inotify_simple>=1.3; sys_platform == 'linux'",
+    # studio
+    "matplotlib>=3.8",
+    "huggingface_hub>=0.23",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "neurokit2>=0.2"]  # neurokit2: encoder adapters tested in-process
+docs = ["mkdocs-material==9.5.39"]  # the docs build: `uv run --group docs mkdocs build --strict`
+
+[project.scripts]
+medomni = "medomni.core.cli:main"
+
+# Bench, Perception and Studio register their commands the same way a plug-in package does (R-2).
+# Metric names a target may use (R-77). Bench's scorer implements them in Stage 3; until then they are names only.
+[project.entry-points."medomni.metrics"]
+auc = "medomni.bench.metrics:auc"
+qwk = "medomni.bench.metrics:qwk"
+mae = "medomni.bench.metrics:mae"
+
+# Family converters from plug-in packages (R-19). A dataset package names its own in dataset.yaml (R-145).
+[project.entry-points."medomni.converters"]
+
+# The four built-in arms' run side (R-84, R-85, R-143). Names are read from this metadata without importing.
+[project.entry-points."medomni.arms"]
+encoders = "medomni.bench.arms:encoders"
+no-perception = "medomni.bench.arms:no_perception"
+encoders-required = "medomni.bench.arms:encoders_required"
+modality-ladder = "medomni.bench.arms:modality_ladder"
+
+# Filled in Stage 3: the Harbor harness as the agent runner (part 5); Bench's and Perception's checks (parts 1-3)
+[project.entry-points."medomni.tools"]
+survey = "medomni.studio.survey.dataset:DatasetSurvey"
+census = "medomni.studio.survey.census:Census"
+intake = "medomni.studio.propose.intake:Intake"
+relevance = "medomni.studio.propose.relevance:Relevance"
+audit = "medomni.studio.review.audit:Audit"
+review-form = "medomni.studio.review.forms:ReviewForm"
+encoder-status = "medomni.studio.review.encoder_status:EncoderStatus"
+release-check = "medomni.studio.review.release_check:ReleaseCheck"
+preview = "medomni.studio.preview.recipe:RecipePreview"
+download-list = "medomni.studio.preview.download_list:DownloadList"
+dummy = "medomni.studio.preview.dummy_tool:Dummy"
+tables = "medomni.studio.report.tables:Tables"
+build-sheet = "medomni.studio.report.build_sheet:BuildSheet"
+progress = "medomni.studio.report.progress:Progress"
+bench-health = "medomni.studio.report.bench_health:BenchHealth"
+diagrams = "medomni.studio.report.diagrams_tool:Diagrams"
+encoder-demo = "medomni.studio.assets.encoder_demo:EncoderDemo"
+testdata = "medomni.studio.assets.testdata:Testdata"
+family-samples = "medomni.studio.assets.family_samples:FamilySamples"
+
+# Task builders (R-142): MedOmni's v1 builder
+[project.entry-points."medomni.builders"]
+medomni-v1 = "medomni.studio.build:builder"
+
+# The arms' build side for MedOmni's v1 builder, named <builder>:<arm> (R-143, R-144)
+[project.entry-points."medomni.arm_builds"]
+"medomni-v1:encoders" = "medomni.studio.build.arms:encoders"
+"medomni-v1:no-perception" = "medomni.studio.build.arms:no_perception"
+"medomni-v1:encoders-required" = "medomni.studio.build.arms:encoders_required"
+"medomni-v1:modality-ladder" = "medomni.studio.build.arms:modality_ladder"
+
+# Each project's content kinds: where its files live and their contracts (R-145)
+[project.entry-points."medomni.content"]
+bench = "medomni.bench.content:CONTENT"
+perception = "medomni.perception.content:CONTENT"
+studio = "medomni.studio.content:CONTENT"
+
+# Services a run starts beside the agent (R-147): Perception owns the perception service; Bench looks it up by name
+[project.entry-points."medomni.services"]
+perception = "medomni.perception.sidecar:SERVICE"
+
+[project.entry-points."medomni.runners"]
+agent = "medomni.bench.runs.harbor:harness"
+replay = "medomni.bench.runs:replay"
+
+[project.entry-points."medomni.checks"]
+
+[project.entry-points."medomni.commands"]
+bench = "medomni.bench.cli:group"
+perception = "medomni.perception.cli:group"
+studio = "medomni.studio.cli:group"
+
+[build-system]
+requires = ["uv_build>=0.8,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+# Plain `pytest` runs T1 only: no data, no Docker, no network. T2-T4 are selected by marker.
+testpaths = ["tests"]
+markers = [
+    "containers: T2, needs Docker",
+    "data: T3, needs a licensed data copy",
+    "baseline: T4, needs the v0.2.1 baseline",
+]
+addopts = "-m 'not containers and not data and not baseline'"
+filterwarnings = ["ignore:scipy.misc is deprecated:DeprecationWarning"]  # neurokit2 imports scipy.misc

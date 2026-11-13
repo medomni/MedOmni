@@ -1,0 +1,102 @@
+code,description,source_table
+PSG//SESSION,A sleep study session (metadata; read by the psg hook),psg_metadata
+RECORDING//START,Start of the night,hook:psg
+RECORDING//END,End of the night (start + recorded duration),hook:psg
+DEMO//SEX//female,Sex: female,hook:psg
+DEMO//SEX//male,Sex: male,hook:psg
+DEMO//AGE,Age at the study (years),hook:psg
+DEMO//RACE//black,"Race (EHR), classified: black",hook:psg
+DEMO//RACE//white,"Race (EHR), classified: white",hook:psg
+DEMO//RACE//asian,"Race (EHR), classified: asian",hook:psg
+DEMO//RACE//other,"Race (EHR), classified: other",hook:psg
+DEMO//RACE//unknown,"Race (EHR), classified: unknown",hook:psg
+DEATH,"Date of death (EHR), end of that day",hook:psg
+SLEEP//EFFICIENCY,Sleep efficiency (sleep / scored time),hook:psg
+SLEEP//REM_FRACTION,REM / sleep,hook:psg
+SLEEP//N3_FRACTION,N3 / sleep,hook:psg
+SLEEP//AHI,Respiratory events per hour of sleep,hook:psg
+SLEEP//AROUSAL_INDEX,Arousals per hour of sleep,hook:psg
+SLEEP//LIMB_INDEX,Limb movements per hour of sleep,hook:psg
+DIAGNOSIS//ICD//29620,"Major depressive affective disorder, single episode, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29621,"Major depressive affective disorder, single episode, mild (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29622,"Major depressive affective disorder, single episode, moderate (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29623,"Major depressive affective disorder, single episode, severe, without mention of psychotic behavior (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29624,"Major depressive affective disorder, single episode, severe, specified as with psychotic behavior (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29625,"Major depressive affective disorder, single episode, in partial or unspecified remission (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29626,"Major depressive affective disorder, single episode, in full remission (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29630,"Major depressive affective disorder, recurrent episode, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29631,"Major depressive affective disorder, recurrent episode, mild (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29632,"Major depressive affective disorder, recurrent episode, moderate (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29633,"Major depressive affective disorder, recurrent episode, severe, without mention of psychotic behavior (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29634,"Major depressive affective disorder, recurrent episode, severe, specified as with psychotic behavior (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29635,"Major depressive affective disorder, recurrent episode, in partial or unspecified remission (ICD-9)",diagnosis
+DIAGNOSIS//ICD//29636,"Major depressive affective disorder, recurrent episode, in full remission (ICD-9)",diagnosis
+DIAGNOSIS//ICD//3004,Dysthymic disorder (ICD-9),diagnosis
+DIAGNOSIS//ICD//311,"Depressive disorder, not elsewhere classified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//4280,"Congestive heart failure, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//4281,Left heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42820,"Systolic heart failure, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//42821,Acute systolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42822,Chronic systolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42823,Acute on chronic systolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42830,"Diastolic heart failure, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//42831,Acute diastolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42832,Chronic diastolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42833,Acute on chronic diastolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42840,"Combined systolic and diastolic heart failure, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//42841,Acute combined systolic and diastolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42842,Chronic combined systolic and diastolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//42843,Acute on chronic combined systolic and diastolic heart failure (ICD-9),diagnosis
+DIAGNOSIS//ICD//4289,"Heart failure, unspecified (ICD-9)",diagnosis
+DIAGNOSIS//ICD//F32,Depressive episode (ICD-10),diagnosis
+DIAGNOSIS//ICD//F320,"Major depressive disorder, single episode, mild (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F321,"Major depressive disorder, single episode, moderate (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F322,"Major depressive disorder, single episode, severe without psychotic features (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F323,"Major depressive disorder, single episode, severe with psychotic features (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F324,"Major depressive disorder, single episode, in partial remission (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F325,"Major depressive disorder, single episode, in full remission (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F328,Other depressive episodes (ICD-10),diagnosis
+DIAGNOSIS//ICD//F3281,Premenstrual dysphoric disorder (ICD-10),diagnosis
+DIAGNOSIS//ICD//F3289,Other specified depressive episodes (ICD-10),diagnosis
+DIAGNOSIS//ICD//F329,"Major depressive disorder, single episode, unspecified (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F32A,"Depression, unspecified (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F33,"Major depressive disorder, recurrent (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F330,"Major depressive disorder, recurrent, mild (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F331,"Major depressive disorder, recurrent, moderate (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F332,"Major depressive disorder, recurrent severe without psychotic features (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F333,"Major depressive disorder, recurrent, severe with psychotic symptoms (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F334,"Major depressive disorder, recurrent, in remission (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F3340,"Major depressive disorder, recurrent, in remission, unspecified (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F3341,"Major depressive disorder, recurrent, in partial remission (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F3342,"Major depressive disorder, recurrent, in full remission (ICD-10)",diagnosis
+DIAGNOSIS//ICD//F338,Other recurrent depressive disorders (ICD-10),diagnosis
+DIAGNOSIS//ICD//F339,"Major depressive disorder, recurrent, unspecified (ICD-10)",diagnosis
+DIAGNOSIS//ICD//I50,Heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I501,"Left ventricular failure, unspecified (ICD-10)",diagnosis
+DIAGNOSIS//ICD//I502,Systolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5020,Unspecified systolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5021,Acute systolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5022,Chronic systolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5023,Acute on chronic systolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I503,Diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5030,Unspecified diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5031,Acute diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5032,Chronic diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5033,Acute on chronic diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I504,Combined systolic (congestive) and diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5040,Unspecified combined systolic (congestive) and diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5041,Acute combined systolic (congestive) and diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5042,Chronic combined systolic (congestive) and diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5043,Acute on chronic combined systolic (congestive) and diastolic (congestive) heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I508,Other heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5081,Right heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I50810,"Right heart failure, unspecified (ICD-10)",diagnosis
+DIAGNOSIS//ICD//I50811,Acute right heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I50812,Chronic right heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I50813,Acute on chronic right heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I50814,Right heart failure due to left heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5082,Biventricular heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5083,High output heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5084,End stage heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I5089,Other heart failure (ICD-10),diagnosis
+DIAGNOSIS//ICD//I509,"Heart failure, unspecified (ICD-10)",diagnosis

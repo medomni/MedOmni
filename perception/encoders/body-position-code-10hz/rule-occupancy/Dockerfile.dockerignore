@@ -1,0 +1,12 @@
+# Only what the Dockerfile beside this file copies (BuildKit reads <Dockerfile>.dockerignore).
+*
+!core/families
+!perception/encoders/body-position-code-10hz/rule-occupancy/adapter.py
+!perception/encoders/body-position-code-10hz/rule-occupancy/card.yaml
+!perception/encoders/body-position-code-10hz/rule-occupancy/testdata
+!src/medomni/__init__.py
+!src/medomni/core
+!src/medomni/perception/__init__.py
+!src/medomni/perception/runtime
+**/__pycache__
+**/*.pyc

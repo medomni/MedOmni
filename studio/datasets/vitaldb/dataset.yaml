@@ -1,0 +1,41 @@
+# VitalDB (open dataset): one surgery case per unit, times in seconds from the case start. R-9: configuration, a policy, templates,
+# cohorts and one converter for its `.vital` recordings; no shared code changes. From S1's U1.19 package (p19_datasets.yaml).
+description: {unit: surgery case, time: seconds-from-start, version: "1.0.0"}
+units: {table: clinical_info, column: caseid}
+source: all
+converters: [converters/vital_to_wfdb.py]  # .vital cases into WFDB and EDF families (R-145)
+verify:
+  unit_files: cases/{unit}.vital
+read:
+- reader: csv
+  options:
+    tables:
+      clinical_info:
+        file: clinical_info.csv
+        subject: caseid
+        events:
+        - {code: CASE//START, time: casestart}
+        - {code: CASE//END, time: caseend}
+        - {code: OP//START, time: opstart}
+        - {code: OP//END, time: opend}
+        - {code: VITALDB//ADMISSION, time: adm}
+        - {code: VITALDB//DISCHARGE, time: dis}
+        - {code: VITALDB//DEATH_INHOSP, value: death_inhosp}
+        - {code: VITALDB//ICU_DAYS, value: icu_days}
+        - {code: VITALDB//AGE, value: age}
+        - {code: VITALDB//ASA, value: asa}
+      labs:
+        file: labs.csv
+        subject: caseid
+        time: dt
+        events:
+        - {code: "LAB//{name}", value: result}
+      track_list:
+        file: track_list.csv
+        subject: caseid
+        events:
+        - {code: FILE//abp-waveform-125hz-mmhg, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/ART", "SNUADC/FEM"]}}
+        - {code: FILE//ecg-1lead-200hz-uv, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/ECG_II"]}}
+        - {code: FILE//ppg-waveform-uncal, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/PLETH"]}}
+        - {code: FILE//capnography-mmhg, path: "cases/{caseid}.vital", equals: {tname: ["Primus/CO2"]}}
+        - {code: FILE//pressure-nonarterial-125hz-mmhg, path: "cases/{caseid}.vital", equals: {tname: ["SNUADC/CVP"]}}

@@ -1,60 +1,27 @@
-{
-  "id": "pressure-nonarterial-125hz-mmhg__rule-summary",
-  "family": "pressure-nonarterial-125hz-mmhg",
-  "modality": "hemodynamic-pressure",
-  "summary": "Per-role CVP, PAP and ICP level and spread in mmHg at the native 124.945 Hz, with signal coverage and the share of physically impossible values.",
-  "intended_use": "Descriptive baseline features for benchmark agents reading bedside central venous, pulmonary artery or intracranial pressure; requires interpretation with clinical context.",
-  "limits": [
-    "Descriptive level and spread only; no waveform morphology, beat detection, respiratory variation or diagnosis.",
-    "Each channel present is summarised under its own role; CVP, PAP and ICP are never pooled.",
-    "Statistics use valid samples only; gaps are reported as valid_fraction, not filled.",
-    "implausible_fraction counts samples outside -20 to 150 mmHg, values no CVP, PAP or ICP can take; a high fraction means an unzeroed transducer, flush or mislabeled channel, and the other statistics then describe the artifact, not the patient.",
-    "PAP is summarised as a whole waveform; systolic and diastolic pressures are not separated."
-  ],
-  "outputs": [
-    {
-      "kind": "labels",
-      "scale": "physical",
-      "labels": [
-        "cvp_median",
-        "cvp_mean",
-        "cvp_p05",
-        "cvp_p95",
-        "cvp_std",
-        "cvp_implausible_fraction",
-        "cvp_valid_fraction",
-        "cvp_duration",
-        "pap_median",
-        "pap_mean",
-        "pap_p05",
-        "pap_p95",
-        "pap_std",
-        "pap_implausible_fraction",
-        "pap_valid_fraction",
-        "pap_duration",
-        "icp_median",
-        "icp_mean",
-        "icp_p05",
-        "icp_p95",
-        "icp_std",
-        "icp_implausible_fraction",
-        "icp_valid_fraction",
-        "icp_duration"
-      ]
-    }
-  ],
-  "reliability": {
-    "status": "unmeasured"
-  },
-  "non_training": true,
-  "license": "Apache-2.0",
-  "source": {
-    "url": "https://github.com/BosonHwang/MedOmni",
-    "rev": null
-  },
-  "runtime": {
-    "image": "ghcr.io/medomni/pressure-nonarterial-125hz-mmhg__rule-summary:dev",
-    "digest": null
-  },
-  "acceptance": "pending"
-}
+id: pressure-nonarterial-125hz-mmhg__rule-summary
+family: pressure-nonarterial-125hz-mmhg
+modality: hemodynamic-pressure
+summary: Per-role CVP, PAP and ICP level and spread in mmHg at the native 124.945 Hz, with signal coverage and the share of
+  physically impossible values.
+authors:
+- {name: Bosong Huang}
+intended_use: Descriptive baseline features for benchmark agents reading bedside central venous, pulmonary artery or intracranial
+  pressure; requires interpretation with clinical context.
+limits: ['Descriptive level and spread only; no waveform morphology, beat detection, respiratory variation or diagnosis.',
+  'Each channel present is summarised under its own role; CVP, PAP and ICP are never pooled.', 'Statistics use valid samples
+    only; gaps are reported as valid_fraction, not filled.', 'implausible_fraction counts samples outside -20 to 150 mmHg,
+    values no CVP, PAP or ICP can take; a high fraction means an unzeroed transducer, flush or mislabeled channel, and the
+    other statistics then describe the artifact, not the patient.', PAP is summarised as a whole waveform; systolic and diastolic
+    pressures are not separated.]
+outputs:
+- kind: labels
+  scale: physical
+  labels: [cvp_median, cvp_mean, cvp_p05, cvp_p95, cvp_std, cvp_implausible_fraction, cvp_valid_fraction, cvp_duration, pap_median,
+    pap_mean, pap_p05, pap_p95, pap_std, pap_implausible_fraction, pap_valid_fraction, pap_duration, icp_median, icp_mean,
+    icp_p05, icp_p95, icp_std, icp_implausible_fraction, icp_valid_fraction, icp_duration]
+reliability: {status: unmeasured}
+non_training: true
+license: Apache-2.0
+source: {url: 'https://github.com/BosonHwang/MedOmni', rev: null}
+runtime: {image: 'ghcr.io/medomni/pressure-nonarterial-125hz-mmhg__rule-summary:dev', digest: null}
+acceptance: pending

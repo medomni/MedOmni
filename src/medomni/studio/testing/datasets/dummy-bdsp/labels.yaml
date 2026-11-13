@@ -1,0 +1,8 @@
+osa:
+  value: AHI
+  pick: last
+  op: ">="
+  x: 15
+  from: any
+  to: any
+  guard: {codes: ["^AHI$"]}

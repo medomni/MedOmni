@@ -1,0 +1,115 @@
+# MIMIC-IV 3.1 with ED, CXR-JPG, ECG and Waveform. The event table holds the light tables (U1.20); evidence reads
+# the large ones (`load: false`). Codes follow S1's U1.16 loader.
+description: {unit: patient, time: datetime, version: "3.1"}
+units: {table: patients, column: subject_id}
+source: {salt: medomni-v0.3, fraction: 0.05}  # the 5% hash rule (R-32)
+verify:
+  version: {file: core/CHANGELOG.txt, contains: "MIMIC-IV v3.1", version: "3.1"}
+read:
+- reader: csv
+  options:
+    tables:
+      patients:
+        file: core/hosp/patients.csv.gz
+        subject: subject_id
+        subject_type: int
+        events:
+        - code: "SEX//{gender}"
+        - {code: AGE, value: anchor_age}
+        - {code: ANCHOR_YEAR, value: anchor_year}
+        - {code: FILE//clinical-record-table, path: core/hosp}
+        - {code: FILE//clinical-measurement-irregular, path: core/hosp}
+      admissions:
+        file: core/hosp/admissions.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: admittime
+        visit: hadm_id
+        events:
+        - code: MIMIC//ADMISSION
+        - {code: MIMIC//DISCHARGE, time: dischtime, present: [dischtime]}
+        - {code: MIMIC//DEATH, time: deathtime, present: [deathtime]}
+        - {code: MIMIC//DEATH, time: dischtime, absent: [deathtime], equals: {hospital_expire_flag: ["1"]}}
+      diagnoses_icd:  # coded at discharge: timed by the admission's discharge, dropped when it has none
+        file: core/hosp/diagnoses_icd.csv.gz
+        subject: subject_id
+        subject_type: int
+        visit: hadm_id
+        time_from: {table: admissions, key: hadm_id, column: dischtime}
+        missing_time: drop
+        events:
+        - code: "DIAGNOSIS//ICD//{icd_code}"
+      icustays:
+        file: core/icu/icustays.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: intime
+        visit: hadm_id
+        events:
+        - code: MIMIC//ICU_ADMISSION
+      ed_edstays:
+        file: ed/ed/edstays.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: intime
+        visit: hadm_id
+        events:
+        - code: ED//STAY
+      creatinine:  # blood creatinine, for the CKD hook (v0.2's derive_ckd_labels.py)
+        file: core/hosp/labevents.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: charttime
+        where: {itemid: ["50912", "52546"]}
+        events:
+        - {code: "LAB//{itemid}", value: valuenum}
+      labevents:
+        file: core/hosp/labevents.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: charttime
+        visit: hadm_id
+        load: false  # 118M rows: evidence reads them per patient
+        events:
+        - {code: "LAB//{itemid}", value: valuenum}
+      ed_triage:
+        file: ed/ed/triage.csv.gz
+        subject: subject_id
+        subject_type: int
+        load: false
+        events:
+        - code: ED//TRIAGE
+      ed_vitalsign:
+        file: ed/ed/vitalsign.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: charttime
+        load: false
+        events:
+        - code: ED//VITALSIGN
+      omr:
+        file: core/hosp/omr.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: chartdate
+        load: false
+        events:
+        - code: "OMR//{result_name}"
+      cxr_metadata:  # read by the cxr hook
+        file: cxr/mimic-cxr-2.0.0-metadata.csv.gz
+        subject: subject_id
+        subject_type: int
+        time: StudyDate
+        load: false
+        events:
+        - code: CXR//STUDY
+- reader: tree
+  options:
+    files:
+      ecg-12lead-500hz-mv: {pattern: "ecg/files/*/p{subject}/*/{record}.hea"}
+- reader: hook
+  options: {hook: cxr, params: {metadata: cxr/mimic-cxr-2.0.0-metadata.csv.gz}}
+- reader: hook
+  options: {hook: wdb, params: {root: wdb/waves}}
+- reader: hook
+  options: {hook: ckd, params: {creatinine: ["LAB//50912", "LAB//52546"]}}

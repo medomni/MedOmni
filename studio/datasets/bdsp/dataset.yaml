@@ -1,0 +1,40 @@
+# BDSP Human Sleep Project, site I0006: each patient's latest night on disk. The night, its sleep metrics and the
+# EHR demographics come from the `psg` hook; the EHR diagnoses from the csv reader.
+description: {unit: patient, time: datetime, version: "3.0"}
+units: {table: psg_metadata, column: BDSPPatientID}
+source: {salt: medomni-v0.3, fraction: 0.10}  # the 10% hash rule (R-41)
+converters: [converters/h5_to_edf.py]  # h5 nights into EDF families (R-105, R-145)
+storage_mb: 65536  # a night materialises as several GB of EDF at run time
+read:
+- reader: csv
+  options:
+    tables:
+      psg_metadata:  # read by the psg hook
+        file: _index/psg-metadata/I0006_*.csv
+        subject: BDSPPatientID
+        subject_type: int
+        time: StartDateTime
+        load: false
+        events:
+        - code: PSG//SESSION
+      diagnosis:
+        file: _index/ehr_labels/diagnosis/*.parquet
+        subject: bdsp_patient_id
+        subject_type: int
+        time: shifted_dx_time_date
+        clean: {dx_code_icd_10: {remove: "."}, dx_cd_icd9: {remove: "."}}
+        events:
+        - code: "DIAGNOSIS//ICD//{dx_code_icd_10}"
+        - code: "DIAGNOSIS//ICD//{dx_cd_icd9}"
+- reader: hook
+  options:
+    hook: psg
+    params:
+      metadata: _index/psg-metadata/I0006_*.csv
+      night: "PSG/bids/I0006/{folder}/ses-{session}/eeg/{folder}_ses-{session}.h5"
+      demographics: _index/ehr_labels/demographics/*.parquet
+      rate_enforced: [resp-effort-rip-2ch-50hz, spo2-series-10hz-pct]  # not requested on a night at a rate they don't accept
+      families: [eeg-sleep-6ch-200hz-uv, eog-2ch-200hz-uv, ecg-1lead-200hz-uv, spo2-series-10hz-pct,
+                 pulse-rate-10hz-bpm, resp-effort-rip-2ch-50hz, resp-flow, snore-acoustic, body-position-code-10hz,
+                 emg-chin-200hz-uv, emg-limb-200hz-uv, ppg-waveform-uncal, psg-cardiorespiratory-4ch-200hz-mixed,
+                 capnography-mmhg]

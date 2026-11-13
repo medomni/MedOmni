@@ -298,6 +298,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Value"
         },
         "flags": {
@@ -327,8 +328,7 @@
         "n_atoms",
         "n_failed",
         "intelligence",
-        "metric",
-        "value"
+        "metric"
       ],
       "title": "ScoreRecord",
       "type": "object"

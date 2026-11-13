@@ -97,6 +97,23 @@ def test_an_infrastructure_failure_refuses_the_cell_with_no_number(built, tmp_pa
     (job / "predictions.jsonl").write_text((src / "predictions.jsonl").read_text())
     rows = scoring.score_run(job, Path(built.tasks) / "atomtasks/_content", "0" * 64, tmp_path / "res.jsonl")
     assert rows and all(r.get("value") is None and "refused" in r["flags"][0] for r in rows)
+    # the rows say "value": null, and read back through the contract (studio tables and the audit read them so)
+    written = [json.loads(line) for line in (tmp_path / "res.jsonl").read_text().splitlines()]
+    assert all("value" in r and r["value"] is None for r in written)
+    assert [load_data(r, ScoreRecord, r["run_id"]).value for r in written] == [None] * len(written)
+
+
+def test_a_score_row_without_a_value_still_reads(tmp_path):
+    """Rows `bench score` wrote before 0.3.0 dropped a None value; the contract reads them as None."""
+    from medomni.core.contracts import ResultRecord
+    from pydantic import TypeAdapter
+
+    row = {"kind": "score", "run_id": "j/p/t", "release": "0.3.0", "task_set": "medomni-bench/v1",
+           "task_set_hash": "0" * 64, "target": "t", "task_version": "1.0", "config_hash": "cfg1:" + "0" * 64,
+           "n_atoms": 20, "n_failed": 0, "intelligence": {"kind": "agent", "name": "a"}, "metric": "auc",
+           "flags": ["t: too few in a class"]}
+    rec = TypeAdapter(ResultRecord).validate_json(json.dumps(row))
+    assert rec.kind == "score" and rec.value is None
 
 
 def test_mixed_config_hashes_are_flagged_in_a_table():

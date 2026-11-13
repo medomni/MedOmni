@@ -130,7 +130,8 @@ def _score_pair(pair: str, runs: list, values: dict, content: Path, task_set_has
                "arm_variant": first.agent.arm_variant if first.agent else None, "n_atoms": len(subject_of), "n_failed": n_failed,
                "intelligence": first.intelligence.model_dump(mode="json"), "metric": metric, "value": value, "flags": list(flags),
                "encoder_use": used}
-        return load_data(doc, ScoreRecord, doc["run_id"]).model_dump(mode="json", exclude_none=True, exclude_defaults=False)
+        out = load_data(doc, ScoreRecord, doc["run_id"]).model_dump(mode="json", exclude_none=True, exclude_defaults=False)
+        return {**out, "value": out.get("value")}  # a refused or unscorable row says "value": null, never drops the key
 
     def marked():
         return [row(t["name"], t["metric"], None, [f"{t['name']}: too few in a class"])

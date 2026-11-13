@@ -1,6 +1,8 @@
 # The release tree (R-163, R-169): what the export publishes from main. Each entry is a top-level file or folder of
 # the repository; everything under a listed folder is published, and anything unlisted stays private (internal_docs/,
 # or a new top-level folder until someone lists it). The export's latest tree is exactly these entries at main's tip.
+# The public repository: the push guard (release/guard.py) lets only the export go there.
+remote: https://github.com/medomni/MedOmni
 include:
   - .dockerignore
   - .gitignore

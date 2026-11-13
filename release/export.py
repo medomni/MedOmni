@@ -95,6 +95,10 @@ for line in msg.split(b"\n"):
             line = rx.sub(rep, line)
     lines.append(line)
 msg = b"\n".join(lines).rstrip(b"\n")
+_subjects = {subjects!r}
+_new = _subjects.get(commit.original_id.decode())
+if _new:
+    msg = _new.encode() + (b"\n" + msg.split(b"\n", 1)[1] if b"\n" in msg else b"")
 if b"\n{public}: " not in b"\n" + msg:
     paras = msg.split(b"\n\n")
     tail = paras[-1].split(b"\n")
@@ -116,7 +120,7 @@ def filtered(repo, branch: str, cfg: dict, work: Path) -> Path:
     (work / "paths").write_text(path_lines(files, renames), encoding="utf-8")
     args = ["filter-repo", "--force", "--quiet", "--paths-from-file", str(work / "paths"),
             "--commit-callback", CALLBACK.format(strip=list(cfg.get("strip_from_messages", [])), public=PUBLIC_TRAILER,
-                                                 private=PRIVATE_TRAILER)]
+                                                 private=PRIVATE_TRAILER, subjects=_subjects(repo, cfg))]
     if cfg.get("mailmap"):
         args += ["--mailmap", str(Path(repo, cfg["mailmap"]).resolve())]
     rules = replacements(clone, cfg, files + [o for o, n in renames.items() if n in files])
@@ -128,6 +132,33 @@ def filtered(repo, branch: str, cfg: dict, work: Path) -> Path:
 
 
 ID = re.compile(rb"(?<![0-9A-Za-z.])p?(1\d{7})(?![0-9A-Za-z.])")
+# What cleaning a message must never leave behind (R-182): an emptied list or parenthesis, a dangling preposition
+FRAGMENT = re.compile(r"\(,|\(\s|\(\s*;|,\s*\)|\(\)| for \(|after \(|\s(in|for|after|of|by)$")
+
+
+def _subjects(repo, cfg: dict) -> dict[str, str]:
+    """The config's exact subjects (`subjects: {private commit: subject}`), with each id expanded to its full form."""
+    out = {}
+    for short, subject in (cfg.get("subjects") or {}).items():
+        out[git(repo, "rev-parse", "--verify", f"{short}^{{commit}}").strip()] = str(subject)
+    return out
+
+
+def fragments(repo, clone: Path) -> list[str]:
+    """Kept messages whose cleaning left a fragment: a line cleaning changed that now holds one, and the original
+    line didn't. Returns `<private commit> | <line>`."""
+    out = []
+    for sha, t in trailers(clone, "main").items():
+        pc = t.get(PRIVATE_TRAILER)
+        if not pc:
+            continue
+        new = [l for l in git(clone, "log", "-1", "--format=%B", sha).splitlines() if not l.startswith(PRIVATE_TRAILER)]
+        old = git(repo, "log", "-1", "--format=%B", pc).splitlines()
+        for i, line in enumerate(new):
+            was = old[i] if i < len(old) else ""
+            if line != was and FRAGMENT.search(line) and not FRAGMENT.search(was):
+                out.append(f"{pc[:12]} | {line[:120]}")
+    return out
 
 
 def replacements(clone: Path, cfg: dict, paths: list[str]) -> list[tuple[str, str]]:
@@ -255,6 +286,10 @@ def export(repo=".", branch="main", config: Path | None = None, report: Path | N
                                                 capture_output=True, text=True).stdout.strip()
     with tempfile.TemporaryDirectory(prefix="medomni-export-") as tmp:
         clone = filtered(repo, branch, cfg, Path(tmp))
+        left = fragments(repo, clone)
+        if left:
+            raise ExportError("cleaning left fragments in these messages; add exact subjects or a rule "
+                              "(internal_docs/release/export.yaml):\n  " + "\n  ".join(left))
         tip = git(clone, "rev-parse", "main").strip()
         if previous:
             git(clone, "fetch", "--quiet", str(repo), f"+{EXPORT_REF}:refs/previous")

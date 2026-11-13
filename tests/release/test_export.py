@@ -95,6 +95,23 @@ def test_a_range_of_ids_leaves_no_fragments(private):
     assert git(private, "log", "-1", "--format=%s", tip) == "docs: redraft with decisions (findings)"
 
 
+LIST = r"\bR-\d+[a-z]?(?:\s*(?:,|to|and|/|-)\s*R-\d+[a-z]?)*\b"
+
+
+def test_a_list_of_ids_leaves_no_fragments(private):
+    commit(private, "docs: cards (R-76, R-77, R-79; Bosong, 2026-11-06)\n\nversion 1.0; R-68, R-94).", {"src/g.py": "g = 1\n"})
+    tip = export(private, {"strip_from_messages": [LIST]})
+    assert git(private, "log", "-1", "--format=%B", tip).splitlines()[:3] == ["docs: cards (Bosong, 2026-11-06)", "", "version 1.0)."]
+
+
+def test_an_exact_subject_replaces_a_badly_cleaned_one(private):
+    sha = commit(private, "docs: redraft for R-19 to R-43 (Build, Recipes)", {"src/h.py": "h = 1\n"})
+    with pytest.raises(ex.ExportError, match="left fragments"):  # "redraft for (Build" would be published
+        export(private, {"strip_from_messages": [LIST]})
+    tip = export(private, {"strip_from_messages": [LIST], "subjects": {sha[:10]: "docs: redraft (Build, Recipes)"}})
+    assert git(private, "log", "-1", "--format=%s", tip) == "docs: redraft (Build, Recipes)"
+
+
 def test_fresh_rebuilds_an_export_that_exists(private):
     first = export(private)
     p = private.parent / "cfg.yaml"

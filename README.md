@@ -19,18 +19,26 @@ A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and 
 
 ## Overview
 
-MedOmni is one shared Core with three projects built on it. Bench and Perception depend only on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
+MedOmni is a shared Core with projects built on it. Each project depends on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
 
 | Project | What you get | Command |
 |---|---|---|
 | **Bench** | Test your agent, or a foundation model behind one, on built medical tasks, and score it. | `medomni bench` |
-| **Perception** | Give your agent perception across medical modalities: 44 encoders behind one HTTP gateway, each reading one kind of input, such as a 12-lead ECG. | `medomni perception` |
+| **Perception** | Give your agent perception across medical modalities: encoders behind one HTTP gateway, each reading one kind of input, such as a 12-lead ECG. | `medomni perception` |
 | **Studio** | The rest of the workflow: survey a dataset, preview and select cohorts, build tasks, and audit them. | `medomni studio` |
 | **Core** | What every project shares: the contracts, the `medomni` command, plug-in loading, dataset loading, the cache and the testing kit. | `medomni` |
 
 Anyone can add a dataset, an encoder, a task or an agent without changing Core: by pull request, or as a plug-in package in their own repository. Each piece has a `new` command to start from and a check command to run. See [Contributing](CONTRIBUTING.md).
 
-No patient data ships with MedOmni. Tasks are built on your machine from generated dummy data, open datasets such as VitalDB, or datasets you are licensed to use, such as MIMIC-IV.
+## Data use and patient privacy
+
+MedOmni respects every dataset's data use agreement and keeps patients' data safe. What can be open is open; what must stay private stays private.
+
+- No patient data ships with MedOmni: no records, labels or per-record outputs. Tasks are built on your machine from generated dummy data, open datasets such as VitalDB, or datasets you are licensed to use, such as MIMIC-IV.
+- Each dataset package carries a policy that decides what may be published from it, and which routes, such as a cloud model provider, may see its data.
+- For a credentialed dataset, MedOmni publishes the task templates, recipes and config hashes, and you build the tasks from your own licensed copy. The config hash shows that two builds used the same task config.
+- What is built from patient data, such as the cache and built tasks, stays in your workspace and is never committed.
+- Before every release, a release check confirms each file may be published under its licence and its dataset's policy. A data check scans every file version pushed to the public repository for patient identifiers.
 
 ## Install
 

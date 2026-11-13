@@ -4,7 +4,7 @@ The open-source ecosystem for omni-modality medical intelligence. MedOmni is ope
 
 A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and notes side by side. MedOmni aims to be the shared, open infrastructure where agents and models learn to do the same: take in any medical data modality, be tested on it, and improve. A dataset or encoder added to MedOmni once can be used by every agent and model tested on it.
 
-MedOmni is one shared Core with three projects built on it. Bench and Perception depend only on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
+MedOmni is a shared Core with projects built on it. Each project depends on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
 
 MedOmni is developed in a private repository; the public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged there and ship in the next release: see [How MedOmni is developed](guides/contribute.md#how-medomni-is-developed).
 
@@ -15,21 +15,24 @@ MedOmni is developed in a private repository; the public repository is an export
     - versioned contracts shared by all projects
     - four extension points (agent, dataset, task, encoder), filled by pull request or plug-in package without changing Core
 
-!!! warning "No patient data ships with MedOmni"
-    The repository holds code, contracts, dataset packages, templates and recipes. Data comes from:
+## Data use and patient privacy
 
-    - generated dummy data
-    - open datasets, such as VitalDB
-    - datasets you are licensed to use, such as MIMIC-IV
+MedOmni respects every dataset's data use agreement and keeps patients' data safe. What can be open is open; what must stay private stays private.
+
+- No patient data ships with MedOmni: no records, labels or per-record outputs. Tasks are built on your machine from generated dummy data, open datasets such as VitalDB, or datasets you are licensed to use, such as MIMIC-IV.
+- Each dataset package carries a policy that decides what may be published from it, and which routes, such as a cloud model provider, may see its data.
+- For a credentialed dataset, MedOmni publishes the task templates, recipes and config hashes, and you build the tasks from your own licensed copy. The config hash shows that two builds used the same task config.
+- What is built from patient data, such as the cache and built tasks, stays in your workspace and is never committed.
+- Before every release, a release check confirms each file may be published under its licence and its dataset's policy. A data check scans every file version pushed to the public repository for patient identifiers.
 
 ## What v0.3.0 includes
 
-Three projects and the core they share:
+The projects and the core they share:
 
 | Project | Does | Package | Command |
 |---|---|---|---|
 | **Bench** | Runs AI agents on built medical tasks and scores them, whoever built the tasks. A task gives an agent one patient's evidence and a clinical question; a fixed verifier scores the answer. It scores the agent as a whole (scaffold and model), as Terminal-Bench and SWE-bench do. | `medomni.bench` | `medomni bench` |
-| **Perception** | Serves 44 medical encoders through an HTTP gateway. Each encoder reads one kind of input, such as a 12-lead ECG, and returns evidence for an agent or your own code. | `medomni.perception` | `medomni perception` |
+| **Perception** | Serves medical encoders through an HTTP gateway. Each encoder reads one kind of input, such as a 12-lead ECG, and returns evidence for an agent or your own code. | `medomni.perception` | `medomni perception` |
 | **Studio** | Makes and builds tasks: dataset survey, task proposals from clinicians, review and sign-off, cohort previews, MedOmni's task builder, the audit and reports. | `medomni.studio` | `medomni studio` |
 | **Core** | Shared by every project: the contracts, the `medomni` command, plug-in loading, dataset loading, the family converter interface, the cache, the built-task contract and the testing kit. | `medomni.core` | `medomni` |
 

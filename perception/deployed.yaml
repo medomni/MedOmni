@@ -61,27 +61,27 @@ encoders:
         detail: 'sample-01.hea: real family sample did not produce healthy output; sample-01.hea: card declares 1 output block(s), got 0'
   body-position-code-10hz__rule-occupancy:
     build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/body-position-code-10hz__rule-occupancy:dev
-    image_id: sha256:a55c4997ce071241aed0401bd6a8026d9e34d59d510e2d6f449a62d09fe852b9
-    built_at: '2026-11-12T12:04:26Z'
+    image_id: sha256:6b5f21e1e78b27563a52223b7c231f413075195be19a1bd2bd812c692dae2810
+    built_at: '2026-11-13T00:44:16Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:04:26Z'
+        at: '2026-11-13T00:44:16Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
       L1:
         status: PASS
-        at: '2026-11-12T12:04:26Z'
+        at: '2026-11-13T00:44:16Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
       L2:
         status: PASS
-        at: '2026-11-12T12:04:26Z'
+        at: '2026-11-13T00:44:16Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:04:26Z'
+        at: '2026-11-13T00:44:16Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
         detail: 5 sample(s), offline
   capnography-mmhg__rule-amplitude:
@@ -111,52 +111,52 @@ encoders:
         detail: family publishes no samples
   cgm-5min-mgdl__pyagata:
     build_key: sha256:540caa7d0c4032a30cb7c2634429f778baf7bd022c5c65127e35abee29e7ccd3
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/cgm-5min-mgdl__pyagata:dev
-    image_id: sha256:7bae5b28f90c088a258ef7ddc073f1cb52d5c2058c913e21d4c69878661e093e
-    built_at: '2026-11-12T12:04:35Z'
+    image_id: sha256:014e91d177c9a27d4d426881b542bd38d373bf7824168fb664a54c04ae96b42e
+    built_at: '2026-11-13T00:44:27Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:04:35Z'
+        at: '2026-11-13T00:44:27Z'
         build_key: sha256:540caa7d0c4032a30cb7c2634429f778baf7bd022c5c65127e35abee29e7ccd3
       L1:
         status: PASS
-        at: '2026-11-12T12:04:35Z'
+        at: '2026-11-13T00:44:27Z'
         build_key: sha256:540caa7d0c4032a30cb7c2634429f778baf7bd022c5c65127e35abee29e7ccd3
       L2:
         status: PASS
-        at: '2026-11-12T12:04:35Z'
+        at: '2026-11-13T00:44:27Z'
         build_key: sha256:540caa7d0c4032a30cb7c2634429f778baf7bd022c5c65127e35abee29e7ccd3
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:04:35Z'
+        at: '2026-11-13T00:44:27Z'
         build_key: sha256:540caa7d0c4032a30cb7c2634429f778baf7bd022c5c65127e35abee29e7ccd3
         detail: 5 sample(s), offline
   clinical-measurement-irregular__labs-summary:
     build_key: sha256:d1edef06f25586a86b9ea2b4be7cb6e0324b257b17c192284891ea428ef3dd36
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/clinical-measurement-irregular__labs-summary:dev
-    image_id: sha256:fb632fd9ea215ef5b0f53cb943b26d391d12ec8fd97f9ecaba20f14db2e02538
-    built_at: '2026-11-12T12:04:39Z'
+    image_id: sha256:987bfe78c6542c7d930b761947a74e4e40e7f6a69a227351a1bfe7cc690feacc
+    built_at: '2026-11-13T00:44:32Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:04:39Z'
+        at: '2026-11-13T00:44:32Z'
         build_key: sha256:d1edef06f25586a86b9ea2b4be7cb6e0324b257b17c192284891ea428ef3dd36
       L1:
         status: PASS
-        at: '2026-11-12T12:04:39Z'
+        at: '2026-11-13T00:44:32Z'
         build_key: sha256:d1edef06f25586a86b9ea2b4be7cb6e0324b257b17c192284891ea428ef3dd36
       L2:
         status: PASS
-        at: '2026-11-12T12:04:39Z'
+        at: '2026-11-13T00:44:32Z'
         build_key: sha256:d1edef06f25586a86b9ea2b4be7cb6e0324b257b17c192284891ea428ef3dd36
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:04:39Z'
+        at: '2026-11-13T00:44:32Z'
         build_key: sha256:d1edef06f25586a86b9ea2b4be7cb6e0324b257b17c192284891ea428ef3dd36
         detail: 5 sample(s), offline
   clinical-measurement-irregular__rule-vitals:
@@ -190,379 +190,379 @@ encoders:
           output; sample-02.jsonl: card declares 1 output block(s), got 0; sample-03.jsonl: real family sample did not produce healthy output; sample-03.jsonl: card declares 1 output block(s), got 0; sample-04.jsonl:
           real family sample did not produce healthy output; sample-04.jsonl: card declares 1 output block(s), got 0; '
   cxr-radiograph-2d__biomedclip:
-    build_key: sha256:2ef13520a13ac554d4a4996e66894154ae3d6cc296ddf5aec042c0cf19570529
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    build_key: sha256:4744ac3271296ff597516024611f64e878a1421b74b39a7e864da8e161783545
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/cxr-radiograph-2d__biomedclip:dev
-    image_id: sha256:b55d28798e2e79617dc259f61fe6fc5755a80ee12158ca4be25c147200e34254
-    built_at: '2026-11-12T12:04:49Z'
+    image_id: sha256:2e7781e7453bc4c19c757199cd5b11a04eb4da91d898a3a033a1f98bc986b288
+    built_at: '2026-11-13T00:44:43Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:04:49Z'
-        build_key: sha256:2ef13520a13ac554d4a4996e66894154ae3d6cc296ddf5aec042c0cf19570529
+        at: '2026-11-13T00:44:43Z'
+        build_key: sha256:4744ac3271296ff597516024611f64e878a1421b74b39a7e864da8e161783545
       L1:
         status: PASS
-        at: '2026-11-12T12:04:49Z'
-        build_key: sha256:2ef13520a13ac554d4a4996e66894154ae3d6cc296ddf5aec042c0cf19570529
+        at: '2026-11-13T00:44:43Z'
+        build_key: sha256:4744ac3271296ff597516024611f64e878a1421b74b39a7e864da8e161783545
       L2:
         status: PASS
-        at: '2026-11-12T12:04:49Z'
-        build_key: sha256:2ef13520a13ac554d4a4996e66894154ae3d6cc296ddf5aec042c0cf19570529
+        at: '2026-11-13T00:44:43Z'
+        build_key: sha256:4744ac3271296ff597516024611f64e878a1421b74b39a7e864da8e161783545
         detail: 3 sample(s)
       L3:
         status: UNVERIFIED-access-controlled
-        at: '2026-11-12T12:04:49Z'
-        build_key: sha256:2ef13520a13ac554d4a4996e66894154ae3d6cc296ddf5aec042c0cf19570529
+        at: '2026-11-13T00:44:43Z'
+        build_key: sha256:4744ac3271296ff597516024611f64e878a1421b74b39a7e864da8e161783545
         detail: the family's sample set is access-controlled
   cxr-radiograph-2d__chexzero:
-    build_key: sha256:9d773f9218e15e71eb5e453c08fe4983a175b2d95a05d27ed46bedae8aa0e99a
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    build_key: sha256:57acf2abd7a49d10847c631386303e0dc94b52fe21762a9a0f02c6c5d578e88c
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/cxr-radiograph-2d__chexzero:dev
-    image_id: sha256:be608ee067aace59816d4f366e63f770c28d9c80705f7427fd81c7a95707fa76
-    built_at: '2026-11-12T12:04:56Z'
+    image_id: sha256:5421e889a6a32c20c173ec5cd634a2e3b169546c0f3c3323e3a62c73c5f27c32
+    built_at: '2026-11-13T00:44:51Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:04:56Z'
-        build_key: sha256:9d773f9218e15e71eb5e453c08fe4983a175b2d95a05d27ed46bedae8aa0e99a
+        at: '2026-11-13T00:44:51Z'
+        build_key: sha256:57acf2abd7a49d10847c631386303e0dc94b52fe21762a9a0f02c6c5d578e88c
       L1:
         status: PASS
-        at: '2026-11-12T12:04:56Z'
-        build_key: sha256:9d773f9218e15e71eb5e453c08fe4983a175b2d95a05d27ed46bedae8aa0e99a
+        at: '2026-11-13T00:44:51Z'
+        build_key: sha256:57acf2abd7a49d10847c631386303e0dc94b52fe21762a9a0f02c6c5d578e88c
       L2:
         status: PASS
-        at: '2026-11-12T12:04:56Z'
-        build_key: sha256:9d773f9218e15e71eb5e453c08fe4983a175b2d95a05d27ed46bedae8aa0e99a
+        at: '2026-11-13T00:44:51Z'
+        build_key: sha256:57acf2abd7a49d10847c631386303e0dc94b52fe21762a9a0f02c6c5d578e88c
         detail: 3 sample(s)
       L3:
         status: UNVERIFIED-access-controlled
-        at: '2026-11-12T12:04:56Z'
-        build_key: sha256:9d773f9218e15e71eb5e453c08fe4983a175b2d95a05d27ed46bedae8aa0e99a
+        at: '2026-11-13T00:44:51Z'
+        build_key: sha256:57acf2abd7a49d10847c631386303e0dc94b52fe21762a9a0f02c6c5d578e88c
         detail: the family's sample set is access-controlled
   cxr-radiograph-2d__torchxrayvision:
     build_key: sha256:5d493cfa457370231f8241764ab2c740a2ebf9ad64dce0a0b83b8891983e7391
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/cxr-radiograph-2d__torchxrayvision:dev
-    image_id: sha256:d88f1620fee53e58d6945b3d934992ed221c03a7f82829531990f64a6505cf21
-    built_at: '2026-11-12T12:05:01Z'
+    image_id: sha256:87e7610eee7487bee70aea1f92bc8e5a4f8c704aa36cee593f36a54d6d1ee797
+    built_at: '2026-11-13T00:44:58Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:05:01Z'
+        at: '2026-11-13T00:44:58Z'
         build_key: sha256:5d493cfa457370231f8241764ab2c740a2ebf9ad64dce0a0b83b8891983e7391
       L1:
         status: PASS
-        at: '2026-11-12T12:05:01Z'
+        at: '2026-11-13T00:44:58Z'
         build_key: sha256:5d493cfa457370231f8241764ab2c740a2ebf9ad64dce0a0b83b8891983e7391
       L2:
         status: PASS
-        at: '2026-11-12T12:05:01Z'
+        at: '2026-11-13T00:44:58Z'
         build_key: sha256:5d493cfa457370231f8241764ab2c740a2ebf9ad64dce0a0b83b8891983e7391
         detail: 4 sample(s)
       L3:
         status: UNVERIFIED-access-controlled
-        at: '2026-11-12T12:05:01Z'
+        at: '2026-11-13T00:44:58Z'
         build_key: sha256:5d493cfa457370231f8241764ab2c740a2ebf9ad64dce0a0b83b8891983e7391
         detail: the family's sample set is access-controlled
   ecg-12lead-500hz-mv__ecgfounder:
     build_key: sha256:7a36e501debc6cdbb51e653135f2564f33909be8fd6c7ccfb011ed6570c23a98
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/ecg-12lead-500hz-mv__ecgfounder:dev
-    image_id: sha256:b05e8880a8bf2e7c7a0dd2aecacaa8408731a6044fc33525892c09bec80cabac
-    built_at: '2026-11-12T12:05:05Z'
+    image_id: sha256:96e0a0a378bc1898c8770df5595650b900a6e55f1470ed367aa6c60c0c7691b2
+    built_at: '2026-11-13T00:45:03Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:05:05Z'
+        at: '2026-11-13T00:45:03Z'
         build_key: sha256:7a36e501debc6cdbb51e653135f2564f33909be8fd6c7ccfb011ed6570c23a98
       L1:
         status: PASS
-        at: '2026-11-12T12:05:05Z'
+        at: '2026-11-13T00:45:03Z'
         build_key: sha256:7a36e501debc6cdbb51e653135f2564f33909be8fd6c7ccfb011ed6570c23a98
       L2:
         status: PASS
-        at: '2026-11-12T12:05:05Z'
+        at: '2026-11-13T00:45:03Z'
         build_key: sha256:7a36e501debc6cdbb51e653135f2564f33909be8fd6c7ccfb011ed6570c23a98
         detail: 4 sample(s)
       L3:
         status: UNVERIFIED-access-controlled
-        at: '2026-11-12T12:05:05Z'
+        at: '2026-11-13T00:45:03Z'
         build_key: sha256:7a36e501debc6cdbb51e653135f2564f33909be8fd6c7ccfb011ed6570c23a98
         detail: the family's sample set is access-controlled
   ecg-1lead-200hz-uv__ecgfounder:
     build_key: sha256:f88a483482ec100cdbaa6a974e6d91dde939503d0f75a0d7912ca86c7b705b06
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/ecg-1lead-200hz-uv__ecgfounder:dev
-    image_id: sha256:b4490ebd26303f76b8eef8006ca237c0421fe7500b5dcf77ee4829e4c268868d
-    built_at: '2026-11-12T12:05:25Z'
+    image_id: sha256:35a1e3d43c1e94cbfb8638775c18d533899778728e3be87a17d4cc90a365fc06
+    built_at: '2026-11-13T00:45:30Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:05:25Z'
+        at: '2026-11-13T00:45:30Z'
         build_key: sha256:f88a483482ec100cdbaa6a974e6d91dde939503d0f75a0d7912ca86c7b705b06
       L1:
         status: PASS
-        at: '2026-11-12T12:05:25Z'
+        at: '2026-11-13T00:45:30Z'
         build_key: sha256:f88a483482ec100cdbaa6a974e6d91dde939503d0f75a0d7912ca86c7b705b06
       L2:
         status: PASS
-        at: '2026-11-12T12:05:25Z'
+        at: '2026-11-13T00:45:30Z'
         build_key: sha256:f88a483482ec100cdbaa6a974e6d91dde939503d0f75a0d7912ca86c7b705b06
         detail: 1 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:05:25Z'
+        at: '2026-11-13T00:45:30Z'
         build_key: sha256:f88a483482ec100cdbaa6a974e6d91dde939503d0f75a0d7912ca86c7b705b06
         detail: 5 sample(s), offline
   ecg-1lead-200hz-uv__neurokit2:
     build_key: sha256:aaf635e19b61c3e2439014927f3234f90651f3d8a69dc49f8bb6b8955d5574b0
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/ecg-1lead-200hz-uv__neurokit2:dev
-    image_id: sha256:4b7ba4b8eea27d669f29d7d5bd8963e391f73cddb7e03b0062d66dec86b94e21
-    built_at: '2026-11-12T12:05:40Z'
+    image_id: sha256:d56d1e7bbd9e1a09b04901a5978c075e6c516319997f702b8d2f6adf2253bea0
+    built_at: '2026-11-13T00:45:48Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:05:40Z'
+        at: '2026-11-13T00:45:48Z'
         build_key: sha256:aaf635e19b61c3e2439014927f3234f90651f3d8a69dc49f8bb6b8955d5574b0
       L1:
         status: PASS
-        at: '2026-11-12T12:05:40Z'
+        at: '2026-11-13T00:45:48Z'
         build_key: sha256:aaf635e19b61c3e2439014927f3234f90651f3d8a69dc49f8bb6b8955d5574b0
       L2:
         status: PASS
-        at: '2026-11-12T12:05:40Z'
+        at: '2026-11-13T00:45:48Z'
         build_key: sha256:aaf635e19b61c3e2439014927f3234f90651f3d8a69dc49f8bb6b8955d5574b0
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:05:40Z'
+        at: '2026-11-13T00:45:48Z'
         build_key: sha256:aaf635e19b61c3e2439014927f3234f90651f3d8a69dc49f8bb6b8955d5574b0
         detail: 5 sample(s), offline
   ecg-monitor-3to5lead-250hz-continuous__ecgfounder:
     build_key: sha256:f05b3ddee983a38ef6ac465078647d6d8aa1ca9a5ab0fa360321a8bfad352ce9
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/ecg-monitor-3to5lead-250hz-continuous__ecgfounder:dev
-    image_id: sha256:fd11956bea841db87c38464e8cec51b7e02a594500600dc13f53a60377bb98f8
-    built_at: '2026-11-12T12:06:04Z'
+    image_id: sha256:bccd354fac739dcc75f4c3c6d2e166ca138f5133251f9c3c7337e8ded221f8c6
+    built_at: '2026-11-13T00:46:16Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:06:04Z'
+        at: '2026-11-13T00:46:16Z'
         build_key: sha256:f05b3ddee983a38ef6ac465078647d6d8aa1ca9a5ab0fa360321a8bfad352ce9
       L1:
         status: PASS
-        at: '2026-11-12T12:06:04Z'
+        at: '2026-11-13T00:46:16Z'
         build_key: sha256:f05b3ddee983a38ef6ac465078647d6d8aa1ca9a5ab0fa360321a8bfad352ce9
       L2:
         status: PASS
-        at: '2026-11-12T12:06:04Z'
+        at: '2026-11-13T00:46:16Z'
         build_key: sha256:f05b3ddee983a38ef6ac465078647d6d8aa1ca9a5ab0fa360321a8bfad352ce9
         detail: 1 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:06:04Z'
+        at: '2026-11-13T00:46:16Z'
         build_key: sha256:f05b3ddee983a38ef6ac465078647d6d8aa1ca9a5ab0fa360321a8bfad352ce9
         detail: 5 sample(s), offline
   eeg-sleep-6ch-200hz-uv__yasa:
     build_key: sha256:547e6c809e65f320ba797b8dd8ac6f64496b9634c6708b92b0c56fadaeef8cd6
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/eeg-sleep-6ch-200hz-uv__yasa:dev
-    image_id: sha256:6b40cc560564b50def797e88afcc48ede985f0ad0a1e77186bd190eec5d0d0bb
-    built_at: '2026-11-12T12:06:55Z'
+    image_id: sha256:c037843bf776d92885d7f5ec2016b6eed720ed4fdb7a89983e8be73f7c496924
+    built_at: '2026-11-13T00:47:17Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:06:55Z'
+        at: '2026-11-13T00:47:17Z'
         build_key: sha256:547e6c809e65f320ba797b8dd8ac6f64496b9634c6708b92b0c56fadaeef8cd6
       L1:
         status: PASS
-        at: '2026-11-12T12:06:55Z'
+        at: '2026-11-13T00:47:17Z'
         build_key: sha256:547e6c809e65f320ba797b8dd8ac6f64496b9634c6708b92b0c56fadaeef8cd6
       L2:
         status: PASS
-        at: '2026-11-12T12:06:55Z'
+        at: '2026-11-13T00:47:17Z'
         build_key: sha256:547e6c809e65f320ba797b8dd8ac6f64496b9634c6708b92b0c56fadaeef8cd6
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:06:55Z'
+        at: '2026-11-13T00:47:17Z'
         build_key: sha256:547e6c809e65f320ba797b8dd8ac6f64496b9634c6708b92b0c56fadaeef8cd6
         detail: 5 sample(s), offline
   emg-chin-200hz-uv__rule-amplitude:
     build_key: sha256:b150ca0c9ce15fd17ebcece57147a6dfa5ab0c1cba4450ed4b52deb2b6f80284
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/emg-chin-200hz-uv__rule-amplitude:dev
-    image_id: sha256:5f609d2f1df5c19fc92cfb430b1f5e7236adcc27b132aca6de63eca6ee1dc2e4
-    built_at: '2026-11-12T12:07:01Z'
+    image_id: sha256:9a71afb3cbbb37910900ca220b487e45594850f9e4a4e2b7ad8d62fcac0944df
+    built_at: '2026-11-13T00:47:24Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:07:01Z'
+        at: '2026-11-13T00:47:24Z'
         build_key: sha256:b150ca0c9ce15fd17ebcece57147a6dfa5ab0c1cba4450ed4b52deb2b6f80284
       L1:
         status: PASS
-        at: '2026-11-12T12:07:01Z'
+        at: '2026-11-13T00:47:24Z'
         build_key: sha256:b150ca0c9ce15fd17ebcece57147a6dfa5ab0c1cba4450ed4b52deb2b6f80284
       L2:
         status: PASS
-        at: '2026-11-12T12:07:01Z'
+        at: '2026-11-13T00:47:24Z'
         build_key: sha256:b150ca0c9ce15fd17ebcece57147a6dfa5ab0c1cba4450ed4b52deb2b6f80284
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:07:01Z'
+        at: '2026-11-13T00:47:24Z'
         build_key: sha256:b150ca0c9ce15fd17ebcece57147a6dfa5ab0c1cba4450ed4b52deb2b6f80284
         detail: 5 sample(s), offline
   emg-limb-200hz-uv__rule-amplitude:
     build_key: sha256:511cd9693d74e929169cf8600e1268616f989bbc590299fbe0e09a51c51719d2
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/emg-limb-200hz-uv__rule-amplitude:dev
-    image_id: sha256:4b5e0efc3d198870fb1ab4b19eb0b365e3fe2cd7e25bdd4ebc68ff6d9ebc100e
-    built_at: '2026-11-12T12:07:07Z'
+    image_id: sha256:3806e38073cf681fa153c8d050e872c4f6049e0a861882f9eb764fff3fb44a03
+    built_at: '2026-11-13T00:47:30Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:07:07Z'
+        at: '2026-11-13T00:47:30Z'
         build_key: sha256:511cd9693d74e929169cf8600e1268616f989bbc590299fbe0e09a51c51719d2
       L1:
         status: PASS
-        at: '2026-11-12T12:07:07Z'
+        at: '2026-11-13T00:47:30Z'
         build_key: sha256:511cd9693d74e929169cf8600e1268616f989bbc590299fbe0e09a51c51719d2
       L2:
         status: PASS
-        at: '2026-11-12T12:07:07Z'
+        at: '2026-11-13T00:47:30Z'
         build_key: sha256:511cd9693d74e929169cf8600e1268616f989bbc590299fbe0e09a51c51719d2
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:07:07Z'
+        at: '2026-11-13T00:47:30Z'
         build_key: sha256:511cd9693d74e929169cf8600e1268616f989bbc590299fbe0e09a51c51719d2
         detail: 5 sample(s), offline
   eog-2ch-200hz-uv__wav2sleep-eog:
     build_key: sha256:a5c172bf1195e8dafbe8ac3730946584c1f5615e61ff7a81ae14134275effaeb
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/eog-2ch-200hz-uv__wav2sleep-eog:dev
-    image_id: sha256:430f12f81a4266c95e4a8820f5e8109a83b4816afe1ac299ea5aa3060075c00b
-    built_at: '2026-11-12T12:07:28Z'
+    image_id: sha256:e2a575b4251d492f17268df78535614e955031d04800f8f7e3726a9c98a4c941
+    built_at: '2026-11-13T00:47:54Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:07:28Z'
+        at: '2026-11-13T00:47:54Z'
         build_key: sha256:a5c172bf1195e8dafbe8ac3730946584c1f5615e61ff7a81ae14134275effaeb
       L1:
         status: PASS
-        at: '2026-11-12T12:07:28Z'
+        at: '2026-11-13T00:47:54Z'
         build_key: sha256:a5c172bf1195e8dafbe8ac3730946584c1f5615e61ff7a81ae14134275effaeb
       L2:
         status: PASS
-        at: '2026-11-12T12:07:28Z'
+        at: '2026-11-13T00:47:54Z'
         build_key: sha256:a5c172bf1195e8dafbe8ac3730946584c1f5615e61ff7a81ae14134275effaeb
         detail: 1 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:07:28Z'
+        at: '2026-11-13T00:47:54Z'
         build_key: sha256:a5c172bf1195e8dafbe8ac3730946584c1f5615e61ff7a81ae14134275effaeb
         detail: 5 sample(s), offline
   flio-tcspc-256x256x1024bin-u16__rule-photons:
     build_key: sha256:88f4d83f52921ba76f933e34ca611f12aa7ff0d51029704beb1e1f844b549823
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/flio-tcspc-256x256x1024bin-u16__rule-photons:dev
-    image_id: sha256:d8b93680db6ade0d75f5ad8b5de48193aa3a5fd76fdc059da3b9b0e841b3d69b
-    built_at: '2026-11-12T12:07:39Z'
+    image_id: sha256:bd32e36323480ac9102391b578eb5ff4a56e1a30770b24f6ac530270e4a3b36f
+    built_at: '2026-11-13T00:48:04Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:07:39Z'
+        at: '2026-11-13T00:48:04Z'
         build_key: sha256:88f4d83f52921ba76f933e34ca611f12aa7ff0d51029704beb1e1f844b549823
       L1:
         status: PASS
-        at: '2026-11-12T12:07:39Z'
+        at: '2026-11-13T00:48:04Z'
         build_key: sha256:88f4d83f52921ba76f933e34ca611f12aa7ff0d51029704beb1e1f844b549823
       L2:
         status: PASS
-        at: '2026-11-12T12:07:39Z'
+        at: '2026-11-13T00:48:04Z'
         build_key: sha256:88f4d83f52921ba76f933e34ca611f12aa7ff0d51029704beb1e1f844b549823
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:07:39Z'
+        at: '2026-11-13T00:48:04Z'
         build_key: sha256:88f4d83f52921ba76f933e34ca611f12aa7ff0d51029704beb1e1f844b549823
         detail: 5 sample(s), offline
   fundus-faf-mono8-2d__retinograd:
-    build_key: sha256:0b3305d237298b8fb683373b7787ce7b0f3561fc29478ee827c25ac0967b75b6
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    build_key: sha256:f1ace6c6b3c51725938d873812065c7f933a0bd92bf5baba8bb2e1bcf0582644
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/fundus-faf-mono8-2d__retinograd:dev
-    image_id: sha256:0283acf585610b051f9749ccb2f0ace904cac61abfa33ebde3e6e6905641f93c
-    built_at: '2026-11-12T12:08:15Z'
+    image_id: sha256:d7b087891e62e22b82664ff0a90ceacac2db9dfa66bfc077982cac3f988ec80a
+    built_at: '2026-11-13T00:48:41Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:08:15Z'
-        build_key: sha256:0b3305d237298b8fb683373b7787ce7b0f3561fc29478ee827c25ac0967b75b6
+        at: '2026-11-13T00:48:41Z'
+        build_key: sha256:f1ace6c6b3c51725938d873812065c7f933a0bd92bf5baba8bb2e1bcf0582644
       L1:
         status: PASS
-        at: '2026-11-12T12:08:15Z'
-        build_key: sha256:0b3305d237298b8fb683373b7787ce7b0f3561fc29478ee827c25ac0967b75b6
+        at: '2026-11-13T00:48:41Z'
+        build_key: sha256:f1ace6c6b3c51725938d873812065c7f933a0bd92bf5baba8bb2e1bcf0582644
       L2:
         status: PASS
-        at: '2026-11-12T12:08:15Z'
-        build_key: sha256:0b3305d237298b8fb683373b7787ce7b0f3561fc29478ee827c25ac0967b75b6
+        at: '2026-11-13T00:48:41Z'
+        build_key: sha256:f1ace6c6b3c51725938d873812065c7f933a0bd92bf5baba8bb2e1bcf0582644
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:08:15Z'
-        build_key: sha256:0b3305d237298b8fb683373b7787ce7b0f3561fc29478ee827c25ac0967b75b6
+        at: '2026-11-13T00:48:41Z'
+        build_key: sha256:f1ace6c6b3c51725938d873812065c7f933a0bd92bf5baba8bb2e1bcf0582644
         detail: 5 sample(s), offline
   fundus-faf-mono8-2d__rule-intensity:
     build_key: sha256:8c717e8a701625550dc0acd664c2972ea4dc15f2a33632358b48e2d2e9d4deee
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/fundus-faf-mono8-2d__rule-intensity:dev
-    image_id: sha256:bc31adde82b454cd94118066adabd3bda22b53781ea35c3436512cbd94e7809a
-    built_at: '2026-11-12T12:08:26Z'
+    image_id: sha256:7e6cc1d2a38a7c5ba2ac63428df6c3b2119f77d0e60be761fa7de8950a3b25e4
+    built_at: '2026-11-13T00:48:52Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:08:26Z'
+        at: '2026-11-13T00:48:52Z'
         build_key: sha256:8c717e8a701625550dc0acd664c2972ea4dc15f2a33632358b48e2d2e9d4deee
       L1:
         status: PASS
-        at: '2026-11-12T12:08:26Z'
+        at: '2026-11-13T00:48:52Z'
         build_key: sha256:8c717e8a701625550dc0acd664c2972ea4dc15f2a33632358b48e2d2e9d4deee
       L2:
         status: PASS
-        at: '2026-11-12T12:08:26Z'
+        at: '2026-11-13T00:48:52Z'
         build_key: sha256:8c717e8a701625550dc0acd664c2972ea4dc15f2a33632358b48e2d2e9d4deee
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:08:26Z'
+        at: '2026-11-13T00:48:52Z'
         build_key: sha256:8c717e8a701625550dc0acd664c2972ea4dc15f2a33632358b48e2d2e9d4deee
         detail: 5 sample(s), offline
   fundus-photography-2d__dr-grade:
-    build_key: sha256:c6c98b96b7787eb4acc31b081c3540a99598fbc9aee957dca2b39a5020701111
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    build_key: sha256:d44c2d0cbb0d060c484e15f6c64d74b271e626ce229e238ec39739b530692d81
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/fundus-photography-2d__dr-grade:dev
-    image_id: sha256:b6d5a9340c7fabe73e3dd80196d8a0de52af42cb610ca5053989ae843aa8fb3b
-    built_at: '2026-11-12T12:08:55Z'
+    image_id: sha256:7156a31d7fa195deddbe3d2da1888f32b8d583ae3eec69e66c3d2dd066621510
+    built_at: '2026-11-13T00:49:19Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:08:55Z'
-        build_key: sha256:c6c98b96b7787eb4acc31b081c3540a99598fbc9aee957dca2b39a5020701111
+        at: '2026-11-13T00:49:19Z'
+        build_key: sha256:d44c2d0cbb0d060c484e15f6c64d74b271e626ce229e238ec39739b530692d81
       L1:
         status: PASS
-        at: '2026-11-12T12:08:55Z'
-        build_key: sha256:c6c98b96b7787eb4acc31b081c3540a99598fbc9aee957dca2b39a5020701111
+        at: '2026-11-13T00:49:19Z'
+        build_key: sha256:d44c2d0cbb0d060c484e15f6c64d74b271e626ce229e238ec39739b530692d81
       L2:
         status: PASS
-        at: '2026-11-12T12:08:55Z'
-        build_key: sha256:c6c98b96b7787eb4acc31b081c3540a99598fbc9aee957dca2b39a5020701111
+        at: '2026-11-13T00:49:19Z'
+        build_key: sha256:d44c2d0cbb0d060c484e15f6c64d74b271e626ce229e238ec39739b530692d81
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:08:55Z'
-        build_key: sha256:c6c98b96b7787eb4acc31b081c3540a99598fbc9aee957dca2b39a5020701111
+        at: '2026-11-13T00:49:19Z'
+        build_key: sha256:d44c2d0cbb0d060c484e15f6c64d74b271e626ce229e238ec39739b530692d81
         detail: 5 sample(s), offline
   fundus-photography-2d__flair:
     build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
@@ -594,77 +594,77 @@ encoders:
         detail: 5 sample(s)
   fundus-photography-2d__retfound:
     build_key: sha256:f6ff7dd3837c740058af9d49e322cb1aebdf681075fc74f14e2bd534b1b5839a
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/fundus-photography-2d__retfound:dev
-    image_id: sha256:a7ea92d4538b137564f5312b4f984a9c8babe68780096224d75e945776120ae7
-    built_at: '2026-11-12T12:10:05Z'
+    image_id: sha256:8a31edadecaa871737d19a47f7f9b8b41a7cb65102709ffa677dd8aa578fc3de
+    built_at: '2026-11-13T00:50:32Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:10:05Z'
+        at: '2026-11-13T00:50:32Z'
         build_key: sha256:f6ff7dd3837c740058af9d49e322cb1aebdf681075fc74f14e2bd534b1b5839a
       L1:
         status: PASS
-        at: '2026-11-12T12:10:05Z'
+        at: '2026-11-13T00:50:32Z'
         build_key: sha256:f6ff7dd3837c740058af9d49e322cb1aebdf681075fc74f14e2bd534b1b5839a
       L2:
         status: PASS
-        at: '2026-11-12T12:10:05Z'
+        at: '2026-11-13T00:50:32Z'
         build_key: sha256:f6ff7dd3837c740058af9d49e322cb1aebdf681075fc74f14e2bd534b1b5839a
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:10:05Z'
+        at: '2026-11-13T00:50:32Z'
         build_key: sha256:f6ff7dd3837c740058af9d49e322cb1aebdf681075fc74f14e2bd534b1b5839a
         detail: 5 sample(s), offline
   fundus-photography-2d__retfound-dr:
     build_key: sha256:6a3d1c50346213a983ef0c7c8c574786d358f36e42bb30bc3f55d12324ba96de
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/fundus-photography-2d__retfound-dr:dev
-    image_id: sha256:1852da22208a5f6160afe26fad779492a5b88325045da98dfbe25ed631e6328f
-    built_at: '2026-11-12T12:10:54Z'
+    image_id: sha256:9f806a3f2bc9c560a7fed8a1fae051fb6275b22fc5780323c9ec062af3267756
+    built_at: '2026-11-13T00:51:24Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:10:54Z'
+        at: '2026-11-13T00:51:24Z'
         build_key: sha256:6a3d1c50346213a983ef0c7c8c574786d358f36e42bb30bc3f55d12324ba96de
       L1:
         status: PASS
-        at: '2026-11-12T12:10:54Z'
+        at: '2026-11-13T00:51:24Z'
         build_key: sha256:6a3d1c50346213a983ef0c7c8c574786d358f36e42bb30bc3f55d12324ba96de
       L2:
         status: PASS
-        at: '2026-11-12T12:10:54Z'
+        at: '2026-11-13T00:51:24Z'
         build_key: sha256:6a3d1c50346213a983ef0c7c8c574786d358f36e42bb30bc3f55d12324ba96de
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:10:54Z'
+        at: '2026-11-13T00:51:24Z'
         build_key: sha256:6a3d1c50346213a983ef0c7c8c574786d358f36e42bb30bc3f55d12324ba96de
         detail: 5 sample(s), offline
   fundus-photography-2d__retfound-jsiec:
     build_key: sha256:34bbbd4f70d0dc747e417f4806a380d73b2c0e98ec50eb694887a07d6001dc7b
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/fundus-photography-2d__retfound-jsiec:dev
-    image_id: sha256:2f6d7dcd6c1aaf08d1d594d98bd397a6344573bb62be4d27f85bb2cf6f023c7b
-    built_at: '2026-11-12T12:11:44Z'
+    image_id: sha256:b2e412c68073212954b434f144eb8329d93c04bae74672f1880d57fcac4caf75
+    built_at: '2026-11-13T00:52:15Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:11:44Z'
+        at: '2026-11-13T00:52:15Z'
         build_key: sha256:34bbbd4f70d0dc747e417f4806a380d73b2c0e98ec50eb694887a07d6001dc7b
       L1:
         status: PASS
-        at: '2026-11-12T12:11:44Z'
+        at: '2026-11-13T00:52:15Z'
         build_key: sha256:34bbbd4f70d0dc747e417f4806a380d73b2c0e98ec50eb694887a07d6001dc7b
       L2:
         status: PASS
-        at: '2026-11-12T12:11:44Z'
+        at: '2026-11-13T00:52:15Z'
         build_key: sha256:34bbbd4f70d0dc747e417f4806a380d73b2c0e98ec50eb694887a07d6001dc7b
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:11:44Z'
+        at: '2026-11-13T00:52:15Z'
         build_key: sha256:34bbbd4f70d0dc747e417f4806a380d73b2c0e98ec50eb694887a07d6001dc7b
         detail: 5 sample(s), offline
   numeric-observation__vitalscore:
@@ -699,552 +699,552 @@ encoders:
           family sample did not produce healthy output; sample-04.csv: card declares 1 output block(s), got 0; sample-05.csv: r'
   oct-bscanset-radial24-circle3-mono8__mirage-onh:
     build_key: sha256:59b9d174bd8e490a9763ad5e5a5d6f4fe5e0f244a9f8e06ebbc9c60bac8d3cdc
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/oct-bscanset-radial24-circle3-mono8__mirage-onh:dev
-    image_id: sha256:89fa77f8d55d2f2bec8439723dd18ac2a8f8294883650085d27182513ce7323f
-    built_at: '2026-11-12T12:14:39Z'
+    image_id: sha256:58d210ab7b3238d62f2bfb32fc2ddb5ff3c8baa5b10e673520277097833aaa37
+    built_at: '2026-11-13T00:55:09Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:14:39Z'
+        at: '2026-11-13T00:55:09Z'
         build_key: sha256:59b9d174bd8e490a9763ad5e5a5d6f4fe5e0f244a9f8e06ebbc9c60bac8d3cdc
       L1:
         status: PASS
-        at: '2026-11-12T12:14:39Z'
+        at: '2026-11-13T00:55:09Z'
         build_key: sha256:59b9d174bd8e490a9763ad5e5a5d6f4fe5e0f244a9f8e06ebbc9c60bac8d3cdc
       L2:
         status: PASS
-        at: '2026-11-12T12:14:39Z'
+        at: '2026-11-13T00:55:09Z'
         build_key: sha256:59b9d174bd8e490a9763ad5e5a5d6f4fe5e0f244a9f8e06ebbc9c60bac8d3cdc
         detail: 4 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:14:39Z'
+        at: '2026-11-13T00:55:09Z'
         build_key: sha256:59b9d174bd8e490a9763ad5e5a5d6f4fe5e0f244a9f8e06ebbc9c60bac8d3cdc
         detail: 5 sample(s), offline
   oct-bscanset-radial24-circle3-mono8__rule-intensity:
     build_key: sha256:a31c5a45bc733e7d702cd061535fa154ccdf900bdcb86c01a6e146fc8ef7960e
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/oct-bscanset-radial24-circle3-mono8__rule-intensity:dev
-    image_id: sha256:2349f8dc6cd2fb7b22860d4917a3309b52eed29698291c83f27fea124b1011cc
-    built_at: '2026-11-12T12:14:46Z'
+    image_id: sha256:8244f9cc504519747322d2a2dc823b435b0e53646cfa0de528c06b5e1072b968
+    built_at: '2026-11-13T00:55:15Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:14:46Z'
+        at: '2026-11-13T00:55:15Z'
         build_key: sha256:a31c5a45bc733e7d702cd061535fa154ccdf900bdcb86c01a6e146fc8ef7960e
       L1:
         status: PASS
-        at: '2026-11-12T12:14:46Z'
+        at: '2026-11-13T00:55:15Z'
         build_key: sha256:a31c5a45bc733e7d702cd061535fa154ccdf900bdcb86c01a6e146fc8ef7960e
       L2:
         status: PASS
-        at: '2026-11-12T12:14:46Z'
+        at: '2026-11-13T00:55:15Z'
         build_key: sha256:a31c5a45bc733e7d702cd061535fa154ccdf900bdcb86c01a6e146fc8ef7960e
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:14:46Z'
+        at: '2026-11-13T00:55:15Z'
         build_key: sha256:a31c5a45bc733e7d702cd061535fa154ccdf900bdcb86c01a6e146fc8ef7960e
         detail: 5 sample(s), offline
   oct-volume-raster-mono8-3d__kdoct:
     build_key: sha256:4530ef45b9687436c331768da6b7598c75b94c1518e7da4561db7fef2c086023
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/oct-volume-raster-mono8-3d__kdoct:dev
-    image_id: sha256:f6e23360b225c41970a4b86f588ea8d98c3b7deae352bcd3c7afa9f866ae62d1
-    built_at: '2026-11-12T12:16:11Z'
+    image_id: sha256:02853ab7977f6f4e12f8fe22ceb0810cece97c43b6f434e498377dbf0371ba47
+    built_at: '2026-11-13T00:57:29Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:16:11Z'
+        at: '2026-11-13T00:57:29Z'
         build_key: sha256:4530ef45b9687436c331768da6b7598c75b94c1518e7da4561db7fef2c086023
       L1:
         status: PASS
-        at: '2026-11-12T12:16:11Z'
+        at: '2026-11-13T00:57:29Z'
         build_key: sha256:4530ef45b9687436c331768da6b7598c75b94c1518e7da4561db7fef2c086023
       L2:
         status: PASS
-        at: '2026-11-12T12:16:11Z'
+        at: '2026-11-13T00:57:29Z'
         build_key: sha256:4530ef45b9687436c331768da6b7598c75b94c1518e7da4561db7fef2c086023
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:16:11Z'
+        at: '2026-11-13T00:57:29Z'
         build_key: sha256:4530ef45b9687436c331768da6b7598c75b94c1518e7da4561db7fef2c086023
         detail: 5 sample(s), offline
   oct-volume-raster-mono8-3d__mirage:
     build_key: sha256:253bd4fe2143d47973e75d463cd20909c6bae63b424cf98093e520fc0d778dec
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/oct-volume-raster-mono8-3d__mirage:dev
-    image_id: sha256:13e13de8164c799c40a6000faf26f667689bd92c3d063a3eda3f1d5428e33242
-    built_at: '2026-11-12T12:17:39Z'
+    image_id: sha256:5e0a787357e578859f85276f4cdba9c6f57ae6c519d02966a988b5784ff200eb
+    built_at: '2026-11-13T01:00:03Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:17:39Z'
+        at: '2026-11-13T01:00:03Z'
         build_key: sha256:253bd4fe2143d47973e75d463cd20909c6bae63b424cf98093e520fc0d778dec
       L1:
         status: PASS
-        at: '2026-11-12T12:17:39Z'
+        at: '2026-11-13T01:00:03Z'
         build_key: sha256:253bd4fe2143d47973e75d463cd20909c6bae63b424cf98093e520fc0d778dec
       L2:
         status: PASS
-        at: '2026-11-12T12:17:39Z'
+        at: '2026-11-13T01:00:03Z'
         build_key: sha256:253bd4fe2143d47973e75d463cd20909c6bae63b424cf98093e520fc0d778dec
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:17:39Z'
+        at: '2026-11-13T01:00:03Z'
         build_key: sha256:253bd4fe2143d47973e75d463cd20909c6bae63b424cf98093e520fc0d778dec
         detail: 5 sample(s), offline
   oct-volume-raster-mono8-3d__rule-intensity:
     build_key: sha256:54b13cfa4f958e05377305ec781eb89ce0f5e215c209d5a276010d34766fcb05
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/oct-volume-raster-mono8-3d__rule-intensity:dev
-    image_id: sha256:af674edd38c0bd46468c86d93fbfceece40f3d5d0ebcf43edd5cecab878a0c33
-    built_at: '2026-11-12T12:17:59Z'
+    image_id: sha256:bbf4e6166bc3bb1442cae5ea8d7a72f478b885e40f18646a9d5b83ed11c5e126
+    built_at: '2026-11-13T01:00:23Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:17:59Z'
+        at: '2026-11-13T01:00:23Z'
         build_key: sha256:54b13cfa4f958e05377305ec781eb89ce0f5e215c209d5a276010d34766fcb05
       L1:
         status: PASS
-        at: '2026-11-12T12:17:59Z'
+        at: '2026-11-13T01:00:23Z'
         build_key: sha256:54b13cfa4f958e05377305ec781eb89ce0f5e215c209d5a276010d34766fcb05
       L2:
         status: PASS
-        at: '2026-11-12T12:17:59Z'
+        at: '2026-11-13T01:00:23Z'
         build_key: sha256:54b13cfa4f958e05377305ec781eb89ce0f5e215c209d5a276010d34766fcb05
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:17:59Z'
+        at: '2026-11-13T01:00:23Z'
         build_key: sha256:54b13cfa4f958e05377305ec781eb89ce0f5e215c209d5a276010d34766fcb05
         detail: 5 sample(s), offline
   octa-enface-slab-mono8-2d__rule-intensity:
     build_key: sha256:8cfc86cfc7be6f609d89c61a7f46076eafca3bddd05fd69a70782e49c5092873
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/octa-enface-slab-mono8-2d__rule-intensity:dev
-    image_id: sha256:9dd33bcec0a1a3feb4252e57f8bd52393901223b3f3921f7a3aaf730813d5f5b
-    built_at: '2026-11-12T12:11:51Z'
+    image_id: sha256:df5d171c2c0be0a6f2cf34aceb8f9c9cd2886b056efa4b23245fe8bee0cb90c7
+    built_at: '2026-11-13T00:52:22Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:11:51Z'
+        at: '2026-11-13T00:52:22Z'
         build_key: sha256:8cfc86cfc7be6f609d89c61a7f46076eafca3bddd05fd69a70782e49c5092873
       L1:
         status: PASS
-        at: '2026-11-12T12:11:51Z'
+        at: '2026-11-13T00:52:22Z'
         build_key: sha256:8cfc86cfc7be6f609d89c61a7f46076eafca3bddd05fd69a70782e49c5092873
       L2:
         status: PASS
-        at: '2026-11-12T12:11:51Z'
+        at: '2026-11-13T00:52:22Z'
         build_key: sha256:8cfc86cfc7be6f609d89c61a7f46076eafca3bddd05fd69a70782e49c5092873
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:11:51Z'
+        at: '2026-11-13T00:52:22Z'
         build_key: sha256:8cfc86cfc7be6f609d89c61a7f46076eafca3bddd05fd69a70782e49c5092873
         detail: 5 sample(s), offline
   octa-enface-slab-mono8-2d__vessel-density:
     build_key: sha256:cad02079f849a829727e59d38046a5142f93d33aa54d31eb414b02aaf53bc5a0
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/octa-enface-slab-mono8-2d__vessel-density:dev
-    image_id: sha256:72c75633d942fc06e7726bc7e7f2fc9ae6bcb68165d25564fd73d153ce27ed58
-    built_at: '2026-11-12T12:11:59Z'
+    image_id: sha256:da88a36cf59262780c61e6ce5b643503a0a051363d4b1592431c2a5287b1b801
+    built_at: '2026-11-13T00:52:30Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:11:59Z'
+        at: '2026-11-13T00:52:30Z'
         build_key: sha256:cad02079f849a829727e59d38046a5142f93d33aa54d31eb414b02aaf53bc5a0
       L1:
         status: PASS
-        at: '2026-11-12T12:11:59Z'
+        at: '2026-11-13T00:52:30Z'
         build_key: sha256:cad02079f849a829727e59d38046a5142f93d33aa54d31eb414b02aaf53bc5a0
       L2:
         status: PASS
-        at: '2026-11-12T12:11:59Z'
+        at: '2026-11-13T00:52:30Z'
         build_key: sha256:cad02079f849a829727e59d38046a5142f93d33aa54d31eb414b02aaf53bc5a0
         detail: 4 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:11:59Z'
+        at: '2026-11-13T00:52:30Z'
         build_key: sha256:cad02079f849a829727e59d38046a5142f93d33aa54d31eb414b02aaf53bc5a0
         detail: 5 sample(s), offline
   octa-flowcube-mono8-3d__flow-metrics:
     build_key: sha256:f8d646847372b6835b5e27a2616c7be8286e93e32b643c5d2c87c9e96e09a944
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/octa-flowcube-mono8-3d__flow-metrics:dev
-    image_id: sha256:a5d0fdd429fa12520c793e75f73311c46abc68e34ae9bd2e750b233b5db9af6b
-    built_at: '2026-11-12T12:13:09Z'
+    image_id: sha256:01f671c7f48a015e9c785383bb0fc72577f54768400850dc1fd619cb08a1bf23
+    built_at: '2026-11-13T00:53:40Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:13:09Z'
+        at: '2026-11-13T00:53:40Z'
         build_key: sha256:f8d646847372b6835b5e27a2616c7be8286e93e32b643c5d2c87c9e96e09a944
       L1:
         status: PASS
-        at: '2026-11-12T12:13:09Z'
+        at: '2026-11-13T00:53:40Z'
         build_key: sha256:f8d646847372b6835b5e27a2616c7be8286e93e32b643c5d2c87c9e96e09a944
       L2:
         status: PASS
-        at: '2026-11-12T12:13:09Z'
+        at: '2026-11-13T00:53:40Z'
         build_key: sha256:f8d646847372b6835b5e27a2616c7be8286e93e32b643c5d2c87c9e96e09a944
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:13:09Z'
+        at: '2026-11-13T00:53:40Z'
         build_key: sha256:f8d646847372b6835b5e27a2616c7be8286e93e32b643c5d2c87c9e96e09a944
         detail: 5 sample(s), offline
   octa-flowcube-mono8-3d__rule-intensity:
     build_key: sha256:d0ee80a57cb025ba11e85ae111af9967537b7d2f55df8e8b60aeec57fc08bb9c
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/octa-flowcube-mono8-3d__rule-intensity:dev
-    image_id: sha256:656edef7743a0430df4ae5515bc4309eb3fdfb385bac6193970a72eba1ae469f
-    built_at: '2026-11-12T12:14:02Z'
+    image_id: sha256:84122fc187fd451fc325b5cacffd0a09ba0c0ebea40556dd267c3e0bc5513587
+    built_at: '2026-11-13T00:54:33Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:14:02Z'
+        at: '2026-11-13T00:54:33Z'
         build_key: sha256:d0ee80a57cb025ba11e85ae111af9967537b7d2f55df8e8b60aeec57fc08bb9c
       L1:
         status: PASS
-        at: '2026-11-12T12:14:02Z'
+        at: '2026-11-13T00:54:33Z'
         build_key: sha256:d0ee80a57cb025ba11e85ae111af9967537b7d2f55df8e8b60aeec57fc08bb9c
       L2:
         status: PASS
-        at: '2026-11-12T12:14:02Z'
+        at: '2026-11-13T00:54:33Z'
         build_key: sha256:d0ee80a57cb025ba11e85ae111af9967537b7d2f55df8e8b60aeec57fc08bb9c
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:14:02Z'
+        at: '2026-11-13T00:54:33Z'
         build_key: sha256:d0ee80a57cb025ba11e85ae111af9967537b7d2f55df8e8b60aeec57fc08bb9c
         detail: 5 sample(s), offline
   ppg-waveform-uncal__bayesbeat:
-    build_key: sha256:5394c40c5eeb49f22a5d671e47f0be02bcd2d5da964d6e015bbcd0801dcc885f
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    build_key: sha256:2ec3db61e899021198e105e5cd7ced94c54ed8fbc55fa347a187aa1c8a324835
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/ppg-waveform-uncal__bayesbeat:dev
-    image_id: sha256:3436d3fdaaba764234e4be6a2d6f2a280a4e36327d15293ddeb976f3ef821162
-    built_at: '2026-11-12T12:18:18Z'
+    image_id: sha256:d1a2857de74bc1d975d64dd9568e27f1b0f8e845e045aaeefc04cf9f8d092df1
+    built_at: '2026-11-13T01:00:42Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:18:18Z'
-        build_key: sha256:5394c40c5eeb49f22a5d671e47f0be02bcd2d5da964d6e015bbcd0801dcc885f
+        at: '2026-11-13T01:00:42Z'
+        build_key: sha256:2ec3db61e899021198e105e5cd7ced94c54ed8fbc55fa347a187aa1c8a324835
       L1:
         status: PASS
-        at: '2026-11-12T12:18:18Z'
-        build_key: sha256:5394c40c5eeb49f22a5d671e47f0be02bcd2d5da964d6e015bbcd0801dcc885f
+        at: '2026-11-13T01:00:42Z'
+        build_key: sha256:2ec3db61e899021198e105e5cd7ced94c54ed8fbc55fa347a187aa1c8a324835
       L2:
         status: PASS
-        at: '2026-11-12T12:18:18Z'
-        build_key: sha256:5394c40c5eeb49f22a5d671e47f0be02bcd2d5da964d6e015bbcd0801dcc885f
+        at: '2026-11-13T01:00:42Z'
+        build_key: sha256:2ec3db61e899021198e105e5cd7ced94c54ed8fbc55fa347a187aa1c8a324835
         detail: 1 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:18:18Z'
-        build_key: sha256:5394c40c5eeb49f22a5d671e47f0be02bcd2d5da964d6e015bbcd0801dcc885f
+        at: '2026-11-13T01:00:42Z'
+        build_key: sha256:2ec3db61e899021198e105e5cd7ced94c54ed8fbc55fa347a187aa1c8a324835
         detail: 4 sample(s), offline
   ppg-waveform-uncal__neurokit2:
     build_key: sha256:a9a207fb0bb09d473535b0c01d98ec5ebd5f7124c808d5cb52be5baa42bc55d5
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/ppg-waveform-uncal__neurokit2:dev
-    image_id: sha256:96eba8b98c063caea14975a641543e5f5f83ca1204999e254a49db6be787ceb1
-    built_at: '2026-11-12T12:18:32Z'
+    image_id: sha256:462b6eece7ca3a0ba80c7c35ae4e09ad7f3eb6628c59dd13c36b9cddfe738942
+    built_at: '2026-11-13T01:00:58Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:18:32Z'
+        at: '2026-11-13T01:00:58Z'
         build_key: sha256:a9a207fb0bb09d473535b0c01d98ec5ebd5f7124c808d5cb52be5baa42bc55d5
       L1:
         status: PASS
-        at: '2026-11-12T12:18:32Z'
+        at: '2026-11-13T01:00:58Z'
         build_key: sha256:a9a207fb0bb09d473535b0c01d98ec5ebd5f7124c808d5cb52be5baa42bc55d5
       L2:
         status: PASS
-        at: '2026-11-12T12:18:32Z'
+        at: '2026-11-13T01:00:58Z'
         build_key: sha256:a9a207fb0bb09d473535b0c01d98ec5ebd5f7124c808d5cb52be5baa42bc55d5
         detail: 3 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:18:32Z'
+        at: '2026-11-13T01:00:58Z'
         build_key: sha256:a9a207fb0bb09d473535b0c01d98ec5ebd5f7124c808d5cb52be5baa42bc55d5
         detail: 4 sample(s), offline
   pressure-nonarterial-125hz-mmhg__rule-summary:
     build_key: sha256:128d8899949e3b829dd0dd6288b7dced512db129da2cdb8a7033171d10d1459c
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/pressure-nonarterial-125hz-mmhg__rule-summary:dev
-    image_id: sha256:f9248e08c79b732d65b4678a59875d5fd3ec94d21b4f4eacf61a17aff8a1e639
-    built_at: '2026-11-12T12:18:41Z'
+    image_id: sha256:bfe1b52d76a68db6f51349fffd04e3b53cac5aefe939e2e4c399b5f1c3dc5c59
+    built_at: '2026-11-13T01:01:07Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:18:41Z'
+        at: '2026-11-13T01:01:07Z'
         build_key: sha256:128d8899949e3b829dd0dd6288b7dced512db129da2cdb8a7033171d10d1459c
       L1:
         status: PASS
-        at: '2026-11-12T12:18:41Z'
+        at: '2026-11-13T01:01:07Z'
         build_key: sha256:128d8899949e3b829dd0dd6288b7dced512db129da2cdb8a7033171d10d1459c
       L2:
         status: PASS
-        at: '2026-11-12T12:18:41Z'
+        at: '2026-11-13T01:01:07Z'
         build_key: sha256:128d8899949e3b829dd0dd6288b7dced512db129da2cdb8a7033171d10d1459c
         detail: 4 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:18:41Z'
+        at: '2026-11-13T01:01:07Z'
         build_key: sha256:128d8899949e3b829dd0dd6288b7dced512db129da2cdb8a7033171d10d1459c
         detail: 5 sample(s), offline
   psg-cardiorespiratory-4ch-200hz-mixed__wav2sleep:
     build_key: sha256:cc4fe07b576f1fde699909709747ee2263b1417c2f99d99ca33ef4474b27cbeb
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/psg-cardiorespiratory-4ch-200hz-mixed__wav2sleep:dev
-    image_id: sha256:b019b713887d89b1fe2e838af03fc01ea5b6b0f25053777cabdd29b7c59bad44
-    built_at: '2026-11-12T12:19:02Z'
+    image_id: sha256:0aabbbfb2fd6ca5cd90826f6f7366986793aea961278d7e0f699719b1fd45ec4
+    built_at: '2026-11-13T01:01:31Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:02Z'
+        at: '2026-11-13T01:01:31Z'
         build_key: sha256:cc4fe07b576f1fde699909709747ee2263b1417c2f99d99ca33ef4474b27cbeb
       L1:
         status: PASS
-        at: '2026-11-12T12:19:02Z'
+        at: '2026-11-13T01:01:31Z'
         build_key: sha256:cc4fe07b576f1fde699909709747ee2263b1417c2f99d99ca33ef4474b27cbeb
       L2:
         status: PASS
-        at: '2026-11-12T12:19:02Z'
+        at: '2026-11-13T01:01:31Z'
         build_key: sha256:cc4fe07b576f1fde699909709747ee2263b1417c2f99d99ca33ef4474b27cbeb
         detail: 1 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:02Z'
+        at: '2026-11-13T01:01:31Z'
         build_key: sha256:cc4fe07b576f1fde699909709747ee2263b1417c2f99d99ca33ef4474b27cbeb
         detail: 5 sample(s), offline
   pulse-rate-10hz-bpm__rule-summary:
     build_key: sha256:ad3ae80a44ef42a93def836352272caf6154e4c1e30409d12945daa1dc3ee607
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/pulse-rate-10hz-bpm__rule-summary:dev
-    image_id: sha256:4026d4fa411ff476204998fc8e4d12482a39f24a1d57210f3e21b6db638512ff
-    built_at: '2026-11-12T12:19:08Z'
+    image_id: sha256:9c827cbf9ba51b57c3e3d0fc74d03e149704cb68f63bbc4c1d888855f256d01c
+    built_at: '2026-11-13T01:01:38Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:08Z'
+        at: '2026-11-13T01:01:38Z'
         build_key: sha256:ad3ae80a44ef42a93def836352272caf6154e4c1e30409d12945daa1dc3ee607
       L1:
         status: PASS
-        at: '2026-11-12T12:19:08Z'
+        at: '2026-11-13T01:01:38Z'
         build_key: sha256:ad3ae80a44ef42a93def836352272caf6154e4c1e30409d12945daa1dc3ee607
       L2:
         status: PASS
-        at: '2026-11-12T12:19:08Z'
+        at: '2026-11-13T01:01:38Z'
         build_key: sha256:ad3ae80a44ef42a93def836352272caf6154e4c1e30409d12945daa1dc3ee607
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:08Z'
+        at: '2026-11-13T01:01:38Z'
         build_key: sha256:ad3ae80a44ef42a93def836352272caf6154e4c1e30409d12945daa1dc3ee607
         detail: 5 sample(s), offline
   resp-effort-rip-2ch-50hz__neurokit2:
     build_key: sha256:6e7a4d37016f7227755820cf394d371bc61ee40aa06a5d0ab19e6b6aa0a0d31e
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/resp-effort-rip-2ch-50hz__neurokit2:dev
-    image_id: sha256:ebdf7d66964d0ebbfefd3c9a6d2f45dfd25782d285be2467c1a7a022bd665e97
-    built_at: '2026-11-12T12:19:22Z'
+    image_id: sha256:1a931ee7733ea9ff1a1bb9455ce8f0166828bc573e7c6a100fb043a7f0ebae38
+    built_at: '2026-11-13T01:01:55Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:22Z'
+        at: '2026-11-13T01:01:55Z'
         build_key: sha256:6e7a4d37016f7227755820cf394d371bc61ee40aa06a5d0ab19e6b6aa0a0d31e
       L1:
         status: PASS
-        at: '2026-11-12T12:19:22Z'
+        at: '2026-11-13T01:01:55Z'
         build_key: sha256:6e7a4d37016f7227755820cf394d371bc61ee40aa06a5d0ab19e6b6aa0a0d31e
       L2:
         status: PASS
-        at: '2026-11-12T12:19:22Z'
+        at: '2026-11-13T01:01:55Z'
         build_key: sha256:6e7a4d37016f7227755820cf394d371bc61ee40aa06a5d0ab19e6b6aa0a0d31e
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:22Z'
+        at: '2026-11-13T01:01:55Z'
         build_key: sha256:6e7a4d37016f7227755820cf394d371bc61ee40aa06a5d0ab19e6b6aa0a0d31e
         detail: 5 sample(s), offline
   resp-flow__rule-amplitude:
     build_key: sha256:00f977085c8310c094578d4f4aed808a8c6ec9cd66b01dcffcfebfe8e6d3992a
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/resp-flow__rule-amplitude:dev
-    image_id: sha256:66099b0e5441a7872253c646e6d841771a26928dce798b745434c805cd3a239e
-    built_at: '2026-11-12T12:19:28Z'
+    image_id: sha256:dff5d693cdef4e9a62d09a249cab93254f7434efb8aaebb07a49f6b3b1206e34
+    built_at: '2026-11-13T01:02:01Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:28Z'
+        at: '2026-11-13T01:02:01Z'
         build_key: sha256:00f977085c8310c094578d4f4aed808a8c6ec9cd66b01dcffcfebfe8e6d3992a
       L1:
         status: PASS
-        at: '2026-11-12T12:19:28Z'
+        at: '2026-11-13T01:02:01Z'
         build_key: sha256:00f977085c8310c094578d4f4aed808a8c6ec9cd66b01dcffcfebfe8e6d3992a
       L2:
         status: PASS
-        at: '2026-11-12T12:19:28Z'
+        at: '2026-11-13T01:02:01Z'
         build_key: sha256:00f977085c8310c094578d4f4aed808a8c6ec9cd66b01dcffcfebfe8e6d3992a
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:28Z'
+        at: '2026-11-13T01:02:01Z'
         build_key: sha256:00f977085c8310c094578d4f4aed808a8c6ec9cd66b01dcffcfebfe8e6d3992a
         detail: 5 sample(s), offline
   resp-impedance-62hz-ohm__rule-amplitude:
     build_key: sha256:ccdb644bdefad81f36cb2fe2e6a2ccf1a2e09a1494402f5beb8a59a346fa4ede
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/resp-impedance-62hz-ohm__rule-amplitude:dev
-    image_id: sha256:bcb67e86f56bb4db6f384df9b6cd29a07f5af56c616617cb66562bd8c9347e46
-    built_at: '2026-11-12T12:19:36Z'
+    image_id: sha256:9a680fa2b4cb0e71d2aab8e0acb0ef004a9c88ba6383ebe11f8909b3617031db
+    built_at: '2026-11-13T01:02:10Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:36Z'
+        at: '2026-11-13T01:02:10Z'
         build_key: sha256:ccdb644bdefad81f36cb2fe2e6a2ccf1a2e09a1494402f5beb8a59a346fa4ede
       L1:
         status: PASS
-        at: '2026-11-12T12:19:36Z'
+        at: '2026-11-13T01:02:10Z'
         build_key: sha256:ccdb644bdefad81f36cb2fe2e6a2ccf1a2e09a1494402f5beb8a59a346fa4ede
       L2:
         status: PASS
-        at: '2026-11-12T12:19:36Z'
+        at: '2026-11-13T01:02:10Z'
         build_key: sha256:ccdb644bdefad81f36cb2fe2e6a2ccf1a2e09a1494402f5beb8a59a346fa4ede
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:36Z'
+        at: '2026-11-13T01:02:10Z'
         build_key: sha256:ccdb644bdefad81f36cb2fe2e6a2ccf1a2e09a1494402f5beb8a59a346fa4ede
         detail: 5 sample(s), offline
   retinal-heightmap-surfaces-f32__layer-thickness:
     build_key: sha256:eb2660a3a80a14cf49a6727a52af56fc11cc5a82ce57b6d32354b4ad048ce9b9
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/retinal-heightmap-surfaces-f32__layer-thickness:dev
-    image_id: sha256:8d32732d65841236fa79ba3139f917dfaf49034181a435e88a648f4ee893ba3b
-    built_at: '2026-11-12T12:19:43Z'
+    image_id: sha256:d48e433fbbf503d01a007661385c157146458e56e8b699518659337367e9ea34
+    built_at: '2026-11-13T01:02:17Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:43Z'
+        at: '2026-11-13T01:02:17Z'
         build_key: sha256:eb2660a3a80a14cf49a6727a52af56fc11cc5a82ce57b6d32354b4ad048ce9b9
       L1:
         status: PASS
-        at: '2026-11-12T12:19:43Z'
+        at: '2026-11-13T01:02:17Z'
         build_key: sha256:eb2660a3a80a14cf49a6727a52af56fc11cc5a82ce57b6d32354b4ad048ce9b9
       L2:
         status: PASS
-        at: '2026-11-12T12:19:43Z'
+        at: '2026-11-13T01:02:17Z'
         build_key: sha256:eb2660a3a80a14cf49a6727a52af56fc11cc5a82ce57b6d32354b4ad048ce9b9
         detail: 4 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:43Z'
+        at: '2026-11-13T01:02:17Z'
         build_key: sha256:eb2660a3a80a14cf49a6727a52af56fc11cc5a82ce57b6d32354b4ad048ce9b9
         detail: 5 sample(s), offline
   retinal-heightmap-surfaces-f32__rule-surfaces:
     build_key: sha256:79033693f1ab08abb847c036f9204a32936c7abac1fdaaa86a6ffb3133d3c47c
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/retinal-heightmap-surfaces-f32__rule-surfaces:dev
-    image_id: sha256:7bdb05c7828773e7b36d84f25ca47925cff2e005fe54592b7c1a8655b870cdb9
-    built_at: '2026-11-12T12:19:49Z'
+    image_id: sha256:eb9387833f3f3f69d58938f5232593a5c246005b409dfcd4d9ac80a5688bf28c
+    built_at: '2026-11-13T01:02:24Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:49Z'
+        at: '2026-11-13T01:02:24Z'
         build_key: sha256:79033693f1ab08abb847c036f9204a32936c7abac1fdaaa86a6ffb3133d3c47c
       L1:
         status: PASS
-        at: '2026-11-12T12:19:49Z'
+        at: '2026-11-13T01:02:24Z'
         build_key: sha256:79033693f1ab08abb847c036f9204a32936c7abac1fdaaa86a6ffb3133d3c47c
       L2:
         status: PASS
-        at: '2026-11-12T12:19:49Z'
+        at: '2026-11-13T01:02:24Z'
         build_key: sha256:79033693f1ab08abb847c036f9204a32936c7abac1fdaaa86a6ffb3133d3c47c
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:49Z'
+        at: '2026-11-13T01:02:24Z'
         build_key: sha256:79033693f1ab08abb847c036f9204a32936c7abac1fdaaa86a6ffb3133d3c47c
         detail: 5 sample(s), offline
   snore-acoustic__rule-amplitude:
     build_key: sha256:943f50bec80447d0dd9772e25ecc5ff92a8c53f4c9e205ccdcc94b51040954ba
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/snore-acoustic__rule-amplitude:dev
-    image_id: sha256:b39f317d3fa092c117ab52a87fe3649e0cd94efddfc5da80b544a6b292a72881
-    built_at: '2026-11-12T12:19:55Z'
+    image_id: sha256:005f3895050bb505e2de7de0dd86be8d59c024647f6264a81d0b1876ff1214c7
+    built_at: '2026-11-13T01:02:30Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:19:55Z'
+        at: '2026-11-13T01:02:30Z'
         build_key: sha256:943f50bec80447d0dd9772e25ecc5ff92a8c53f4c9e205ccdcc94b51040954ba
       L1:
         status: PASS
-        at: '2026-11-12T12:19:55Z'
+        at: '2026-11-13T01:02:30Z'
         build_key: sha256:943f50bec80447d0dd9772e25ecc5ff92a8c53f4c9e205ccdcc94b51040954ba
       L2:
         status: PASS
-        at: '2026-11-12T12:19:55Z'
+        at: '2026-11-13T01:02:30Z'
         build_key: sha256:943f50bec80447d0dd9772e25ecc5ff92a8c53f4c9e205ccdcc94b51040954ba
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:19:55Z'
+        at: '2026-11-13T01:02:30Z'
         build_key: sha256:943f50bec80447d0dd9772e25ecc5ff92a8c53f4c9e205ccdcc94b51040954ba
         detail: 5 sample(s), offline
   spo2-series-10hz-pct__pobm:
     build_key: sha256:2be1f11da8aa497fb78b6a05f90bfb4d22d86b4f28c287b0bd818098ca8aea0d
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/spo2-series-10hz-pct__pobm:dev
-    image_id: sha256:3b52c28646eb5b79cec2cbc4bfd775b81aec86a528ad536003a85a5bcfd41d25
-    built_at: '2026-11-12T12:20:02Z'
+    image_id: sha256:ecd69f77534eea172a4bf1cc3125206a748c00cc7162f749b1d351ca0c6b73cb
+    built_at: '2026-11-13T01:02:37Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:20:02Z'
+        at: '2026-11-13T01:02:37Z'
         build_key: sha256:2be1f11da8aa497fb78b6a05f90bfb4d22d86b4f28c287b0bd818098ca8aea0d
       L1:
         status: PASS
-        at: '2026-11-12T12:20:02Z'
+        at: '2026-11-13T01:02:37Z'
         build_key: sha256:2be1f11da8aa497fb78b6a05f90bfb4d22d86b4f28c287b0bd818098ca8aea0d
       L2:
         status: PASS
-        at: '2026-11-12T12:20:02Z'
+        at: '2026-11-13T01:02:37Z'
         build_key: sha256:2be1f11da8aa497fb78b6a05f90bfb4d22d86b4f28c287b0bd818098ca8aea0d
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:20:02Z'
+        at: '2026-11-13T01:02:37Z'
         build_key: sha256:2be1f11da8aa497fb78b6a05f90bfb4d22d86b4f28c287b0bd818098ca8aea0d
         detail: 5 sample(s), offline
   wearable-hr-1min-bpm__rule-summary:
     build_key: sha256:5909e0a2cbbdeda78df9e5691ae2132f829f25ce4f42ebeea174656992c4b932
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/wearable-hr-1min-bpm__rule-summary:dev
-    image_id: sha256:a0f365495602a768c6dc4472b44e9b57c0b30e90cecf6847abfe70c2e9f0d80a
-    built_at: '2026-11-12T12:20:08Z'
+    image_id: sha256:6cf3b7fa498d2f0c7b58ae57bc297eb3d6954084dc34da0117b6a3aec7a7933a
+    built_at: '2026-11-13T01:02:43Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:20:08Z'
+        at: '2026-11-13T01:02:43Z'
         build_key: sha256:5909e0a2cbbdeda78df9e5691ae2132f829f25ce4f42ebeea174656992c4b932
       L1:
         status: PASS
-        at: '2026-11-12T12:20:08Z'
+        at: '2026-11-13T01:02:43Z'
         build_key: sha256:5909e0a2cbbdeda78df9e5691ae2132f829f25ce4f42ebeea174656992c4b932
       L2:
         status: PASS
-        at: '2026-11-12T12:20:08Z'
+        at: '2026-11-13T01:02:43Z'
         build_key: sha256:5909e0a2cbbdeda78df9e5691ae2132f829f25ce4f42ebeea174656992c4b932
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:20:08Z'
+        at: '2026-11-13T01:02:43Z'
         build_key: sha256:5909e0a2cbbdeda78df9e5691ae2132f829f25ce4f42ebeea174656992c4b932
         detail: 5 sample(s), offline
   wearable-resprate-1min-brpm__rule-summary:
@@ -1277,26 +1277,26 @@ encoders:
         detail: 'sample-04.json: real family sample did not produce healthy output; sample-04.json: card declares 1 output block(s), got 0'
   wearable-spo2-1min-pct__rule-summary:
     build_key: sha256:147e7dc8c9ce8931dc0f022687d0b542e1ecbf49879aa4e8f69e48764852346d
-    source_rev: 7b3ef16e0af67e59f8d1bbfeba8231e68e391f16
+    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
     image: ghcr.io/medomni/wearable-spo2-1min-pct__rule-summary:dev
-    image_id: sha256:bddc8a252bf28cf66e136658b254215eaeb51a4db2dad1bec9f55e73730fc04e
-    built_at: '2026-11-12T12:20:14Z'
+    image_id: sha256:8880ddaa17bfa0442a3570ced7a5d856698782e69e6b632b6ee1381f0c2c70ef
+    built_at: '2026-11-13T01:02:49Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-12T12:20:14Z'
+        at: '2026-11-13T01:02:49Z'
         build_key: sha256:147e7dc8c9ce8931dc0f022687d0b542e1ecbf49879aa4e8f69e48764852346d
       L1:
         status: PASS
-        at: '2026-11-12T12:20:14Z'
+        at: '2026-11-13T01:02:49Z'
         build_key: sha256:147e7dc8c9ce8931dc0f022687d0b542e1ecbf49879aa4e8f69e48764852346d
       L2:
         status: PASS
-        at: '2026-11-12T12:20:14Z'
+        at: '2026-11-13T01:02:49Z'
         build_key: sha256:147e7dc8c9ce8931dc0f022687d0b542e1ecbf49879aa4e8f69e48764852346d
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-12T12:20:14Z'
+        at: '2026-11-13T01:02:49Z'
         build_key: sha256:147e7dc8c9ce8931dc0f022687d0b542e1ecbf49879aa4e8f69e48764852346d
         detail: 5 sample(s), offline

@@ -7,7 +7,8 @@ It reads files as bytes and reports hits by pattern, never the matched text. A h
     python release/datacheck.py tree [<ref>]       # the files at <ref> (default: HEAD)
     python release/datacheck.py history <ref>      # every version of every file reachable from <ref>
     --release       only the release tree (release/public.yaml), as on the private line
-    --extra <file>  more patterns, one regex per line (the private line's own, such as private paths)
+    --extra <file>  more patterns, one regex per line
+    --private-config internal_docs/release/export.yaml   the private line's own patterns (private paths), if present
 """
 from __future__ import annotations
 
@@ -105,11 +106,28 @@ def versions(repo, ref: str, history: bool, include: list[str] | None = None) ->
     return out
 
 
+def introduced(repo, commits: list[str], include: list[str] | None = None) -> list[tuple[str, str]]:
+    """(path, blob) of every file version the commits add or change (what a push brings that the remote lacks)."""
+    if not commits:
+        return []
+    seen, out = set(), []
+    raw = _git(repo, "show", "--no-renames", "--raw", "--no-abbrev", "--format=", "-m", *commits).decode().splitlines()
+    for line in raw:
+        if not line.startswith(":"):
+            continue
+        meta, path = line.split("\t", 1)
+        blob = meta.split()[3]
+        if set(blob) != {"0"} and (path, blob) not in seen and released(path, include):
+            seen.add((path, blob)); out.append((path, blob))
+    return out
+
+
 def check(repo, ref: str = "HEAD", history: bool = False, extra: Path | None = None, allow: list[dict] | None = None,
-          include: list[str] | None = None):
-    """{"versions": n, "hits": [(path, pattern, reason or None)]} for the files at <ref>, or for all of its history."""
-    pats, allow = patterns(extra), rules() if allow is None else allow
-    vs = versions(repo, ref, history, include)
+          include: list[str] | None = None, commits: list[str] | None = None, pats: dict | None = None):
+    """{"versions": n, "hits": [(path, pattern, reason or None)]} for the files at <ref>, for all of its history, or
+    (`commits`) for the file versions those commits introduce."""
+    pats, allow = pats or patterns(extra), rules() if allow is None else allow
+    vs = introduced(repo, commits, include) if commits is not None else versions(repo, ref, history, include)
     blobs = {}
     if vs:
         out = _git(repo, "cat-file", "--batch", inp=("\n".join(sorted({b for _, b in vs})) + "\n").encode())
@@ -133,9 +151,21 @@ def main(argv=None) -> int:
     ap.add_argument("ref", nargs="?", default="HEAD")
     ap.add_argument("--repo", default=".")
     ap.add_argument("--extra", type=Path)
+    ap.add_argument("--private-config", type=Path, help="the private line's export config: its private_patterns join in")
     ap.add_argument("--release", action="store_true", help="only the release tree (release/public.yaml)")
     a = ap.parse_args(argv)
-    r = check(a.repo, a.ref, a.what == "history", a.extra, include=include_list(a.repo) if a.release else None)
+    extra = a.extra
+    if a.private_config and a.private_config.is_file():
+        import tempfile
+
+        import yaml
+
+        lines = (yaml.safe_load(a.private_config.read_text(encoding="utf-8")) or {}).get("private_patterns", [])
+        if extra is not None:
+            lines = extra.read_text(encoding="utf-8").splitlines() + lines
+        extra = Path(tempfile.mkstemp(prefix="medomni-patterns-")[1])
+        extra.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    r = check(a.repo, a.ref, a.what == "history", extra, include=include_list(a.repo) if a.release else None)
     bad = [(p, k) for p, k, why in r["hits"] if why is None]
     print(f"data check: {r['versions']} file version(s), {len(r['hits'])} hit(s), {len(bad)} unresolved")
     for (k, top), n in sorted(Counter((k, p.split("/")[0]) for p, k in bad).items()):

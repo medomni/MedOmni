@@ -1,0 +1,7 @@
+#!/bin/sh
+# MedOmni's push guard (release/guard.py): only the export goes to the public remote, and no push brings patient
+# data. Enabled once per clone with `git config core.hooksPath release/hooks`. Don't bypass it.
+top=$(git rev-parse --show-toplevel) || exit 1
+py=${MEDOMNI_GUARD_PYTHON:-"$top/.venv/bin/python"}
+[ -x "$py" ] || py=python3
+exec "$py" "$top/release/guard.py" "$@"

@@ -1,0 +1,24 @@
+# The release tree (R-163, R-169): what the export publishes from main. Each entry is a top-level file or folder of
+# the repository; everything under a listed folder is published, and anything unlisted stays private (internal_docs/,
+# or a new top-level folder until someone lists it). The export's latest tree is exactly these entries at main's tip.
+include:
+  - .dockerignore
+  - .gitignore
+  - .python-version
+  - AGENTS.md
+  - CONTRIBUTING.md
+  - CONTRIBUTORS.md
+  - LICENSE
+  - README.md
+  - bench
+  - core
+  - docs
+  - mkdocs.yml
+  - overrides
+  - perception
+  - pyproject.toml
+  - release
+  - src
+  - studio
+  - tests
+  - uv.lock

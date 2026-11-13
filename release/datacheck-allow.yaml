@@ -1,0 +1,30 @@
+# Hits the data check allows, each with why it isn't patient data (release/datacheck.py). A rule with `values`
+# allows exactly those values in the files its path glob names; a rule without allows the pattern in those files.
+allow:
+- path: '*'
+  pattern: mimic-id
+  values:
+  - '10000032'
+  reason: MIMIC-IV's own public documentation and demo example subject, used as an example path
+- path: uv.lock
+  pattern: mimic-id
+  reason: package sizes and hashes in the lock file
+- path: '*/testdata/*.dcm'
+  pattern: mimic-id
+  reason: digits inside authored pixel data; the folder's PROVENANCE states its source and licence (release-check)
+- path: perception/encoders/ppg-waveform-uncal/bayesbeat/testdata/PROVENANCE.md
+  pattern: mimic-id
+  reason: a Zenodo record number in a public URL
+- path: '*/codes.csv'
+  pattern: data-file
+  reason: a dataset's code vocabulary (schema), no records
+- path: src/medomni/*/testing/datasets/*
+  pattern: data-file
+  reason: the synthetic dummy datasets' code lists
+- path: tests/*
+  pattern: mimic-id
+  values:
+  - '10000001'
+  - '11000001'
+  - '12345678'
+  reason: made-up numbers in tests; none is a MIMIC-IV subject, admission or stay id (checked)

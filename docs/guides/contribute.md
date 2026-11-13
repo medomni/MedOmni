@@ -148,6 +148,7 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
 2. Implement the adapter and pin the image:
     - `encode(sample, options)` in `adapter.py`, with expensive set-up in `load()`
     - base image, dependencies and source revision pinned in the Dockerfile
+    - torch, if the encoder needs it, installed with `torch==<version>` from the CPU build index, at a version listed in `src/medomni/perception/registry/torch.yaml`
     - weights and other files in `assets.json`, each with its source (a URL or a Hugging Face file) and sha256; the image build fetches and checks them
 3. Write the model card: the family, outputs, options, license and source. See [Encoders](../reference/encoders.md).
 4. Write the test data, its inputs and `PROVENANCE.md`:
@@ -168,7 +169,7 @@ Encoder folders live in `perception/encoders/` and are built into images; they a
 medomni perception check perception/encoders/<family>/<encoder>
 ```
 
-It validates the model card with `medomni contracts check`, builds the image, and runs the encoder's tests: it runs the image on the test data and compares the responses with `expected.json`. GPU encoders may run on a self-hosted runner.
+It validates the model card with `medomni contracts check`, checks the Dockerfile's torch installs against the list, builds the image, checks the torch inside it is a listed CPU build, and runs the encoder's tests: it runs the image on the test data and compares the responses with `expected.json`. See [Check and freeze](../learn/perception/encoders.md#check-and-freeze). GPU encoders may run on a self-hosted runner.
 
 ## Publish a plug-in package
 

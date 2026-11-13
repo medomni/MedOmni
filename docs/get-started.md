@@ -9,7 +9,7 @@ From install to a scored Bench run: first on dummy data, which needs no credenti
 
 ## 1. Install
 
-<!-- outline (Stage 4 part 6): availability wording. Replace <repository-url> with the public repository once the `public` branch is pushed; say where encoder images are pulled from (ghcr.io/medomni) and that there is no PyPI release. Same in README.md. -->
+<!-- outline (Stage 4 part 6): availability wording. Replace <repository-url> with the public repository once the first release is exported; say where encoder images are pulled from (ghcr.io/medomni) and that there is no PyPI release. Same in README.md. -->
 ```bash
 git clone --branch v0.3.0 <repository-url> medomni && cd medomni
 ```

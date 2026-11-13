@@ -3,6 +3,8 @@ name = "medomni"
 version = "0.3.0.dev0"
 description = "Open-source software for medical AI on many data modalities"
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 # One install for everything the package runs. Torch, CUDA and model weights live in the encoder images, not here.
 # numpy stays below 2: pyedflib, wfdb and the scorer's dependencies are pinned against numpy 1.

@@ -80,7 +80,7 @@ class ScoreRecord(Contract):
     n_failed: int = Field(ge=0)
     intelligence: IntelligenceRef
     metric: MetricName
-    value: float | None
+    value: float | None = None  # None: refused or unscorable; rows `bench score` wrote before 0.3.0 omit it
     flags: tuple[str, ...] = ()
     encoder_use: dict[str, Any] = {}
 

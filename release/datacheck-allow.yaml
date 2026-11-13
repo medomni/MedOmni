@@ -1,6 +1,9 @@
 # Hits the data check allows, each with why it isn't patient data (release/datacheck.py). A rule with `values`
 # allows exactly those values in the files its path glob names; a rule without allows the pattern in those files.
 allow:
+- path: release/datacheck-allow.yaml
+  pattern: mimic-id
+  reason: the allow list names the values it allows; each is reviewed before it is added
 - path: '*'
   pattern: mimic-id
   values:

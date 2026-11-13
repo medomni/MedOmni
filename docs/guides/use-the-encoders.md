@@ -47,4 +47,4 @@ A successful `encode` returns evidence: the encoder's outputs with their provena
 ## Where next
 
 - [Encoders](../reference/encoders.md): the model card format and every encoder in this version.
-- [Contribute](contribute.md): add an encoder for a new family.
+- [Add an encoder](add-an-encoder.md): package a new encoder for a family.

@@ -1,6 +1,26 @@
-# Run your agent
+# Test your agent
 
-For agent evaluators. You score your own agent on a MedOmni task set, with and without encoders.
+For agent evaluators. You evaluate how your agent performs on MedOmni's medical tasks under the conditions you choose, such as with and without encoders, and read the scores.
+
+## What you can test
+
+A task set fixes the tasks; an arm fixes the conditions the agent works under. A set lists the arms it is built for, and every score row names its arm, so you compare one agent across arms, or several agents under one arm.
+
+| Arm | The agent gets |
+|---|---|
+| `encoders` | The patient's evidence and the encoders for the families it holds. |
+| `no-perception` | The same evidence, with no encoders. |
+| `encoders-required` | The evidence and the encoders, and it must call at least one. |
+| `modality-ladder` | Six rungs, each adding input families to the last, to show how performance changes as modalities are added. |
+
+| Task set | Holds | Arms |
+|---|---|---|
+| `medomni-bench/smoke-dummy` | One pair per template, on generated data: checks that the pipeline works. | `encoders` |
+| `medomni-bench/v1` | The credentialed templates. | `encoders`, `no-perception` |
+| `medomni-bench/vitaldb` | The VitalDB templates, on an open dataset. | `encoders`, `no-perception` |
+| `medomni-bench/modality-ladder` | The ladder templates at their ladder cohort. | `modality-ladder` |
+
+[Runs](../learn/bench/runs.md) explains arms, and [Tasks](../reference/tasks.md) the task sets.
 
 ## Before you start
 
@@ -42,17 +62,17 @@ For agent evaluators. You score your own agent on a MedOmni task set, with and w
     | `settings.max_turns` | The most turns the agent may take on one atom task. |
     | `settings.api_base` | The provider's base URL, for a model server on your machine or a compatible API. |
 
-2. Export your model provider's key in your shell, then run the agent on a task set, under each arm you want to compare, as many times as you need:
+2. Export your model provider's key in your shell, then run the agent on a task set, under each arm you want to compare:
 
     ```bash
     export OPENAI_API_KEY=...
     ```
 
     ```bash
-    medomni bench run --agent my-agent.yaml --set medomni-bench/v1 --arm encoders --arm no-perception --reps 2
+    medomni bench run --agent my-agent.yaml --set medomni-bench/v1 --arm encoders --arm no-perception
     ```
 
-    The built-in arms are `encoders` (with encoders), `no-perception` (without), `encoders-required` (must call at least one) and `modality-ladder` (six rungs of input families). A task set lists the arms it is built under. `medomni bench run` first checks the built tasks, and resumes if run again. [Runs](../learn/bench/runs.md) explains both. While it runs, it prints one line with the number of finished and failed atom tasks; for a detailed live view, run `medomni studio progress <run>` beside it.
+    Without `--arm`, it runs every arm the set lists. `medomni bench run` first checks the built tasks, and resumes if run again. [Runs](../learn/bench/runs.md) explains both. While it runs, it prints one line with the number of finished and failed atom tasks; for a detailed live view, run `medomni studio progress <run>` beside it.
 
 3. Score:
 

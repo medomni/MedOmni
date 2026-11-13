@@ -72,5 +72,5 @@ A task that fails either has broken answers or scoring, such as an answer for no
 
 ## Where next
 
-- [Run your agent](../../guides/run-your-agent.md#results-file): the results file fields.
+- [Test your agent](../../guides/test-your-agent.md#results-file): the results file fields.
 - [Tasks](../studio/tasks.md): where the metrics and answers come from.

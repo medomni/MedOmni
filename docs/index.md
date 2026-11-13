@@ -34,7 +34,7 @@ Not in v0.3.0: MedOmni Agent (a later project) and a PyPI release.
 
 | Project | You are | You want to | Start here |
 |---|---|---|---|
-| Bench | **Agent evaluator** | Run your agent on MedOmni tasks and read the scores | [Run your agent](guides/run-your-agent.md) |
+| Bench | **Agent evaluator** | Test your agent on MedOmni tasks and read the scores | [Test your agent](guides/test-your-agent.md) |
 | Perception | **Encoder user** | Call medical encoders over HTTP from your own code | [Use the encoders](guides/use-the-encoders.md) |
 | Bench, Studio or Perception | **Contributor** | Add an agent to Bench, a dataset or a task to Studio, or an encoder to Perception | [Contribute](guides/contribute.md) |
 

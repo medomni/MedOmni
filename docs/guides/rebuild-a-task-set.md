@@ -38,6 +38,6 @@ Your results carry each task's [config hash](../learn/studio/tasks.md#config-has
 
 ## Where next
 
-- [Run your agent](run-your-agent.md): run on the set you built.
+- [Test your agent](test-your-agent.md): run on the set you built.
 - [Build](../learn/studio/build.md): the steps the counts come from.
 - [Cache](../learn/core/cache.md): what the cache holds.

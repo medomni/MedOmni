@@ -11,7 +11,7 @@ The ideas behind MedOmni. Each entry links to the page with the details.
 :   What every project uses: the contracts, the `medomni` command, plug-in loading, dataset loading, families, the cache, the built-task contract and the testing kit. Projects register with it; it imports none of them. Only the MedOmni team changes it. See [Architecture](architecture.md).
 
 **Bench**
-:   The project that evaluates AI agents on medical tasks. It runs an agent on built tasks in Harbor, with or without encoders, and scores the answers, whoever built the tasks. See [Run your agent](../guides/run-your-agent.md).
+:   The project that evaluates AI agents on medical tasks. It runs an agent on built tasks in Harbor, with or without encoders, and scores the answers, whoever built the tasks. See [Test your agent](../guides/test-your-agent.md).
 
 **Studio**
 :   The project that makes and builds tasks, and the work people do around Bench and Perception: dataset survey, task proposals, review and sign-off, cohort previews, MedOmni's task builder, the audit and reports. A proposal ends in a frozen task template, which the builder turns into built tasks. See [Studio](studio/overview.md).

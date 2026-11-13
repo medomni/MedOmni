@@ -115,5 +115,5 @@ Contract: task set, `src/medomni/core/contracts/schemas/task-set.schema.json`.
 
 - [Families](families.md): the inputs a template can name.
 - [Recipes](recipes.md): the cohort, label and evidence fields.
-- [Contribute](../guides/contribute.md): write a new template and cohort.
+- [Add a task](../guides/add-a-task.md): write a new template and cohort.
 - [Datasets](datasets.md): what each dataset needs.

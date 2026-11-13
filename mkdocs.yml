@@ -74,11 +74,17 @@ nav:
           - Audit: learn/studio/audit.md
       - Extend MedOmni: learn/extend.md
   - Guides:
-      - Run your agent: guides/run-your-agent.md
-      - Connect your data: guides/connect-your-data.md
-      - Rebuild a task set: guides/rebuild-a-task-set.md
-      - Use the encoders: guides/use-the-encoders.md
-      - Contribute: guides/contribute.md
+      - "Bench: evaluate your agent":
+          - Test your agent: guides/test-your-agent.md
+          - Connect your data: guides/connect-your-data.md
+          - Rebuild a task set: guides/rebuild-a-task-set.md
+      - "Perception: give your agent perception":
+          - Use the encoders: guides/use-the-encoders.md
+      - Add to MedOmni:
+          - Add an encoder: guides/add-an-encoder.md
+          - Add a dataset: guides/add-a-dataset.md
+          - Add a task: guides/add-a-task.md
+          - Contribute: guides/contribute.md
   - Reference:
       - Tasks: reference/tasks.md
       - Recipes: reference/recipes.md

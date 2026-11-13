@@ -77,19 +77,55 @@ def _event_table(ws, ds: str) -> tuple:
             "event table in the cache" if found else "no event table cached; run `medomni cache build`", "cache")
 
 
+def _codes(pair: str) -> tuple[set, set]:
+    """The pair's dataset codes (`codes.csv`): the codes, and (table, value) for each `<PREFIX>//<value>` code."""
+    import csv
+
+    from medomni.core.loading import find_package
+
+    from ... import common
+
+    path = find_package(common.load_pair(pair).template.dataset) / "codes.csv"
+    if not path.is_file():
+        return set(), set()
+    with open(path, newline="", encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+    return ({r["code"] for r in rows},
+            {(r.get("source_table") or "", r["code"].split("//", 1)[1]) for r in rows if "//" in r["code"]})
+
+
+def _coded(f: Path, column: str, codes: tuple[set, set]) -> bool:
+    """True when every value of a staged table's column is one of the dataset's codes (VitalDB's `labs.name` holds
+    lab test names such as `alb`, each a `LAB//alb` code): a coded field, not a direct identifier."""
+    import csv
+
+    with open(f, newline="", encoding="utf-8") as fh:
+        values = {(r.get(column) or "").strip() for r in csv.DictReader(fh)}
+    whole, by_table = codes
+    return bool(values) and all(v in whole or (f.stem, v) in by_table for v in values)
+
+
 def _staged_columns(scope, sink, pair: str) -> None:
     from ... import common
 
+    codes = None
     for arm, _, atom, d in common.built_atoms(scope.ws, pair):
-        cols = set()
+        cols, coded = set(), set()
         for f in (d / "data/tables").glob("*.csv"):
             with open(f, encoding="utf-8") as fh:
-                cols |= {f"{f.stem}.{h.strip()}" for h in fh.readline().split(",")}
+                heads = [h.strip() for h in fh.readline().split(",")]
+            cols |= {f"{f.stem}.{h}" for h in heads}
+            for h in heads:
+                if DIRECT_ID.search(h):
+                    codes = _codes(pair) if codes is None else codes
+                    if _coded(f, h, codes):
+                        coded.add(f"{f.stem}.{h}")
         demo = d / "data/demographics.json"
         if demo.exists():
             doc = json.loads(demo.read_text(encoding="utf-8"))
             cols |= {f"demographics.{k}" for k in (doc if isinstance(doc, dict) else {})}
-        hit = sorted(c for c in cols if DIRECT_ID.search(c.split(".", 1)[1]))
+        hit = sorted(c for c in cols - coded if DIRECT_ID.search(c.split(".", 1)[1]))
         sink.add("D-ISOL.1", "M", atom, FAIL if hit else PASS,
-                 f"direct-identifier fields staged to the agent: {hit[:5]}" if hit else f"no direct-identifier field among {len(cols)} staged columns or keys",
+                 f"direct-identifier fields staged to the agent: {hit[:5]}" if hit else f"no direct-identifier field among {len(cols)} staged columns or keys"
+                 + (f" ({', '.join(sorted(coded))} hold only dataset codes)" if coded else ""),
                  "atom tables")

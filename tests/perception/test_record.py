@@ -13,9 +13,13 @@ IMAGE_ID = "sha256:" + "b" * 64
 @pytest.fixture
 def repo(tmp_path, monkeypatch):
     edir = tmp_path / "perception/encoders/fam-x/enc"
-    edir.mkdir(parents=True)
+    for d in (edir, tmp_path / "perception/encoders/other/keep"):
+        d.mkdir(parents=True)
+        (d / "card.yaml").write_text("id: x\n")
     (tmp_path / "perception/deployed.yaml").write_text(yaml.safe_dump({"schema": record.SCHEMA, "encoders": {
-        "other__keep": {"image_id": "sha256:" + "c" * 64}, "fam-x__enc": {"image_id": "sha256:" + "d" * 64}}}))
+        "other__keep": {"image_id": "sha256:" + "c" * 64}, "fam-x__enc": {"image_id": "sha256:" + "d" * 64},
+        "gone__away": {"image_id": "sha256:" + "e" * 64}}}))
+    monkeypatch.setattr("medomni.core.plugins.folders", lambda: [])
     monkeypatch.setattr(record, "build_key", lambda e, r: KEY)
     monkeypatch.setattr(record, "git_rev", lambda paths, r: "f" * 40)
     monkeypatch.setattr(record, "image_labels", lambda image: ({"org.medomni.build_key": KEY}, IMAGE_ID))
@@ -29,6 +33,7 @@ def test_a_passing_check_is_servable_and_other_entries_stay(repo):
     assert served.servable(doc, "fam-x__enc") == (True, "ok")
     assert served.ref(doc, "fam-x__enc") == IMAGE_ID
     assert doc["encoders"]["other__keep"] == {"image_id": "sha256:" + "c" * 64}
+    assert "gone__away" not in doc["encoders"]  # no encoder folder in any content root: dropped (s4 part 2)
     assert (root / record.RECORD).read_text().startswith("# Deployed encoder images")
 
 

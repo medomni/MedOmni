@@ -179,3 +179,70 @@ def test_no_project_imports_studio():
     for project in ("core", "bench", "perception"):
         for p in (src / project).rglob("*.py"):
             assert "medomni.studio" not in p.read_text(encoding="utf-8"), p
+
+
+def test_the_summary_line_shows_outcomes_after_severity(built, capsys, monkeypatch):
+    """The per-asset line agrees with REPORT.md and FINDINGS.md: a demoted strict fail counts as a warn (s4 part 2)."""
+    from medomni.studio.review.checks import data
+
+    real = data.run
+
+    def run(scope, sink):
+        real(scope, sink)
+        sink.add("D-COMP.1", "M", "planted", matrix.FAIL, "a planted strict failure", "test")
+
+    monkeypatch.setattr(data, "run", run)
+    main(["studio", "audit", "--only", "data"])
+    line = next(ln for ln in capsys.readouterr().out.splitlines() if ln.startswith("data "))
+    strict = engine.read_jsonl(audit_dir() / "records/data.jsonl")  # the records keep the strict outcomes
+    t = engine.tally(engine.apply_severity(strict))
+    assert f"pass {t['pass']} warn {t['warn']} fail {t['fail']} unassessed {t['unassessed']}" in line
+    assert t["fail"] == 0 and f"({engine.tally(strict)['fail']} strict fails shown as warns)" in line
+    assert "**warn** ×1 — [strict fail, demoted" in (audit_dir() / "FINDINGS.md").read_text()
+
+
+def test_a_coded_name_column_is_not_a_direct_identifier(tmp_path):
+    """VitalDB's labs.name holds lab test names, each a `LAB//<name>` code (s4 part 2)."""
+    from medomni.studio.review.checks import data
+
+    codes = ({"LAB//alb", "LAB//hb"}, {("labs", "alb"), ("labs", "hb")})
+    (tmp_path / "labs.csv").write_text("caseid,dt,name,result\n1,0,alb,4.1\n1,5,hb,12\n")
+    (tmp_path / "people.csv").write_text("caseid,name\n1,Jane Doe\n")
+    (tmp_path / "other.csv").write_text("caseid,name\n1,alb\n")  # a code of another table's prefix
+    assert data._coded(tmp_path / "labs.csv", "name", codes)
+    assert not data._coded(tmp_path / "people.csv", "name", codes)
+    assert not data._coded(tmp_path / "other.csv", "name", codes)
+    (tmp_path / "empty.csv").write_text("caseid,name\n")
+    assert not data._coded(tmp_path / "empty.csv", "name", codes)
+
+
+def _atom(tmp_path, listed, staged):
+    d = tmp_path / "atom"
+    for rel in staged:
+        (d / "data" / rel).parent.mkdir(parents=True, exist_ok=True)
+        (d / "data" / rel).write_bytes(b"x")
+    inv = {"subject": "s", "support": [], "encoders": {}, "families": {"abp": {"kind": "signal", "paths": listed}}}
+    (d / "data/inventory.json").write_text(json.dumps(inv))
+    return d
+
+
+class _Sink:
+    def __init__(self):
+        self.got = []
+
+    def add(self, *a):
+        self.got.append(a)
+
+
+def test_a_wfdb_record_is_listed_by_its_header(tmp_path):
+    """The builder lists a WFDB record's .hea and stages its .dat beside it (render.inventory); a .dat with no listed
+    header is still refused (s4 part 2)."""
+    from medomni.studio.review.checks import tasks
+
+    s = _Sink()
+    tasks._inventory(s, "a", _atom(tmp_path, ["files/1/abp.hea"], ["files/1/abp.hea", "files/1/abp.dat"]), "")
+    assert s.got[0][3] == matrix.PASS
+    shutil.rmtree(tmp_path / "atom")
+    s = _Sink()
+    tasks._inventory(s, "a", _atom(tmp_path, ["files/1/abp.hea"], ["files/1/abp.hea", "files/1/other.dat"]), "")
+    assert s.got[0][3] == matrix.FAIL and "files/1/other.dat is staged but not in the inventory" in s.got[0][4]

@@ -152,8 +152,10 @@ class Audit(Review):
             engine.aggregate(cells, sink.items)  # refuse items for a check or auditor the matrix does not assign
             files[f"records/{asset}.jsonl"] = engine.to_jsonl(sink.items)
             strict += sink.items
-            t = engine.tally(sink.items)
-            print(f"{asset:9s} {len(sink.items):5d} items  pass {t['pass']} warn {t['warn']} fail {t['fail']} unassessed {t['unassessed']}", file=ctx.stream)
+            # outcomes after severity, as REPORT.md and FINDINGS.md show them; the records keep the strict ones
+            t, strict_fails = engine.tally(engine.apply_severity(sink.items)), engine.tally(sink.items)["fail"]
+            demoted = f" ({strict_fails - t['fail']} strict fails shown as warns)" if strict_fails > t["fail"] else ""
+            print(f"{asset:9s} {len(sink.items):5d} items  pass {t['pass']} warn {t['warn']} fail {t['fail']} unassessed {t['unassessed']}{demoted}", file=ctx.stream)
         bound = verdicts.bindings(scope)
         items = engine.apply_severity(strict + verdicts.items(reviews_dir(), cells, scope, bound))
         agg = engine.aggregate(cells, items)

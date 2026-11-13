@@ -128,7 +128,8 @@ def _inventory(sink, atom: str, d: Path, compose_text: str) -> None:
                 bad.append(f"{rel} ({fam}) is not staged")
     for f in (d / "data").rglob("*"):
         rel = f.relative_to(d / "data").as_posix()
-        if f.is_file() and rel not in listed and rel not in SUPPORT:
+        companion = f.suffix == ".dat" and rel[:-4] + ".hea" in listed  # a WFDB record is listed by its .hea
+        if f.is_file() and rel not in listed and rel not in SUPPORT and not companion:
             bad.append(f"{rel} is staged but not in the inventory")
     comp = yaml.safe_load(compose_text) if compose_text else {}
     refs = set(mapping.values())

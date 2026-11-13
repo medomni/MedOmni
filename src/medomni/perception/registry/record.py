@@ -4,7 +4,9 @@ only an entry whose L2 and L3 passed at its own build_key (`sidecar/record.py` r
 
 The stages are the steps of `check`: L0 the card, L1 the image build, L2 the test data, L3 the family's real samples
 (`UNVERIFIED-no-supply` when the family publishes none, which the service refuses to serve). An entry is written only
-for an image built from committed source, so its `source_rev` names a commit. Other entries are left as they are.
+for an image built from committed source, so its `source_rev` names a commit. Other entries are left as they are,
+except an entry whose encoder has no folder in any content root (the repository or a plug-in folder): it is dropped,
+so the record lists only encoders that exist (s4 part 2).
 """
 from __future__ import annotations
 
@@ -25,6 +27,16 @@ HEADER = ("# Deployed encoder images: written by `medomni perception check --rec
 
 def _now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def known_encoders(repo) -> set[str]:
+    """The encoder ids with a folder in a content root: the repository's and every plug-in folder's."""
+    from medomni.core import plugins
+    from medomni.perception.content import CONTENT
+
+    marker = next(k.marker for k in CONTENT if getattr(k, "name", None) == "encoders")
+    roots, _ = plugins.roots(Path(repo))
+    return {f"{card.parent.parent.name}__{card.parent.name}" for _, root in roots for card in root.glob(marker)}
 
 
 def write(edir, l2_detail: str, l3_status: str, l3_detail: str | None = None, repo=None, at: str | None = None) -> dict:
@@ -53,7 +65,8 @@ def write(edir, l2_detail: str, l3_status: str, l3_detail: str | None = None, re
     doc = (yaml.safe_load(path.read_text(encoding="utf-8")) if path.is_file() else None) or {"schema": SCHEMA, "encoders": {}}
     if doc.get("schema") != SCHEMA:
         raise RegistryError(f"{path}: schema {doc.get('schema')!r}, expected {SCHEMA!r}")
-    encoders = dict(doc.get("encoders") or {})
+    known = known_encoders(repo)
+    encoders = {k: v for k, v in (doc.get("encoders") or {}).items() if k in known}
     encoders[eid] = entry
     doc = {"schema": SCHEMA, "encoders": dict(sorted(encoders.items()))}
     path.write_text(HEADER + yaml.safe_dump(doc, sort_keys=False, allow_unicode=True, width=200), encoding="utf-8")

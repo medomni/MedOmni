@@ -89,6 +89,20 @@ def test_messages_and_authors(private):
     assert git(private, "log", "-1", "--format=%an", f"{tip}~2") == "Bo"
 
 
+def test_a_range_of_ids_leaves_no_fragments(private):
+    commit(private, "docs: redraft with decisions R-1 to R-8 (R-9/R-10; S2-S4 findings)", {"src/f.py": "f = 1\n"})
+    tip = export(private, {"strip_from_messages": [r"\bR-\d+[a-z]?(?:\s*(?:to|and|/|-)\s*R-\d+[a-z]?)*\b", r"\bS[1-4](?:-S[1-4])?\b"]})
+    assert git(private, "log", "-1", "--format=%s", tip) == "docs: redraft with decisions (findings)"
+
+
+def test_fresh_rebuilds_an_export_that_exists(private):
+    first = export(private)
+    p = private.parent / "cfg.yaml"
+    p.write_text(yaml.safe_dump({"strip_from_messages": [r"\bsrc\b"]}))
+    assert ex.export(private, "main", p)["tip"] == first  # appended to: nothing new, so unchanged
+    assert ex.export(private, "main", p, fresh=True)["tip"] != first  # rebuilt with the new rule
+
+
 def test_a_second_run_gives_the_same_commits(private):
     first = export(private)
     git(private, "update-ref", "-d", ex.EXPORT_REF)

@@ -1,11 +1,14 @@
 """`medomni perception check <encoder-folder>` (R-122): one command that can refuse an encoder.
 
 1. The card passes the registry's card check, which is Core's model card contract (as `medomni contracts check`).
-2. The image builds, with the repository root as context.
-3. Every `testdata/input*` sample runs through one container, and each response matches `testdata/expected.json`:
+2. The Dockerfile passes a static rule, before anything is built: every `torch==` install names the build index in
+   `torch.yaml` (the CPU build) and pins a version on its list. A plug-in folder's `perception/torch.yaml` replaces it.
+3. The image builds, from a context staged with what its `Dockerfile.dockerignore` allows (`build.py`). The torch
+   inside it, if any, is the build and a version `torch.yaml` names: a dependency can bring in torch on its own.
+4. Every `testdata/input*` sample runs through one container, and each response matches `testdata/expected.json`:
    numbers within a tolerance, everything else exactly. A neural network is reproducible to a tolerance and not to a
    bit: the BLAS library and the processor differ between machines. `--freeze` writes expected.json instead.
-4. The family's pinned real samples (`--samples <dir>`, else the family's published sample set) run offline, with
+5. The family's pinned real samples (`--samples <dir>`, else the family's published sample set) run offline, with
    Docker networking off, and each response must be healthy and say only what the card declares.
 
 `run_case(..., docker=False)` runs the same samples in this process, with no Docker, through the same run_encode.
@@ -13,10 +16,13 @@
 import hashlib
 import json
 import math
+import re
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+
+import yaml
 
 from . import RegistryError, encoder_id, tag
 from .cards import load_card
@@ -26,6 +32,79 @@ TOL = 1e-3          # how far a number can move between two machines
 
 class CheckFailed(RuntimeError):
     """The encoder failed a step; the message names it."""
+
+
+# ---------------- the Dockerfile ----------------
+
+TORCH = Path(__file__).resolve().parent / "torch.yaml"
+PLUGIN_TORCH = "perception/torch.yaml"  # where a plug-in content folder ships its own list
+_PIN = re.compile(r"(?<![\w.\-\[])torch==([0-9][0-9A-Za-z.+]*)")
+_INDEX = re.compile(r"(?<!\S)(?:--index-url|-i)(?:=|\s+)(\S+)")
+
+
+def torch_builds():
+    """{index, versions}: the shipped torch.yaml, or the one plug-in folder that ships perception/torch.yaml."""
+    from medomni.core import plugins
+
+    found = [f.path / PLUGIN_TORCH for f in plugins.folders() if f.path and (f.path / PLUGIN_TORCH).is_file()]
+    if len(found) > 1:
+        raise RegistryError(f"{len(found)} plug-in folders ship {PLUGIN_TORCH}; at most one may")
+    path = found[0] if found else TORCH
+    try:
+        builds = yaml.safe_load(path.read_text(encoding="utf-8"))
+        index, versions = builds["index"], [str(v) for v in builds["versions"]]
+    except (OSError, yaml.YAMLError, KeyError, TypeError) as exc:
+        raise RegistryError(f"cannot read the torch build list {path}: {exc}") from exc
+    return {"index": str(index).rstrip("/"), "build": str(builds.get("build", "")), "versions": versions}
+
+
+def _run_commands(text):
+    """The shell commands of a Dockerfile's RUN instructions: comment lines dropped, continuations joined."""
+    lines = [line for line in text.splitlines() if not line.lstrip().startswith("#")]
+    for instruction in re.sub(r"\\[ \t]*\n", " ", "\n".join(lines)).splitlines():
+        head, _, body = instruction.strip().partition(" ")
+        if head.upper() == "RUN":
+            yield from re.split(r"&&|\|\||;", body)
+
+
+def dockerfile_problems(dockerfile, builds):
+    """What the torch rule refuses in one Dockerfile: a `torch==` install without the build index, or off the list."""
+    problems = []
+    for command in _run_commands(Path(dockerfile).read_text(encoding="utf-8")):
+        pins = _PIN.findall(command)
+        if not pins or "install" not in command:
+            continue
+        indexes = [u.strip("\"'").rstrip("/") for u in _INDEX.findall(command)]
+        if builds["index"] not in indexes:
+            problems.append(f"torch=={pins[0]} installs without --index-url {builds['index']}")
+        problems += [f"torch=={v} is not on the torch build list ({', '.join(builds['versions'])})"
+                     for v in pins if v not in builds["versions"]]
+    return problems
+
+
+def image_torch(image):
+    """The torch version installed in a built image ('2.6.0+cpu'), or None when it has no torch."""
+    probe = ("import importlib.metadata as m\ntry: print(m.version('torch'))\n"
+             "except m.PackageNotFoundError: print('-')")
+    result = subprocess.run(["docker", "run", "--rm", "--network", "none", "--entrypoint", "python", image, "-c", probe],
+                            capture_output=True, text=True)
+    if result.returncode:
+        raise RegistryError(f"cannot read the torch version in {image}: {result.stderr.strip()[-200:]}")
+    version = result.stdout.strip()
+    return None if version == "-" else version
+
+
+def image_torch_problems(version, builds):
+    """What the torch rule refuses in a built image's installed torch version."""
+    if version is None:
+        return []
+    base, _, label = version.partition("+")
+    problems = []
+    if label != builds["build"]:
+        problems.append(f"the image has torch {version}, not a +{builds['build']} build (a dependency may pull it in)")
+    if base not in builds["versions"]:
+        problems.append(f"the image has torch {version}, not on the torch build list ({', '.join(builds['versions'])})")
+    return problems
 
 
 # ---------------- testdata ----------------
@@ -321,10 +400,28 @@ def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=Tr
     if not (edir / "adapter.py").is_file():
         out(f"[{eid}] card only, no adapter: nothing to build")
         return 0
+    if (edir / "Dockerfile").is_file():
+        try:
+            problems = dockerfile_problems(edir / "Dockerfile", torch_builds())
+        except RegistryError as exc:
+            out(f"[{eid}] REJECTED: {exc}")
+            return 1
+        if problems:
+            out(f"[{eid}] Dockerfile REJECTED:")
+            for e in problems[:8]:
+                out(f"   - {e}")
+            return 1
+        out(f"[{eid}] Dockerfile ok")
     try:
         if build:
             image, image_id = image_build.build(edir)
             out(f"[{eid}] built {image} ({image_id[:19]})")
+        problems = image_torch_problems(image_torch(tag(eid, "dev")), torch_builds())
+        if problems:
+            out(f"[{eid}] image REJECTED:")
+            for e in problems:
+                out(f"   - {e}")
+            return 1
         card, results = run_case(edir, docker=True)
     except Exception as exc:  # a failed build or a crashed container is a failure, never "not run"
         out(f"[{eid}] REJECTED: {type(exc).__name__}: {exc}")

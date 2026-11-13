@@ -17,7 +17,8 @@ COPY src/medomni/core src/medomni/core
 COPY src/medomni/perception src/medomni/perception
 # the catalogue checks encoder cards against Core's family files
 COPY core/families core/families
-# encoder cards (and the adapter.py and Dockerfile that make one runnable), the deployment record and defaults
+# encoder cards (and the adapter.py and Dockerfile that make one runnable), the deployment record and defaults; the
+# ignore files keep each encoder folder to those three files, so no weights or test data
 COPY perception/encoders perception/encoders
 COPY perception/deployed.yaml perception/deployment.yaml perception/
 ENV PYTHONPATH=/app/src MEDOMNI_ROOT=/app PYTHONUNBUFFERED=1 DATA_ROOT=/workspace/data PORT=8899

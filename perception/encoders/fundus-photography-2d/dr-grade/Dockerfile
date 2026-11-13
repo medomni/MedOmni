@@ -11,14 +11,15 @@ RUN python3 /tmp/fetch_assets.py \
     && chmod -R a+rX /opt/weights
 
 # CPU wheels: much smaller than the CUDA ones, and deployment.yaml decides the
-# device, not the image.
-RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu \
-        torch==2.6.0
+# device, not the image. torch 2.15.0 and torchvision 0.29.2 are what this image
+# has run since timm first pulled them in from PyPI (R-171): installing them here,
+# from the CPU index, keeps that version and leaves timm nothing to fetch.
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.15.0 torchvision==0.29.2
 
 # timm supplies the efficientnet_b0 architecture and the checkpoint supplies
-# every weight in it. No torchvision: the adapter resizes and crops with
-# Pillow, which is what torchvision does to a PIL image anyway. pydicom and
-# pillow are the family decoder's — a fundus photograph arrives as a DICOM.
+# every weight in it. The adapter resizes and crops with Pillow, not
+# torchvision. pydicom and pillow are the family decoder's — a fundus
+# photograph arrives as a DICOM.
 RUN pip install --no-cache-dir \
         timm==1.0.11 \
         safetensors==0.4.5 \

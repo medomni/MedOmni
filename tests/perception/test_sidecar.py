@@ -536,3 +536,24 @@ def test_every_copy_in_the_dockerfile_is_allowed_by_its_ignore_file():
     for src in sources:
         assert (REPO / src).exists(), src
         assert any(src == a or src.startswith(a + "/") or a.startswith(src + "/") for a in allowed), src
+
+
+def _rules(path):
+    return [line.strip() for line in path.read_text().splitlines() if line.strip() and not line.startswith("#")]
+
+
+def test_the_legacy_builder_gets_the_same_rules_as_buildkit():
+    """Docker without BuildKit ignores Dockerfile.dockerignore and reads only the root .dockerignore (R-171)."""
+    here = sidecar.DOCKERFILE.rsplit("/", 1)[0]
+    assert _rules(REPO / ".dockerignore") == _rules(REPO / here / "Dockerfile.dockerignore")
+
+
+def test_no_encoder_weights_or_test_data_reach_the_service_image():
+    """The service image copies the encoder folders; only card.yaml, adapter.py and Dockerfile may pass (R-171)."""
+    rules = _rules(REPO / ".dockerignore")
+    assert rules[0] == "*"
+    tree = rules.index("!perception/encoders")
+    assert rules[tree + 1] == "perception/encoders/*/*/*"  # everything inside an encoder folder out ...
+    later = [r[1:] for r in rules[tree + 2:] if r.startswith("!perception/encoders")]  # ... then only these back in
+    assert sorted(later) == [f"perception/encoders/*/*/{f}" for f in ("Dockerfile", "adapter.py", "card.yaml")]
+

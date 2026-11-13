@@ -6,6 +6,10 @@
 !src/medomni/core
 !src/medomni/perception
 !core/families
+# the legacy builder can't re-include a file through a wildcard folder, so: the encoder tree, nothing inside an
+# encoder folder, then its three files
+!perception/encoders
+perception/encoders/*/*/*
 !perception/encoders/*/*/card.yaml
 !perception/encoders/*/*/adapter.py
 !perception/encoders/*/*/Dockerfile

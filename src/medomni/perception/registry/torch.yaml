@@ -1,0 +1,10 @@
+# The torch builds an encoder image may install (`medomni perception check`, before and after the build; R-171).
+# index: every `torch==` install must name it with --index-url. The CPU build: the GPU build is about 5 GB larger,
+#        and deployment.yaml, not the image, decides the device.
+# build: the local version label the torch inside a built image must carry (2.6.0+cpu), checked after the build:
+#        torch can arrive as another package's dependency, which no Dockerfile line shows.
+# versions: the pins encoders use today. A version change can shift outputs, so a new one is added on purpose.
+# A GPU host overrides this file: a plug-in content folder that ships perception/torch.yaml replaces it.
+index: https://download.pytorch.org/whl/cpu
+build: cpu
+versions: ["2.6.0", "2.7.1", "2.13.0", "2.15.0"]

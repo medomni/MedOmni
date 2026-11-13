@@ -2,24 +2,12 @@
 #   docker build -f perception/encoders/fundus-faf-mono8-2d/retinograd/Dockerfile -t <tag> .
 FROM python:3.11-slim@sha256:1042b61448fef4ba92d16a8c7eb4996d027568ce64792a7877fd88511e0af7c6
 
-# The assets come first, because this layer is the expensive one: it downloads
-# 623 MiB of weights. Changing a pin below then costs a pip install and not
-# another download. fetch_assets.py verifies every file against the sha256 the
-# card publishes, so a build cannot ship an image whose card describes other
-# weights. It is a file rather than a RUN heredoc because the classic builder
-# accepts a heredoc, ignores its body, and reports success.
-ENV RETINOGRAD_SOURCE=/opt/retinograd \
-    RETINOGRAD_WEIGHTS=/opt/weights/FAF_inception_resenet_2Class_classification.pth
-COPY perception/encoders/fundus-faf-mono8-2d/retinograd/fetch_assets.py /tmp/
-RUN python3 /tmp/fetch_assets.py \
-    && rm /tmp/fetch_assets.py \
-    && chmod -R a+rX /opt/weights /opt/retinograd
-
 # CPU wheels: much smaller than the CUDA ones, and deployment.yaml decides the
-# device, not the image. torchvision is not installed — the adapter resizes
-# with Pillow, which is what torchvision's Resize does to a PIL image anyway.
-RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu \
-        torch==2.6.0
+# device, not the image. torch 2.15.0 and torchvision 0.29.2 are what this image
+# has run since timm first pulled them in from PyPI (R-171): installing them here,
+# from the CPU index, keeps that version and leaves timm nothing to fetch. The
+# adapter resizes with Pillow, not torchvision.
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.15.0 torchvision==0.29.2
 
 # timm supplies the inception_resnet_v2 architecture; the checkpoint supplies
 # every weight in it, so nothing is ever downloaded at run time.
@@ -31,6 +19,19 @@ RUN pip install --no-cache-dir \
         pillow==11.0.0 \
         numpy==2.2.6 \
         pyyaml==6.0.2
+
+# The weights come after the packages (R-171), so the package layers can be
+# shared with other images. fetch_assets.py downloads 623 MiB and verifies every
+# file against the sha256 the card publishes, so a build cannot ship an image
+# whose card describes other weights. It is a file rather than a RUN heredoc
+# because the classic builder accepts a heredoc, ignores its body, and reports
+# success.
+ENV RETINOGRAD_SOURCE=/opt/retinograd \
+    RETINOGRAD_WEIGHTS=/opt/weights/FAF_inception_resenet_2Class_classification.pth
+COPY perception/encoders/fundus-faf-mono8-2d/retinograd/fetch_assets.py /tmp/
+RUN python3 /tmp/fetch_assets.py \
+    && rm /tmp/fetch_assets.py \
+    && chmod -R a+rX /opt/weights /opt/retinograd
 
 WORKDIR /app
 

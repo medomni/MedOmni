@@ -1,6 +1,6 @@
 [project]
 name = "medomni"
-version = "0.3.0.dev0"
+version = "0.3.0"
 description = "Open-source software for medical AI on many data modalities"
 readme = "README.md"
 license = "Apache-2.0"

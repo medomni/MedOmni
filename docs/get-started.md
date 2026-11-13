@@ -9,9 +9,8 @@ From install to a scored Bench run: first on dummy data, which needs no credenti
 
 ## 1. Install
 
-<!-- outline (Stage 4 part 6): availability wording. Replace <repository-url> with the public repository once the first release is exported; say where encoder images are pulled from (ghcr.io/medomni) and that there is no PyPI release. Same in README.md. -->
 ```bash
-git clone --branch v0.3.0 <repository-url> medomni && cd medomni
+git clone --branch v0.3.0 https://github.com/medomni/MedOmni medomni && cd medomni
 ```
 
 ```bash
@@ -42,13 +41,24 @@ medomni studio task build --set medomni-bench/smoke-dummy
 
 Studio's builder, `medomni-v1`, writes the set's built tasks to your workspace. Bench runs and scores them.
 
+The set's arm gives the agent encoders, which run as images on your machine. Before the first run, build them:
+
+- Each encoder you want the agent to have: `medomni perception check perception/encoders/<family>/<encoder> --record` builds its image, checks it on its test data and records it. The perception service serves only recorded images.
+- Then the perception service, which carries the record:
+
+    ```bash
+    docker build -f src/medomni/perception/sidecar/Dockerfile -t medomni-perception .
+    ```
+
+    `medomni bench run` refuses to start without it and prints this command.
+
 For a provider's API, export its key in the same shell first, such as `export OPENAI_API_KEY=...`.
 
 ```bash
 medomni bench run --agent my-agent.yaml --set medomni-bench/smoke-dummy
 ```
 
-`medomni bench run` pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run in its run folder.
+`medomni bench run` runs every atom task in Harbor and records each run in its run folder.
 
 ## 4. Score
 

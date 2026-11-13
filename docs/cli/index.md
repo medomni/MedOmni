@@ -26,7 +26,7 @@ Shared commands are at the top level; each project's commands are under its name
 
 | Command | Does |
 |---|---|
-| `medomni perception pull [<family-or-encoder> ...]` | Pulls encoder images from `ghcr.io/medomni`. |
+| `medomni perception pull [<family-or-encoder> ...]` | Pulls encoder images from `ghcr.io/medomni`. Nothing is published there yet; build images with `perception check`. |
 | `medomni perception up --data-root <dir>` | Starts the gateway on the pulled encoders, on `127.0.0.1:8000`. |
 | `medomni perception new <family>/<encoder>` | Writes an encoder folder to fill in, in `perception/encoders/`, with an empty `testdata/`. |
 | `medomni perception check <encoder-folder>` | Validates the model card with `contracts check`, checks the Dockerfile's torch installs, builds the image, checks the torch inside it is a listed CPU build, and runs the encoder's tests: compares its responses on test data with `expected.json`, then on real family samples from `--samples <dir>`, or reports that stage unverified without them; `--freeze` records `expected.json` instead; `--record` writes a passing encoder into `perception/deployed.yaml`, the images the perception service starts. |

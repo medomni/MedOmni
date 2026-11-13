@@ -52,7 +52,7 @@ A [plug-in package](../core/plugins.md) can add an arm: its run side in `medomni
     - the [checks on built tasks](../core/built-tasks.md#checks-on-any-built-task)
     - the [stand-in agents](scoring.md#stand-in-agents) on each task
     - the agent's route against the policy of each dataset the tasks hold data from: a denied route refuses the run, and a `conditional` route prints the conditions you must meet
-2. pulls the encoder images for the families the tasks stage
+2. checks that the perception service's image is on your machine, when the arm attaches it
 3. writes one Harbor job per arm (and rung) and repetition, with what the arm attaches, and runs them
 4. records each run: ids, the intelligence, the task version and config hash, served model, cost and errors; and, in the run's `agent` block, the arm and its variant, the encoders served (id and image digest), encoder calls and files opened
 5. reads the agent's answer from the submission path and writes one prediction record per target to the run's `predictions.jsonl`

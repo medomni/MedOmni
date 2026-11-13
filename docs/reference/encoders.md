@@ -29,7 +29,7 @@ A model card has no extra keys, its family exists, and an encoder never returns 
 
 ## Encoders in v0.3.0
 
-44 encoders, each published as an image at `ghcr.io/medomni/<encoder>`, tagged with the MedOmni version that built it. Pull them with `medomni perception pull`.
+44 encoders. Each is built as an image on your machine with `medomni perception check`; see [Check and freeze](../learn/perception/encoders.md#check-and-freeze).
 
 Licenses differ. Some are non-commercial (CC BY-NC) or copyleft (GPL); read the model card before using an encoder outside research.
 

@@ -112,6 +112,13 @@ def test_an_exact_subject_replaces_a_badly_cleaned_one(private):
     assert git(private, "log", "-1", "--format=%s", tip) == "docs: redraft (Build, Recipes)"
 
 
+def test_a_whole_message_can_be_given(private):
+    sha = commit(private, "src: i (R-1)\n\nquotes '(,' on purpose", {"src/i.py": "i = 1\n"})
+    tip = export(private, {"messages": {sha[:10]: "src: i\n\nsays it in words"}})
+    assert git(private, "log", "-1", "--format=%B", tip).splitlines()[:3] == ["src: i", "", "says it in words"]
+    assert git(private, "log", "-1", "--format=%B", tip).strip().endswith(f"Private-Commit: {sha}")
+
+
 def test_fresh_rebuilds_an_export_that_exists(private):
     first = export(private)
     p = private.parent / "cfg.yaml"

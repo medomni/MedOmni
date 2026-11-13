@@ -17,13 +17,7 @@ MedOmni is developed in a private repository; the public repository is an export
 
 ## Data use and patient privacy
 
-MedOmni respects every dataset's data use agreement and keeps patients' data safe. What can be open is open; what must stay private stays private.
-
-- No patient data ships with MedOmni: no records, labels or per-record outputs. Tasks are built on your machine from generated dummy data, open datasets such as VitalDB, or datasets you are licensed to use, such as MIMIC-IV.
-- Each dataset package carries a policy that decides what may be published from it, and which routes, such as a cloud model provider, may see its data.
-- For a credentialed dataset, MedOmni publishes the task templates, recipes and config hashes, and you build the tasks from your own licensed copy. The config hash shows that two builds used the same task config.
-- What is built from patient data, such as the cache and built tasks, stays in your workspace and is never committed.
-- Before every release, a release check confirms each file may be published under its licence and its dataset's policy. A data check scans every file version pushed to the public repository for patient identifiers.
+MedOmni works in a sensitive medical domain, and we respect the data use agreement of every dataset it supports. No patient data ships with MedOmni: you build tasks from generated dummy data, open datasets such as VitalDB, or your own licensed copy of a dataset such as MIMIC-IV, and what is built from patient data stays on your machine.
 
 ## What v0.3.0 includes
 

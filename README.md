@@ -28,17 +28,11 @@ MedOmni is a shared Core with projects built on it. Each project depends on Core
 | **Studio** | The rest of the workflow: survey a dataset, preview and select cohorts, build tasks, and audit them. | `medomni studio` |
 | **Core** | What every project shares: the contracts, the `medomni` command, plug-in loading, dataset loading, the cache and the testing kit. | `medomni` |
 
-Anyone can add a dataset, an encoder, a task or an agent without changing Core: by pull request, or as a plug-in package in their own repository. Each piece has a `new` command to start from and a check command to run. See [Contributing](CONTRIBUTING.md).
+Anyone can add a dataset, an encoder, a task or an agent without changing Core: by pull request, or as a plug-in package in their own repository. See [Contributing](CONTRIBUTING.md).
 
 ## Data use and patient privacy
 
-MedOmni respects every dataset's data use agreement and keeps patients' data safe. What can be open is open; what must stay private stays private.
-
-- No patient data ships with MedOmni: no records, labels or per-record outputs. Tasks are built on your machine from generated dummy data, open datasets such as VitalDB, or datasets you are licensed to use, such as MIMIC-IV.
-- Each dataset package carries a policy that decides what may be published from it, and which routes, such as a cloud model provider, may see its data.
-- For a credentialed dataset, MedOmni publishes the task templates, recipes and config hashes, and you build the tasks from your own licensed copy. The config hash shows that two builds used the same task config.
-- What is built from patient data, such as the cache and built tasks, stays in your workspace and is never committed.
-- Before every release, a release check confirms each file may be published under its licence and its dataset's policy. A data check scans every file version pushed to the public repository for patient identifiers.
+MedOmni works in a sensitive medical domain, and we respect the data use agreement of every dataset it supports. No patient data ships with MedOmni: you build tasks from generated dummy data, open datasets such as VitalDB, or your own licensed copy of a dataset such as MIMIC-IV, and what is built from patient data stays on your machine.
 
 ## Install
 
@@ -58,7 +52,7 @@ Then follow [Get started](docs/get-started.md) to build, run and score a first t
 src/medomni/     the package: core/, bench/, perception/, studio/
 core/families/   one file per input family, and aliases.yaml
 bench/           benchmarks/ (benchmark cards and task sets), agents/
-perception/      encoders/<family>/<encoder>/, deployed.yaml (the images the perception service starts)
+perception/      encoders/<family>/<encoder>/, deployed.yaml
 studio/          datasets/<dataset>/ (dataset packages, templates, cohorts)
 tests/           one folder per project
 docs/            the documentation
@@ -66,7 +60,8 @@ docs/            the documentation
 
 ## Documentation
 
-- [Get started](docs/get-started.md): install and score a first run on dummy data.
+The documentation is at [medomni.ai](https://medomni.ai). To start:
+
 - [Run your agent](docs/guides/run-your-agent.md), [Use the encoders](docs/guides/use-the-encoders.md), [Contribute](docs/guides/contribute.md).
 - [Architecture](docs/learn/architecture.md): how the projects fit together.
 
@@ -76,4 +71,4 @@ MedOmni's code is under the Apache License 2.0; see [LICENSE](LICENSE). Each enc
 
 ## Releases
 
-This is v0.3.0, the first public release, a beta. The documentation is at [medomni.ai](https://medomni.ai). Releases are tags on [github.com/medomni/MedOmni](https://github.com/medomni/MedOmni). There is no PyPI release, and encoder images are built on your machine.
+This is v0.3.0, the first public release, a beta. Releases are tags on [github.com/medomni/MedOmni](https://github.com/medomni/MedOmni); there is no PyPI release.

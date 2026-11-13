@@ -39,12 +39,20 @@ medomni studio audit
 
 It runs the machine checks, reads the recorded verdicts and writes a report and a findings list to the workspace.
 
-<!-- outline (Stage 4 part 4), a section "Release check", to be written when it is built:
-- `medomni studio release-check` reads three things and fails on any conflict: each encoder card's `license` (which images and weights may be published), each dataset policy's `publish` rules (which tracked files under each package may ship: id lists, labels, per-record outputs, samples), and the release tree's data files (each in a testdata folder with a provenance and licence file).
-- How restricted licences are handled, as Bosong decides (D1).
-- It includes the version check that `studio task check --release` runs today.
-- When it runs: before every release, and in CI if part 5 adds it.
--->
+## Release check
+
+```bash
+medomni studio release-check
+```
+
+It checks that the release tree may be published, before every release. It reads four things and fails on any conflict:
+
+- **Encoder licences:** every model card states a licence, and every built image carries the same one in its `org.medomni.license` label, which `medomni perception check` sets. An encoder under a restricted licence ships like the rest, with the licence stated on both. `--no-images` skips the labels, so the check runs without Docker.
+- **Dataset publish rules:** every file under a dataset package is a kind its policy's `publish` rules name and allow: schema files, templates or recipes. Any other file is refused.
+- **Data files:** every signal, image or array file sits in a folder, or the folder above it, with a `PROVENANCE` file that states a licence. Site images under `docs/` aren't data.
+- **Task set versions:** the version check of `medomni studio task check --release`.
+
+The release tree is the repository's tracked files, less the folders that stay private.
 
 ## Where it lives
 

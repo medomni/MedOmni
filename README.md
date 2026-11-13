@@ -49,4 +49,8 @@ docs/            the documentation
 - [Run your agent](docs/guides/run-your-agent.md), [Use the encoders](docs/guides/use-the-encoders.md), [Contribute](docs/guides/contribute.md).
 - [Architecture](docs/learn/architecture.md): how the projects fit together.
 
-<!-- pending (Stage 4 parts 4 to 6): the documentation site's address, the licence, and where releases and images are published -->
+## Licence
+
+MedOmni's code is under the Apache License 2.0; see [LICENSE](LICENSE). Each encoder, dataset package and task set states its own licence on its card or policy.
+
+<!-- pending (Stage 4 parts 5 and 6): the documentation site's address, and where releases and images are published -->

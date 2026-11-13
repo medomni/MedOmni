@@ -49,6 +49,7 @@ Shared commands are at the top level; each project's commands are under its name
 | `medomni studio preview <template>@<cohort>` | Runs the cohort on your copy up to cohort selection and prints the patients left after each step and per class. Builds nothing. |
 | `medomni studio download-list <dataset>` | Lists what to download for a dataset: one tab-separated line per entry, with its source, its path in your copy and how to fetch it (`file`, `folder` or `gunzip`). Without the index tables on disk, it prints those first. |
 | `medomni studio dummy <dataset> [--subjects N] [--seed S] [--out DIR]` | Writes dummy data shaped like the dataset, from its `dataset.yaml` and `codes.csv`, with the [dummy-data generator](../learn/core/families.md#how-the-registry-is-used). |
+| `medomni studio release-check` | Checks that the release tree may be published: encoder card licences against image licence labels (`--no-images` skips Docker), dataset publish rules, a licensed `PROVENANCE` beside every data file, and task set versions. See [Release check](../learn/studio/audit.md#release-check). |
 | `medomni studio audit` | Runs the [audit](../reference/audit.md) and writes its report to the workspace. `--only` limits it to some assets. |
 | `medomni studio progress <run>` | Shows a run's progress live, per atom task. Run it beside `medomni bench run`. |
 | `medomni studio build-sheet <set>` | Writes a sheet of what a set's build made, per task, to the workspace. |

@@ -50,13 +50,13 @@ It runs six stages in order and stops at the first failure:
 3. **Build:** builds the image.
 4. **Image torch:** the torch installed in the image, if any, must be the listed build (`+cpu`) at a listed version. A dependency can bring in torch without any Dockerfile line naming it.
 5. **Test data:** runs the image on `testdata/` and compares the responses with `expected.json`.
-6. **Real samples:** runs the image offline on real samples of its family and checks each response against the model card. It needs at least three, in `--samples <dir>`, such as the files `medomni studio family-samples` writes from your own copy of a dataset. MedOmni publishes no real samples. Without them, the stage reports "unverified" and the test data stands in.
+6. **Real samples:** runs the image offline on real samples of its family and checks each response against the model card. It needs at least three, in `--samples <dir>`, such as the files `medomni studio family-samples` writes from your own copy of a dataset. MedOmni publishes no real samples. Without them, the stage reports `UNVERIFIED-no-samples`, or `UNVERIFIED-access-controlled` for a family whose real samples are access-controlled, and the test data stands in.
 
 The list for stages 2 and 4 is `src/medomni/perception/registry/torch.yaml`: the CPU build index and the torch versions encoders pin. Images are CPU builds because the GPU build is about 5 GB larger, and the deployment, not the image, decides the device. A host that wants another build, such as CUDA, ships its own `perception/torch.yaml` in one [plug-in content folder](../core/plugins.md), which replaces the list. Two content folders that ship one are refused.
 
 Stages 5 and 6 run the encoder's tests in `tests/perception/`. `--freeze` records `expected.json` from the current build; a later change that alters the responses fails stage 5.
 
-`--record` writes an encoder that passed into `perception/deployed.yaml`, which pins the image the perception service starts for each encoder. It refuses an image built from uncommitted source, and leaves the other encoders' entries as they are. The service serves an encoder whose entry passed stage 5 and did not fail stage 6. `--record` and `--freeze` can't be combined.
+`--record` writes an encoder that passed into `perception/deployed.yaml`, which pins the image the perception service starts for each encoder. It refuses an image built from uncommitted source, and leaves the other encoders' entries as they are, except that it drops an entry whose encoder has no folder in the repository or any plug-in content folder. The service serves an encoder whose entry passed stage 5 and did not fail stage 6. `--record` and `--freeze` can't be combined.
 
 ## Images
 

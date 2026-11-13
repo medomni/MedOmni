@@ -6,14 +6,12 @@ A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and 
 
 MedOmni is a shared Core with projects built on it. Each project depends on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
 
-MedOmni is developed in a private repository; the public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged there and ship in the next release: see [How MedOmni is developed](guides/contribute.md#how-medomni-is-developed).
-
 !!! info "This is v0.3.0, the first public release"
     MedOmni v0.3.0 (git tag `v0.3.0`) is the first public release and the first milestone of MedOmni. It has:
 
     - the `medomni` package and command
     - versioned contracts shared by all projects
-    - four extension points (agent, dataset, task, encoder), filled by pull request or plug-in package without changing Core
+    - extension points for agents, datasets, tasks and encoders, filled by pull request or plug-in package without changing Core
 
 ## Data use and patient privacy
 

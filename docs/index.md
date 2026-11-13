@@ -1,31 +1,30 @@
 # MedOmni
 
-MedOmni is open-source software for medical AI on many data modalities: tables, waveforms, images and notes.
+The open-source ecosystem for omni-modality medical intelligence. MedOmni is open infrastructure for medical AI on any data modality: tables, waveforms, images, volumes and notes.
 
-MedOmni is developed in a private repository; the public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged there and ship in the next release: see [How MedOmni is developed](guides/contribute.md#how-medomni-is-developed).
+A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and notes side by side. MedOmni aims to be the shared, open infrastructure where agents and models learn to do the same: take in any medical data modality, be tested on it, and improve. A dataset or encoder added to MedOmni once can be used by every agent and model tested on it.
+
+MedOmni is a shared Core with projects built on it. Each project depends on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
 
 !!! info "This is v0.3.0, the first public release"
     MedOmni v0.3.0 (git tag `v0.3.0`) is the first public release and the first milestone of MedOmni. It has:
 
     - the `medomni` package and command
     - versioned contracts shared by all projects
-    - four extension points (agent, dataset, task, encoder), filled by pull request or plug-in package without changing Core
+    - extension points for agents, datasets, tasks and encoders, filled by pull request or plug-in package without changing Core
 
-!!! warning "No patient data ships with MedOmni"
-    The repository holds code, contracts, dataset packages, templates and recipes. Data comes from:
+## Data use and patient privacy
 
-    - generated dummy data
-    - open datasets, such as VitalDB
-    - datasets you are licensed to use, such as MIMIC-IV
+MedOmni works in a sensitive medical domain, and we respect the data use agreement of every dataset it supports. No patient data ships with MedOmni: you build tasks from generated dummy data, open datasets such as VitalDB, or your own licensed copy of a dataset such as MIMIC-IV, and what is built from patient data stays on your machine.
 
 ## What v0.3.0 includes
 
-Three projects and the core they share:
+The projects and the core they share:
 
 | Project | Does | Package | Command |
 |---|---|---|---|
 | **Bench** | Runs AI agents on built medical tasks and scores them, whoever built the tasks. A task gives an agent one patient's evidence and a clinical question; a fixed verifier scores the answer. It scores the agent as a whole (scaffold and model), as Terminal-Bench and SWE-bench do. | `medomni.bench` | `medomni bench` |
-| **Perception** | Serves 44 medical encoders through an HTTP gateway. Each encoder reads one kind of input, such as a 12-lead ECG, and returns evidence for an agent or your own code. | `medomni.perception` | `medomni perception` |
+| **Perception** | Serves medical encoders through an HTTP gateway. Each encoder reads one kind of input, such as a 12-lead ECG, and returns evidence for an agent or your own code. | `medomni.perception` | `medomni perception` |
 | **Studio** | Makes and builds tasks: dataset survey, task proposals from clinicians, review and sign-off, cohort previews, MedOmni's task builder, the audit and reports. | `medomni.studio` | `medomni studio` |
 | **Core** | Shared by every project: the contracts, the `medomni` command, plug-in loading, dataset loading, the family converter interface, the cache, the built-task contract and the testing kit. | `medomni.core` | `medomni` |
 

@@ -3,14 +3,14 @@
     studio/datasets/<dataset>/tasks/<template_id>/template.yaml
     studio/datasets/<dataset>/tasks/<template_id>/cohorts/{n20,ladder}.yaml
 
-Sources (v0.2's from the v0.2.1 tree, `v02`; the fixtures and S1's recipes from this repository):
+Sources (v0.2's from the v0.2.1 tree, `v02`; the fixtures and the Stage 1 prototype recipes from this repository):
 
 - the 30 base specs in `data_task/taskbuilder/specs/`; a `-full` twin adds the `full` evidence variant (R-34, R-109)
   and, when it overrides them, the variant's own `input` and `exclude` (`full:`); a `-mini` twin is the n20 tier;
 - the targets v0.2 adds in code, `CENSUS_RULED` in `emit_atomic.py` (read as a literal, not imported);
-- the cohorts S2 ported from S1's recipes, `tests/core/fixtures/recipes/<dataset>/cohorts.yaml` (n20 and ladder;
-  the base `standard` tier was never built and is not converted, Bosong 2026-11-09). The one cohort S2 left out,
-  `mimic_icu-stay-radiology@n20`, comes from S1's `p16_recipes.yaml`: its inline balance rule becomes the label
+- the cohorts ported from the Stage 1 prototype recipes, `tests/core/fixtures/recipes/<dataset>/cohorts.yaml` (n20 and ladder;
+  the base `standard` tier was never built and is not converted, Bosong 2026-11-09). The one cohort the port left out,
+  `mimic_icu-stay-radiology@n20`, comes from the prototype recipe file (`PROTOTYPE_RECIPES`, private): its inline balance rule becomes the label
   `derived:cxr-before-anchor`, named by the cohort's `select.balance` so it is never scored (Bosong, 2026-11-09).
 
 `agent.instruction` holds the template's own instruction paragraph: v0.2's definitions block for the kind of prediction
@@ -42,7 +42,14 @@ BLOCKS = "data_task/taskbuilder/templates/blocks"
 LADDER = "data_task/taskbuilder/ladder.yaml"
 ICD_CODE = "^DIAGNOSIS//ICD//({})"
 FIXTURES = "tests/core/fixtures/recipes"
-S1_RECIPES = "internal_docs/roadmaps/v0.3.0/roadmaps/probes/s1/p16_recipes.yaml"
+
+
+class PrivateSourceMissing(FileNotFoundError):
+    """A source only the private repository holds."""
+
+
+# The prototype recipe file: in the private repository only; without it the one inline cohort can't be converted.
+PROTOTYPE_RECIPES = "internal_docs/roadmaps/v0.3.0/roadmaps/probes/s1/p16_recipes.yaml"
 DEST = "studio/datasets"
 TIERS = ("n20", "ladder")
 COHORT_VERSION = "1.0"  # R-106
@@ -64,7 +71,7 @@ DROPPED = ("version", "prediction_time_note", "readme_note", "approved_by", "str
 ENVIRONMENT = ("cpus", "memory_mb", "allow_internet", "agent_timeout_sec", "verifier_timeout_sec")
 AUTHOR_ALIASES = {"Boson": "Bosong Huang"}  # one person, two git names (same GitHub account)
 
-# The one cohort S2 did not port: its inline balance rule, as a label and a target
+# The one cohort the Stage 2 port left out: its inline balance rule, as a label and a target
 INLINE = {"mimic_icu-stay-radiology@n20": {
     "rule": {"exists": "CXR//STUDY", "to": "anchor"},
     "label": "derived:cxr-before-anchor",
@@ -109,9 +116,12 @@ def _fixtures(repo: Path) -> dict[str, dict]:
 
 
 def _inline_cohort(repo: Path, key: str) -> dict:
-    """A cohort from S1's recipe file, converted as S2's port did (p11_port_recipes.py), with the inline balance
-    rule replaced by its target."""
-    r = copy.deepcopy(yaml.safe_load((repo / S1_RECIPES).read_text(encoding="utf-8"))[key])
+    """A cohort from the prototype recipe file, converted as the Stage 2 port did, with the inline balance rule
+    replaced by its target. Raises PrivateSourceMissing where the file isn't (the public repository)."""
+    src = repo / PROTOTYPE_RECIPES
+    if not src.is_file():
+        raise PrivateSourceMissing(f"{PROTOTYPE_RECIPES} is in the private repository only")
+    r = copy.deepcopy(yaml.safe_load(src.read_text(encoding="utf-8"))[key])
     inline = INLINE[key]
     ds = r["dataset"]
     targets = {lab["name"]: f"{ds}:{lab['derivation']}" for lab in r["labels"]}
@@ -181,7 +191,7 @@ def _exclude(raw: dict) -> dict[str, list[str]]:
 
 
 def _label(ds: str, ref: str) -> str:
-    """`mimic:derived:x` (S2's fixtures) -> `mimic-iv:derived:x`."""
+    """`mimic:derived:x` (the ported fixtures) -> `mimic-iv:derived:x`."""
     old, _, label = ref.partition(":")
     if DATASETS.get(old, old) != ds:
         raise ValueError(f"{ref}: label of another dataset than {ds}")

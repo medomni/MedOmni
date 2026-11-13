@@ -1,4 +1,4 @@
-"""Recipes (part 6): S1's ported recipes validate; references across files are checked. The v1 builder's (R-147)."""
+"""Recipes (part 6): the ported Stage 1 prototype recipes validate; references across files are checked. The v1 builder's (R-147)."""
 import shutil
 from pathlib import Path
 
@@ -22,7 +22,7 @@ def test_s1_recipes_validate():
         labels = c.load(d / "labels.yaml", v1.LabelLibrary)
         n_labels += len(labels.root)
         for name, entry in yaml.safe_load((d / "cohorts.yaml").read_text()).items():
-            cohort = c.load_data({"version": "1.0"} | entry["cohort"], v1.Cohort, name)  # S1's recipes predate versions (R-106)
+            cohort = c.load_data({"version": "1.0"} | entry["cohort"], v1.Cohort, name)  # the prototype recipes predate versions (R-106)
             assert check_cohort(name, cohort, dataset=d.name, targets=entry["targets"], labels=labels,
                                 definitions=None, codes=None, families=fams) == [], name
             n_cohorts += 1

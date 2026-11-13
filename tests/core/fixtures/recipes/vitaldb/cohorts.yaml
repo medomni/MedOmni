@@ -1,4 +1,4 @@
-# Ported from S1's p16_recipes.yaml by internal_docs/roadmaps/v0.3.0/roadmaps/s2/probes/p11_port_recipes.py. Do not edit.
+# Ported from the v0.3.0 Stage 1 prototype recipes. Do not edit.
 vitaldb_postop-creatinine@opend:
   cohort:
     anchor:

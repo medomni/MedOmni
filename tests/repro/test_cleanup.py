@@ -7,9 +7,9 @@ import re
 import subprocess
 
 V02_FOLDERS = ("assurance", "data_manifest", "data_task", "harness", "release", "tools", "runs", "perception")
-# v0.3 content in a v0.2 folder name: the encoders and their records, and the export's flat release/ folder (v0.2's
-# release/ held version folders such as release/v0.1.1/)
-KEPT = re.compile(r"^(perception/encoders/|perception/deployed\.yaml$|perception/deployment\.yaml$|release/[^/]+$)")
+# v0.3 content in a v0.2 folder name: the encoders and their records, and the export's release/ folder, flat but for
+# its hooks/ (v0.2's release/ held version folders such as release/v0.1.1/)
+KEPT = re.compile(r"^(perception/encoders/|perception/deployed\.yaml$|perception/deployment\.yaml$|release/(hooks/)?[^/]+$)")
 CORE_HELPERS = {"sha256", "sha256_file", "sha256_dir", "quick_sha", "dir_hash"}  # medomni.core.hashing's, and v0.2's names
 
 

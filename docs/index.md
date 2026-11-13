@@ -1,6 +1,6 @@
 # MedOmni
 
-The open-source ecosystem for omni-modality medical intelligence. MedOmni is open infrastructure for medical AI on any data modality: tables, waveforms, images, volumes and notes.
+The ecosystem for omni-modality medical intelligence. MedOmni is open infrastructure for medical AI on any data modality: tables, waveforms, images, volumes and notes.
 
 A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and notes side by side. MedOmni aims to be the shared, open infrastructure where agents and models learn to do the same: take in any medical data modality, be tested on it, and improve. A dataset or encoder added to MedOmni once can be used by every agent and model tested on it.
 

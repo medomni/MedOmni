@@ -95,10 +95,12 @@ for line in msg.split(b"\n"):
             line = rx.sub(rep, line)
     lines.append(line)
 msg = b"\n".join(lines).rstrip(b"\n")
-_subjects = {subjects!r}
+_subjects, _messages = {subjects!r}, {messages!r}
 _new = _subjects.get(commit.original_id.decode())
 if _new:
     msg = _new.encode() + (b"\n" + msg.split(b"\n", 1)[1] if b"\n" in msg else b"")
+if commit.original_id.decode() in _messages:
+    msg = _messages[commit.original_id.decode()].rstrip("\n").encode()
 if b"\n{public}: " not in b"\n" + msg:
     paras = msg.split(b"\n\n")
     tail = paras[-1].split(b"\n")
@@ -120,7 +122,8 @@ def filtered(repo, branch: str, cfg: dict, work: Path) -> Path:
     (work / "paths").write_text(path_lines(files, renames), encoding="utf-8")
     args = ["filter-repo", "--force", "--quiet", "--paths-from-file", str(work / "paths"),
             "--commit-callback", CALLBACK.format(strip=list(cfg.get("strip_from_messages", [])), public=PUBLIC_TRAILER,
-                                                 private=PRIVATE_TRAILER, subjects=_subjects(repo, cfg))]
+                                                 private=PRIVATE_TRAILER, subjects=_subjects(repo, cfg, "subjects"),
+                                                 messages=_subjects(repo, cfg, "messages"))]
     if cfg.get("mailmap"):
         args += ["--mailmap", str(Path(repo, cfg["mailmap"]).resolve())]
     rules = replacements(clone, cfg, files + [o for o, n in renames.items() if n in files])
@@ -136,10 +139,11 @@ ID = re.compile(rb"(?<![0-9A-Za-z.])p?(1\d{7})(?![0-9A-Za-z.])")
 FRAGMENT = re.compile(r"\(,|\(\s|\(\s*;|,\s*\)|\(\)| for \(|after \(|\s(in|for|after|of|by)$")
 
 
-def _subjects(repo, cfg: dict) -> dict[str, str]:
-    """The config's exact subjects (`subjects: {private commit: subject}`), with each id expanded to its full form."""
+def _subjects(repo, cfg: dict, key: str = "subjects") -> dict[str, str]:
+    """The config's exact subjects (`subjects: {private commit: subject}`) or whole messages (`messages`), each id
+    expanded to its full form."""
     out = {}
-    for short, subject in (cfg.get("subjects") or {}).items():
+    for short, subject in (cfg.get(key) or {}).items():
         out[git(repo, "rev-parse", "--verify", f"{short}^{{commit}}").strip()] = str(subject)
     return out
 

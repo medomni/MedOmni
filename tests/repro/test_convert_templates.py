@@ -41,12 +41,15 @@ SCORED = {  # v0.2's n20 trees: template -> {target: metric} (atomtasks/_parents
     'mimic_sepsis-hospital': {'septicemia': 'auc'},
     'mimic_stroke-infarct-ed': {'cerebral_infarction': 'auc'},
 }
-BALANCE = {}  # S1's inline balance rule is `draw.balance`, not a target (Bosong, 2026-11-09)
+BALANCE = {}  # the prototype's inline balance rule is `draw.balance`, not a target (Bosong, 2026-11-09)
 
 
 @pytest.fixture(scope="module")
 def converted(repo, v02_root):
-    return templates.convert(repo, v02_root)
+    try:
+        return templates.convert(repo, v02_root)
+    except templates.PrivateSourceMissing as e:  # the public repository
+        pytest.skip(str(e))
 
 
 def _templates(outputs):
@@ -113,7 +116,7 @@ def test_committed_tree_is_the_converter_output(repo, converted):
         assert (repo / rel).read_text(encoding="utf-8") == templates.HEADER + convert.dump(data), rel
 
 
-def test_conversion_is_stable(repo, v02_root, tmp_path):
+def test_conversion_is_stable(repo, v02_root, converted, tmp_path):
     a = convert.write(templates.convert(repo, v02_root)[0], tmp_path / "a", templates.HEADER)
     b = convert.write(templates.convert(repo, v02_root)[0], tmp_path / "b", templates.HEADER)
     assert [p.read_bytes() for p in a] == [p.read_bytes() for p in b]

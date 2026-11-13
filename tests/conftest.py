@@ -40,6 +40,8 @@ def v02_root(tmp_path_factory) -> Path:
     """v0.2.1's files, out of this repository's git history: the v0.2 side of the equivalence tests."""
     from tests.repro.migrate import V02_COMMIT, v02_tree
 
+    if not (REPO / "internal_docs").is_dir():
+        pytest.skip("v0.2.1's history is in the private repository only; the public repository starts at v0.3")
     if subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", f"{V02_COMMIT}^{{commit}}"]).returncode:
         pytest.fail(f"v0.2.1's commit {V02_COMMIT} is not in this clone's history; fetch it (git fetch --tags)")
     return v02_tree(REPO, tmp_path_factory.mktemp("v02"))

@@ -3,112 +3,31 @@
 # passed at its build_key. Schema medomni.deployed/1.
 schema: medomni.deployed/1
 encoders:
-  abp-waveform-125hz-mmhg__pyvital-hpi:
-    build_key: sha256:04551dbccb760ae0db39263f93ac7d289d379631b80df5551cf038e6399c75fb
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
-    image: ghcr.io/medomni/abp-waveform-125hz-mmhg__pyvital-hpi:dev
-    image_id: sha256:73dfbe842304db11d1cbb08cbfb15571b923f3365cf5b9edf93a777a2c205406
-    built_at: '2026-09-24T08:51:43Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T08:51:43Z'
-        build_key: sha256:04551dbccb760ae0db39263f93ac7d289d379631b80df5551cf038e6399c75fb
-      L1:
-        status: PASS
-        at: '2026-09-24T08:51:43Z'
-        build_key: sha256:04551dbccb760ae0db39263f93ac7d289d379631b80df5551cf038e6399c75fb
-      L2:
-        status: PASS
-        at: '2026-09-24T08:52:37Z'
-        build_key: sha256:04551dbccb760ae0db39263f93ac7d289d379631b80df5551cf038e6399c75fb
-        detail: 2 sample(s)
-      L3:
-        status: FAIL
-        at: '2026-09-24T08:55:13Z'
-        build_key: sha256:04551dbccb760ae0db39263f93ac7d289d379631b80df5551cf038e6399c75fb
-        draw_key: sha256:6cc6fdb67b3f0fa1fd0b3b63dc06620447e9b42b55e6b8bb316cba42281fe803
-        n_units: 5
-        source: family-samples
-        detail: 'sample-01.hea: real family sample did not produce healthy output; sample-01.hea: card declares 1 output block(s), got 0'
-  abp-waveform-125hz-mmhg__pyvital-sv:
-    build_key: sha256:004492311172b21d5cb694581928041c76f98f5b034435460ece186c60cacfd6
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
-    image: ghcr.io/medomni/abp-waveform-125hz-mmhg__pyvital-sv:dev
-    image_id: sha256:ce8215d4dd0701ad9f3fe09734f4aafe29f87a50217d4291f60a8ae14da57a6c
-    built_at: '2026-09-24T08:51:43Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T08:51:43Z'
-        build_key: sha256:004492311172b21d5cb694581928041c76f98f5b034435460ece186c60cacfd6
-      L1:
-        status: PASS
-        at: '2026-09-24T08:51:43Z'
-        build_key: sha256:004492311172b21d5cb694581928041c76f98f5b034435460ece186c60cacfd6
-      L2:
-        status: PASS
-        at: '2026-09-24T08:52:40Z'
-        build_key: sha256:004492311172b21d5cb694581928041c76f98f5b034435460ece186c60cacfd6
-        detail: 1 sample(s)
-      L3:
-        status: FAIL
-        at: '2026-09-24T08:55:25Z'
-        build_key: sha256:004492311172b21d5cb694581928041c76f98f5b034435460ece186c60cacfd6
-        draw_key: sha256:6cc6fdb67b3f0fa1fd0b3b63dc06620447e9b42b55e6b8bb316cba42281fe803
-        n_units: 5
-        source: family-samples
-        detail: 'sample-01.hea: real family sample did not produce healthy output; sample-01.hea: card declares 1 output block(s), got 0'
   body-position-code-10hz__rule-occupancy:
     build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
-    source_rev: f1351342d4601f7c4f0e780315a068828debea7b
+    source_rev: 9d3773d6e7b0c1c6f155f8757a0e0d02ac01c2d7
     image: ghcr.io/medomni/body-position-code-10hz__rule-occupancy:dev
-    image_id: sha256:6b5f21e1e78b27563a52223b7c231f413075195be19a1bd2bd812c692dae2810
-    built_at: '2026-11-13T00:44:16Z'
+    image_id: sha256:65dfe5fc4a6400dc6a82c1b2c00e1d986a343524047620d721961fd56378488a
+    built_at: '2026-11-13T02:29:22Z'
     stages:
       L0:
         status: PASS
-        at: '2026-11-13T00:44:16Z'
+        at: '2026-11-13T02:29:22Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
       L1:
         status: PASS
-        at: '2026-11-13T00:44:16Z'
+        at: '2026-11-13T02:29:22Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
       L2:
         status: PASS
-        at: '2026-11-13T00:44:16Z'
+        at: '2026-11-13T02:29:22Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
         detail: 2 sample(s)
       L3:
         status: PASS
-        at: '2026-11-13T00:44:16Z'
+        at: '2026-11-13T02:29:22Z'
         build_key: sha256:c9358c2dda58cb4edff6c72fdff6367d710385c1d80236b2393e405ea9b7b628
         detail: 5 sample(s), offline
-  capnography-mmhg__rule-amplitude:
-    build_key: sha256:fd8e9529d58dd3849b29d84dfe26a6977eee449ec1de38269e2bcaffac012908
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
-    image: ghcr.io/medomni/capnography-mmhg__rule-amplitude:dev
-    image_id: sha256:5cbd62be04503958c1f8f9115ef66d29f70cf8d79ee292b95c3d284897101b95
-    built_at: '2026-09-24T08:51:44Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T08:51:44Z'
-        build_key: sha256:fd8e9529d58dd3849b29d84dfe26a6977eee449ec1de38269e2bcaffac012908
-      L1:
-        status: PASS
-        at: '2026-09-24T08:51:44Z'
-        build_key: sha256:fd8e9529d58dd3849b29d84dfe26a6977eee449ec1de38269e2bcaffac012908
-      L2:
-        status: PASS
-        at: '2026-09-24T08:52:43Z'
-        build_key: sha256:fd8e9529d58dd3849b29d84dfe26a6977eee449ec1de38269e2bcaffac012908
-        detail: 3 sample(s)
-      L3:
-        status: UNVERIFIED-no-supply
-        at: '2026-09-24T08:55:28Z'
-        build_key: sha256:fd8e9529d58dd3849b29d84dfe26a6977eee449ec1de38269e2bcaffac012908
-        detail: family publishes no samples
   cgm-5min-mgdl__pyagata:
     build_key: sha256:540caa7d0c4032a30cb7c2634429f778baf7bd022c5c65127e35abee29e7ccd3
     source_rev: f1351342d4601f7c4f0e780315a068828debea7b
@@ -159,36 +78,6 @@ encoders:
         at: '2026-11-13T00:44:32Z'
         build_key: sha256:d1edef06f25586a86b9ea2b4be7cb6e0324b257b17c192284891ea428ef3dd36
         detail: 5 sample(s), offline
-  clinical-measurement-irregular__rule-vitals:
-    build_key: sha256:87b32808f69d4226210e658ee879175f15dcad5d57cac9a5361187034fe26439
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
-    image: ghcr.io/medomni/clinical-measurement-irregular__rule-vitals:dev
-    image_id: sha256:834d0f032f2d6cf9a9cd469bb96c36a4a465708371b501a0e380182137305f66
-    built_at: '2026-09-24T08:51:46Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T08:51:46Z'
-        build_key: sha256:87b32808f69d4226210e658ee879175f15dcad5d57cac9a5361187034fe26439
-      L1:
-        status: PASS
-        at: '2026-09-24T08:51:46Z'
-        build_key: sha256:87b32808f69d4226210e658ee879175f15dcad5d57cac9a5361187034fe26439
-      L2:
-        status: PASS
-        at: '2026-09-24T08:52:47Z'
-        build_key: sha256:87b32808f69d4226210e658ee879175f15dcad5d57cac9a5361187034fe26439
-        detail: 1 sample(s)
-      L3:
-        status: FAIL
-        at: '2026-09-24T08:55:37Z'
-        build_key: sha256:87b32808f69d4226210e658ee879175f15dcad5d57cac9a5361187034fe26439
-        draw_key: sha256:081fd7046994d80e9ea85fe68982cbaa1f306eaa75a68748519684a06ead0468
-        n_units: 5
-        source: family-samples
-        detail: 'sample-01.jsonl: real family sample did not produce healthy output; sample-01.jsonl: card declares 1 output block(s), got 0; sample-02.jsonl: real family sample did not produce healthy
-          output; sample-02.jsonl: card declares 1 output block(s), got 0; sample-03.jsonl: real family sample did not produce healthy output; sample-03.jsonl: card declares 1 output block(s), got 0; sample-04.jsonl:
-          real family sample did not produce healthy output; sample-04.jsonl: card declares 1 output block(s), got 0; '
   cxr-radiograph-2d__biomedclip:
     build_key: sha256:4744ac3271296ff597516024611f64e878a1421b74b39a7e864da8e161783545
     source_rev: f1351342d4601f7c4f0e780315a068828debea7b
@@ -564,34 +453,6 @@ encoders:
         at: '2026-11-13T00:49:19Z'
         build_key: sha256:d44c2d0cbb0d060c484e15f6c64d74b271e626ce229e238ec39739b530692d81
         detail: 5 sample(s), offline
-  fundus-photography-2d__flair:
-    build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
-    source_rev: a646d4d5112d86bbe7e9a3e2e5adf8e042f7938d
-    image: ghcr.io/medomni/fundus-photography-2d__flair:dev
-    image_id: sha256:277d247045fb42b1e556f4a0225be3ba6dbf7c3bcfd4799467a95d56d3ff474f
-    built_at: '2026-09-24T09:21:55Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T09:21:55Z'
-        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
-      L1:
-        status: PASS
-        at: '2026-09-24T09:21:55Z'
-        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
-      L2:
-        status: PASS
-        at: '2026-09-24T09:22:00Z'
-        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
-        detail: 2 sample(s)
-      L3:
-        status: PASS
-        at: '2026-09-24T09:22:26Z'
-        build_key: sha256:7cbafe614e3165899a32439e2071cf992fbf03c804a910c18ebbed5f4c8cbfae
-        draw_key: sha256:2accca00b9b488138ef052ccd8386bc2c74cd111f1373f951615ce212f3f4cc2
-        n_units: 5
-        source: family-samples
-        detail: 5 sample(s)
   fundus-photography-2d__retfound:
     build_key: sha256:f6ff7dd3837c740058af9d49e322cb1aebdf681075fc74f14e2bd534b1b5839a
     source_rev: f1351342d4601f7c4f0e780315a068828debea7b
@@ -667,36 +528,6 @@ encoders:
         at: '2026-11-13T00:52:15Z'
         build_key: sha256:34bbbd4f70d0dc747e417f4806a380d73b2c0e98ec50eb694887a07d6001dc7b
         detail: 5 sample(s), offline
-  numeric-observation__vitalscore:
-    build_key: sha256:754dc089e8e03683ca2b2958cd3c592ae2e5bf49dfe2092d28f3f0c282d29ef5
-    source_rev: ae693bd8156bd3af8d1510ac9a2921d1287d82c8
-    image: ghcr.io/medomni/numeric-observation__vitalscore:dev
-    image_id: sha256:d7c52fc66dd3d708789022921ba0d0ac4baa84e5d471625646345ced3a3ea050
-    built_at: '2026-09-24T04:27:56Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T04:27:56Z'
-        build_key: sha256:754dc089e8e03683ca2b2958cd3c592ae2e5bf49dfe2092d28f3f0c282d29ef5
-      L1:
-        status: PASS
-        at: '2026-09-24T04:27:56Z'
-        build_key: sha256:754dc089e8e03683ca2b2958cd3c592ae2e5bf49dfe2092d28f3f0c282d29ef5
-      L2:
-        status: PASS
-        at: '2026-09-24T04:29:31Z'
-        build_key: sha256:754dc089e8e03683ca2b2958cd3c592ae2e5bf49dfe2092d28f3f0c282d29ef5
-        detail: 1 sample(s)
-      L3:
-        status: FAIL
-        at: '2026-09-24T04:35:59Z'
-        build_key: sha256:754dc089e8e03683ca2b2958cd3c592ae2e5bf49dfe2092d28f3f0c282d29ef5
-        draw_key: sha256:4c6051e5b441ac160a1757eb9f3efa96b9e9760e5e677313d8c5db8d0515254c
-        n_units: 5
-        source: family-samples
-        detail: 'sample-01.csv: real family sample did not produce healthy output; sample-01.csv: card declares 1 output block(s), got 0; sample-02.csv: real family sample did not produce healthy output;
-          sample-02.csv: card declares 1 output block(s), got 0; sample-03.csv: real family sample did not produce healthy output; sample-03.csv: card declares 1 output block(s), got 0; sample-04.csv: real
-          family sample did not produce healthy output; sample-04.csv: card declares 1 output block(s), got 0; sample-05.csv: r'
   oct-bscanset-radial24-circle3-mono8__mirage-onh:
     build_key: sha256:59b9d174bd8e490a9763ad5e5a5d6f4fe5e0f244a9f8e06ebbc9c60bac8d3cdc
     source_rev: f1351342d4601f7c4f0e780315a068828debea7b
@@ -1247,34 +1078,6 @@ encoders:
         at: '2026-11-13T01:02:43Z'
         build_key: sha256:5909e0a2cbbdeda78df9e5691ae2132f829f25ce4f42ebeea174656992c4b932
         detail: 5 sample(s), offline
-  wearable-resprate-1min-brpm__rule-summary:
-    build_key: sha256:a80c62e2542703d7ab408eaa72d8e77fcd46048a7623f430d49638ceba08b6fc
-    source_rev: 69a097215d8c28b810168d79b5a8beb884751bdd
-    image: ghcr.io/medomni/wearable-resprate-1min-brpm__rule-summary:dev
-    image_id: sha256:0f1ea1aee97c77f2f5028dbd9ebd413d1f3aa70be7d3f85b97d2c34274b17ce7
-    built_at: '2026-09-24T08:52:33Z'
-    stages:
-      L0:
-        status: PASS
-        at: '2026-09-24T08:52:33Z'
-        build_key: sha256:a80c62e2542703d7ab408eaa72d8e77fcd46048a7623f430d49638ceba08b6fc
-      L1:
-        status: PASS
-        at: '2026-09-24T08:52:33Z'
-        build_key: sha256:a80c62e2542703d7ab408eaa72d8e77fcd46048a7623f430d49638ceba08b6fc
-      L2:
-        status: PASS
-        at: '2026-09-24T08:55:00Z'
-        build_key: sha256:a80c62e2542703d7ab408eaa72d8e77fcd46048a7623f430d49638ceba08b6fc
-        detail: 2 sample(s)
-      L3:
-        status: FAIL
-        at: '2026-09-24T09:09:37Z'
-        build_key: sha256:a80c62e2542703d7ab408eaa72d8e77fcd46048a7623f430d49638ceba08b6fc
-        draw_key: sha256:96132c897e8f5e7911dc2408912ab30597a9e1e52f013634654c5d92aa7e53be
-        n_units: 5
-        source: family-samples
-        detail: 'sample-04.json: real family sample did not produce healthy output; sample-04.json: card declares 1 output block(s), got 0'
   wearable-spo2-1min-pct__rule-summary:
     build_key: sha256:147e7dc8c9ce8931dc0f022687d0b542e1ecbf49879aa4e8f69e48764852346d
     source_rev: f1351342d4601f7c4f0e780315a068828debea7b

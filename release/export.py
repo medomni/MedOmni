@@ -110,11 +110,21 @@ commit.message = msg + b"\n"
 '''
 
 
-def filtered(repo, branch: str, cfg: dict, work: Path) -> Path:
+def published(repo, ref: str | None) -> set[str]:
+    """Every path a previous export holds in any of its commits: once published, a path stays in the filter, so a
+    later move or deletion shows as a change on top of the public history, never as a rewrite of it."""
+    if not ref:
+        return set()
+    return {p for p in git(repo, "log", "--format=", "--name-only", "--no-renames", ref).splitlines() if p}
+
+
+def filtered(repo, branch: str, cfg: dict, work: Path, previous: str | None = None) -> Path:
     """A fresh clone of the branch, filtered. Returns the clone; its `main` is the filtered history."""
     include = _at(repo, branch, "release/public.yaml")["include"]  # the allowlist and path map at the branch's tip
     renames = _at(repo, branch, "release/history-paths.yaml").get("paths", {})
-    files = release_files(repo, branch, include)
+    already = published(repo, previous)
+    files = sorted(set(release_files(repo, branch, include)) | already)
+    renames = {o: n for o, n in renames.items() if o not in already}  # a published old name stays as published
     clone = work / "clone"
     git(work, "clone", "--quiet", "--no-local", "--no-tags", "--single-branch", "--branch", branch, str(Path(repo).resolve()), str(clone))
     if branch != "main":
@@ -289,7 +299,7 @@ def export(repo=".", branch="main", config: Path | None = None, report: Path | N
     previous = "" if fresh else subprocess.run(["git", "rev-parse", "--verify", "-q", EXPORT_REF], cwd=repo,
                                                 capture_output=True, text=True).stdout.strip()
     with tempfile.TemporaryDirectory(prefix="medomni-export-") as tmp:
-        clone = filtered(repo, branch, cfg, Path(tmp))
+        clone = filtered(repo, branch, cfg, Path(tmp), previous or None)
         left = fragments(repo, clone)
         if left:
             raise ExportError("cleaning left fragments in these messages; add exact subjects or a rule "

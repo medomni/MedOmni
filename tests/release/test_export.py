@@ -141,6 +141,21 @@ def test_an_incremental_export_appends_exactly_the_new_commit(private):
     assert git(private, "log", "-1", "--format=%B", second).strip().endswith(f"Private-Commit: {new}")
 
 
+def test_a_published_file_moved_later_keeps_the_export_append_only(private):
+    """A file the export already published, then moved or deleted on main: the next export appends the move."""
+    first = export(private)
+    git(private, "mv", "src/b.py", "src/z.py")
+    commit(private, "src: move b")
+    second = export(private)
+    assert git(private, "rev-parse", f"{second}~1") == first  # appended, not rewritten
+    assert git(private, "ls-tree", "-r", "--name-only", second).splitlines() == [
+        "README.md", "release/history-paths.yaml", "release/public.yaml", "src/a.py", "src/z.py"]
+    commit(private, "src: drop z", remove=["src/z.py"])
+    third = export(private)
+    assert git(private, "rev-parse", f"{third}~1") == second
+    assert "src/z.py" not in git(private, "ls-tree", "-r", "--name-only", third)
+
+
 def test_an_outside_commit_imports_by_its_author_and_isnt_exported_twice(private, tmp_path):
     first = export(private)
     public = tmp_path / "public"

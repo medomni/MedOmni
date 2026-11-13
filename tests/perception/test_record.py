@@ -37,10 +37,17 @@ def test_a_passing_check_is_servable_and_other_entries_stay(repo):
     assert (root / record.RECORD).read_text().startswith("# Deployed encoder images")
 
 
-def test_no_samples_is_recorded_but_not_served(repo):
+def test_no_samples_is_recorded_and_served_on_its_test_data(repo):
+    """MedOmni publishes no real samples (R-161): an unverified L3 serves, with the test data standing in."""
     root, edir = repo
-    record.write(edir, "1 sample(s)", "UNVERIFIED-no-supply", "the family publishes no samples", repo=root)
-    assert served.servable(served.load(root / record.RECORD), "fam-x__enc") == (False, "L3 UNVERIFIED-no-supply")
+    record.write(edir, "1 sample(s)", served.NO_SAMPLES, "no real samples given; the test data stands in", repo=root)
+    assert served.servable(served.load(root / record.RECORD), "fam-x__enc") == (True, "ok")
+
+
+def test_a_failed_l3_is_not_served(repo):
+    root, edir = repo
+    record.write(edir, "1 sample(s)", "FAIL", "a real sample crashed", repo=root)
+    assert served.servable(served.load(root / record.RECORD), "fam-x__enc") == (False, "L3 FAIL")
 
 
 def test_refused_for_uncommitted_source_or_a_stale_image(repo, monkeypatch):
@@ -68,4 +75,4 @@ def test_access_controlled_families_are_marked_in_core():
     controlled = {f for f in ("ppg-waveform-uncal", "ecg-12lead-500hz-mv", "cxr-radiograph-2d", "clinical-measurement-irregular",
                               "eeg-sleep-6ch-200hz-uv") if families.get(f).samples_access == "controlled"}
     assert len(controlled) == 5
-    assert families.get("capnography-mmhg").samples_access is None  # no sample set at all: still not servable
+    assert families.get("capnography-mmhg").samples_access is None  # no sample set at all: unverified, served (R-161)

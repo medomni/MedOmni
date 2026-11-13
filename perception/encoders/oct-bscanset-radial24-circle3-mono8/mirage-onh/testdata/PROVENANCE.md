@@ -41,3 +41,5 @@ verified by `medomni perception check --samples`, which runs the three pinned
 `MedOmni/family-samples` sets — Spectralis optic-nerve-head acquisitions,
 496x768, each holding exactly 24 radial and 3 circle frames — through the
 built image with Docker networking disabled.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

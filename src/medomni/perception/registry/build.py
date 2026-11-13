@@ -90,13 +90,20 @@ def stage(edir, repo=None) -> Path:
     return dst
 
 
+LICENSE_LABEL = f"{LABEL_NS}.license"  # the card's licence, on the image (R-158 D1; `studio release-check` reads it)
+
+
 def command(edir, repo=None, image_tag="dev", context=None):
     """The docker build command for one encoder folder, over its staged context (`stage`)."""
+    import yaml
+
     edir, repo = Path(edir).resolve(), Path(repo or repo_root(edir)).resolve()
     eid = encoder_id(edir)
     context = Path(context) if context else repo
+    card = yaml.safe_load((edir / "card.yaml").read_text(encoding="utf-8")) if (edir / "card.yaml").is_file() else {}
     return ["docker", "build", "-t", tag(eid, image_tag),
             "--label", f"{LABEL_NS}.encoder_id={eid}",
+            *(["--label", f"{LICENSE_LABEL}={card['license']}"] if (card or {}).get("license") else []),
             "--label", f"{LABEL_NS}.build_key={build_key(edir, repo)}",
             "--label", f"{LABEL_NS}.source_rev={git_rev([repo / p for p in SHARED] + [edir], repo)}",
             "-f", str(context / edir.relative_to(repo) / "Dockerfile"), str(context)]

@@ -3,7 +3,8 @@
 only an entry whose L2 and L3 passed at its own build_key (`sidecar/record.py` reads it; the service image bakes a copy).
 
 The stages are the steps of `check`: L0 the card, L1 the image build, L2 the test data, L3 the family's real samples
-(`UNVERIFIED-no-supply` when the family publishes none, which the service refuses to serve). An entry is written only
+(`UNVERIFIED-no-samples` when none were given, or `UNVERIFIED-access-controlled`; the service serves either, with
+the test data standing in, and refuses a FAIL). An entry is written only
 for an image built from committed source, so its `source_rev` names a commit. Other entries are left as they are,
 except an entry whose encoder has no folder in any content root (the repository or a plug-in folder): it is dropped,
 so the record lists only encoders that exist (s4 part 2).

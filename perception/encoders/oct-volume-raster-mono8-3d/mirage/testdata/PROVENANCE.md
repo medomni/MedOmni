@@ -38,3 +38,5 @@ Those three samples come from the OCTA acquisition's structural channel
 (`..._octa_oct_...`) rather than a dedicated raster volume series, which is a
 question open with Data & Task. It does not change what this encoder reads:
 they are macular OCT B-scans, and they conform to the family's declaration.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

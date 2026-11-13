@@ -8,8 +8,9 @@
 4. Every `testdata/input*` sample runs through one container, and each response matches `testdata/expected.json`:
    numbers within a tolerance, everything else exactly. A neural network is reproducible to a tolerance and not to a
    bit: the BLAS library and the processor differ between machines. `--freeze` writes expected.json instead.
-5. The family's pinned real samples (`--samples <dir>`, else the family's published sample set) run offline, with
-   Docker networking off, and each response must be healthy and say only what the card declares.
+5. The family's real samples, from `--samples <dir>` (one sub-folder per family), run offline with Docker networking
+   off, and each response must be healthy and say only what the card declares. MedOmni publishes no real samples
+   (R-161): with no folder for the family, the stage is unverified and the test data stands in.
 
 `run_case(..., docker=False)` runs the same samples in this process, with no Docker, through the same run_encode.
 """
@@ -329,20 +330,6 @@ def family_response_problems(card, response):
     return errors + _finite(response)
 
 
-def download_family_samples(family_id):
-    """The family's published sample set (core/families/<id>.yaml `samples`), from Hugging Face."""
-    from medomni.core import families
-
-    samples = families.get(family_id).samples
-    if samples is None:
-        raise RegistryError(f"family '{family_id}' publishes no samples")
-    from huggingface_hub import snapshot_download
-
-    snapshot = Path(snapshot_download(samples.hf_repo, repo_type="dataset", revision=samples.revision,
-                                      allow_patterns=[samples.dir.rstrip("/") + "/**"]))
-    return snapshot / samples.dir
-
-
 def offline_encode(edir, samples_dir, sample_name, options, image_tag="dev"):
     """One sample through the image's one-shot entry point, with Docker networking off."""
     body = json.dumps(options, separators=(",", ":"), allow_nan=False)
@@ -359,11 +346,11 @@ def offline_encode(edir, samples_dir, sample_name, options, image_tag="dev"):
         raise RuntimeError(f"offline Docker inference did not return JSON: {result.stdout}") from exc
 
 
-def family_samples(edir, samples_root=None, image_tag="dev"):
-    """Run the family's real samples offline; returns (number of samples, failures)."""
+def family_samples(edir, samples_root, image_tag="dev"):
+    """Run the family's real samples from `samples_root/<family>/` offline; returns (number of samples, failures)."""
     edir = Path(edir)
     card = load_card(edir)
-    root = Path(samples_root).resolve() / card["family"] if samples_root else download_family_samples(card["family"])
+    root = Path(samples_root).resolve() / card["family"]
     with tempfile.TemporaryDirectory(prefix=".family-test-") as directory:
         materialized = Path(directory) / card["family"]
         shutil.copytree(root, materialized)
@@ -452,12 +439,12 @@ def check(edir, samples_root=None, do_freeze=False, tol=TOL, out=print, build=Tr
         return 0
 
     fam = families.get(card["family"])
-    if samples_root is None and fam.samples is None:
+    if samples_root is None or not (Path(samples_root) / card["family"]).is_dir():
         if fam.samples_access == "controlled":
             out(f"[{eid}] real samples: access-controlled, not distributed; the test data stands in")
             return recorded("UNVERIFIED-access-controlled", "the family's sample set is access-controlled")
-        out(f"[{eid}] real samples: the family publishes none")
-        return recorded("UNVERIFIED-no-supply", "the family publishes no samples")
+        out(f"[{eid}] real samples: unverified, none given (--samples); the test data stands in")
+        return recorded("UNVERIFIED-no-samples", "no real samples given; the test data stands in")
     try:
         n, failures = family_samples(edir, samples_root)
     except (RegistryError, ImportError, OSError) as exc:

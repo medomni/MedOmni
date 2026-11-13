@@ -2,14 +2,6 @@
 #   docker build -f perception/encoders/fundus-photography-2d/dr-grade/Dockerfile -t <tag> .
 FROM python:3.11-slim@sha256:1042b61448fef4ba92d16a8c7eb4996d027568ce64792a7877fd88511e0af7c6
 
-# Assets first: fetch_assets.py verifies both files against the sha256 the card
-# publishes, so a build cannot ship an image whose card describes other weights.
-ENV DR_GRADE_WEIGHTS=/opt/weights/model.safetensors
-COPY perception/encoders/fundus-photography-2d/dr-grade/fetch_assets.py /tmp/
-RUN python3 /tmp/fetch_assets.py \
-    && rm /tmp/fetch_assets.py \
-    && chmod -R a+rX /opt/weights
-
 # CPU wheels: much smaller than the CUDA ones, and deployment.yaml decides the
 # device, not the image. torch 2.15.0 and torchvision 0.29.2 are what this image
 # has run since timm first pulled them in from PyPI (R-171): installing them here,
@@ -29,6 +21,15 @@ RUN pip install --no-cache-dir \
         pillow==11.0.0 \
         numpy==2.2.6 \
         pyyaml==6.0.2
+
+# The weights come after the packages (R-171), so the package layers can be shared with other images.
+# fetch_assets.py verifies every file against the sha256 the card publishes, so a build
+# cannot ship an image whose card describes other weights.
+ENV DR_GRADE_WEIGHTS=/opt/weights/model.safetensors
+COPY perception/encoders/fundus-photography-2d/dr-grade/fetch_assets.py /tmp/
+RUN python3 /tmp/fetch_assets.py \
+    && rm /tmp/fetch_assets.py \
+    && chmod -R a+rX /opt/weights
 
 WORKDIR /app
 

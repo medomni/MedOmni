@@ -37,3 +37,5 @@ verified by `medomni perception check --samples`, which runs the three pinned
 `MedOmni/family-samples` cubes — Spectralis 20x20 mm acquisitions of 13, 20 and
 26 B-scans at 496x512, JPEG-lossless — through the built image with Docker
 networking disabled.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

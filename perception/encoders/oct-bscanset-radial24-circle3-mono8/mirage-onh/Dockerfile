@@ -2,16 +2,6 @@
 #   docker build -f perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/Dockerfile -t <tag> .
 FROM python:3.11-slim@sha256:1042b61448fef4ba92d16a8c7eb4996d027568ce64792a7877fd88511e0af7c6
 
-# Assets first: this layer downloads 332 MiB of weights, so changing a pin
-# below costs a pip install and not another download. fetch_assets.py verifies
-# every file against the sha256 the card publishes.
-ENV MIRAGE_SOURCE=/opt/mirage \
-    MIRAGE_WEIGHTS=/opt/weights/model.safetensors
-COPY perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/fetch_assets.py /tmp/
-RUN python3 /tmp/fetch_assets.py \
-    && rm /tmp/fetch_assets.py \
-    && chmod -R a+rX /opt/weights /opt/mirage
-
 # CPU wheels: much smaller than the CUDA ones, and deployment.yaml decides the
 # device, not the image.
 RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu \
@@ -31,6 +21,16 @@ RUN pip install --no-cache-dir \
         pillow==11.0.0 \
         numpy==2.2.6 \
         pyyaml==6.0.2
+
+# The weights come after the packages (R-171), so the package layers can be shared with other images.
+# This layer downloads 332 MiB of weights; fetch_assets.py verifies every file against the sha256 the card publishes, so a build
+# cannot ship an image whose card describes other weights.
+ENV MIRAGE_SOURCE=/opt/mirage \
+    MIRAGE_WEIGHTS=/opt/weights/model.safetensors
+COPY perception/encoders/oct-bscanset-radial24-circle3-mono8/mirage-onh/fetch_assets.py /tmp/
+RUN python3 /tmp/fetch_assets.py \
+    && rm /tmp/fetch_assets.py \
+    && chmod -R a+rX /opt/weights /opt/mirage
 
 WORKDIR /app
 

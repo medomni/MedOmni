@@ -47,3 +47,5 @@ five come back ungradable with high confidence. Those frames are 39 to 52
 percent near-black with a median intensity of 0 to 21, so the likeliest reason
 is that ultra-widefield Eidon exposure is not what Retinograd-AI was trained
 on. Nothing here settles that, which is why reliability stays `unmeasured`.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

@@ -213,8 +213,11 @@ def test_an_entry_without_image_id_is_not_servable():
     assert record.ref(r, "fam__enc") is None
 
 
-def test_l3_unverified_is_not_servable():
-    assert not record.servable(rec_with(L2="PASS", L3="UNVERIFIED-thin"), "fam__enc")[0]
+def test_an_unverified_l3_is_served_and_a_failed_one_is_not():
+    """MedOmni publishes no real samples (R-161): an unverified stage 6 lets the test data (L2) stand in."""
+    assert record.servable(rec_with(L2="PASS", L3="UNVERIFIED-no-samples"), "fam__enc") == (True, "ok")
+    assert not record.servable(rec_with(L2="PASS", L3="FAIL"), "fam__enc")[0]
+    assert not record.servable(rec_with(L2="UNVERIFIED-no-samples", L3="PASS"), "fam__enc")[0]  # L2 must pass
 
 
 def test_a_stage_for_another_build_key_is_not_servable():

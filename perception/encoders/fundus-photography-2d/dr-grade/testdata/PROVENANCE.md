@@ -38,3 +38,5 @@ four round to grade 0 and one to grade 1. A screening cohort should look like
 that, so the numbers are consistent rather than surprising — which is not the
 same as measured. One score sits just below the scale, which exercises the
 clamping path on real data; the card records both.
+
+License: authored for MedOmni; Apache-2.0 with this repository.

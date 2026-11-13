@@ -9,7 +9,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-Apache--2.0-green" alt="Licence: Apache-2.0"></a>
 </p>
 
-### The open-source ecosystem for omni-modality medical intelligence
+### The ecosystem for omni-modality medical intelligence
 
 MedOmni is open infrastructure for medical AI on any data modality: tables, waveforms, images, volumes and notes.
 

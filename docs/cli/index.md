@@ -19,7 +19,7 @@ Shared commands are at the top level; each project's commands are under its name
 |---|---|
 | `medomni bench data connect <dataset> --path <dir>` | Records where your copy of a dataset is, in the workspace configuration. |
 | `medomni bench agent new <name>` | Writes an agent config to fill in. |
-| `medomni bench run --agent <config> --set <set>` | Runs the [checks on built tasks](../learn/core/built-tasks.md#checks-on-any-built-task), the [stand-in agents](../learn/bench/scoring.md#stand-in-agents) and the route check on the built set, and runs nothing if one fails. Then pulls the encoder images for the families the tasks stage, runs every atom task in Harbor and records each run. Prints a running count of finished and failed atom tasks. `--arm` (repeatable; default: every arm the set lists), `--reps <n>`, `--concurrency <n>`. Resumes where it stopped. |
+| `medomni bench run --agent <config> --set <set>` | Runs the [checks on built tasks](../learn/core/built-tasks.md#checks-on-any-built-task), the [stand-in agents](../learn/bench/scoring.md#stand-in-agents) and the route check on the built set, and runs nothing if one fails. Then runs every atom task in Harbor and records each run. Prints a running count of finished and failed atom tasks. `--arm` (repeatable; default: every arm the set lists). Resumes where it stopped. |
 | `medomni bench score --set <set>` | Scores every target of every complete `<template>@<cohort>` per agent, arm and repetition, and prints and saves the table. Rows with different config hashes are flagged configured differently. The only command that writes scores. `--agent` limits it to one agent. |
 
 ## Perception

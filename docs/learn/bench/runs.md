@@ -10,7 +10,7 @@ agent config + built task set ──harness──▶ Harbor jobs ──▶ one r
 
 ## Agent
 
-The system being evaluated is an intelligence. Its kind in v0.3.0 is `agent`: a scaffold driving a model, described in an agent config. The config names the kind, the agent, the model and the route (`local` or `cloud`); its `settings`, which the runner reads and checks, hold the scaffold (a Harbor agent such as `terminus-2`), the model name the provider must report back, and the run limits. [Run your agent](../../guides/run-your-agent.md) lists every field.
+The system being evaluated is an intelligence. Its kind in v0.3.0 is `agent`: a scaffold driving a model, described in an agent config. The config names the kind, the agent, the model and the route (`local` or `cloud`); its `settings`, which the runner reads and checks, hold the scaffold (a Harbor agent such as `terminus-2`), the model name the provider must report back, and the run limits. [Test your agent](../../guides/test-your-agent.md) lists every field.
 
 The replay agent repeats recorded runs with no model calls. MedOmni's own tests use it to run a task set at no cost.
 
@@ -88,6 +88,6 @@ A prediction record is one answer for one target of one atom task: `run_id`, `at
 
 ## Where next
 
-- [Run your agent](../../guides/run-your-agent.md): the agent config fields and the commands.
+- [Test your agent](../../guides/test-your-agent.md): the agent config fields and the commands.
 - [Scoring](scoring.md): how runs become scores.
 - [Gateway](../perception/gateway.md): what the perception service runs.

@@ -25,7 +25,7 @@ MedOmni writes your configuration, built tasks, runs and results to the workspac
 
 ## 2. Describe your agent
 
-Copy the agent template and set your model. See [Run your agent](guides/run-your-agent.md) for every field.
+Copy the agent template and set your model. See [Test your agent](guides/test-your-agent.md) for every field.
 
 ```bash
 medomni bench agent new my-agent
@@ -77,5 +77,5 @@ MedOmni hosts no dataset. Download and connect each dataset as in [Connect your 
 
 ## Where next
 
-- [Run your agent](guides/run-your-agent.md): your own model, with and without encoders.
+- [Test your agent](guides/test-your-agent.md): your own model, with and without encoders.
 - [Concepts](learn/concepts.md): the terms used above.

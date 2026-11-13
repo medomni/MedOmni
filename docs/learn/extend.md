@@ -23,17 +23,17 @@ What you can add to MedOmni, how, and what checks it.
 | A Studio tool | Studio | Its kind's interface | `src/medomni/studio/<kind>/` | `medomni studio check` | `src/medomni/studio/<kind>/` | entry point: `medomni.tools` |
 
 - Every check is the same in MedOmni's CI, in your terminal and in a plug-in package's CI ([testing kit](core/plugins.md#the-testing-kit)).
-- [Contribute](../guides/contribute.md) walks through each one.
+- [Add an encoder](../guides/add-an-encoder.md), [Add a dataset](../guides/add-a-dataset.md), [Add a task](../guides/add-a-task.md) and [Contribute](../guides/contribute.md) walk through each one.
 - A benchmark is a card (version, owner, license, the intelligence kinds it accepts) and its task sets. MedOmni's own is `medomni-bench`; a plug-in package publishes its own the same way.
 
 ## What you can use without adding anything
 
 | You use | Through | See |
 |---|---|---|
-| Your own agent | An agent config file on your machine | [Run your agent](../guides/run-your-agent.md) |
+| Your own agent | An agent config file on your machine | [Test your agent](../guides/test-your-agent.md) |
 | Your own data copy | `medomni bench data connect` | [Connect your data](../guides/connect-your-data.md) |
 | The encoders from your own code | The Gateway API | [Use the encoders](../guides/use-the-encoders.md) |
-| Results in your own analysis | The result records in the run folders and `results.jsonl` | [Run your agent](../guides/run-your-agent.md#results-file) |
+| Results in your own analysis | The result records in the run folders and `results.jsonl` | [Test your agent](../guides/test-your-agent.md#results-file) |
 
 ## What you ask the MedOmni team for
 

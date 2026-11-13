@@ -62,7 +62,7 @@ docs/            the documentation
 
 The documentation is at [medomni.ai](https://medomni.ai). To start:
 
-- [Run your agent](docs/guides/run-your-agent.md), [Use the encoders](docs/guides/use-the-encoders.md), [Contribute](docs/guides/contribute.md).
+- [Test your agent](docs/guides/test-your-agent.md), [Use the encoders](docs/guides/use-the-encoders.md), [Contribute](docs/guides/contribute.md).
 - [Architecture](docs/learn/architecture.md): how the projects fit together.
 
 ## Licence

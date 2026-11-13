@@ -4,18 +4,31 @@
   <img src="docs/assets/logo.png" alt="MedOmni" width="280">
 </p>
 
-### Benchmarking Omni Modality* Integration in Medical Multimodal Agentic Systems
+<p align="center">
+  <a href="https://medomni.ai"><img src="https://img.shields.io/badge/docs-medomni.ai-blue" alt="Documentation: medomni.ai"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-Apache--2.0-green" alt="Licence: Apache-2.0"></a>
+</p>
 
-MedOmni is open-source software for medical AI on many data modalities: tables, waveforms, images and notes. This is v0.3.0.
+### The open-source ecosystem for omni-modality medical intelligence
 
-MedOmni is developed in a private repository; this public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged here and ship in the next release: see [Contributing](CONTRIBUTING.md).
+MedOmni is open infrastructure for medical AI on any data modality: tables, waveforms, images, volumes and notes.
 
-| Project | Does | Command |
+## Goal
+
+A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and notes side by side. MedOmni aims to be the shared, open infrastructure where agents and models learn to do the same: take in any medical data modality, be tested on it, and improve. A dataset or encoder added to MedOmni once can be used by every agent and model tested on it.
+
+## Overview
+
+MedOmni is one shared Core with three projects built on it. Bench and Perception depend only on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
+
+| Project | What you get | Command |
 |---|---|---|
-| **Bench** | Runs AI agents on built medical tasks and scores them. | `medomni bench` |
-| **Perception** | Serves 44 medical encoders through an HTTP gateway. | `medomni perception` |
-| **Studio** | Makes and builds tasks, and audits them. | `medomni studio` |
-| **Core** | The contracts, the `medomni` command, plug-in loading, dataset loading, the cache and the testing kit, shared by every project. | `medomni` |
+| **Bench** | Test your agent, or a foundation model behind one, on built medical tasks, and score it. | `medomni bench` |
+| **Perception** | Give your agent perception across medical modalities: 44 encoders behind one HTTP gateway, each reading one kind of input, such as a 12-lead ECG. | `medomni perception` |
+| **Studio** | The rest of the workflow: survey a dataset, preview and select cohorts, build tasks, and audit them. | `medomni studio` |
+| **Core** | What every project shares: the contracts, the `medomni` command, plug-in loading, dataset loading, the cache and the testing kit. | `medomni` |
+
+Anyone can add a dataset, an encoder, a task or an agent without changing Core: by pull request, or as a plug-in package in their own repository. Each piece has a `new` command to start from and a check command to run. See [Contributing](CONTRIBUTING.md).
 
 No patient data ships with MedOmni. Tasks are built on your machine from generated dummy data, open datasets such as VitalDB, or datasets you are licensed to use, such as MIMIC-IV.
 
@@ -55,4 +68,4 @@ MedOmni's code is under the Apache License 2.0; see [LICENSE](LICENSE). Each enc
 
 ## Releases
 
-The documentation is at [medomni.ai](https://medomni.ai). Releases are tags on [github.com/medomni/MedOmni](https://github.com/medomni/MedOmni); v0.3.0 is a beta. There is no PyPI release, and encoder images are built on your machine.
+This is v0.3.0, the first public release, a beta. The documentation is at [medomni.ai](https://medomni.ai). Releases are tags on [github.com/medomni/MedOmni](https://github.com/medomni/MedOmni). There is no PyPI release, and encoder images are built on your machine.

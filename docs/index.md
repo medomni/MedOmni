@@ -1,6 +1,10 @@
 # MedOmni
 
-MedOmni is open-source software for medical AI on many data modalities: tables, waveforms, images and notes.
+The open-source ecosystem for omni-modality medical intelligence. MedOmni is open infrastructure for medical AI on any data modality: tables, waveforms, images, volumes and notes.
+
+A clinician reads lab tables, ECGs, sleep recordings, X-rays, retinal scans and notes side by side. MedOmni aims to be the shared, open infrastructure where agents and models learn to do the same: take in any medical data modality, be tested on it, and improve. A dataset or encoder added to MedOmni once can be used by every agent and model tested on it.
+
+MedOmni is one shared Core with three projects built on it. Bench and Perception depend only on Core, and the projects exchange data only through Core's contracts, so each can be used and changed on its own.
 
 MedOmni is developed in a private repository; the public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged there and ship in the next release: see [How MedOmni is developed](guides/contribute.md#how-medomni-is-developed).
 

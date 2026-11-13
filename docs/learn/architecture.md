@@ -72,7 +72,7 @@ MedOmni/
 - **Datasets**: MIMIC-IV, AI-READI and BDSP under your own license, and VitalDB, read from local disk.
 - **Harbor**: the agent-evaluation framework that runs each atom task in Docker.
 - **Model provider**: the API behind an agent's model on a `cloud` route. A `local` route needs none.
-- **Container registry**: the published gateway and encoder images (`ghcr.io/medomni`).
+- **Container registry**: where `medomni perception pull` pulls encoder images from (`ghcr.io/medomni`). Nothing is published there yet; images are built on your machine.
 - **Hugging Face**: model cards, and dummy data for each dataset. No real record is published there.
 
 ## Containers (C2)
@@ -85,9 +85,9 @@ MedOmni/
 | Workspace | Core | Configuration, the cache, built atom tasks, the run folders and the results file, on your machine. Never committed. |
 | Bench library | Bench | Checks built tasks, turns a task set into Harbor jobs, records runs and scores them. |
 | Perception service | Bench | Runs inside each atom task with encoders: Perception's gateway, with Bench's call budget, family filter and call log. |
-| Perception library | Perception | Pulls encoder images, starts the gateway and checks encoders. |
+| Perception library | Perception | Builds and checks encoder images, and starts the gateway. |
 | Gateway | Perception | The HTTP service in front of every encoder: its catalogue finds encoders and serves model cards, its router sends each call to a running encoder container. |
-| Encoders | Perception | One image per encoder, each reading one family. Published to the container registry; model cards to Hugging Face. |
+| Encoders | Perception | One image per encoder, each reading one family. Built on your machine; model cards on Hugging Face. |
 | Studio tools | Studio | Build atom tasks from your data with the `medomni-v1` builder, survey datasets, collect and review task proposals, preview cohorts, run the audit and report results. |
 
 Gateway and encoder images are tagged with the MedOmni release that built them. The gateway runs any encoder image built since the Container API last changed.

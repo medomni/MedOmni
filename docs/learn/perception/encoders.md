@@ -3,7 +3,7 @@
 An encoder is a containerised model or rule that reads one family and returns evidence. Each encoder is one folder in the repository, built into one image, and described by one model card.
 
 ```text
-perception/encoders/<family>/<encoder>/ ──build──▶ image on ghcr.io/medomni
+perception/encoders/<family>/<encoder>/ ──build──▶ image on your machine
                          card.yaml ──publish──▶ model card on Hugging Face
 ```
 
@@ -60,8 +60,9 @@ Stages 5 and 6 run the encoder's tests in `tests/perception/`. `--freeze` record
 
 ## Images
 
-- One image per encoder, at `ghcr.io/medomni/<encoder>`, tagged with the MedOmni version that built it.
-- Users pull images; they never install encoder code.
+- One image per encoder, built on your machine by `medomni perception check`, tagged `ghcr.io/medomni/<encoder>:dev`. MedOmni doesn't publish encoder images yet, so `medomni perception pull` has nothing to pull.
+- In a Bench run, the perception service starts only the image `perception/deployed.yaml` records for an encoder, by content id. Record your build with `--record`, then build the service image, which carries the record.
+- Users run images; they never install encoder code.
 - Licenses differ; the [Encoders reference](../../reference/encoders.md) lists each one.
 
 ## Where it lives

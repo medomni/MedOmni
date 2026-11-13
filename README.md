@@ -24,7 +24,7 @@ No patient data ships with MedOmni. Tasks are built on your machine from generat
 Python 3.11 or later, Docker and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-git clone --branch v0.3.0 <repository-url> medomni && cd medomni
+git clone --branch v0.3.0 https://github.com/medomni/MedOmni medomni && cd medomni
 uv venv && source .venv/bin/activate && uv pip install -e .
 medomni --version
 ```
@@ -53,4 +53,6 @@ docs/            the documentation
 
 MedOmni's code is under the Apache License 2.0; see [LICENSE](LICENSE). Each encoder, dataset package and task set states its own licence on its card or policy.
 
-<!-- pending (Stage 4 parts 5 and 6): the documentation site's address, and where releases and images are published -->
+## Releases
+
+The documentation is at [medomni.ai](https://medomni.ai). Releases are tags on [github.com/medomni/MedOmni](https://github.com/medomni/MedOmni); v0.3.0 is a beta. There is no PyPI release, and encoder images are built on your machine.

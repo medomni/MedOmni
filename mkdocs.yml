@@ -1,6 +1,8 @@
 site_name: MedOmni
 site_description: A benchmark for medical multimodal agents
 site_url: https://medomni.ai/
+repo_url: https://github.com/medomni/MedOmni
+repo_name: medomni/MedOmni
 
 theme:
   name: material

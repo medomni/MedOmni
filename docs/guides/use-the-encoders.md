@@ -10,13 +10,13 @@ For encoder users. You run Perception's gateway locally and call encoders over H
 
 ## Steps
 
-1. Pull the images you need, by family or by encoder.
+1. Build the image of each encoder you need. The check builds it and runs it on the encoder's test data.
 
     ```bash
-    medomni perception pull ecg-12lead-500hz-mv
+    medomni perception check perception/encoders/ecg-12lead-500hz-mv/ecgfounder
     ```
 
-2. Start the gateway on the pulled encoders, pointing it at the folder that holds your inputs. The folder is mounted read-only into every encoder container.
+2. Start the gateway on the built encoders, pointing it at the folder that holds your inputs. The folder is mounted read-only into every encoder container.
 
     ```bash
     medomni perception up --data-root ~/samples

@@ -81,7 +81,7 @@ CALLBACK = r'''
 import re as _re
 _strip = [_re.compile(p.encode()) for p in {strip!r}]
 _tidy = [(_re.compile(rb"\(\s*(?:[,;]\s*)*\)"), b""), (_re.compile(rb"\(\s*[,;]\s*"), b"("), (_re.compile(rb"\s*[,;]\s*\)"), b")"),
-         (_re.compile(rb":\s*[,;]\s*"), b": "), (_re.compile(rb"(?:,\s*){{2,}}"), b", "), (_re.compile(rb"[ \t]+([,.;:)])"), rb"\1"),
+         (_re.compile(rb":\s*[,;]\s*"), b": "), (_re.compile(rb"\(\s+"), b"("), (_re.compile(rb"(?:,\s*){{2,}}"), b", "), (_re.compile(rb"[ \t]+([,.;:)])"), rb"\1"),
          (_re.compile(rb"[ \t]{{2,}}"), b" "), (_re.compile(rb"[ \t]+$", _re.M), b"")]
 _trailer = _re.compile(rb"^[A-Za-z][A-Za-z-]*: ", _re.M)
 _keep = _re.compile(rb"^(Co-Authored-By|Signed-off-by|{private}|{public}): ", _re.I)
@@ -246,10 +246,13 @@ def scan(repo, ref: str, cfg: dict) -> dict:
     return {"versions": r["versions"], "hits": r["hits"], "data_without_provenance": sorted(unprovenanced)}
 
 
-def export(repo=".", branch="main", config: Path | None = None, report: Path | None = None) -> dict:
+def export(repo=".", branch="main", config: Path | None = None, report: Path | None = None, fresh: bool = False) -> dict:
+    """Filter the branch into EXPORT_REF. Once an export exists it is only appended to; `fresh` builds it anew, which
+    is right only before anything has been pushed (a changed message rule or mailmap then reaches every commit)."""
     repo = Path(repo).resolve()
     cfg = _yaml(config) if config else {}
-    previous = subprocess.run(["git", "rev-parse", "--verify", "-q", EXPORT_REF], cwd=repo, capture_output=True, text=True).stdout.strip()
+    previous = "" if fresh else subprocess.run(["git", "rev-parse", "--verify", "-q", EXPORT_REF], cwd=repo,
+                                                capture_output=True, text=True).stdout.strip()
     with tempfile.TemporaryDirectory(prefix="medomni-export-") as tmp:
         clone = filtered(repo, branch, cfg, Path(tmp))
         tip = git(clone, "rev-parse", "main").strip()
@@ -310,13 +313,14 @@ def main(argv=None) -> int:
     e.add_argument("--branch", default="main")
     e.add_argument("--config", type=Path, help="the private config (mailmap, message patterns, replace_text)")
     e.add_argument("--report", type=Path)
+    e.add_argument("--fresh", action="store_true", help="build the export anew; only before anything has been pushed")
     i = sub.add_parser("import", help="bring the public line's outside commits into the branch")
     i.add_argument("public_ref")
     i.add_argument("--branch", default="main")
     a = ap.parse_args(argv)
     try:
         if a.cmd == "export":
-            r = export(".", a.branch, a.config, a.report)
+            r = export(".", a.branch, a.config, a.report, a.fresh)
             print(f"{EXPORT_REF} -> {r['tip'][:12]}" + (f" (after {r['previous'][:12]})" if r["previous"] else ""))
         else:
             made = import_public(a.public_ref, ".", a.branch)

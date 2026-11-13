@@ -2,6 +2,8 @@
 
 MedOmni is open-source software for medical AI on many data modalities: tables, waveforms, images and notes.
 
+MedOmni is developed in a private repository; the public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged there and ship in the next release: see [How MedOmni is developed](guides/contribute.md#how-medomni-is-developed).
+
 !!! info "This is v0.3.0, the first public release"
     MedOmni v0.3.0 (git tag `v0.3.0`) is the first public release and the first milestone of MedOmni. It has:
 

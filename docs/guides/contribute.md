@@ -2,10 +2,17 @@
 
 For contributors who add an agent to Bench, a dataset or a task to Studio, or an encoder to Perception.
 
-There are two routes. Both run the same check.
+## How MedOmni is developed
 
-- **Pull request.** Create the starting files with the piece's `new` command, fill them in, run its check command locally, and open a pull request; CI runs the same check.
-- **Plug-in package.** Publish your own `medomni-*` package that ships the same pieces in a content folder. Use this when your work should stay in your own repository, for example a task on data that cannot leave your institution. See [Publish a plug-in package](#publish-a-plug-in-package).
+MedOmni is developed in a private repository. The public repository is an export of each release, and every commit in it keeps its author.
+
+A pull request goes to the public repository:
+
+1. Create the starting files with the piece's `new` command, fill them in, and run its check command locally.
+2. Open a pull request on the public repository. CI runs the same check, and the MedOmni team reviews it.
+3. Once it is merged there, it is brought into development under your name and ships in the next release.
+
+Work that should stay in your own repository, for example a task on data that cannot leave your institution, can be a plug-in package instead: your own `medomni-*` package that ships the same pieces in a content folder and runs the same check. See [Publish a plug-in package](#publish-a-plug-in-package).
 
 Contributions change only extension points. Only the MedOmni team changes Core and the contracts; if you need a contract change, such as a new family, open an issue first.
 

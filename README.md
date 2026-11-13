@@ -8,6 +8,8 @@
 
 MedOmni is open-source software for medical AI on many data modalities: tables, waveforms, images and notes. This is v0.3.0.
 
+MedOmni is developed in a private repository; this public repository is an export of each release, with every commit's author kept. Pull requests are reviewed and merged here and ship in the next release: see [Contributing](CONTRIBUTING.md).
+
 | Project | Does | Command |
 |---|---|---|
 | **Bench** | Runs AI agents on built medical tasks and scores them. | `medomni bench` |
